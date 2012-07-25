@@ -2,7 +2,6 @@ package org.jboss.pressgangccms.contentspec;
 
 import org.jboss.pressgangccms.contentspec.enums.LevelType;
 
-
 public class Part extends Level
 {
 

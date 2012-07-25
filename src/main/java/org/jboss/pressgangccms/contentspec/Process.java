@@ -18,7 +18,6 @@ import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
 import org.jboss.pressgangccms.utils.common.CollectionUtilities;
 
-
 /**
  * A class that is used to represent and process a "Process" within a Content Specification.
  * 

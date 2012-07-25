@@ -8,8 +8,6 @@ import java.util.ListIterator;
 import org.jboss.pressgangccms.contentspec.enums.LevelType;
 import org.jboss.pressgangccms.utils.common.DocBookUtilities;
 
-
-
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A Level can have children Levels and
  * Content Specifications within it.
@@ -462,7 +460,7 @@ public class Level extends SpecNode
 	{
 		final String options = getOptionsString();
 		String output = type != LevelType.BASE ? 
-				(type.getTitle() + ": " + title
+				(type.getTitle() + ": " + (title == null ? "" : title)
 				// Add the target id if one exists
 				+ (targetId == null ? "" : (" [" + targetId + "]"))
 				// Add the external target id if one exists

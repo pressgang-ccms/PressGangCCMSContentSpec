@@ -4,8 +4,5 @@
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/PressGangCCMSCommonUtilities"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/PressGangCCMSRESTv1Common"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/PressGangCCMSZanataInterface"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

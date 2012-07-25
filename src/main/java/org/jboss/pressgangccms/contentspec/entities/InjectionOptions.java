@@ -2,7 +2,8 @@ package org.jboss.pressgangccms.contentspec.entities;
 
 import java.util.ArrayList;
 
-import com.redhat.ecs.commonutils.StringUtilities;
+import org.jboss.pressgangccms.utils.common.StringUtilities;
+
 
 public class InjectionOptions
 {

@@ -8,15 +8,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.contentspec.entities.Relationship;
-import com.redhat.contentspec.enums.LevelType;
-import com.redhat.contentspec.enums.RelationshipType;
-import com.redhat.contentspec.rest.RESTReader;
-import com.redhat.contentspec.utils.ContentSpecUtilities;
-import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.entities.Relationship;
+import org.jboss.pressgangccms.contentspec.enums.LevelType;
+import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgangccms.contentspec.rest.RESTReader;
+import org.jboss.pressgangccms.contentspec.utils.ContentSpecUtilities;
+import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgangccms.utils.common.CollectionUtilities;
+
 
 /**
  * A class that is used to represent and process a "Process" within a Content Specification.

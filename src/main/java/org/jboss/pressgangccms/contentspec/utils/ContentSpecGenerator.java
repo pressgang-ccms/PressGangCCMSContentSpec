@@ -5,27 +5,27 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jboss.pressgangccms.contentspec.Chapter;
+import org.jboss.pressgangccms.contentspec.ContentSpec;
+import org.jboss.pressgangccms.contentspec.Level;
+import org.jboss.pressgangccms.contentspec.Section;
+import org.jboss.pressgangccms.contentspec.SpecTopic;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.structures.TagRequirements;
+import org.jboss.pressgangccms.docbook.compiling.DocbookBuildingOptions;
+import org.jboss.pressgangccms.docbook.constants.DocbookBuilderConstants;
+import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
+import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTranslatedTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataDetails;
+import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataTrunk;
+import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
+import org.jboss.pressgangccms.utils.common.CollectionUtilities;
+import org.jboss.pressgangccms.utils.common.ExceptionUtilities;
 
-import com.redhat.contentspec.Chapter;
-import com.redhat.contentspec.ContentSpec;
-import com.redhat.contentspec.Level;
-import com.redhat.contentspec.Section;
-import com.redhat.contentspec.SpecTopic;
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.ecs.commonutils.ExceptionUtilities;
-import com.redhat.ecs.services.docbookcompiling.DocbookBuilderConstants;
-import com.redhat.ecs.services.docbookcompiling.DocbookBuildingOptions;
-import com.redhat.topicindex.component.docbookrenderer.structures.tocformat.TagRequirements;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.ComponentBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
-import com.redhat.topicindex.rest.expand.ExpandDataDetails;
-import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
-import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
 public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {

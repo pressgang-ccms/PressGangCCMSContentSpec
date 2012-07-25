@@ -1,6 +1,7 @@
 package org.jboss.pressgangccms.contentspec.enums;
 
-import com.redhat.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+
 
 /**
  * A Enumerator to describe the levels types available for a level. It also contains the ability to get an Unique ID and title for the LevelType's.

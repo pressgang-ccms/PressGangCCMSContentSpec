@@ -2,8 +2,7 @@ package org.jboss.pressgangccms.contentspec.sort;
 
 import java.util.Comparator;
 
-import com.redhat.contentspec.utils.logging.LogMessage;
-
+import org.jboss.pressgangccms.contentspec.utils.logging.LogMessage;
 
 /**
  * Used to compare if two LogMessages are different based on their timestamps.

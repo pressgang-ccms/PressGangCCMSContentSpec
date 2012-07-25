@@ -1,6 +1,7 @@
 package org.jboss.pressgangccms.contentspec.entities;
 
-import com.redhat.contentspec.enums.RelationshipType;
+import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
+
 
 /**
  * A class to hold a basic relationship until it can be processed at a later stage.

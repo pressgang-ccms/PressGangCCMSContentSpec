@@ -3,13 +3,15 @@ package org.jboss.pressgangccms.contentspec.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import com.redhat.contentspec.ContentSpec;
-import com.redhat.contentspec.KeyValueNode;
-import com.redhat.contentspec.Level;
-import com.redhat.contentspec.Node;
-import com.redhat.ecs.commonstructures.StringToCSNodeCollection;
-import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.ecs.commonutils.StringUtilities;
+
+import org.jboss.pressgangccms.contentspec.ContentSpec;
+import org.jboss.pressgangccms.contentspec.KeyValueNode;
+import org.jboss.pressgangccms.contentspec.Level;
+import org.jboss.pressgangccms.contentspec.Node;
+import org.jboss.pressgangccms.contentspec.structures.StringToCSNodeCollection;
+import org.jboss.pressgangccms.utils.common.CollectionUtilities;
+import org.jboss.pressgangccms.utils.common.StringUtilities;
+
 
 public class ContentSpecUtilities
 {

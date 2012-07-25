@@ -3,7 +3,8 @@ package org.jboss.pressgangccms.contentspec;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.redhat.ecs.commonutils.StringUtilities;
+import org.jboss.pressgangccms.utils.common.StringUtilities;
+
 
 /**
  * An abstract class that contains the base objects required for a Content Specification Node.

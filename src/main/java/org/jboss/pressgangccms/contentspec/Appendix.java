@@ -1,6 +1,8 @@
 package org.jboss.pressgangccms.contentspec;
 
-import com.redhat.contentspec.enums.LevelType;
+import org.jboss.pressgangccms.contentspec.enums.LevelType;
+
+
 
 /**
  * A class that is used to represent an Appendix in a book or Content Specification. It can contain other Levels (Sections or Topics) or Nodes (Comments).

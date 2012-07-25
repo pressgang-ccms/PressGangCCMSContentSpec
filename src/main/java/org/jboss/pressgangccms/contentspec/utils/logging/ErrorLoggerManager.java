@@ -6,7 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.redhat.contentspec.sort.LogMessageComparator;
+import org.jboss.pressgangccms.contentspec.sort.LogMessageComparator;
+
 /**
  * An Error logger manager that manages error logs. 
  */

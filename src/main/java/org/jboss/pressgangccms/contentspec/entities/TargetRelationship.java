@@ -1,9 +1,9 @@
 package org.jboss.pressgangccms.contentspec.entities;
 
-import com.redhat.contentspec.Level;
-import com.redhat.contentspec.SpecNode;
-import com.redhat.contentspec.SpecTopic;
-import com.redhat.contentspec.enums.RelationshipType;
+import org.jboss.pressgangccms.contentspec.Level;
+import org.jboss.pressgangccms.contentspec.SpecNode;
+import org.jboss.pressgangccms.contentspec.SpecTopic;
+import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
 
 /**
  * A class to specify a relationship between a topic and a level.

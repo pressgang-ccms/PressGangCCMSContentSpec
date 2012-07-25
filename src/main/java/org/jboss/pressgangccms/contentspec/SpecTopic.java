@@ -11,21 +11,20 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.entities.Relationship;
+import org.jboss.pressgangccms.contentspec.entities.TargetRelationship;
+import org.jboss.pressgangccms.contentspec.entities.TopicRelationship;
+import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
+import org.jboss.pressgangccms.rest.v1.components.ComponentTopicV1;
+import org.jboss.pressgangccms.rest.v1.components.ComponentTranslatedTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTranslatedTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgangccms.utils.common.StringUtilities;
+import org.jboss.pressgangccms.utils.constants.CommonConstants;
 import org.w3c.dom.Document;
-
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.contentspec.entities.TargetRelationship;
-import com.redhat.contentspec.entities.Relationship;
-import com.redhat.contentspec.entities.TopicRelationship;
-import com.redhat.contentspec.enums.RelationshipType;
-import com.redhat.ecs.commonutils.StringUtilities;
-import com.redhat.ecs.constants.CommonConstants;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.entities.ComponentTopicV1;
-import com.redhat.topicindex.rest.entities.ComponentTranslatedTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTranslatedTopicV1;
 
 public class SpecTopic extends SpecNode
 {

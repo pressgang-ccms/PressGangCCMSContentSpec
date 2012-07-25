@@ -1,7 +1,8 @@
 package org.jboss.pressgangccms.contentspec.entities;
 
-import com.redhat.contentspec.SpecTopic;
-import com.redhat.contentspec.enums.RelationshipType;
+import org.jboss.pressgangccms.contentspec.SpecTopic;
+import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
+
 
 /*
  * A class to specify a relationship between two topics.

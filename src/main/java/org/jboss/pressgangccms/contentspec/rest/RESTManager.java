@@ -1,13 +1,14 @@
 package org.jboss.pressgangccms.contentspec.rest;
 
+import org.jboss.pressgangccms.contentspec.rest.utils.RESTCollectionCache;
+import org.jboss.pressgangccms.contentspec.rest.utils.RESTEntityCache;
+import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.resteasy.client.ProxyFactory;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
 import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
 import org.jboss.resteasy.spi.ResteasyProviderFactory;
 
-import com.redhat.contentspec.rest.utils.RESTCollectionCache;
-import com.redhat.contentspec.rest.utils.RESTEntityCache;
-import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
+
 
 /**
  * A class to store and manage database reading and writing via REST Interface

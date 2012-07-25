@@ -1,23 +1,25 @@
 package org.jboss.pressgangccms.contentspec.rest;
 
 import org.apache.log4j.Logger;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.rest.utils.RESTCollectionCache;
+import org.jboss.pressgangccms.contentspec.rest.utils.RESTEntityCache;
+import org.jboss.pressgangccms.rest.v1.collections.RESTCategoryCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.RESTPropertyTagCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.RESTTagCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.RESTTopicCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.RESTTopicSourceUrlCollectionV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTPropertyTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTopicSourceUrlV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
+import org.jboss.pressgangccms.utils.common.ExceptionUtilities;
+
 import java.util.*;
 
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.contentspec.rest.utils.RESTCollectionCache;
-import com.redhat.contentspec.rest.utils.RESTEntityCache;
-import com.redhat.ecs.commonutils.ExceptionUtilities;
-import com.redhat.topicindex.rest.collections.RESTCategoryCollectionV1;
-import com.redhat.topicindex.rest.collections.RESTPropertyTagCollectionV1;
-import com.redhat.topicindex.rest.collections.RESTTagCollectionV1;
-import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
-import com.redhat.topicindex.rest.collections.RESTTopicSourceUrlCollectionV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTCategoryV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTPropertyTagV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTagV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTopicSourceUrlV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
-import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
+
 
 public class RESTWriter
 {

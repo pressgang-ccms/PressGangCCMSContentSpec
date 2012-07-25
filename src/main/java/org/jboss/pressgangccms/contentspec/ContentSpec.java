@@ -9,12 +9,12 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.contentspec.entities.BugzillaOptions;
-import com.redhat.contentspec.entities.InjectionOptions;
-import com.redhat.contentspec.enums.LevelType;
-import com.redhat.ecs.commonutils.DocBookUtilities;
-import com.redhat.ecs.commonutils.HashUtilities;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.contentspec.entities.BugzillaOptions;
+import org.jboss.pressgangccms.contentspec.entities.InjectionOptions;
+import org.jboss.pressgangccms.contentspec.enums.LevelType;
+import org.jboss.pressgangccms.utils.common.DocBookUtilities;
+import org.jboss.pressgangccms.utils.common.HashUtilities;
 
 public class ContentSpec extends Node
 {

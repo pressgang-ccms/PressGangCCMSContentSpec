@@ -6,22 +6,21 @@ import javax.ws.rs.core.PathSegment;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
+import org.jboss.pressgangccms.contentspec.SpecTopic;
+import org.jboss.pressgangccms.contentspec.constants.CSConstants;
+import org.jboss.pressgangccms.rest.v1.collections.RESTTopicCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
+import org.jboss.pressgangccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgangccms.rest.v1.exceptions.InternalProcessingException;
+import org.jboss.pressgangccms.rest.v1.exceptions.InvalidParameterException;
+import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataDetails;
+import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataTrunk;
+import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
+import org.jboss.pressgangccms.utils.common.CollectionUtilities;
+import org.jboss.pressgangccms.utils.common.ExceptionUtilities;
 import org.jboss.resteasy.specimpl.PathSegmentImpl;
-
-import com.redhat.contentspec.SpecTopic;
-import com.redhat.contentspec.constants.CSConstants;
-import com.redhat.ecs.commonutils.CollectionUtilities;
-import com.redhat.ecs.commonutils.ExceptionUtilities;
-import com.redhat.topicindex.rest.collections.BaseRestCollectionV1;
-import com.redhat.topicindex.rest.collections.RESTTopicCollectionV1;
-import com.redhat.topicindex.rest.entities.ComponentBaseRESTEntityWithPropertiesV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTBaseTopicV1;
-import com.redhat.topicindex.rest.entities.interfaces.RESTTopicV1;
-import com.redhat.topicindex.rest.exceptions.InternalProcessingException;
-import com.redhat.topicindex.rest.exceptions.InvalidParameterException;
-import com.redhat.topicindex.rest.expand.ExpandDataDetails;
-import com.redhat.topicindex.rest.expand.ExpandDataTrunk;
-import com.redhat.topicindex.rest.sharedinterface.RESTInterfaceV1;
 
 /**
  * A fairly simple container class to hold a set of topics that need to be updated or created

@@ -5,8 +5,10 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 
-import com.redhat.contentspec.enums.LevelType;
-import com.redhat.ecs.commonutils.DocBookUtilities;
+import org.jboss.pressgangccms.contentspec.enums.LevelType;
+import org.jboss.pressgangccms.utils.common.DocBookUtilities;
+
+
 
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A Level can have children Levels and

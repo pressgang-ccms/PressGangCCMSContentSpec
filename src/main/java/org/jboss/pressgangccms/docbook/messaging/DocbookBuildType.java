@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.compiling;
+package org.jboss.pressgangccms.docbook.messaging;
 
 /**
  * This class defines the entity types that can be rendered by the Docbook Renderer service

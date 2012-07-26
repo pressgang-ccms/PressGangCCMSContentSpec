@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.compiling;
+package org.jboss.pressgangccms.docbook.messaging;
 
 /**
  * This class defines the message that is sent to the Docbook Renderer Service

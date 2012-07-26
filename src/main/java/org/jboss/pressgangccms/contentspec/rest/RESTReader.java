@@ -23,7 +23,6 @@ import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentTagV1;
-import org.jboss.pressgangccms.rest.v1.components.ComponentTranslatedTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTImageV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
@@ -192,7 +191,7 @@ public class RESTReader
 				/* We need to expand the Tags & Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
+				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -505,11 +504,11 @@ public class RESTReader
 				}
 				else if (entityCache.containsKeyValue(RESTTranslatedTopicV1.class, (id * -1)))
 				{
-					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, (id * -1)));
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, (id * -1) + "-" + locale));
 				}
 				else
 				{
-					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id));
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id + "-" + locale));
 				}
 			}
 
@@ -561,7 +560,7 @@ public class RESTReader
 				{
 					for (final RESTTranslatedTopicV1 item : downloadedTopics.getItems())
 					{
-						entityCache.add(item, item.getTopicId(), false);
+						entityCache.add(item);
 						topics.addItem(item);
 					}
 				}
@@ -591,15 +590,15 @@ public class RESTReader
 			final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;zanataIds=");
 			final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
-			for (Integer id : ids)
+			for (final Integer id : ids)
 			{
-				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id))
+				if (!entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id + "-" + locale))
 				{
 					urlVars.append(id + encodedComma);
 				}
 				else
 				{
-					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id));
+					topics.addItem(entityCache.get(RESTTranslatedTopicV1.class, id + "-" + locale));
 				}
 			}
 
@@ -651,7 +650,7 @@ public class RESTReader
 				{
 					for (final RESTTranslatedTopicV1 item : downloadedTopics.getItems())
 					{
-						entityCache.add(item, ComponentTranslatedTopicV1.returnZanataId(item), false);
+						entityCache.add(item);
 						topics.addItem(item);
 					}
 				}
@@ -666,8 +665,8 @@ public class RESTReader
 		return null;
 	}
 
-	/*
-	 * Gets a translated topic based on a topic id and locale
+	/**
+	 * Gets a translated topic based on a topic id, revision and locale.
 	 */
 	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale)
 	{
@@ -676,12 +675,129 @@ public class RESTReader
 		if (topic == null)
 			return null;
 		
-		for (final RESTTranslatedTopicV1 translatedTopic : topic.getTranslatedTopics_OTM().getItems())
+		if (topic.getTranslatedTopics_OTM() != null && topic.getTranslatedTopics_OTM().getItems() != null)
 		{
-			if (translatedTopic.getLocale().equals(locale))
-				return translatedTopic;
+			for (final RESTTranslatedTopicV1 translatedTopic : topic.getTranslatedTopics_OTM().getItems())
+			{
+				if (rev != null && translatedTopic.getTopicRevision().equals(rev) && translatedTopic.getLocale().equals(locale))
+				{
+					return translatedTopic;
+				}
+				else if (rev == null)
+				{
+					return translatedTopic;
+				}
+			}
 		}
 
+		return null;
+	}
+
+	/**
+	 * Gets a translated topic based on a topic id, revision and locale. The translated topic
+	 * that is returned will be less then or equal to the revision that is passed. If the revision
+	 * is null then the latest translated topic will be passed.
+	 * 
+	 * @param id The TopicID to find the translation for.
+	 * @param rev The Topic Revision to find the translation for.
+	 * @param locale The locale of the translation to find.
+	 * @param expand If the content of the translated topic should be expanded.
+	 * @return The closest matching translated topic otherwise null if none exist.
+	 */
+	public RESTTranslatedTopicV1 getClosestTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale, final boolean expand)
+	{
+		if (locale == null)
+		{
+			return null;
+		}
+		
+		final RESTTopicV1 topic = getTopicById(id, rev, true);
+		if (topic == null)
+		{
+			return null;
+		}
+		
+		RESTTranslatedTopicV1 closestTranslation = null;
+		if (topic.getTranslatedTopics_OTM() != null && topic.getTranslatedTopics_OTM().getItems() != null)
+		{
+			for (final RESTTranslatedTopicV1 translatedTopic : topic.getTranslatedTopics_OTM().getItems())
+			{
+				if (translatedTopic.getLocale().equals(locale)
+						/* Ensure that the translation is the newest translation possible */
+						&& (closestTranslation == null || closestTranslation.getTopicRevision() < translatedTopic.getTopicRevision())
+						/* Ensure that the translation revision is less than or equal to the revision specified */
+						&& (rev == null || translatedTopic.getTopicRevision() <= rev))
+				{
+					
+					closestTranslation = translatedTopic;
+				}
+			}
+		}
+
+		if (!expand)
+		{
+			return closestTranslation;
+		}
+		else if (closestTranslation != null)
+		{
+			return getTranslatedTopicById(closestTranslation.getId());
+		}
+		else
+		{
+			return null;
+		}
+	}
+
+	/**
+	 * Get a Translated Topic by it's id.
+	 * 
+	 * @param id
+	 * @return
+	 */
+	public RESTTranslatedTopicV1 getTranslatedTopicById(final Integer id)
+	{
+		try
+		{
+			if (entityCache.containsKeyValue(RESTTranslatedTopicV1.class, id))
+			{
+				return entityCache.get(RESTTranslatedTopicV1.class, id);
+			}
+			else
+			{
+				/*
+				 * We need to expand the all the items in the translatedtopic
+				 * collection
+				 */
+				final ExpandDataTrunk expand = new ExpandDataTrunk();
+		
+				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
+				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
+		
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+
+				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
+
+				expand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+		
+				final String expandString = mapper.writeValueAsString(expand);
+				
+				final RESTTranslatedTopicV1 translatedTopic = client.getJSONTranslatedTopic(id, expandString);
+				entityCache.add(translatedTopic);
+				
+				return translatedTopic;
+			}
+		}
+		catch (Exception e)
+		{
+			log.error(ExceptionUtilities.getStackTrace(e));
+		}
 		return null;
 	}
 
@@ -808,8 +924,14 @@ public class RESTReader
 				{
 					for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
 					{
-						if (topic.getLocale().equals(locale))
+						if (rev != null && topic.getTopicRevision().equals(rev) && topic.getLocale().equals(locale))
+						{
 							return topic;
+						}
+						else if (rev == null && topic.getLocale().equals(locale))
+						{
+							return topic;
+						}
 					}
 				}
 			}

@@ -1,10 +1,11 @@
 package org.jboss.pressgangccms.docbook.structures;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
 import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorType;
@@ -17,7 +18,7 @@ import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
 public class TopicErrorData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
 {	
 	private T topic;
-	private Map<ErrorLevel, ArrayList<String>> errors = new HashMap<ErrorLevel, ArrayList<String>>();
+	private Map<ErrorLevel, Set<String>> errors = new HashMap<ErrorLevel, Set<String>>();
 	private List<ErrorType> errorTypes = new ArrayList<ErrorType>();
 
 	public T getTopic()
@@ -30,12 +31,12 @@ public class TopicErrorData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestC
 		this.topic = topic;
 	}
 
-	public Map<ErrorLevel, ArrayList<String>> getErrors()
+	public Map<ErrorLevel, Set<String>> getErrors()
 	{
 		return errors;
 	}
 
-	public void setErrors(final Map<ErrorLevel, ArrayList<String>> errors)
+	public void setErrors(final Map<ErrorLevel, Set<String>> errors)
 	{
 		this.errors = errors;
 	}
@@ -43,7 +44,7 @@ public class TopicErrorData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestC
 	public void addError(final String item, final ErrorLevel level, final ErrorType errorType)
 	{
 		if (!errors.containsKey(level))
-			errors.put(level, new ArrayList<String>());
+			errors.put(level, new HashSet<String>());
 		errors.get(level).add(item);
 		
 		if (errorType != null)
@@ -58,11 +59,11 @@ public class TopicErrorData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestC
 		return errors.containsKey(level);
 	}
 	
-	public List<String> getItemsOfType(final ErrorLevel level)
+	public Set<String> getItemsOfType(final ErrorLevel level)
 	{
 		if (hasItemsOfType(level))
 			return errors.get(level);
-		return Collections.emptyList();
+		return new HashSet<String>();
 	}
 	
 	public boolean hasErrorType(final ErrorType errorType)

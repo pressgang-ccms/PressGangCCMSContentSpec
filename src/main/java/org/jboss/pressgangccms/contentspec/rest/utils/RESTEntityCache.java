@@ -23,20 +23,17 @@ public class RESTEntityCache
 		{
 			for (final T item : value.getItems())
 			{
-				if (item.getClass() == RESTTranslatedTopicV1.class)
-				{
-					add(item, ((RESTTranslatedTopicV1) item).getTopicId(), isRevisions);
-					add(item, ComponentTranslatedTopicV1.returnZanataId(((RESTTranslatedTopicV1) item)), isRevisions);
-				}
-				else
-				{
-					add(item, isRevisions);
-				}
+				add(item, isRevisions);
 			}
 		}
 	}
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Number id, final Number revision)
+	{
+		return containsKeyValue(clazz, id.toString(), revision);
+	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Integer id, final Number revision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final String id, final Number revision)
 	{
 		if (singleEntities.containsKey(clazz))
 			return revision == null ? singleEntities.get(clazz).containsKey(clazz.getSimpleName() + "-" + id) : singleEntities.get(clazz).containsKey(clazz.getSimpleName() + "-" + id + "-" + revision);
@@ -44,7 +41,12 @@ public class RESTEntityCache
 			return false;
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Integer id)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final Number id)
+	{
+		return containsKeyValue(clazz, id.toString(), null);
+	}
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> boolean containsKeyValue(final Class<T> clazz, final String id)
 	{
 		return containsKeyValue(clazz, id, null);
 	}
@@ -80,6 +82,12 @@ public class RESTEntityCache
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final boolean isRevision)
 	{
 		add(value, value.getId(), isRevision);
+		if (value instanceof RESTTranslatedTopicV1)
+		{
+			final RESTTranslatedTopicV1 translatedTopic = (RESTTranslatedTopicV1) value;
+			add(value, (translatedTopic.getTopicId() + "-" + translatedTopic.getLocale()), isRevision);
+			add(value, (ComponentTranslatedTopicV1.returnZanataId(translatedTopic) + "-" + translatedTopic.getLocale()), isRevision);
+		}
 	}
 
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> BaseRestCollectionV1<T, U> get(final Class<T> clazz, final Class<U> collectionClass)
@@ -102,12 +110,22 @@ public class RESTEntityCache
 		}
 	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Integer id)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Number id)
+	{
+		return get(clazz, id.toString(), null);
+	}
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final String id)
 	{
 		return get(clazz, id, null);
 	}
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Number id, final Number revision)
+	{
+		return get(clazz, id.toString(), revision);
+	}
 
-	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final Integer id, final Number revision)
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> T get(final Class<T> clazz, final String id, final Number revision)
 	{
 		if (!containsKeyValue(clazz, id, revision))
 			return null;

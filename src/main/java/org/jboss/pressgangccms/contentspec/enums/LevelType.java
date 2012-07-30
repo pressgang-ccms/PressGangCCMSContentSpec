@@ -11,8 +11,8 @@ import org.jboss.pressgangccms.contentspec.constants.CSConstants;
  */
 public enum LevelType
 {
-	BASE(CSConstants.LEVEL_BASE), CHAPTER(CSConstants.LEVEL_CHAPTER), APPENDIX(CSConstants.LEVEL_APPENDIX), PROCESS(CSConstants.LEVEL_PROCESS), SECTION(CSConstants.LEVEL_SECTION),
-	PART(CSConstants.LEVEL_PART);
+	BASE(CSConstants.LEVEL_BASE), CHAPTER(CSConstants.LEVEL_CHAPTER), APPENDIX(CSConstants.LEVEL_APPENDIX),
+	PROCESS(CSConstants.LEVEL_PROCESS), SECTION(CSConstants.LEVEL_SECTION), PART(CSConstants.LEVEL_PART);
 	
 	private final int type;
 	

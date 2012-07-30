@@ -52,6 +52,9 @@ public class CSConstants {
 	public static final String PROCESS = "Process";
 	public static final String PART = "Part";
 	
+	public static final String BOOK_TYPE_BOOK = "Book";
+	public static final String BOOK_TYPE_ARTICLE = "Article";
+	
 	/** The Concept tag ID */
 	public static final Integer CONCEPT_TAG_ID = 5;
 	/** The Concept tag name */

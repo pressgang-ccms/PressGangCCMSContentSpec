@@ -12,6 +12,7 @@ import java.util.List;
 import org.jboss.pressgangccms.contentspec.constants.CSConstants;
 import org.jboss.pressgangccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgangccms.contentspec.entities.InjectionOptions;
+import org.jboss.pressgangccms.contentspec.enums.BookType;
 import org.jboss.pressgangccms.contentspec.enums.LevelType;
 import org.jboss.pressgangccms.utils.common.DocBookUtilities;
 import org.jboss.pressgangccms.utils.common.HashUtilities;
@@ -45,6 +46,7 @@ public class ContentSpec extends Node
 	private KeyValueNode<String> outputStyle = null;
 	private KeyValueNode<Boolean> allowDuplicateTopics = null; 
 	private KeyValueNode<Boolean> allowEmptyLevels = null; 
+	private KeyValueNode<BookType> bookType = null;
 	
 	private final LinkedList<Node> nodes = new LinkedList<Node>();
 	private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);
@@ -592,6 +594,38 @@ public class ContentSpec extends Node
 		else
 		{
 			this.copyrightHolder.setValue(copyrightHolder);
+		}
+	}
+	
+	/**
+	 * Get the Type of Book the Content Specification should be created for.
+	 * The current values that are supported are "Book" and "Article".
+	 * 
+	 * @return The type of book the Content Specification should be transformed
+	 * into or BOOK if the type isn't set.
+	 */
+	public BookType getBookType()
+	{
+		return bookType == null ? BookType.BOOK : bookType.getValue();
+	}
+
+	/**
+	 * Set the Type of Book the Content Specification should be created for.
+	 * The current values that are supported are "Book" and "Article".
+	 * 
+	 * @param bookType
+	 *            The type the book should be built as.
+	 */
+	public void setBookType(final BookType bookType)
+	{
+		if (this.bookType == null)
+		{
+			this.bookType = new KeyValueNode<BookType>("Type", bookType);
+			appendChild(this.bookType);
+		}
+		else
+		{
+			this.bookType.setValue(bookType);
 		}
 	}
 

@@ -95,6 +95,10 @@ public class DocbookBuilderConstants
 	public static final Integer CSP_INVALID_VALIDATION_TOPIC_ERROR_XML_ID = 33;
 	/** The StringConstantsID that represents the preface.xml file */
 	public static final Integer CSP_PREFACE_XML_ID = 34;
+	/** The StringConstantsID that represents the Article_Info.xml file */
+	public static final Integer ARTICLE_INFO_XML_ID = 35;
+	/** The StringConstantsID that represents the Article.xml file */
+	public static final Integer ARTICLE_XML_ID = 36;
 
 	public static final Integer TREEVIEW_SPRITE_GIF_ID = 1;
 	public static final Integer TREEVIEW_LOADING_GIF_ID = 2;

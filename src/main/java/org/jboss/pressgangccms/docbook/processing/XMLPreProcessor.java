@@ -54,6 +54,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
+
 /**
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
@@ -524,9 +527,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final String commentContent = comment.getNodeValue();
 
 			/* compile the regular expression */
-			final Pattern injectionSequencePattern = Pattern.compile(regularExpression);
+			final NamedPattern injectionSequencePattern = NamedPattern.compile(regularExpression);
 			/* find any matches */
-			final Matcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
+			final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
 
 			/* loop over the regular expression matches */
 			while (injectionSequencematcher.find())
@@ -805,9 +808,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final String commentContent = comment.getNodeValue();
 
 			/* compile the regular expression */
-			final Pattern injectionSequencePattern = Pattern.compile(INJECT_CONTENT_FRAGMENT_RE);
+			final NamedPattern injectionSequencePattern = NamedPattern.compile(INJECT_CONTENT_FRAGMENT_RE);
 			/* find any matches */
-			final Matcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
+			final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
 
 			/* loop over the regular expression matches */
 			while (injectionSequencematcher.find())
@@ -952,9 +955,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			final String commentContent = comment.getNodeValue();
 
 			/* compile the regular expression */
-			final Pattern injectionSequencePattern = Pattern.compile(INJECT_TITLE_FRAGMENT_RE);
+			final NamedPattern injectionSequencePattern = NamedPattern.compile(INJECT_TITLE_FRAGMENT_RE);
 			/* find any matches */
-			final Matcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
+			final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
 
 			/* loop over the regular expression matches */
 			while (injectionSequencematcher.find())

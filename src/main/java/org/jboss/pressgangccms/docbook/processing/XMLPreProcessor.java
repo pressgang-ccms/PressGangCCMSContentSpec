@@ -1080,7 +1080,8 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			
 			// Insert the node after the title node
 			Node nextNode = titleEle.getNextSibling();
-			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null) {
+			while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE)
+			{
 				nextNode = nextNode.getNextSibling();
 			}
 			doc.getDocumentElement().insertBefore(rootEle, nextNode);
@@ -1206,14 +1207,14 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U>, U extends BaseRest
 			{
 				formalParaEle.appendChild(ele);
 			}
-			
+
 			// Add the paragraph and list after the title node
 			Node nextNode = titleEle.getNextSibling();
-			while (nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE && nextNode != null)
+			while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE)
 			{
 				nextNode = nextNode.getNextSibling();
 			}
-			
+
 			doc.getDocumentElement().insertBefore(formalParaEle, nextNode);
 		}
 	}

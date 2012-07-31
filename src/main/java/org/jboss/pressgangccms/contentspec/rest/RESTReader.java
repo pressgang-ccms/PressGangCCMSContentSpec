@@ -23,8 +23,10 @@ import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentTagV1;
+import org.jboss.pressgangccms.rest.v1.components.ComponentTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTImageV1;
+import org.jboss.pressgangccms.rest.v1.entities.RESTPropertyTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicSourceUrlV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
@@ -445,9 +447,10 @@ public class RESTReader
 			{
 				for (final RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
-					Object[] revision = new Object[2];
+					Object[] revision = new Object[3];
 					revision[0] = topicRev.getRevision();
 					revision[1] = topicRev.getLastModified();
+					revision[2] = "";
 					results.add(revision);
 				}
 			}
@@ -983,9 +986,18 @@ public class RESTReader
 			{
 				for (RESTTopicV1 topicRev : topicRevisions.getItems())
 				{
-					Object[] revision = new Object[2];
+					Object[] revision = new Object[3];
 					revision[0] = topicRev.getRevision();
 					revision[1] = topicRev.getLastModified();
+					final RESTPropertyTagV1 type = ComponentTopicV1.returnProperty(topicRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID);
+					if (type != null)
+					{
+						revision[2] = type.getValue();
+					}
+					else
+					{
+						revision[2] = "";
+					}
 					results.add(revision);
 				}
 			}

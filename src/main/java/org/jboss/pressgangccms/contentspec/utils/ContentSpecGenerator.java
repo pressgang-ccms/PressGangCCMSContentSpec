@@ -256,7 +256,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 						{
 							for (final RESTCategoryV1 parentTagCategory : parentTag.getCategories().getItems())
 							{
-								if (parentTagCategory.getId() == DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID || parentTagCategory.getId() == DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID)
+								if (parentTagCategory.getId().equals(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID) || parentTagCategory.getId().equals(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID))
 								{
 									isEmcompassed = true;
 									break;

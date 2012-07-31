@@ -52,7 +52,8 @@ public class ErrorLoggerManager
 	/**
 	 *  ErrorLoggerManager constructor
 	 */
-	public ErrorLoggerManager() {
+	public ErrorLoggerManager()
+	{
 	}
 	
 	/**

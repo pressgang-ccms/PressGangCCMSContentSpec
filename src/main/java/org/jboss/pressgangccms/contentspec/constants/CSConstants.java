@@ -104,4 +104,11 @@ public class CSConstants {
 	/** The initial name for a snapshot revision */
 	public static final String INITIAL_SNAPSHOT_REVISION_NAME = "Initial Untranslated Revision";
 
+	// Override keys
+	public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";
+
+	public static final String REVISION_HISTORY_OVERRIDE = "Revision_History.xml";
+
+	public static final String PUBSNUMBER_OVERRIDE = "pubsnumber";
+
 }

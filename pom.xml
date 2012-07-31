@@ -51,6 +51,14 @@
       <scope>provided</scope>
     </dependency>
     
+    <!-- Named-Regexp Library -->
+	<dependency>
+		<groupId>com.google.code.regexp</groupId>
+		<artifactId>named-regexp</artifactId>
+		<version>0.0.2-SNAPSHOT</version>
+		<scope>provided</scope>
+	</dependency>
+    
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>

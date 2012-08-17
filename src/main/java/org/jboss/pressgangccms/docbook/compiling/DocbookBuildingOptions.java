@@ -115,7 +115,7 @@ public class DocbookBuildingOptions
 	private Boolean ignoreMissingCustomInjections = true;
 	private Boolean suppressErrorsPage = false;
 	private Boolean taskAndOverviewOnly = true;
-	private Boolean insertSurveyLink = true;
+	private Boolean insertSurveyLink = false;
 	private String emailTo = null;
 	private Boolean insertEditorLinks = false;
 

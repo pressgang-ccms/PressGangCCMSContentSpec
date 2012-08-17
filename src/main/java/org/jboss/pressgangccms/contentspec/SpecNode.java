@@ -16,6 +16,7 @@ public abstract class SpecNode extends Node
 	protected List<String> tags = new ArrayList<String>();
 	protected List<String> removeTags = new ArrayList<String>();
 	protected List<String> sourceUrls = new ArrayList<String>();
+	protected String condition = null;
 	protected String description = null;
 	protected String assignedWriter = null;
 	
@@ -382,6 +383,49 @@ public abstract class SpecNode extends Node
 	public void removeSourceUrl(final String url)
 	{
 		sourceUrls.remove(url);
+	}
+	
+	/**
+	 * Adds a source URL to the list of URL's for this set of node
+	 * 
+	 * @param url The URL to be added
+	 */
+	public void setConditionStatement(final String condition)
+	{
+		this.condition = condition;
+	}
+	
+	/**
+	 * Gets the conditional statement to be used when building
+	 * 
+	 * @return The conditional statement for this node and it's sub nodes.
+	 */
+	public String getConditionStatement()
+	{
+		return getConditionStatement(false);
+	}
+	
+	/**
+	 * Gets the conditional statement to be used when building
+	 * 
+	 * @param useInherited If the conditional statement should be pulled 
+	 * from its parent nodes.
+	 * @return The conditional statement for this node and it's sub nodes.
+	 */
+	public String getConditionStatement(final boolean useInherited)
+	{
+		if (condition != null)
+		{
+			return condition;
+		}
+		else if (useInherited && getParent() != null)
+		{
+			return getParent().getConditionStatement(useInherited);
+		}
+		else
+		{
+			return null;
+		}
 	}
 	
 	/**

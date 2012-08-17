@@ -130,6 +130,11 @@ public class ContentSpec extends Node
 	 */
 	public void setProduct(final String product)
 	{
+		if (product == null)
+		{
+			return;
+		}
+		
 		if (this.product == null)
 		{
 			this.product = new KeyValueNode<String>("Product", product);
@@ -159,6 +164,11 @@ public class ContentSpec extends Node
 	 */
 	public void setVersion(final String version)
 	{
+		if (version == null)
+		{
+			return;
+		}
+		
 		if (this.version == null)
 		{
 			this.version = new KeyValueNode<String>("Version", version);
@@ -188,6 +198,11 @@ public class ContentSpec extends Node
 	 */
 	public void setBrand(final String brand)
 	{
+		if (brand == null)
+		{
+			return;
+		}
+		
 		if (this.brand == null)
 		{
 			this.brand = new KeyValueNode<String>("Brand", brand);
@@ -262,6 +277,11 @@ public class ContentSpec extends Node
 	 */
 	public void setTitle(final String title)
 	{
+		if (title == null)
+		{
+			return;
+		}
+		
 		if (this.title == null)
 		{
 			this.title = new KeyValueNode<String>("Title", title);
@@ -290,6 +310,11 @@ public class ContentSpec extends Node
 	 */
 	public void setSubtitle(final String subtitle)
 	{
+		if (subtitle == null)
+		{
+			return;
+		}
+		
 		if (this.subtitle == null)
 		{
 			this.subtitle = new KeyValueNode<String>("Subtitle", subtitle);
@@ -319,6 +344,11 @@ public class ContentSpec extends Node
 	 */
 	public void setEdition(final String edition)
 	{
+		if (edition == null)
+		{
+			return;
+		}
+		
 		if (this.edition == null)
 		{
 			this.edition = new KeyValueNode<String>("Edition", edition);
@@ -348,6 +378,11 @@ public class ContentSpec extends Node
 	 */
 	public void setPubsNumber(final Integer pubsNumber)
 	{
+		if (pubsNumber == null)
+		{
+			return;
+		}
+		
 		if (this.pubsNumber == null)
 		{
 			this.pubsNumber = new KeyValueNode<Integer>("Pubsnumber", pubsNumber);
@@ -377,6 +412,11 @@ public class ContentSpec extends Node
 	 */
 	public void setPublicanCfg(final String publicanCfg)
 	{
+		if (publicanCfg == null)
+		{
+			return;
+		}
+		
 		if (this.publicanCfg == null)
 		{
 			this.publicanCfg = new KeyValueNode<String>("publican.cfg", publicanCfg);
@@ -442,6 +482,11 @@ public class ContentSpec extends Node
 	 */
 	public void setDtd (final String dtd)
 	{
+		if (dtd == null)
+		{
+			return;
+		}
+		
 		if (this.dtd == null)
 		{
 			this.dtd = new KeyValueNode<String>("DTD", dtd);
@@ -528,6 +573,11 @@ public class ContentSpec extends Node
 	 */
 	public void setChecksum(final String checksum)
 	{
+		if (checksum == null)
+		{
+			return;
+		}
+		
 		if (this.checksum == null)
 		{
 			this.checksum = new KeyValueNode<String>("CHECKSUM", checksum);
@@ -557,6 +607,11 @@ public class ContentSpec extends Node
 	 */
 	public void setAbstract(final String description)
 	{
+		if (description == null)
+		{
+			return;
+		}
+	
 		if (this.description == null)
 		{
 			this.description = new KeyValueNode<String>("Abstract", description);
@@ -586,6 +641,11 @@ public class ContentSpec extends Node
 	 */
 	public void setCopyrightHolder(final String copyrightHolder)
 	{
+		if (copyrightHolder == null)
+		{
+			return;
+		}
+		
 		if (this.copyrightHolder == null)
 		{
 			this.copyrightHolder = new KeyValueNode<String>("Copyright Holder", copyrightHolder);
@@ -697,6 +757,11 @@ public class ContentSpec extends Node
 	 */
 	public void setLocale(final String locale)
 	{
+		if (locale == null)
+		{
+			return;
+		}
+		
 		if (this.locale == null)
 		{
 			this.locale = new KeyValueNode<String>("Translation Locale", locale);
@@ -726,6 +791,11 @@ public class ContentSpec extends Node
 	 */
 	public void setOutputStyle(final String outputStyle)
 	{
+		if (outputStyle == null)
+		{
+			return;
+		}
+		
 		if (this.outputStyle == null)
 		{
 			this.outputStyle = new KeyValueNode<String>("Output Style", outputStyle);
@@ -1064,6 +1134,11 @@ public class ContentSpec extends Node
 
 	public void setBugzillaProduct(final String bugzillaProduct)
 	{
+		if (bugzillaProduct == null)
+		{
+			return;
+		}
+		
 		if (this.bugzillaProduct == null)
 		{
 			this.bugzillaProduct = new KeyValueNode<String>("BZProduct", bugzillaProduct);
@@ -1082,6 +1157,11 @@ public class ContentSpec extends Node
 
 	public void setBugzillaComponent(final String bugzillaComponent)
 	{
+		if (bugzillaComponent  == null)
+		{
+			return;
+		}
+		
 		if (this.bugzillaComponent == null)
 		{
 			this.bugzillaComponent = new KeyValueNode<String>("BZComponent", bugzillaComponent);
@@ -1110,6 +1190,11 @@ public class ContentSpec extends Node
 	 */
 	public void setBugzillaVersion(final String bugzillaVersion)
 	{
+		if (bugzillaVersion == null)
+		{
+			return;
+		}
+
 		if (this.bugzillaVersion == null)
 		{
 			this.bugzillaVersion = new KeyValueNode<String>("BZVersion", bugzillaVersion);
@@ -1141,6 +1226,11 @@ public class ContentSpec extends Node
 	 */
 	public void setBugzillaURL(final String bugzillaURL)
 	{
+		if (bugzillaURL == null)
+		{
+			return;
+		}
+		
 		if (this.bugzillaURL == null)
 		{
 			this.bugzillaURL = new KeyValueNode<String>("BZURL", bugzillaURL);

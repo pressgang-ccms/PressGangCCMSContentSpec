@@ -67,11 +67,15 @@ public class KeyValueNode<T> extends Node
 	{
 		if (key.equals("publican.cfg"))
 		{
-			return key + " " + separator + " [" + value.toString() + "]";
+			return key + " " + separator + " [" + (value == null ? "" : value.toString()) + "]";
+		}
+		else if (value instanceof Boolean)
+		{
+			return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));
 		}
 		else
 		{
-			return key + " " + separator + " " + value.toString();
+			return key + " " + separator + " " + (value == null ? "" : value.toString());
 		}
 	}
 	

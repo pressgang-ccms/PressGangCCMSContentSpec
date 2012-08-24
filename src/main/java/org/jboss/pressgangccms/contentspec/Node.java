@@ -6,101 +6,89 @@ package org.jboss.pressgangccms.contentspec;
  * @author lnewson
  * 
  */
-public abstract class Node
-{
-	protected final int lineNumber;
-	protected String text;
-	protected Node parent;
+public abstract class Node {
+    protected final int lineNumber;
+    protected String text;
+    protected Node parent;
 
-	public Node(final int lineNumber, final String text)
-	{
-		this.lineNumber = lineNumber;
-		this.text = text;
-	}
+    public Node(final int lineNumber, final String text) {
+        this.lineNumber = lineNumber;
+        this.text = text;
+    }
 
-	public Node(final String text)
-	{
-		this.lineNumber = -1;
-		this.text = text;
-	}
+    public Node(final String text) {
+        this.lineNumber = -1;
+        this.text = text;
+    }
 
-	public Node()
-	{
-		this.lineNumber = -1;
-		this.text = null;
-	}
+    public Node() {
+        this.lineNumber = -1;
+        this.text = null;
+    }
 
-	/**
-	 * Gets the line number that the node is on in a Content Specification.
-	 * 
-	 * @return The Line Number for the node.
-	 */
-	public int getLineNumber()
-	{
-		return lineNumber;
-	}
+    /**
+     * Gets the line number that the node is on in a Content Specification.
+     * 
+     * @return The Line Number for the node.
+     */
+    public int getLineNumber() {
+        return lineNumber;
+    }
 
-	/**
-	 * Gets the text for the node's line.
-	 * 
-	 * @return The line of text for the node.
-	 */
-	public String getText()
-	{
-		return text;
-	}
+    /**
+     * Gets the text for the node's line.
+     * 
+     * @return The line of text for the node.
+     */
+    public String getText() {
+        return text;
+    }
 
-	/**
-	 * Sets the text for the node.
-	 * 
-	 * @param text
-	 *            The nodes text.
-	 */
-	protected void setText(final String text)
-	{
-		this.text = text;
-	}
+    /**
+     * Sets the text for the node.
+     * 
+     * @param text The nodes text.
+     */
+    protected void setText(final String text) {
+        this.text = text;
+    }
 
-	/**
-	 * Gets the step of the node in the Content Specification.
-	 * 
-	 * @return The Step of the node.
-	 */
-	public abstract Integer getStep();
+    /**
+     * Gets the step of the node in the Content Specification.
+     * 
+     * @return The Step of the node.
+     */
+    public abstract Integer getStep();
 
-	/**
-	 * Get the parent of the node.
-	 * 
-	 * @return The nodes parent.
-	 */
-	public Node getParent()
-	{
-		return parent;
-	}
+    /**
+     * Get the parent of the node.
+     * 
+     * @return The nodes parent.
+     */
+    public Node getParent() {
+        return parent;
+    }
 
-	/**
-	 * Sets the nodes parent.
-	 * 
-	 * @param parent
-	 *            The parent node.
-	 */
-	protected void setParent(final Node parent)
-	{
-		this.parent = parent;
-	}
+    /**
+     * Sets the nodes parent.
+     * 
+     * @param parent The parent node.
+     */
+    protected void setParent(final Node parent) {
+        this.parent = parent;
+    }
 
-	/**
-	 * Gets the column the node starts at.
-	 * 
-	 * @return The column the node starts at.
-	 */
-	public Integer getColumn()
-	{
-		return parent == null ? 0 : (parent.getColumn() + 1);
-	}
-	
-	/**
-	 * Removes the node from its parent.
-	 */
-	protected abstract void removeParent();
+    /**
+     * Gets the column the node starts at.
+     * 
+     * @return The column the node starts at.
+     */
+    public Integer getColumn() {
+        return parent == null ? 0 : (parent.getColumn() + 1);
+    }
+
+    /**
+     * Removes the node from its parent.
+     */
+    protected abstract void removeParent();
 }

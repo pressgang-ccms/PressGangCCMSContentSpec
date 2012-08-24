@@ -1,41 +1,32 @@
 package org.jboss.pressgangccms.contentspec;
 
-public class TextNode extends Node
-{
-	public TextNode(final int lineNumber, final String text)
-	{
-		super(lineNumber, text);
-	}
-	
-	public TextNode(final String text)
-	{
-		super(text);
-	}
-	
-	@Override
-	public Integer getStep()
-	{
-		// TODO Auto-generated method stub
-		return null;
-	}
+public class TextNode extends Node {
+    public TextNode(final int lineNumber, final String text) {
+        super(lineNumber, text);
+    }
 
-	@Override
-	protected void removeParent()
-	{
-		if (parent instanceof ContentSpec)
-		{
-			((ContentSpec) parent).removeChild(this);
-		}
-		else if (parent instanceof Level)
-		{
-			((Level) parent).removeChild(this);
-		}
-		this.parent = null;
-	}
+    public TextNode(final String text) {
+        super(text);
+    }
 
-	@Override
-	public String toString()
-	{
-		return getText();
-	}
+    @Override
+    public Integer getStep() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    @Override
+    protected void removeParent() {
+        if (parent instanceof ContentSpec) {
+            ((ContentSpec) parent).removeChild(this);
+        } else if (parent instanceof Level) {
+            ((Level) parent).removeChild(this);
+        }
+        this.parent = null;
+    }
+
+    @Override
+    public String toString() {
+        return getText();
+    }
 }

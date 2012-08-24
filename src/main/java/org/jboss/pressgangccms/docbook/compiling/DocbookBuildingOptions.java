@@ -325,7 +325,7 @@ public class DocbookBuildingOptions
 			return this.getTaskAndOverviewOnly() == null ? null : this.getTaskAndOverviewOnly().toString();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG))
-			return this.getCvsPkgOption() == null ? null : this.getCvsPkgOption();
+			return this.getCvsPkgOption();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO))
 			return this.getEmailTo();
@@ -355,7 +355,7 @@ public class DocbookBuildingOptions
 			return this.getBookEdition();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER))
-			return this.getBookPubsnumber() == null ? "" : this.getBookPubsnumber().toString();
+			return this.getBookPubsnumber();
 
 		if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE))
 			return this.getBookSubtitle();

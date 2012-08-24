@@ -58,10 +58,20 @@ public class RESTEntityCache
 
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final Number id, final boolean isRevision)
 	{
-		add(value, id.toString(), isRevision);
+		add(value, id.toString(), (isRevision ? value.getRevision() : null));
 	}
-
+	
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final String id, final boolean isRevision)
+    {
+        add(value, id, (isRevision ? value.getRevision() : null));
+    }
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final Number id, final Number revision)
+    {
+        add(value, id.toString(), revision);
+    }
+
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final String id, final Number revision)
 	{
 		// Add the map if one doesn't exist for the current class
 		if (!singleEntities.containsKey(value.getClass()))
@@ -70,8 +80,8 @@ public class RESTEntityCache
 		}
 
 		// Add the entity
-		if (isRevision)
-			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id + "-" + value.getRevision(), value);
+		if (revision != null)
+			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id + "-" + revision, value);
 		else
 			singleEntities.get(value.getClass()).put(value.getClass().getSimpleName() + "-" + id, value);
 
@@ -81,14 +91,19 @@ public class RESTEntityCache
 
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final boolean isRevision)
 	{
-		add(value, value.getId(), isRevision);
-		if (value instanceof RESTTranslatedTopicV1)
-		{
-			final RESTTranslatedTopicV1 translatedTopic = (RESTTranslatedTopicV1) value;
-			add(value, (translatedTopic.getTopicId() + "-" + translatedTopic.getLocale()), isRevision);
-			add(value, (ComponentTranslatedTopicV1.returnZanataId(translatedTopic) + "-" + translatedTopic.getLocale()), isRevision);
-		}
+		add(value, isRevision ? value.getRevision() : null);
 	}
+	
+	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> void add(final T value, final Number revision)
+    {
+        add(value, value.getId(), revision);
+        if (value instanceof RESTTranslatedTopicV1)
+        {
+            final RESTTranslatedTopicV1 translatedTopic = (RESTTranslatedTopicV1) value;
+            add(value, (translatedTopic.getTopicId() + "-" + translatedTopic.getLocale()), revision);
+            add(value, (ComponentTranslatedTopicV1.returnZanataId(translatedTopic) + "-" + translatedTopic.getLocale()), revision);
+        }
+    }
 
 	public <T extends RESTBaseEntityV1<T, U>, U extends BaseRestCollectionV1<T, U>> BaseRestCollectionV1<T, U> get(final Class<T> clazz, final Class<U> collectionClass)
 	{

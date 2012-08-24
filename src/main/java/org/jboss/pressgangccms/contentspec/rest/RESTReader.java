@@ -291,7 +291,7 @@ public class RESTReader
 				else
 				{
 					topic = client.getJSONTopicRevision(id, rev, expandString);
-					entityCache.add(topic, true);
+					entityCache.add(topic, rev);
 				}
 			}
 			return topic;
@@ -946,7 +946,7 @@ public class RESTReader
 	 * Gets a list of Revision's from the CSProcessor database for a specific
 	 * content spec
 	 */
-	public List<Object[]> getContentSpecRevisionsById(final Integer csId)
+	public List<Object[]> getContentSpecRevisionsById(final Integer csId, final boolean limitToLast10)
 	{
 		final List<Object[]> results = new ArrayList<Object[]>();
 		try
@@ -959,13 +959,18 @@ public class RESTReader
 			}
 			else
 			{
+			    final ExpandDataDetails revisionDetails = new ExpandDataDetails("revisions");
+			    
+			    if (limitToLast10)
+			    {
+			        revisionDetails.setStart(-10);
+			    }
+			    
 				/* We need to expand the Revisions collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(new ExpandDataDetails("revisions"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
-				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails(
-						"incomingRelationships"))));
+				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
+				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(revisionDetails);
+				expandRevs.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("properties"))));
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -977,7 +982,7 @@ public class RESTReader
 					return null;
 
 				// Add the content spec revisions to the cache
-				collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
+				//collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
 				topicRevisions = topic.getRevisions();
 			}
 
@@ -1089,7 +1094,7 @@ public class RESTReader
 	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
-		final List<Object[]> specRevisions = getContentSpecRevisionsById(id);
+		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, true);
 
 		if (specRevisions == null)
 			return null;
@@ -1130,7 +1135,7 @@ public class RESTReader
 	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
-		final List<Object[]> specRevisions = getContentSpecRevisionsById(id);
+		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, true);
 
 		if (specRevisions == null)
 			return null;

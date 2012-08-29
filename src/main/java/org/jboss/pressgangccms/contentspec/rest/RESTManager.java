@@ -21,7 +21,7 @@ public class RESTManager
 	public RESTManager(final String serverUrl)
 	{
 		factory = PressGangCCMSProxyFactory.create(serverUrl);
-		client = factory.getRESTInterfaceClient();
+		client = factory.getRESTInterfaceV1Client();
 		reader = new RESTReader(client, entityCache, collectionCache);
 		writer = new RESTWriter(reader, client, entityCache, collectionCache);
 	}

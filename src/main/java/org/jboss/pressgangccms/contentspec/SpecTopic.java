@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {
     private String id;
+    private String uniqueParserId;
     private int DBId = 0;
     private String type;
     private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
@@ -131,6 +132,24 @@ public class SpecTopic extends SpecNode {
     public String getId() {
         return id;
     }
+    
+    /**
+     * Set the Unique ID for the Content Specification Topic.
+     * 
+     * @param id The Content Specification Topic ID.
+     */
+    public void setUniqueId(final String uniqueId) {
+        this.uniqueParserId = uniqueId;
+    }
+
+    /**
+     * Gets the Content Specification Unique ID for the topic.
+     * 
+     * @return The Unique CS Topic ID.
+     */
+    public String getUniqueId() {
+        return uniqueParserId;
+    }
 
     /**
      * Gets the Content Specification Unique ID for the topic.
@@ -139,7 +158,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @return The unique id.
      */
-    public String getUniqueId() {
+    /*public String getUniqueId() {
         if (id.equals("N") || id.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)
                 || id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || id.matches(CSConstants.CLONED_TOPIC_ID_REGEX)
                 || id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)) {
@@ -147,7 +166,7 @@ public class SpecTopic extends SpecNode {
         } else {
             return id;
         }
-    }
+    }*/
 
     /**
      * Sets the Database ID for the Topic.

@@ -19,7 +19,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 {
 	public static enum ErrorLevel {ERROR, WARNING};
 	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
-		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED}
+		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION}
 
 	private Map<String, List<TopicErrorData<T, U>>> errors = new HashMap<String, List<TopicErrorData<T, U>>>();
 

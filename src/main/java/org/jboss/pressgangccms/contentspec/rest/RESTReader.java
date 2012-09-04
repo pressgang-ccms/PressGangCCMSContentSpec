@@ -160,7 +160,9 @@ public class RESTReader
 				 * expand it anyway
 				 */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				expand.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
+                final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+                final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.PROPERTIES_NAME));
+				expand.setBranches(CollectionUtilities.toArrayList(expandCategories, expandProperties));
 
 				final String expandString = mapper.writeValueAsString(expand);
 				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
@@ -193,11 +195,12 @@ public class RESTReader
 				/* We need to expand the Tags & Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
+                final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+                final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.PROPERTIES_NAME));
+				expandTags.setBranches(CollectionUtilities.toArrayList(expandCategories, expandProperties));
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 				tags = client.getJSONTags(expandString);
 				collectionsCache.add(RESTTagV1.class, tags);
@@ -270,11 +273,17 @@ public class RESTReader
 			{
 				/* We need to expand the all the items in the topic collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
+                final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
+                final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+                final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME));
+                final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+                final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
 				final ExpandDataTrunk expandTopicTranslations = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories")), new ExpandDataTrunk(new ExpandDataDetails("properties"))));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), new ExpandDataTrunk(new ExpandDataDetails("properties")),
-						new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
+				
+				expandTags.setBranches(CollectionUtilities.toArrayList(expandCategories, expandProperties));
+				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties,
+						expandOutgoing, expandIncoming));
 
 				if (expandTranslations)
 				{
@@ -282,7 +291,7 @@ public class RESTReader
 				}
 				
 				final String expandString = mapper.writeValueAsString(expand);
-				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
 				if (rev == null)
 				{
 					topic = client.getJSONTopic(id, expandString);
@@ -359,24 +368,24 @@ public class RESTReader
 					expandTopicDetails.setStart(i);
 					expandTopicDetails.setEnd(i + 100);
 					final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(expandTopicDetails);
-					final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+					final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
 					final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
-					final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
-					final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
-					final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships"));
+					final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+					final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
 					final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
+					final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
 
 					/* We need to expand the categories collection on the topic tags */
-					tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+					tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
 					if (expandTranslations)
 					{
 						outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), expandTranslatedTopics));
+						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, expandSourceUrls, expandTranslatedTopics));
 					}
 					else
 					{
 						outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls"))));
+						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, expandSourceUrls));
 					}
 					
 					expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
@@ -426,16 +435,19 @@ public class RESTReader
 			{
 				/* We need to expand the Revisions collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(new ExpandDataDetails("revisions"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
-				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("sourceUrls")), 
-						new ExpandDataTrunk(new ExpandDataDetails("properties")), new ExpandDataTrunk(new ExpandDataDetails("outgoingRelationships")), 
-						new ExpandDataTrunk(new ExpandDataDetails("incomingRelationships"))));
+				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
+				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.REVISIONS_NAME));
+				final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
+				final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+				final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+				final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
+				expandTags.setBranches(CollectionUtilities.toArrayList(expandCategories));
+				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties,
+						expandOutgoing, expandIncoming));
 				expand.setBranches(CollectionUtilities.toArrayList(expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
-				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 				final RESTTopicV1 topic = client.getJSONTopic(topicId, expandString);
 				collectionsCache.add(RESTTopicV1.class, topic.getRevisions(), additionalKeys, true);
@@ -533,17 +545,16 @@ public class RESTReader
 				 */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 
-				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
+				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedTopics"));
 				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
-				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
-				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
-				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
-				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
 				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
@@ -623,17 +634,16 @@ public class RESTReader
 				 */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 
-				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedtopics"));
+				final ExpandDataTrunk translatedTopicsExpand = new ExpandDataTrunk(new ExpandDataDetails("translatedTopics"));
 				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
-				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
-				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
-				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
-				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
 				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
@@ -776,13 +786,12 @@ public class RESTReader
 				final ExpandDataTrunk topicExpandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
-				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails("categories"));
-				final ExpandDataTrunk parentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
 				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 		
 				/* We need to expand the categories collection on the topic tags */
-				tags.setBranches(CollectionUtilities.toArrayList(categories, parentTags, properties));
+				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
 				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));

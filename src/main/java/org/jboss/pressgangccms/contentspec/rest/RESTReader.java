@@ -277,13 +277,13 @@ public class RESTReader
                 final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
                 final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
                 final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME));
-                final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
-                final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
+                //final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+                //final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
 				final ExpandDataTrunk expandTopicTranslations = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 				
 				expandTags.setBranches(CollectionUtilities.toArrayList(expandCategories, expandProperties));
-				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties,
-						expandOutgoing, expandIncoming));
+				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties/*,
+						expandOutgoing, expandIncoming*/));
 
 				if (expandTranslations)
 				{
@@ -371,7 +371,7 @@ public class RESTReader
 					final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
 					final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 					final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
-					final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+					//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
 					final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
 					final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
 
@@ -379,13 +379,13 @@ public class RESTReader
 					tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
 					if (expandTranslations)
 					{
-						outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, expandSourceUrls, expandTranslatedTopics));
+						//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
+						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls, expandTranslatedTopics));
 					}
 					else
 					{
-						outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, expandSourceUrls));
+						//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
+						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls));
 					}
 					
 					expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
@@ -440,11 +440,11 @@ public class RESTReader
 				final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
 				final ExpandDataTrunk expandCategories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
 				final ExpandDataTrunk expandProperties = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME));
-				final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
-				final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
+				//final ExpandDataTrunk expandOutgoing = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+				//final ExpandDataTrunk expandIncoming = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.INCOMING_NAME));
 				expandTags.setBranches(CollectionUtilities.toArrayList(expandCategories));
-				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties,
-						expandOutgoing, expandIncoming));
+				expandRevs.setBranches(CollectionUtilities.toArrayList(expandTags, expandSourceUrls, expandProperties/*,
+						expandOutgoing, expandIncoming*/));
 				expand.setBranches(CollectionUtilities.toArrayList(expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -550,16 +550,16 @@ public class RESTReader
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
-				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
-				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+				//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
 
-				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, topicsExpand));
 
 				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
 
@@ -639,16 +639,16 @@ public class RESTReader
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
-				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
-				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+				//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
 
-				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+				translatedTopicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, topicsExpand));
 
 				expand.setBranches(CollectionUtilities.toArrayList(translatedTopicsExpand));
 
@@ -787,16 +787,16 @@ public class RESTReader
 				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TAGS_NAME));
 				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
 				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
-				final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
+				//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.ALL_LATEST_OUTGOING_NAME));
 				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TOPIC_NAME));
 		
 				/* We need to expand the categories collection on the topic tags */
 				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
-				outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
+				//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, topicsExpand));
 
 				topicsExpand.setBranches(CollectionUtilities.toArrayList(topicExpandTranslatedTopics));
 
-				expand.setBranches(CollectionUtilities.toArrayList(tags, outgoingRelationships, properties, topicsExpand));
+				expand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, topicsExpand));
 		
 				final String expandString = mapper.writeValueAsString(expand);
 				
@@ -934,17 +934,23 @@ public class RESTReader
 			{
 				if (type.getId().equals(CSConstants.CONTENT_SPEC_TAG_ID))
 				{
+				    RESTTranslatedTopicV1 latestTranslatedTopic = null;
 					for (final RESTTranslatedTopicV1 topic : cs.getTranslatedTopics_OTM().getItems())
 					{
-						if (rev != null && topic.getTopicRevision().equals(rev) && topic.getLocale().equals(locale))
-						{
-							return topic;
-						}
-						else if (rev == null && topic.getLocale().equals(locale))
-						{
-							return topic;
-						}
+					    if (topic.getLocale().equals(locale) && (latestTranslatedTopic == null || latestTranslatedTopic.getTopicRevision() < topic.getTopicRevision()))
+					    {
+    						if (rev != null && topic.getTopicRevision() <= cs.getRevision())
+    						{
+    						    latestTranslatedTopic = topic;
+    						}
+    						else if (rev == null)
+    						{
+    						    latestTranslatedTopic = topic;
+    						}
+					    }
 					}
+					
+					return latestTranslatedTopic;
 				}
 			}
 		}
@@ -955,7 +961,7 @@ public class RESTReader
 	 * Gets a list of Revision's from the CSProcessor database for a specific
 	 * content spec
 	 */
-	public List<Object[]> getContentSpecRevisionsById(final Integer csId, final boolean limitToLast10)
+	public List<Object[]> getContentSpecRevisionsById(final Integer csId, final Integer startLimit, final Integer endLimit)
 	{
 		final List<Object[]> results = new ArrayList<Object[]>();
 		try
@@ -968,18 +974,19 @@ public class RESTReader
 			}
 			else
 			{
-			    final ExpandDataDetails revisionDetails = new ExpandDataDetails("revisions");
+			    final ExpandDataDetails revisionDetails = new ExpandDataDetails(RESTTopicV1.REVISIONS_NAME);
 			    
-			    if (limitToLast10)
+			    if (startLimit != null || endLimit!= null)
 			    {
-			        revisionDetails.setStart(-10);
+			        revisionDetails.setEnd(endLimit);
+			        revisionDetails.setStart(startLimit);
 			    }
 			    
 				/* We need to expand the Revisions collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
 				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
 				final ExpandDataTrunk expandRevs = new ExpandDataTrunk(revisionDetails);
-				expandRevs.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("properties"))));
+				expandRevs.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME))));
 				expand.setBranches(CollectionUtilities.toArrayList(expandTags, expandRevs));
 
 				final String expandString = mapper.writeValueAsString(expand);
@@ -1060,9 +1067,9 @@ public class RESTReader
 				}
 
 				final ExpandDataTrunk expandTopics = new ExpandDataTrunk(expandDataDetails);
-				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
-				expandTopics.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails("properties"))));
+				final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
+				expandTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME))));
+				expandTopics.setBranches(CollectionUtilities.toArrayList(expandTags, new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.PROPERTIES_NAME))));
 
 				expand.setBranches(CollectionUtilities.toArrayList(expandTopics));
 
@@ -1098,12 +1105,20 @@ public class RESTReader
 	}
 
 	/*
+     * Get the Pre Processed Content Specification for a ID and Revision
+     */
+    public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision)
+    {
+        return getPreContentSpecById(id, revision, null, 5);
+    }
+	
+	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision)
+	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
-		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, true);
+		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
 		if (specRevisions == null)
 			return null;
@@ -1135,16 +1150,30 @@ public class RESTReader
 			}
 			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
 		}
+		
+		/* If the defaults were used then try to go back 5 more */
+        if (preContentSpec == null && startLimit == null && endLimit == 5)
+        {
+            return this.getPreContentSpecById(id, revision, 5, 10);
+        }
 		return preContentSpec;
 	}
+	
+	/*
+     * Get the Pre Processed Content Specification for a ID and Revision
+     */
+    public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
+    {
+        return getPostContentSpecById(id, revision, null, 5);
+    }
 
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
+	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
-		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, true);
+		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
 		if (specRevisions == null)
 			return null;
@@ -1163,7 +1192,7 @@ public class RESTReader
 		if (sortedSpecRevisions.size() == 0)
 			return null;
 
-		// Find the Pre Content Spec from the revisions
+		// Find the Post Content Spec from the revisions
 		RESTTopicV1 postContentSpec = null;
 		Integer specRev = sortedSpecRevisions.last();
 		while (specRev != null)
@@ -1175,6 +1204,12 @@ public class RESTReader
 				break;
 			}
 			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+		}
+		
+		/* If the defaults were used then try to go back 5 more */
+		if (postContentSpec == null && startLimit == null && endLimit == 5)
+		{
+		    return this.getPostContentSpecById(id, revision, 5, 10);
 		}
 		return postContentSpec;
 	}

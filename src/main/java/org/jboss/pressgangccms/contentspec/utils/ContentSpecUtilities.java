@@ -117,10 +117,10 @@ public class ContentSpecUtilities
 				final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
 				if (fixedStringDetails.getFixedString() != null)
 				{
-					if (translations.containsKey(fixedStringDetails.getFixedString()))
-					{
-						final String translation = translations.get(fixedStringDetails.getFixedString());
+					final String translation = translations.get(fixedStringDetails.getFixedString());
 
+					if (translation != null && !translation.isEmpty())
+					{
 						/* Build up the padding that Zanata removed */
 						final StringBuilder leftTrimPadding = new StringBuilder();
 						final StringBuilder rightTrimPadding = new StringBuilder();

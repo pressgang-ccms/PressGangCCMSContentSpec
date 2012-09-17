@@ -126,7 +126,7 @@ public class DocbookBuildingOptions
 
 	// Book name options
 	private String bookTitle = "Book";
-	private String bookProduct = "Documentation 0.1";
+	private String bookProduct = "Documentation";
 	private String bookProductVersion = "0.1";
 	private String bookEdition = null;
 	private String bookPubsnumber = null;

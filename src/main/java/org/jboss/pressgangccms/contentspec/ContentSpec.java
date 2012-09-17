@@ -30,7 +30,7 @@ public class ContentSpec extends Node {
     private ArrayList<String> text = new ArrayList<String>();
     private KeyValueNode<String> dtd = null;
     private String createdBy = null;
-    private KeyValueNode<Integer> revision = null;
+    private KeyValueNode<Integer> specRevision = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
     private KeyValueNode<String> description = null;
@@ -46,6 +46,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<Boolean> allowDuplicateTopics = null;
     private KeyValueNode<Boolean> allowEmptyLevels = null;
     private KeyValueNode<BookType> bookType = null;
+    private Integer revision = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
     private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);
@@ -210,6 +211,26 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * The revision number for this Content Spec as it exists in the database. This property is not exposible in a Content
+     * Specification and is used internally only.
+     * 
+     * @return The Content Specifications Database revision, or null for the latest version.
+     */
+    public Integer getRevision() {
+        return revision;
+    }
+
+    /**
+     * Sets the revision number for this Content Spec as it exists in the database. This property is not exposible in a Content
+     * Specification and is used internally only.
+     * 
+     * @param revision The Content Specifications Database revision, or null for the latest version.
+     */
+    public void setRevision(final Integer revision) {
+        this.revision = revision;
+    }
+
+    /**
      * Gets the title of the Content Specification.
      * 
      * @return The Content Specification title or an empty string if it is null.
@@ -304,6 +325,7 @@ public class ContentSpec extends Node {
      * 
      * @return The publication number or null if one doesn't exist.
      */
+    @Deprecated
     public Integer getPubsNumber() {
         return (Integer) (pubsNumber == null ? null : pubsNumber.getValue());
     }
@@ -313,6 +335,7 @@ public class ContentSpec extends Node {
      * 
      * @param pubsNumber The publication number.
      */
+    @Deprecated
     public void setPubsNumber(final Integer pubsNumber) {
         if (pubsNumber == null) {
             return;
@@ -435,22 +458,22 @@ public class ContentSpec extends Node {
      * @return The SpecRevision number or null if one doesn't exist.
      */
     @Deprecated
-    public Integer getRevision() {
-        return (Integer) (revision == null ? null : revision.getValue());
+    public Integer getSpecRevision() {
+        return (Integer) (specRevision == null ? null : specRevision.getValue());
     }
 
     /**
      * Sets the SpecRevision number for a ContentSpecification.
      * 
-     * @param revision The SpecRevision number.
+     * @param specRevision The SpecRevision number.
      */
     @Deprecated
-    public void setRevision(final int revision) {
-        if (this.revision == null) {
-            this.revision = new KeyValueNode<Integer>("SpecRevision", revision);
-            appendChild(this.revision);
+    public void setSpecRevision(final int specRevision) {
+        if (this.specRevision == null) {
+            this.specRevision = new KeyValueNode<Integer>("SpecRevision", specRevision);
+            appendChild(this.specRevision);
         } else {
-            this.revision.setValue(revision);
+            this.specRevision.setValue(specRevision);
         }
     }
 
@@ -1084,7 +1107,7 @@ public class ContentSpec extends Node {
             if (node instanceof KeyValueNode) {
                 final KeyValueNode keyValueNode = (KeyValueNode) node;
                 if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID")
-                        && !keyValueNode.getKey().equals("SpecRevison")) {
+                        && !keyValueNode.getKey().equals("SpecRevison") && !keyValueNode.getKey().equals("Pubsnumber")) {
                     output.append(node.toString());
                 }
             } else {

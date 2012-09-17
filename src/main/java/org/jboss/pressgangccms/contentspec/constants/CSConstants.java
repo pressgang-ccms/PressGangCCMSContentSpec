@@ -113,8 +113,6 @@ public class CSConstants {
 	public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";
 
 	public static final String REVISION_HISTORY_OVERRIDE = "Revision_History.xml";
-
-	public static final String PUBSNUMBER_OVERRIDE = "pubsnumber";
 	
 	public static final String REVNUMBER_OVERRIDE = "revnumber";
 

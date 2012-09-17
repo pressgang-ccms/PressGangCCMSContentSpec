@@ -9,7 +9,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.pressgangccms.contentspec.SpecTopic;
 import org.jboss.pressgangccms.contentspec.constants.CSConstants;
 import org.jboss.pressgangccms.rest.v1.collections.RESTTopicCollectionV1;
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.base.RESTBaseCollectionItemV1;
+import org.jboss.pressgangccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
@@ -32,7 +33,7 @@ import org.jboss.resteasy.specimpl.PathSegmentImpl;
  * @param <T> The Topic Type eg RESTTranslatedTopicV1 or RESTTopicV1
  * @param <U> The Topics Collection Type eg RESTTranslatedTopicCollectionV1 or RESTTopicCollectionV1
  */
-public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class TopicPool<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
 {
 
 	private static final Logger log = Logger.getLogger(TopicPool.class);
@@ -76,7 +77,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 */
 	public boolean savePool()
 	{
-		if ((newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()) && (updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty()))
+		if ((newTopicPool.returnItems() == null || newTopicPool.returnItems().isEmpty()) && (updatedTopicPool.returnItems() == null || updatedTopicPool.returnItems().isEmpty()))
 			return true;
 		try
 		{
@@ -91,26 +92,26 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 			//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
 
 			// Save the new topics
-			if (!(newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty()))
+			if (!(newTopicPool.returnItems() == null || newTopicPool.returnItems().isEmpty()))
 			{
 				final RESTTopicCollectionV1 response = client.createJSONTopics(expandString, newTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
-				if (response.getItems() == null)
+				if (response.returnItems() == null)
 					return false;
 				// The response is valid so set it as the pool
 				newTopicPool = response;
 			}
 
 			// Update the existing topics
-			if (!(updatedTopicPool.getItems() == null || updatedTopicPool.getItems().isEmpty()))
+			if (!(updatedTopicPool.returnItems() == null || updatedTopicPool.returnItems().isEmpty()))
 			{
 				final RESTTopicCollectionV1 response = client.updateJSONTopics(expandString, updatedTopicPool);
 				// Check that the response isn't empty (ie failed)
 				if (response == null)
 					return false;
-				if (response.getItems() == null)
+				if (response.returnItems() == null)
 					return false;
 				// The response is valid so set it as the pool
 				updatedTopicPool = response;
@@ -137,9 +138,9 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	{
 		if (initialised)
 		{
-			if (newTopicPool.getItems() != null && !newTopicPool.getItems().isEmpty())
+			if (newTopicPool.returnItems() != null && !newTopicPool.returnItems().isEmpty())
 			{
-				for (final RESTTopicV1 topic : newTopicPool.getItems())
+				for (final RESTTopicV1 topic : newTopicPool.returnItems())
 				{
 					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 					{
@@ -151,9 +152,9 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 					}
 				}
 			}
-			if (updatedTopicPool.getItems() != null && !updatedTopicPool.getItems().isEmpty())
+			if (updatedTopicPool.returnItems() != null && !updatedTopicPool.returnItems().isEmpty())
 			{
-				for (final RESTTopicV1 topic : updatedTopicPool.getItems())
+				for (final RESTTopicV1 topic : updatedTopicPool.returnItems())
 				{
 					if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID) != null)
 					{
@@ -187,7 +188,7 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	 */
 	public boolean isEmpty()
 	{
-		return newTopicPool.getItems() == null ? true : newTopicPool.getItems().isEmpty();
+		return newTopicPool.returnItems() == null ? true : newTopicPool.returnItems().isEmpty();
 	}
 
 	/**
@@ -197,10 +198,10 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollec
 	@SuppressWarnings("serial")
 	public void rollbackPool()
 	{
-		if (newTopicPool.getItems() == null || newTopicPool.getItems().isEmpty())
+		if (newTopicPool.returnItems() == null || newTopicPool.returnItems().isEmpty())
 			return;
 		final PathSegment path = new PathSegmentImpl("ids", false);
-		for (final RESTTopicV1 topic : newTopicPool.getItems())
+		for (final RESTTopicV1 topic : newTopicPool.returnItems())
 		{
 			path.getMatrixParameters().put(topic.getId().toString(), new ArrayList<String>()
 			{

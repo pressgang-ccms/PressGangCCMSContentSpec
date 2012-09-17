@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
@@ -17,7 +16,7 @@ import org.jboss.pressgangccms.utils.common.CollectionUtilities;
  * with some function to retrieve topics based on a set of tags to match or
  * exclude.
  */
-public class TocTopicDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 {
 	private Map<T, TopicProcessingData> topics = new HashMap<T, TopicProcessingData>();
 
@@ -98,7 +97,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRes
 				continue;
 			
 			/* check to see if the topic has only the matching tags */
-			if (haveOnlyMatchingTags && topic.getTags().getItems().size() != matchingTags.size())
+			if (haveOnlyMatchingTags && topic.getTags().returnItems().size() != matchingTags.size())
 				continue;
 		
 			/* check for matching tags */

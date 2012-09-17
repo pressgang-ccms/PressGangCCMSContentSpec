@@ -5,7 +5,7 @@ package org.jboss.pressgangccms.docbook.messaging;
 */
 public final class TopicRendererType
 {
-public static final int TOPIC = 0;
-public static final int TRANSLATEDTOPIC = 1;
-public static final int CONTENTSPECIFICATON = 2;
+    public static final int TOPIC = 0;
+    public static final int TRANSLATEDTOPIC = 1;
+    public static final int CONTENTSPECIFICATON = 2;
 }

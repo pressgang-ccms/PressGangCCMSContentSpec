@@ -14,12 +14,15 @@ import org.jboss.pressgangccms.contentspec.constants.CSConstants;
 import org.jboss.pressgangccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgangccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgangccms.docbook.constants.DocbookBuilderConstants;
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTranslatedTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.join.RESTCategoryTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.join.RESTTagCategoryV1;
 import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataDetails;
 import org.jboss.pressgangccms.rest.v1.expansion.ExpandDataTrunk;
 import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
@@ -27,7 +30,7 @@ import org.jboss.pressgangccms.utils.common.CollectionUtilities;
 import org.jboss.pressgangccms.utils.common.ExceptionUtilities;
 
 
-public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTBaseCollectionV1<T, U, ?>>
 {
 	/** The REST client */
 	private final RESTInterfaceV1 restClient;
@@ -52,7 +55,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	 * @param locale The locale of the topics.
 	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
 	 */
-	public ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale)
+	public ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final U topics, final String locale)
 	{
 		return this.generateContentSpecFromTopics(clazz, topics, locale, new DocbookBuildingOptions());
 	}
@@ -70,7 +73,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
 	 * @return A ContentSpec object that represents the Content Specification. The toString() method can be used to get the text based version.
 	 */
-	public ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	public ContentSpec generateContentSpecFromTopics(final Class<T> clazz, final U topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		final ContentSpec contentSpec = doFormattedTocPass(clazz, topics, locale, docbookBuildingOptions);
 		if (contentSpec != null)
@@ -108,7 +111,8 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	 * @param childRequirements The TagRequirements for this level based on the child requirements from the levels parent.
 	 * @param displayRequirements The TagRequirements to display topics at this level.
 	 */
-	private void populateContentSpecLevel(final BaseRestCollectionV1<T, U> topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
+	@SuppressWarnings("rawtypes")
+    private void populateContentSpecLevel(final U topics, final Level level, final TagRequirements childRequirements, final TagRequirements displayRequirements)
 	{
 		/*
 		 * If this branch has no parent, then it is the top level and we don't
@@ -122,10 +126,10 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			/* and add the tags required to be displayed at this level */
 			requirements.merge(displayRequirements);
 
-			for (final T topic : topics.getItems())
+			for (final T topic : topics.returnItems())
 			{
 				boolean doesMatch = true;
-				for (final RESTTagV1 andTag : requirements.getMatchAllOf())
+				for (final RESTBaseTagV1 andTag : requirements.getMatchAllOf())
 				{
 					if (!ComponentBaseTopicV1.hasTag(topic, andTag.getId()))
 					{
@@ -136,12 +140,12 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 
 				if (doesMatch && requirements.getMatchOneOf().size() != 0)
 				{
-					for (final ArrayList<RESTTagV1> orBlock : requirements.getMatchOneOf())
+					for (final ArrayList<RESTBaseTagV1> orBlock : requirements.getMatchOneOf())
 					{
 						if (orBlock.size() != 0)
 						{
 							boolean matchesOrBlock = false;
-							for (final RESTTagV1 orTag : orBlock)
+							for (final RESTBaseTagV1 orTag : orBlock)
 							{
 								if (ComponentBaseTopicV1.hasTag(topic, orTag.getId()))
 								{
@@ -192,7 +196,8 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
 	 * @return A ContentSpec object that represents the assembled Content Specification. The toString() method can be used to get the text based version.
 	 */
-	private ContentSpec doFormattedTocPass(final Class<T> clazz, final BaseRestCollectionV1<T, U> topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	@SuppressWarnings("rawtypes")
+    private ContentSpec doFormattedTocPass(final Class<T> clazz, final U topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		try
 		{
@@ -243,18 +248,18 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			 * we get the tags out of the tech and common names categories, and
 			 * pull outthose that are not encompassed.
 			 */
-			final List<RESTTagV1> topLevelTags = new ArrayList<RESTTagV1>();
+			final List<RESTTagCategoryV1> topLevelTags = new ArrayList<RESTTagCategoryV1>();
 			for (final RESTCategoryV1 category : new RESTCategoryV1[]
 			{ technologyCategroy, commonNamesCategory })
 			{
-				if (category.getTags().getItems() != null)
+				if (category.getTags().returnItems() != null)
 				{
-					for (final RESTTagV1 tag : category.getTags().getItems())
+					for (final RESTTagCategoryV1 tag : category.getTags().returnItems())
 					{
 						boolean isEmcompassed = false;
-						for (final RESTTagV1 parentTag : tag.getParentTags().getItems())
+						for (final RESTTagV1 parentTag : tag.getParentTags().returnItems())
 						{
-							for (final RESTCategoryV1 parentTagCategory : parentTag.getCategories().getItems())
+							for (final RESTCategoryTagV1 parentTagCategory : parentTag.getCategories().returnItems())
 							{
 								if (parentTagCategory.getId().equals(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID) || parentTagCategory.getId().equals(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID))
 								{
@@ -298,20 +303,20 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 			final RESTTagV1 taskTag = restClient.getJSONTag(DocbookBuilderConstants.TASK_TAG_ID, "");
 
 			/* add TocFormatBranch objects for each top level tag */
-			for (final RESTTagV1 tag : topLevelTags)
+			for (final RESTTagCategoryV1 tag : topLevelTags)
 			{
 				/*
 				 * Create the top level tag. This level is represented by the
 				 * tags that are not encompased, and includes any topic that has
 				 * that tag or any tag that is encompassed by this tag.
 				 */
-				final TagRequirements topLevelBranchTags = new TagRequirements((RESTTagV1) null, new ArrayList<RESTTagV1>()
+				final TagRequirements topLevelBranchTags = new TagRequirements((RESTBaseTagV1) null, new ArrayList<RESTBaseTagV1>()
 				{
 					private static final long serialVersionUID = 7499166852563779981L;
 
 					{
 						add(tag);
-						addAll(tag.getChildTags().getItems());
+						addAll(tag.getChildTags().returnItems());
 					}
 				});
 
@@ -320,7 +325,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 				
 				populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
-				for (final RESTTagV1 concernTag : concernCategory.getTags().getItems())
+				for (final RESTTagCategoryV1 concernTag : concernCategory.getTags().returnItems())
 				{
 					/*
 					 * the second level of the toc are the concerns, which will
@@ -328,7 +333,15 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U>, U extends Bas
 					 */
 					final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (RESTTagV1) null);
 					concernLevelChildTags.merge(topLevelBranchTags);
-					final TagRequirements concernLevelDisplayTags = new TagRequirements((RESTTagV1) null, CollectionUtilities.toArrayList(conceptualOverviewTag, taskTag));
+					final TagRequirements concernLevelDisplayTags = new TagRequirements((RESTBaseTagV1) null, new ArrayList<RESTBaseTagV1>()
+					{
+                        private static final long serialVersionUID = -204535050439409584L;
+
+                        {
+					        add(conceptualOverviewTag);
+					        add(taskTag);
+					    }
+					});
 					
 					final Section concernSection = new Section(concernTag.getName());
 					topLevelTagChapter.appendChild(concernSection);

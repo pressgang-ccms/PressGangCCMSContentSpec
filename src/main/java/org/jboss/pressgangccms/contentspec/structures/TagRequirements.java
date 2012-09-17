@@ -3,31 +3,32 @@ package org.jboss.pressgangccms.contentspec.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTagV1;
 import org.jboss.pressgangccms.utils.common.CollectionUtilities;
 
 /**
  * This class defines the tags that a topic needs to have in order to be
  * displayed in a particular TOC level
  */
+@SuppressWarnings("rawtypes")
 public class TagRequirements
 {
 	/** One of these tags needs to be present */
-	private final List<ArrayList<RESTTagV1>> matchOneOf = new ArrayList<ArrayList<RESTTagV1>>();
+	private final List<ArrayList<RESTBaseTagV1>> matchOneOf = new ArrayList<ArrayList<RESTBaseTagV1>>();
 	/** All of these tags needs to be present */
-	private final List<RESTTagV1> matchAllOf = new ArrayList<RESTTagV1>();
+	private final List<RESTBaseTagV1> matchAllOf = new ArrayList<RESTBaseTagV1>();
 
-	public List<ArrayList<RESTTagV1>> getMatchOneOf()
+    public List<ArrayList<RESTBaseTagV1>> getMatchOneOf()
 	{
 		return matchOneOf;
 	}
 
-	public List<RESTTagV1> getMatchAllOf()
+	public List<RESTBaseTagV1> getMatchAllOf()
 	{
 		return matchAllOf;
 	}
 
-	public TagRequirements(final ArrayList<RESTTagV1> matchAllOf, final ArrayList<RESTTagV1> matchOneOf)
+	public TagRequirements(final ArrayList<RESTBaseTagV1> matchAllOf, final ArrayList<RESTBaseTagV1> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
@@ -36,7 +37,7 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final ArrayList<RESTTagV1> matchAllOf, final RESTTagV1 matchOneOf)
+	public TagRequirements(final ArrayList<RESTBaseTagV1> matchAllOf, final RESTBaseTagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(CollectionUtilities.toArrayList(matchOneOf));
@@ -44,7 +45,7 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final RESTTagV1 matchAllOf, final ArrayList<RESTTagV1> matchOneOf)
+	public TagRequirements(final RESTBaseTagV1 matchAllOf, final ArrayList<RESTBaseTagV1> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
@@ -52,7 +53,7 @@ public class TagRequirements
 			this.matchAllOf.add(matchAllOf);
 	}
 
-	public TagRequirements(final RESTTagV1 matchAllOf, final RESTTagV1 matchOneOf)
+	public TagRequirements(final RESTBaseTagV1 matchAllOf, final RESTBaseTagV1 matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(CollectionUtilities.toArrayList(matchOneOf));

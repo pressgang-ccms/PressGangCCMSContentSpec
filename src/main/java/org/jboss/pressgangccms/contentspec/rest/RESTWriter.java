@@ -1,25 +1,30 @@
 package org.jboss.pressgangccms.contentspec.rest;
 
+import static org.jboss.pressgangccms.rest.v1.collections.base.RESTBaseCollectionItemV1.ADD_STATE;
+import static org.jboss.pressgangccms.rest.v1.collections.base.RESTBaseCollectionItemV1.REMOVE_STATE;
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.jboss.pressgangccms.contentspec.constants.CSConstants;
 import org.jboss.pressgangccms.contentspec.rest.utils.RESTCollectionCache;
 import org.jboss.pressgangccms.contentspec.rest.utils.RESTEntityCache;
 import org.jboss.pressgangccms.rest.v1.collections.RESTCategoryCollectionV1;
-import org.jboss.pressgangccms.rest.v1.collections.RESTPropertyTagCollectionV1;
 import org.jboss.pressgangccms.rest.v1.collections.RESTTagCollectionV1;
 import org.jboss.pressgangccms.rest.v1.collections.RESTTopicCollectionV1;
 import org.jboss.pressgangccms.rest.v1.collections.RESTTopicSourceUrlCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.items.RESTAssignedPropertyTagCollectionItemV1;
+import org.jboss.pressgangccms.rest.v1.collections.items.RESTTagCollectionItemV1;
+import org.jboss.pressgangccms.rest.v1.collections.items.RESTTopicCollectionItemV1;
+import org.jboss.pressgangccms.rest.v1.collections.items.RESTTopicSourceUrlCollectionItemV1;
+import org.jboss.pressgangccms.rest.v1.collections.join.RESTAssignedPropertyTagCollectionV1;
+import org.jboss.pressgangccms.rest.v1.collections.join.RESTCategoryTagCollectionV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTCategoryV1;
-import org.jboss.pressgangccms.rest.v1.entities.RESTPropertyTagV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTagV1;
-import org.jboss.pressgangccms.rest.v1.entities.RESTTopicSourceUrlV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgangccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
+import org.jboss.pressgangccms.rest.v1.entities.join.RESTCategoryTagV1;
 import org.jboss.pressgangccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.pressgangccms.utils.common.ExceptionUtilities;
-
-import java.util.*;
-
-
 
 public class RESTWriter
 {
@@ -66,7 +71,7 @@ public class RESTWriter
 	/**
 	 * Writes a Tag tuple to the database using the data provided.
 	 */
-	public Integer createTag(final String name, final String description, final RESTCategoryCollectionV1 categories)
+    public Integer createTag(final String name, final String description, final RESTCategoryCollectionV1 categories)
 	{
 		Integer insertId = null;
 		try
@@ -74,11 +79,13 @@ public class RESTWriter
 			RESTTagV1 tag = new RESTTagV1();
 			tag.explicitSetName(name);
 			tag.explicitSetDescription(description);
-			for (RESTCategoryV1 category : categories.getItems())
+			final RESTCategoryTagCollectionV1 newCategories = new RESTCategoryTagCollectionV1();
+			for (final RESTCategoryV1 category : categories.returnItems())
 			{
-				category.setAddItem(true);
+			    final RESTCategoryTagV1 newCategory = new RESTCategoryTagV1(category);
+			    newCategories.addNewItem(newCategory);
 			}
-			tag.explicitSetCategories(categories);
+			tag.explicitSetCategories(newCategories);
 
 			tag = client.createJSONTag(null, tag);
 			insertId = tag.getId();
@@ -104,12 +111,11 @@ public class RESTWriter
 	 */
 	public Integer createTopic(final String title, final String text, final String description, final Date timestamp, final RESTTopicSourceUrlCollectionV1 sourceUrls, 
 			final RESTTopicCollectionV1 incomingRelationships, final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
-			final RESTPropertyTagCollectionV1 properties)
+			final RESTAssignedPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
 		{
-
 			RESTTopicV1 topic = new RESTTopicV1();
 
 			topic.explicitSetTitle(title);
@@ -124,41 +130,41 @@ public class RESTWriter
 			}
 			if (!incomingRelationships.getItems().isEmpty())
 			{
-				for (RESTTopicV1 incomingRelationship : incomingRelationships.getItems())
+				for (final RESTTopicCollectionItemV1 incomingRelationship : incomingRelationships.getItems())
 				{
-					incomingRelationship.setAddItem(true);
+				    incomingRelationship.setState(ADD_STATE);
 				}
 				topic.explicitSetIncomingRelationships(incomingRelationships);
 			}
 			if (!outgoingRelationships.getItems().isEmpty())
 			{
-				for (RESTTopicV1 outgoingRelationship : outgoingRelationships.getItems())
+				for (final RESTTopicCollectionItemV1 outgoingRelationship : outgoingRelationships.getItems())
 				{
-					outgoingRelationship.setAddItem(true);
+				    outgoingRelationship.setState(ADD_STATE);
 				}
 				topic.explicitSetOutgoingRelationships(outgoingRelationships);
 			}
 			if (!tags.getItems().isEmpty())
 			{
-				for (RESTTagV1 tag : tags.getItems())
+				for (final RESTTagCollectionItemV1 tag : tags.getItems())
 				{
-					tag.setAddItem(true);
+					tag.setState(ADD_STATE);
 				}
 				topic.explicitSetTags(tags);
 			}
 			if (!properties.getItems().isEmpty())
 			{
-				for (RESTPropertyTagV1 tag : properties.getItems())
+				for (final RESTAssignedPropertyTagCollectionItemV1 tag : properties.getItems())
 				{
-					tag.setAddItem(true);
+					tag.setState(ADD_STATE);
 				}
 				topic.explicitSetProperties(properties);
 			}
 			if (!sourceUrls.getItems().isEmpty())
 			{
-				for (RESTTopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
+				for (final RESTTopicSourceUrlCollectionItemV1 sourceUrl : sourceUrls.getItems())
 				{
-					sourceUrl.setAddItem(true);
+					sourceUrl.setState(ADD_STATE);
 				}
 				topic.explicitSetSourceUrls_OTM(sourceUrls);
 			}
@@ -187,7 +193,7 @@ public class RESTWriter
 	 */
 	public Integer updateTopic(final Integer topicId, final String title, final String text, final String description, final Date timestamp,
 			final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships, final RESTTopicCollectionV1 outgoingRelationships,
-			final RESTTagCollectionV1 tags, final RESTPropertyTagCollectionV1 properties)
+			final RESTTagCollectionV1 tags, final RESTAssignedPropertyTagCollectionV1 properties)
 	{
 		Integer insertId = null;
 		try
@@ -213,44 +219,44 @@ public class RESTWriter
 			}
 			if (!incomingRelationships.getItems().isEmpty())
 			{
-				for (RESTTopicV1 incomingRelationship : incomingRelationships.getItems())
+				for (final RESTTopicCollectionItemV1 incomingRelationship : incomingRelationships.getItems())
 				{
-					incomingRelationship.setAddItem(true);
+					incomingRelationship.setState(ADD_STATE);
 				}
 				topic.explicitSetIncomingRelationships(incomingRelationships);
 			}
 			if (!outgoingRelationships.getItems().isEmpty())
-			{
-				for (RESTTopicV1 outgoingRelationship : outgoingRelationships.getItems())
-				{
-					outgoingRelationship.setAddItem(true);
-				}
-				topic.explicitSetOutgoingRelationships(outgoingRelationships);
-			}
-			if (!tags.getItems().isEmpty())
-			{
-				for (RESTTagV1 tag : tags.getItems())
-				{
-					tag.setAddItem(true);
-				}
-				topic.explicitSetTags(tags);
-			}
-			if (!properties.getItems().isEmpty())
-			{
-				for (RESTPropertyTagV1 tag : properties.getItems())
-				{
-					tag.setAddItem(true);
-				}
-				topic.explicitSetProperties(properties);
-			}
-			if (!sourceUrls.getItems().isEmpty())
-			{
-				for (RESTTopicSourceUrlV1 sourceUrl : sourceUrls.getItems())
-				{
-					sourceUrl.setAddItem(true);
-				}
-				topic.explicitSetSourceUrls_OTM(sourceUrls);
-			}
+            {
+                for (final RESTTopicCollectionItemV1 outgoingRelationship : outgoingRelationships.getItems())
+                {
+                    outgoingRelationship.setState(ADD_STATE);
+                }
+                topic.explicitSetOutgoingRelationships(outgoingRelationships);
+            }
+            if (!tags.getItems().isEmpty())
+            {
+                for (final RESTTagCollectionItemV1 tag : tags.getItems())
+                {
+                    tag.setState(ADD_STATE);
+                }
+                topic.explicitSetTags(tags);
+            }
+            if (!properties.getItems().isEmpty())
+            {
+                for (final RESTAssignedPropertyTagCollectionItemV1 tag : properties.getItems())
+                {
+                    tag.setState(ADD_STATE);
+                }
+                topic.explicitSetProperties(properties);
+            }
+            if (!sourceUrls.getItems().isEmpty())
+            {
+                for (final RESTTopicSourceUrlCollectionItemV1 sourceUrl : sourceUrls.getItems())
+                {
+                    sourceUrl.setState(ADD_STATE);
+                }
+                topic.explicitSetSourceUrls_OTM(sourceUrls);
+            }
 
 			topic = client.createJSONTopic(null, topic);
 			insertId = topic.getId();
@@ -276,30 +282,26 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Create the Added By, Content Spec Type and DTD property tags
-			RESTPropertyTagCollectionV1 properties = new RESTPropertyTagCollectionV1();
-			RESTPropertyTagV1 addedBy = client.getJSONPropertyTag(CSConstants.ADDED_BY_PROPERTY_TAG_ID, null);
+			final RESTAssignedPropertyTagCollectionV1 properties = new RESTAssignedPropertyTagCollectionV1();
+			final RESTAssignedPropertyTagV1 addedBy = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.ADDED_BY_PROPERTY_TAG_ID, null));
 			addedBy.explicitSetValue(createdBy);
-			addedBy.setAddItem(true);
 
-			RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+			final RESTAssignedPropertyTagV1 typePropertyTag = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null));
 			typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
-			typePropertyTag.setAddItem(true);
 
-			RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
+			final RESTAssignedPropertyTagV1 dtdPropertyTag = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null));
 			dtdPropertyTag.explicitSetValue(dtd);
-			dtdPropertyTag.setAddItem(true);
 
-			properties.addItem(addedBy);
-			properties.addItem(dtdPropertyTag);
-			properties.addItem(typePropertyTag);
+			properties.addNewItem(addedBy);
+			properties.addNewItem(dtdPropertyTag);
+			properties.addNewItem(typePropertyTag);
 
 			contentSpec.explicitSetProperties(properties);
 
 			// Add the Content Specification Type Tag
-			RESTTagCollectionV1 tags = new RESTTagCollectionV1();
-			RESTTagV1 typeTag = client.getJSONTag(CSConstants.CONTENT_SPEC_TAG_ID, null);
-			typeTag.setAddItem(true);
-			tags.addItem(typeTag);
+			final RESTTagCollectionV1 tags = new RESTTagCollectionV1();
+			final RESTTagV1 typeTag = client.getJSONTag(CSConstants.CONTENT_SPEC_TAG_ID, null);
+			tags.addNewItem(typeTag);
 
 			contentSpec.explicitSetTags(tags);
 
@@ -336,7 +338,7 @@ public class RESTWriter
 			contentSpec.explicitSetXml(preContentSpec);
 
 			// Update the Content Spec Type and DTD property tags
-			final RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
+			final RESTAssignedPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
 
@@ -344,37 +346,37 @@ public class RESTWriter
 
 				// Loop through and remove any Type or DTD tags if they don't
 				// match
-				for (final RESTPropertyTagV1 property : properties.getItems())
+				for (final RESTAssignedPropertyTagCollectionItemV1 propertyItem : properties.getItems())
 				{
+				    final RESTAssignedPropertyTagV1 property = propertyItem.getItem();
+				    
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
-						property.setRemoveItem(true);
+						propertyItem.setState(REMOVE_STATE);
 					}
 					else if (property.getId().equals(CSConstants.DTD_PROPERTY_TAG_ID))
 					{
 						if (!property.getValue().equals(dtd))
 						{
-							property.setRemoveItem(true);
+						    propertyItem.setState(REMOVE_STATE);
 							newDTD = true;
 						}
 					}
 				}
 
 				// The property tag should never match a pre tag
-				final RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				final RESTAssignedPropertyTagV1 typePropertyTag = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null));
 				typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
-				typePropertyTag.setAddItem(true);
 
-				properties.addItem(typePropertyTag);
+				properties.addNewItem(typePropertyTag);
 
 				// If the DTD has changed then it needs to be re-added
 				if (newDTD)
 				{
-					final RESTPropertyTagV1 dtdPropertyTag = client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null);
+					final RESTAssignedPropertyTagV1 dtdPropertyTag = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null));
 					dtdPropertyTag.explicitSetValue(dtd);
-					dtdPropertyTag.setAddItem(true);
 
-					properties.addItem(dtdPropertyTag);
+					properties.addNewItem(dtdPropertyTag);
 				}
 			}
 
@@ -409,24 +411,24 @@ public class RESTWriter
 			contentSpec.explicitSetXml(postContentSpec);
 
 			// Update Content Spec Type
-			final RESTPropertyTagCollectionV1 properties = contentSpec.getProperties();
+			final RESTAssignedPropertyTagCollectionV1 properties = contentSpec.getProperties();
 			if (properties.getItems() != null && !properties.getItems().isEmpty())
 			{
-
 				// Loop through and remove the type
-				for (final RESTPropertyTagV1 property : properties.getItems())
+				for (final RESTAssignedPropertyTagCollectionItemV1 propertyItem : properties.getItems())
 				{
+				    final RESTAssignedPropertyTagV1 property = propertyItem.getItem();
+				    
 					if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID))
 					{
-						property.setRemoveItem(true);
+						propertyItem.setState(REMOVE_STATE);
 					}
 				}
 
-				final RESTPropertyTagV1 typePropertyTag = client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null);
+				final RESTAssignedPropertyTagV1 typePropertyTag = new RESTAssignedPropertyTagV1(client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null));
 				typePropertyTag.explicitSetValue(CSConstants.CSP_POST_PROCESSED_STRING);
-				typePropertyTag.setAddItem(true);
 
-				properties.addItem(typePropertyTag);
+				properties.addNewItem(typePropertyTag);
 
 				contentSpec.explicitSetProperties(properties);
 			}

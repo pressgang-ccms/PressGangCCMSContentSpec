@@ -3,7 +3,6 @@ package org.jboss.pressgangccms.docbook.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgangccms.utils.structures.Pair;
 
@@ -22,7 +21,7 @@ import org.jboss.pressgangccms.utils.structures.Pair;
  * already has the listed of related topics available to it in a child
  * collection.
  */
-public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, ?, ?>>
 {
 	/** The details of the topic type tag */
 	private Pair<Integer, String> categoryIDAndName;

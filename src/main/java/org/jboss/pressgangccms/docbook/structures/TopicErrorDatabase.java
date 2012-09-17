@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
@@ -15,13 +14,13 @@ import org.jboss.pressgangccms.utils.common.CollectionUtilities;
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 {
 	public static enum ErrorLevel {ERROR, WARNING};
 	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
 		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION}
 
-	private Map<String, List<TopicErrorData<T, U>>> errors = new HashMap<String, List<TopicErrorData<T, U>>>();
+	private Map<String, List<TopicErrorData<T>>> errors = new HashMap<String, List<TopicErrorData<T>>>();
 
 	public int getErrorCount(final String locale)
 	{
@@ -75,16 +74,16 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 
 	private void addItem(final T topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
 	{
-		final TopicErrorData<T, U> topicErrorData = addOrGetTopicErrorData(topic);
+		final TopicErrorData<T> topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
 		if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
 			topicErrorData.addError(item, errorLevel, errorType);
 	}
 
-	private TopicErrorData<T, U> getErrorData(final T topic)
+	private TopicErrorData<T> getErrorData(final T topic)
 	{
 		for (final String locale : errors.keySet())
-			for (final TopicErrorData<T, U> topicErrorData : errors.get(locale))
+			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
 			{
 				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
 				{
@@ -103,15 +102,15 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 		return null;
 	}
 
-	private TopicErrorData<T, U> addOrGetTopicErrorData(final T topic)
+	private TopicErrorData<T> addOrGetTopicErrorData(final T topic)
 	{
-		TopicErrorData<T, U> topicErrorData = getErrorData(topic);
+		TopicErrorData<T> topicErrorData = getErrorData(topic);
 		if (topicErrorData == null)
 		{
-			topicErrorData = new TopicErrorData<T, U>();
+			topicErrorData = new TopicErrorData<T>();
 			topicErrorData.setTopic(topic);
 			if (!errors.containsKey(topic.getLocale()))
-				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T, U>>());
+				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T>>());
 			errors.get(topic.getLocale()).add(topicErrorData);
 		}
 		return topicErrorData;
@@ -122,17 +121,17 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 		return CollectionUtilities.toArrayList(errors.keySet());
 	}
 
-	public List<TopicErrorData<T, U>> getErrors(final String locale)
+	public List<TopicErrorData<T>> getErrors(final String locale)
 	{
 		return errors.containsKey(locale) ? errors.get(locale) : null;
 	}
 	
-	public List<TopicErrorData<T, U>> getErrorsOfType(final String locale, final ErrorType errorType)
+	public List<TopicErrorData<T>> getErrorsOfType(final String locale, final ErrorType errorType)
 	{
-		final List<TopicErrorData<T, U>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData<T, U>>();
+		final List<TopicErrorData<T>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData<T>>();
 		
-		final List<TopicErrorData<T, U>> typeErrorDatas = new ArrayList<TopicErrorData<T, U>>();
-		for (final TopicErrorData<T, U> errorData : localeErrors)
+		final List<TopicErrorData<T>> typeErrorDatas = new ArrayList<TopicErrorData<T>>();
+		for (final TopicErrorData<T> errorData : localeErrors)
 		{
 			if (errorData.hasErrorType(errorType))
 				typeErrorDatas.add(errorData);
@@ -141,7 +140,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U>, U extends BaseR
 		return typeErrorDatas;
 	}
 
-	public void setErrors(final String locale, final List<TopicErrorData<T, U>> errors)
+	public void setErrors(final String locale, final List<TopicErrorData<T>> errors)
 	{
 		this.errors.put(locale, errors);
 	}

@@ -5,12 +5,12 @@ import java.util.Comparator;
 import java.util.List;
 
 import org.jboss.pressgangccms.docbook.structures.InjectionTopicData;
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgangccms.utils.sort.ExternalListSort;
 
 
-public class TopicTitleSorter<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> implements ExternalListSort<Integer, T, InjectionTopicData>
+public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
+        implements ExternalListSort<Integer, T, InjectionTopicData>
 {
 	public void sort(final List<T> topics, final List<InjectionTopicData> list) 
 	    {

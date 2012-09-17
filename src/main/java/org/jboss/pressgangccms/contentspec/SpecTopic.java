@@ -16,7 +16,6 @@ import org.jboss.pressgangccms.contentspec.entities.Relationship;
 import org.jboss.pressgangccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgangccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgangccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentTopicV1;
 import org.jboss.pressgangccms.rest.v1.components.ComponentTranslatedTopicV1;
 import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
@@ -38,7 +37,7 @@ public class SpecTopic extends SpecNode {
     private String targetId = null;
     private String title = null;
     private String duplicateId = null;
-    private RESTBaseTopicV1<?, ?> topic = null;
+    private RESTBaseTopicV1<?, ?, ?> topic = null;
     private Document xmlDocument = null;
     private Integer revision = null;
 
@@ -97,7 +96,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @return The underlying topic if it has been set otherwise null.
      */
-    public RESTBaseTopicV1<?, ?> getTopic() {
+    public RESTBaseTopicV1<?, ?, ?> getTopic() {
         return topic;
     }
 
@@ -106,8 +105,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @param topic The underlying topic.
      */
-    public <T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>> void setTopic(
-            final RESTBaseTopicV1<T, U> topic) {
+    public <T extends RESTBaseTopicV1<T, ?, ?>> void setTopic(final T topic) {
         this.topic = topic;
     }
 

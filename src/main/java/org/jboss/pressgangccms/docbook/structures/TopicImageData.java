@@ -1,13 +1,12 @@
 package org.jboss.pressgangccms.docbook.structures;
 
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
 
 /**
  * This class is used to map an image referenced inside a topic to the topic
  * itself. This is mostly for error reporting purposes.
  */
-public class TopicImageData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class TopicImageData<T extends RESTBaseTopicV1<T, ?, ?>>
 {
 	private T topic = null;
 	private String imageName = null;

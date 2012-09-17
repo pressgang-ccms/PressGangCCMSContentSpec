@@ -9,13 +9,12 @@ import java.util.Set;
 
 import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
 import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorType;
-import org.jboss.pressgangccms.rest.v1.collections.base.BaseRestCollectionV1;
 import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
 
 /**
  * Stores information on the errors and warnings that were detected in a topic.
  */
-public class TopicErrorData<T extends RESTBaseTopicV1<T, U>, U extends BaseRestCollectionV1<T, U>>
+public class TopicErrorData<T extends RESTBaseTopicV1<T, ?, ?>>
 {	
 	private T topic;
 	private Map<ErrorLevel, Set<String>> errors = new HashMap<ErrorLevel, Set<String>>();

@@ -36,6 +36,11 @@ public class CSConstants {
 	public static final Integer CONCERN_CATEGORY_ID = 2;
 	public static final String CONCERN_CATEGORY_NAME = "Concerns";
 	public static final Integer LIFECYCLE_CATEGORY_ID = 5;
+	public static final Integer INFORMATION_SENSITIVITY_CATEGORY_ID = 19;
+	public static final Integer SEO_METADATA_CATEGORY_ID = 24;
+	public static final Integer CONTENT_TYPE_CATEGORY_ID = 23;
+	public static final Integer PROGRAMMING_LANGUAGE_CATEGORY_ID = 22;
+	
 	public static final Integer RH_INTERNAL_TAG_ID = 315;
 	
 	public static final String NEW_TOPIC_ID_REGEX 			= "^N[0-9]*$";

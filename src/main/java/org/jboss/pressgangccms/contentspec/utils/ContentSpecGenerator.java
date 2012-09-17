@@ -10,7 +10,6 @@ import org.jboss.pressgangccms.contentspec.ContentSpec;
 import org.jboss.pressgangccms.contentspec.Level;
 import org.jboss.pressgangccms.contentspec.Section;
 import org.jboss.pressgangccms.contentspec.SpecTopic;
-import org.jboss.pressgangccms.contentspec.constants.CSConstants;
 import org.jboss.pressgangccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgangccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgangccms.docbook.constants.DocbookBuilderConstants;
@@ -209,14 +208,12 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 			
 			/* Setup the basic content specification data */
 			retValue.setTitle(docbookBuildingOptions.getBookTitle());
-			retValue.setBrand("JBoss-EAP6");
+			retValue.setBrand("JBoss");
 			retValue.setProduct(docbookBuildingOptions.getBookProduct());
 			retValue.setVersion(docbookBuildingOptions.getBookProductVersion());
 			retValue.setEdition(docbookBuildingOptions.getBookEdition() == null || docbookBuildingOptions.getBookEdition().isEmpty() ? null : docbookBuildingOptions.getBookEdition());
 			retValue.setSubtitle(docbookBuildingOptions.getBookSubtitle() == null || docbookBuildingOptions.getBookSubtitle().isEmpty() ? null : docbookBuildingOptions.getBookSubtitle());
-			retValue.setPubsNumber(docbookBuildingOptions.getBookPubsnumber() == null || docbookBuildingOptions.getBookPubsnumber().isEmpty() ? 1 : Integer.parseInt(docbookBuildingOptions.getBookPubsnumber()));
 			retValue.setDtd("Docbook 4.5");
-			retValue.setOutputStyle(CSConstants.SKYNET_OUTPUT_FORMAT);
 			retValue.setCopyrightHolder("Red Hat, Inc");
 			retValue.setInjectSurveyLinks(docbookBuildingOptions.getInsertSurveyLink() == null ? false : docbookBuildingOptions.getInsertSurveyLink());
 			

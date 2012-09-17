@@ -1112,18 +1112,18 @@ public class RESTReader
      */
     public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision)
     {
-        return getPreContentSpecById(id, revision, null, 5);
+        return getPreContentSpecById(id, revision, null, 5, true, 5);
     }
 	
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit)
+	public RESTTopicV1 getPreContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit, final boolean recursive, final int increment)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
 		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
-		if (specRevisions == null)
+		if (specRevisions == null || specRevisions.isEmpty())
 			return null;
 
 		// Create a sorted set of revision ids that are less the the current
@@ -1137,27 +1137,30 @@ public class RESTReader
 			}
 		}
 
-		if (sortedSpecRevisions.size() == 0)
-			return null;
-
 		// Find the Pre Content Spec from the revisions
 		RESTTopicV1 preContentSpec = null;
-		Integer specRev = sortedSpecRevisions.last();
-		while (specRev != null)
-		{
-			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
-			{
-				preContentSpec = contentSpecRev;
-				break;
-			}
-			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
-		}
+		if (sortedSpecRevisions.size() > 0)
+        {
+    		Integer specRev = sortedSpecRevisions.last();
+    		while (specRev != null)
+    		{
+    			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
+    			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING))
+    			{
+    				preContentSpec = contentSpecRev;
+    				break;
+    			}
+    			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+    		}
+        }
 		
 		/* If the defaults were used then try to go back 5 more */
-        if (preContentSpec == null && startLimit == null && endLimit == 5)
+        if (preContentSpec == null && recursive)
         {
-            return this.getPreContentSpecById(id, revision, 5, 10);
+            final Integer start = startLimit == null ? increment : startLimit + increment;
+            final Integer end = endLimit == null ? null : endLimit + increment;
+            
+            return this.getPreContentSpecById(id, revision, start, end, recursive, increment);
         }
 		return preContentSpec;
 	}
@@ -1167,18 +1170,18 @@ public class RESTReader
      */
     public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
     {
-        return getPostContentSpecById(id, revision, null, 5);
+        return getPostContentSpecById(id, revision, null, 5, true, 5);
     }
 
 	/*
 	 * Get the Pre Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit)
+	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit, final boolean recursive, final int increment)
 	{
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
 		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
-		if (specRevisions == null)
+		if (specRevisions == null || specRevisions.isEmpty())
 			return null;
 
 		// Create a sorted set of revision ids that are less the the current
@@ -1192,27 +1195,30 @@ public class RESTReader
 			}
 		}
 
-		if (sortedSpecRevisions.size() == 0)
-			return null;
-
 		// Find the Post Content Spec from the revisions
 		RESTTopicV1 postContentSpec = null;
-		Integer specRev = sortedSpecRevisions.last();
-		while (specRev != null)
+		if (sortedSpecRevisions.size() > 0)
 		{
-			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
-			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
-			{
-				postContentSpec = contentSpecRev;
-				break;
-			}
-			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+    		Integer specRev = sortedSpecRevisions.last();
+    		while (specRev != null)
+    		{
+    			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
+    			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
+    			{
+    				postContentSpec = contentSpecRev;
+    				break;
+    			}
+    			specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+    		}
 		}
 		
 		/* If the defaults were used then try to go back 5 more */
-		if (postContentSpec == null && startLimit == null && endLimit == 5)
+		if (postContentSpec == null && recursive)
 		{
-		    return this.getPostContentSpecById(id, revision, 5, 10);
+		    final Integer start = startLimit == null ? increment : startLimit + increment;
+		    final Integer end = endLimit == null ? null : endLimit + increment;
+		    
+		    return this.getPostContentSpecById(id, revision, start, end, recursive, increment);
 		}
 		return postContentSpec;
 	}

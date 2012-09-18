@@ -1,6 +1,6 @@
 package org.jboss.pressgangccms.docbook.structures;
 
-import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 
 /**
  * This class is used to map an image referenced inside a topic to the topic

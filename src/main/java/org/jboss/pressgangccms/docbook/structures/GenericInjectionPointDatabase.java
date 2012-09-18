@@ -3,8 +3,8 @@ package org.jboss.pressgangccms.docbook.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgangccms.rest.v1.entities.base.RESTBaseTopicV1;
-import org.jboss.pressgangccms.utils.structures.Pair;
+import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.utils.structures.Pair;
 
 /**
  * Provides a way to manage a collection of GenericInjectionPoint objects.

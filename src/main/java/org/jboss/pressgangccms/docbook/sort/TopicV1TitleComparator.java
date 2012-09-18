@@ -2,7 +2,7 @@ package org.jboss.pressgangccms.docbook.sort;
 
 import java.util.Comparator;
 
-import org.jboss.pressgangccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
 
 public class TopicV1TitleComparator implements Comparator<RESTTopicV1>
 {

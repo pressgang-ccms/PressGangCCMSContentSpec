@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.constants;
+package org.jboss.pressgang.ccms.docbook.constants;
 
 public class DocbookBuilderConstants
 {

@@ -1,12 +1,12 @@
-package org.jboss.pressgangccms.docbook.sort;
+package org.jboss.pressgang.ccms.docbook.sort;
 
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
-import org.jboss.pressgangccms.docbook.structures.InjectionTopicData;
 
 
 public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>

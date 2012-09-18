@@ -11,6 +11,8 @@ import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
+import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
+import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTCategoryV1;
@@ -25,8 +27,6 @@ import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataTrunk;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
-import org.jboss.pressgangccms.docbook.compiling.DocbookBuildingOptions;
-import org.jboss.pressgangccms.docbook.constants.DocbookBuilderConstants;
 
 
 public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTBaseCollectionV1<T, U, ?>>

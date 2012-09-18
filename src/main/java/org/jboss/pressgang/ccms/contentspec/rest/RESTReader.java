@@ -18,6 +18,7 @@ import org.jboss.pressgang.ccms.rest.v1.collections.RESTCategoryCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.RESTTagCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.RESTTopicCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.RESTTranslatedTopicCollectionV1;
+import org.jboss.pressgang.ccms.rest.v1.collections.RESTTranslatedTopicStringCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.RESTUserCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
@@ -28,6 +29,7 @@ import org.jboss.pressgang.ccms.rest.v1.entities.RESTImageV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicSourceUrlV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicStringV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTUserV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
@@ -676,6 +678,50 @@ public class RESTReader
 	}
 
 	/**
+     * Gets a translated topic based on a topic id, revision and locale.
+     */
+    public RESTTranslatedTopicStringCollectionV1 getTranslatedTopicStringsByTopicId(final Integer id, final Integer rev, final String locale)
+    {
+        final RESTTranslatedTopicV1 translatedTopic = getTranslatedTopicByTopicId(id, rev, locale);
+        
+        if (translatedTopic == null) return null;
+        
+        try
+        {
+            final List<String> additionalKeys = CollectionUtilities.toArrayList("revision" + rev, "translatedTopic" + translatedTopic.getId());
+            if (collectionsCache.containsKey(RESTTranslatedTopicStringV1.class, additionalKeys))
+            {
+                return collectionsCache.get(RESTTranslatedTopicStringV1.class, RESTTranslatedTopicStringCollectionV1.class, additionalKeys);
+            }
+            else
+            {
+                /*
+                 * We need to expand the all the items in the translatedtopic
+                 * collection
+                 */
+                final ExpandDataTrunk expand = new ExpandDataTrunk();
+        
+                final ExpandDataTrunk expandTranslatedStrings = new ExpandDataTrunk(new ExpandDataDetails(RESTTranslatedTopicV1.TRANSLATEDTOPICSTRING_NAME));
+    
+                expand.setBranches(CollectionUtilities.toArrayList(expandTranslatedStrings));
+        
+                final String expandString = mapper.writeValueAsString(expand);
+                
+                final RESTTranslatedTopicV1 translatedTopicStrings = client.getJSONTranslatedTopic(translatedTopic.getId(), expandString);
+                collectionsCache.add(RESTTranslatedTopicStringV1.class, translatedTopicStrings.getTranslatedTopicStrings_OTM(), additionalKeys);
+                
+                return translatedTopicStrings.getTranslatedTopicStrings_OTM();
+            }
+        }
+        catch (Exception e)
+        {
+            log.error(ExceptionUtilities.getStackTrace(e));
+        }
+        
+        return null;
+    }
+	
+	/**
 	 * Gets a translated topic based on a topic id, revision and locale.
 	 */
 	public RESTTranslatedTopicV1 getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale)
@@ -1166,19 +1212,27 @@ public class RESTReader
 	}
 	
 	/*
-     * Get the Pre Processed Content Specification for a ID and Revision
+     * Get the Post Processed Content Specification for a ID and Revision
      */
     public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision)
     {
-        return getPostContentSpecById(id, revision, null, 5, true, 5);
+        return getPostContentSpecById(id, revision, null, 5, true, 5, false);
+    }
+	
+	/*
+     * Get the Post Processed Content Specification for a ID and Revision
+     */
+    public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final boolean expandTranslations)
+    {
+        return getPostContentSpecById(id, revision, null, 5, true, 5, expandTranslations);
     }
 
 	/*
-	 * Get the Pre Processed Content Specification for a ID and Revision
+	 * Get the Post Processed Content Specification for a ID and Revision
 	 */
-	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit, final boolean recursive, final int increment)
+	public RESTTopicV1 getPostContentSpecById(final Integer id, final Integer revision, final Integer startLimit, final Integer endLimit, final boolean recursive, final int increment, final boolean expandTranslations)
 	{
-		final RESTTopicV1 cs = getContentSpecById(id, revision);
+		final RESTTopicV1 cs = getContentSpecById(id, revision, expandTranslations);
 		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
 		if (specRevisions == null || specRevisions.isEmpty())
@@ -1202,7 +1256,7 @@ public class RESTReader
     		Integer specRev = sortedSpecRevisions.last();
     		while (specRev != null)
     		{
-    			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
+    			final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev, expandTranslations);
     			if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING))
     			{
     				postContentSpec = contentSpecRev;
@@ -1218,7 +1272,7 @@ public class RESTReader
 		    final Integer start = startLimit == null ? increment : startLimit + increment;
 		    final Integer end = endLimit == null ? null : endLimit + increment;
 		    
-		    return this.getPostContentSpecById(id, revision, start, end, recursive, increment);
+		    return this.getPostContentSpecById(id, revision, start, end, recursive, increment, expandTranslations);
 		}
 		return postContentSpec;
 	}

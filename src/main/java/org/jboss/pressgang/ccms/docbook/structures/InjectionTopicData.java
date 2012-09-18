@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.structures;
+package org.jboss.pressgang.ccms.docbook.structures;
 /**
  *  This class represents a topic that was included in a custom injection point.
  */

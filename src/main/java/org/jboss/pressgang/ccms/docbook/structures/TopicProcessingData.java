@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.structures;
+package org.jboss.pressgang.ccms.docbook.structures;
 
 import org.w3c.dom.Document;
 

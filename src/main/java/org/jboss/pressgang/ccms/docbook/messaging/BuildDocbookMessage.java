@@ -1,7 +1,7 @@
-package org.jboss.pressgangccms.docbook.messaging;
+package org.jboss.pressgang.ccms.docbook.messaging;
 
+import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
-import org.jboss.pressgangccms.docbook.compiling.DocbookBuildingOptions;
 
 public class BuildDocbookMessage
 {

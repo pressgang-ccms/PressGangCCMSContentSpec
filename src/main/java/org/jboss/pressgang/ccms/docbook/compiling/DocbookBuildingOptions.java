@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.compiling;
+package org.jboss.pressgang.ccms.docbook.compiling;
 
 import java.util.ArrayList;
 import java.util.List;

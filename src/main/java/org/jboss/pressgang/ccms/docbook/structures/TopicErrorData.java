@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.structures;
+package org.jboss.pressgang.ccms.docbook.structures;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
+import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorType;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
-import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
-import org.jboss.pressgangccms.docbook.structures.TopicErrorDatabase.ErrorType;
 
 /**
  * Stores information on the errors and warnings that were detected in a topic.

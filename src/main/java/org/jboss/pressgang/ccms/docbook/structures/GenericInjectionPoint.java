@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.docbook.structures;
+package org.jboss.pressgang.ccms.docbook.structures;
 
 import java.util.ArrayList;
 import java.util.List;

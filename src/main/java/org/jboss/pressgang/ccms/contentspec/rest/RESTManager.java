@@ -25,8 +25,6 @@ public class RESTManager
 	
 	public RESTManager(final String serverUrl)
 	{
-		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
-		ResteasyProviderFactory.getInstance().registerProvider(ResteasyJacksonProvider.class);
 		client = PressGangCCMSProxyFactoryV1.create(serverUrl).getRESTClient();
 		reader = new RESTReader(client, entityCache, collectionCache);
 		writer = new RESTWriter(reader, client, entityCache, collectionCache);

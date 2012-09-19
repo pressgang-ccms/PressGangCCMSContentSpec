@@ -2,6 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.rest;
 
 import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTCollectionCache;
 import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTEntityCache;
+import org.jboss.pressgang.ccms.rest.v1.client.PressGangCCMSProxyFactoryV1;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.resteasy.client.ProxyFactory;
 import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
@@ -26,7 +27,7 @@ public class RESTManager
 	{
 		RegisterBuiltin.register(ResteasyProviderFactory.getInstance());
 		ResteasyProviderFactory.getInstance().registerProvider(ResteasyJacksonProvider.class);
-		client = ProxyFactory.create(RESTInterfaceV1.class, serverUrl);
+		client = PressGangCCMSProxyFactoryV1.create(serverUrl).getRESTClient();
 		reader = new RESTReader(client, entityCache, collectionCache);
 		writer = new RESTWriter(reader, client, entityCache, collectionCache);
 	}

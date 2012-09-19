@@ -34,6 +34,7 @@ public class Level extends SpecNode {
     private String targetId = null;
     private String externalTargetId = null;
     protected String title = null;
+    protected String translatedTitle = null;
     protected String duplicateId = null;
 
     /**
@@ -80,6 +81,24 @@ public class Level extends SpecNode {
      */
     public void setTitle(final String title) {
         this.title = title;
+    }
+    
+    /**
+     * Gets the translated title of the Level.
+     * 
+     * @return The translated title of the Level.
+     */
+    public String getTranslatedTitle() {
+        return translatedTitle;
+    }
+
+    /**
+     * Sets the translated title for the Level.
+     * 
+     * @param title The translated title for the Level.
+     */
+    public void setTranslatedTitle(final String translatedTitle) {
+        this.translatedTitle = translatedTitle;
     }
 
     /**
@@ -405,7 +424,8 @@ public class Level extends SpecNode {
     @Override
     public String getText() {
         final String options = getOptionsString();
-        String output = type != LevelType.BASE ? (type.getTitle() + ": " + (title == null ? "" : title)
+        final String title = (this.translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
+        String output = type != LevelType.BASE ? (type.getTitle() + ": " + title
         // Add the target id if one exists
                 + (targetId == null ? "" : (" [" + targetId + "]"))
         // Add the external target id if one exists

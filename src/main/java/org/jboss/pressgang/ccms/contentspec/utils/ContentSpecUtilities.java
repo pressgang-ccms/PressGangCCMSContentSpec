@@ -141,7 +141,7 @@ public class ContentSpecUtilities
 								{
 									if (node instanceof Level)
 									{
-										((Level)node).setTitle(fixedTranslation);
+										((Level)node).setTranslatedTitle(fixedTranslation);
 									}
 									else if (node instanceof KeyValueNode)
 									{

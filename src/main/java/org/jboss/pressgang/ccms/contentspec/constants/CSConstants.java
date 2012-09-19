@@ -59,6 +59,8 @@ public class CSConstants {
 	
 	public static final String BOOK_TYPE_BOOK = "Book";
 	public static final String BOOK_TYPE_ARTICLE = "Article";
+	public static final String BOOK_TYPE_BOOK_DRAFT = "Book-Draft";
+    public static final String BOOK_TYPE_ARTICLE_DRAFT = "Article-Draft";
 	
 	/** The Concept tag ID */
 	public static final Integer CONCEPT_TAG_ID = 5;

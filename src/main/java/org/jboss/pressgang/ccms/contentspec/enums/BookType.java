@@ -4,7 +4,7 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 
 public enum BookType
 {
-	BOOK(CSConstants.BOOK_TYPE_BOOK), ARTICLE(CSConstants.BOOK_TYPE_ARTICLE);
+	BOOK(CSConstants.BOOK_TYPE_BOOK), ARTICLE(CSConstants.BOOK_TYPE_ARTICLE), BOOK_DRAFT(CSConstants.BOOK_TYPE_BOOK_DRAFT), ARTICLE_DRAFT(CSConstants.BOOK_TYPE_ARTICLE_DRAFT);
 	
 	private final String title;
 	
@@ -23,6 +23,14 @@ public enum BookType
 		{
 			return ARTICLE;
 		}
+		else if (bookType.equalsIgnoreCase(CSConstants.BOOK_TYPE_BOOK_DRAFT))
+        {
+            return BOOK_DRAFT;
+        }
+        else if (bookType.equalsIgnoreCase(CSConstants.BOOK_TYPE_ARTICLE_DRAFT))
+        {
+            return ARTICLE_DRAFT;
+        }
 		else
 		{
 			return null;

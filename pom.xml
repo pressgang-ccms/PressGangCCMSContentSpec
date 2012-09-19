@@ -40,7 +40,7 @@
     </dependency>
     <dependency>
       <groupId>org.jboss.pressgang.ccms</groupId>
-      <artifactId>pressgang-ccms-rest</artifactId>
+      <artifactId>pressgang-ccms-restv1</artifactId>
       <version>1.0-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>

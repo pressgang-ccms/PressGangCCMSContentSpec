@@ -185,7 +185,13 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTB
 			String bugzillaVersion = null;
 			String bugzillaKeywords = null;
 			String bugzillaAssignedTo = null;
-			final String bugzillaEnvironment = URLEncoder.encode("Instance Name: " + fixedInstanceNameProperty + "\nBuild: " + buildName + "\nBuild Filter: " + searchTagsUrl + "\nBuild Name: " + specifiedBuildName + "\nBuild Date: " + formatter.format(buildDate), "UTF-8");
+			final String bugzillaEnvironment = URLEncoder.encode(
+			        "Instance Name: " + fixedInstanceNameProperty + "\n" +
+			        "Build: " + buildName + "\n" +
+			        "Build Filter: " + searchTagsUrl + "\n" + 
+			        "Build Name: " + specifiedBuildName + "\n" +
+			        "Build Date: " + formatter.format(buildDate), "UTF-8");
+			final String bugzillaSummary = URLEncoder.encode(topic.getTitle(), "UTF-8");
 			final String bugzillaBuildID =  topic instanceof RESTTranslatedTopicV1 ? URLEncoder.encode(ComponentTranslatedTopicV1.returnBugzillaBuildId((RESTTranslatedTopicV1) topic), "UTF-8") : URLEncoder.encode(ComponentTopicV1.returnBugzillaBuildId((RESTTopicV1) topic), "UTF-8");
 
 			/* look for the bugzilla options */
@@ -225,6 +231,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTB
 
 			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
 			bugzillaURLComponents += "cf_build_id=" + bugzillaBuildID;
+			
+			bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+			bugzillaURLComponents += "short_desc=" + bugzillaSummary;
 			
 			if (bugzillaAssignedTo != null)
 			{

@@ -96,8 +96,12 @@ public class RESTReader
 
 		try
 		{
-		    RESTCategoryCollectionV1 categories = collectionsCache.get(RESTCategoryV1.class, RESTCategoryCollectionV1.class);
-			if (categories.getItems() == null)
+		    final RESTCategoryCollectionV1 categories;
+		    if (collectionsCache.containsKey(RESTCategoryV1.class))
+		    {
+		        categories = collectionsCache.get(RESTCategoryV1.class, RESTCategoryCollectionV1.class);
+		    }
+		    else
 			{
 				/* We need to expand the Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();
@@ -192,8 +196,12 @@ public class RESTReader
 
 		try
 		{
-		    RESTTagCollectionV1 tags = collectionsCache.get(RESTTagV1.class, RESTTagCollectionV1.class);
-			if (tags.getItems() == null)
+		    final RESTTagCollectionV1 tags;
+		    if (collectionsCache.containsKey(RESTTagV1.class))
+		    {
+		        tags = collectionsCache.get(RESTTagV1.class, RESTTagCollectionV1.class);
+		    }
+		    else
 			{
 				/* We need to expand the Tags & Categories collection */
 				final ExpandDataTrunk expand = new ExpandDataTrunk();

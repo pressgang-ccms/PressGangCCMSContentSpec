@@ -25,6 +25,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> brand = null;
     private KeyValueNode<String> subtitle = null;
     private KeyValueNode<String> edition = null;
+    private KeyValueNode<String> bookVersion = null;
     private KeyValueNode<Integer> pubsNumber = null;
     private KeyValueNode<String> publicanCfg = null;
     private ArrayList<String> text = new ArrayList<String>();
@@ -294,6 +295,33 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the Book Version of the book the Content Specification will create.
+     * 
+     * @return The Content Specifications Book Edition or null if one doesn't exist.
+     */
+    public String getBookVersion() {
+        return bookVersion == null ? null : bookVersion.getValue();
+    }
+
+    /**
+     * Set the BookVersion of the Book the Content Specification represents.
+     * 
+     * @param edition The Book Edition.
+     */
+    public void setBookVersion(final String bookVersion) {
+        if (bookVersion == null) {
+            return;
+        }
+
+        if (this.bookVersion == null) {
+            this.bookVersion = new KeyValueNode<String>("Book Version", bookVersion);
+            appendChild(this.bookVersion);
+        } else {
+            this.edition.setValue(bookVersion);
+        }
+    }
+    
+    /**
      * Gets the Edition of the book the Content Specification will create.
      * 
      * @return The Content Specifications Book Edition or null if one doesn't exist.
@@ -325,7 +353,6 @@ public class ContentSpec extends Node {
      * 
      * @return The publication number or null if one doesn't exist.
      */
-    @Deprecated
     public Integer getPubsNumber() {
         return (Integer) (pubsNumber == null ? null : pubsNumber.getValue());
     }
@@ -335,7 +362,6 @@ public class ContentSpec extends Node {
      * 
      * @param pubsNumber The publication number.
      */
-    @Deprecated
     public void setPubsNumber(final Integer pubsNumber) {
         if (pubsNumber == null) {
             return;

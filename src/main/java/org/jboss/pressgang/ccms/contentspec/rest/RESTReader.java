@@ -350,55 +350,45 @@ public class RESTReader
 				query = query.substring(0, query.length() - 1);
 
 				final PathSegment path = new PathSegmentImpl(query, false);
-				
-				final RESTTopicCollectionV1 downloadedTopicsSize = client.getJSONTopicsWithQuery(path, "");
-				
-				/* Load the topics in groups to save memory when unmarshalling */
-				final int numTopics = downloadedTopicsSize.getSize();
-				for (int i = 0; i <= numTopics; i = i + 100)
+
+				/* We need to expand the all the items in the topic collection */
+				final ExpandDataTrunk expand = new ExpandDataTrunk();
+				final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(new ExpandDataDetails("topics"));
+				final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
+				final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
+				final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
+				//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
+				final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
+				final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
+
+				/* We need to expand the categories collection on the topic tags */
+				tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
+				if (expandTranslations)
 				{
-					/* We need to expand the all the items in the topic collection */
-					final ExpandDataTrunk expand = new ExpandDataTrunk();
-					final ExpandDataDetails expandTopicDetails = new ExpandDataDetails("topics");
-					expandTopicDetails.setStart(i);
-					expandTopicDetails.setEnd(i + 100);
-					final ExpandDataTrunk topicsExpand = new ExpandDataTrunk(expandTopicDetails);
-					final ExpandDataTrunk tags = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TAGS_NAME));
-					final ExpandDataTrunk properties = new ExpandDataTrunk(new ExpandDataDetails(RESTBaseTopicV1.PROPERTIES_NAME));
-					final ExpandDataTrunk categories = new ExpandDataTrunk(new ExpandDataDetails(RESTTagV1.CATEGORIES_NAME));
-					//final ExpandDataTrunk outgoingRelationships = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.OUTGOING_NAME));
-					final ExpandDataTrunk expandTranslatedTopics = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.TRANSLATEDTOPICS_NAME));
-					final ExpandDataTrunk expandSourceUrls = new ExpandDataTrunk(new ExpandDataDetails(RESTTopicV1.SOURCE_URLS_NAME));
+					//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls, expandTranslatedTopics));
+				}
+				else
+				{
+					//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
+					topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls));
+				}
+				
+				expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
 
-					/* We need to expand the categories collection on the topic tags */
-					tags.setBranches(CollectionUtilities.toArrayList(categories, properties));
-					if (expandTranslations)
-					{
-						//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties, expandTranslatedTopics));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls, expandTranslatedTopics));
-					}
-					else
-					{
-						//outgoingRelationships.setBranches(CollectionUtilities.toArrayList(tags, properties));
-						topicsExpand.setBranches(CollectionUtilities.toArrayList(tags, /*outgoingRelationships,*/ properties, expandSourceUrls));
-					}
-					
-					expand.setBranches(CollectionUtilities.toArrayList(topicsExpand));
+				final String expandString = mapper.writeValueAsString(expand);
+				//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
+				
+				final RESTTopicCollectionV1 downloadedTopics = client.getJSONTopicsWithQuery(path, expandString);
+				entityCache.add(downloadedTopics);
 
-					final String expandString = mapper.writeValueAsString(expand);
-					//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");
-					
-					final RESTTopicCollectionV1 downloadedTopics = client.getJSONTopicsWithQuery(path, expandString);
-					entityCache.add(downloadedTopics);
-
-					/* Transfer the downloaded data to the current topic list */
-					if (downloadedTopics != null && downloadedTopics.getItems() != null)
+				/* Transfer the downloaded data to the current topic list */
+				if (downloadedTopics != null && downloadedTopics.getItems() != null)
+				{
+				    final List<RESTTopicV1> items = downloadedTopics.returnItems();
+					for (final RESTTopicV1 item : items)
 					{
-					    final List<RESTTopicV1> items = downloadedTopics.returnItems();
-						for (final RESTTopicV1 item : items)
-						{
-							topics.addItem(item);
-						}
+						topics.addItem(item);
 					}
 				}
 			}

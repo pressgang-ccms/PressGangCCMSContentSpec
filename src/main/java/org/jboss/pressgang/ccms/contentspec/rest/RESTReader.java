@@ -1167,7 +1167,7 @@ public class RESTReader
 		final RESTTopicV1 cs = getContentSpecById(id, revision);
 		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
-		if (specRevisions == null || specRevisions.isEmpty())
+		if (cs == null || specRevisions == null || specRevisions.isEmpty())
 			return null;
 
 		// Create a sorted set of revision ids that are less the the current
@@ -1199,7 +1199,7 @@ public class RESTReader
         }
 		
 		/* If the defaults were used then try to go back 5 more */
-        if (preContentSpec == null && recursive)
+        if (preContentSpec == null && recursive && specRevisions.size() == Math.abs(increment))
         {
             final Integer start = startLimit == null ? increment : startLimit + increment;
             final Integer end = endLimit == null ? null : endLimit + increment;
@@ -1233,7 +1233,7 @@ public class RESTReader
 		final RESTTopicV1 cs = getContentSpecById(id, revision, expandTranslations);
 		final List<Object[]> specRevisions = getContentSpecRevisionsById(id, startLimit, endLimit);
 
-		if (specRevisions == null || specRevisions.isEmpty())
+		if (cs == null || specRevisions == null || specRevisions.isEmpty())
 			return null;
 
 		// Create a sorted set of revision ids that are less the the current
@@ -1265,7 +1265,7 @@ public class RESTReader
 		}
 		
 		/* If the defaults were used then try to go back 5 more */
-		if (postContentSpec == null && recursive)
+		if (postContentSpec == null && recursive && specRevisions.size() == Math.abs(increment))
 		{
 		    final Integer start = startLimit == null ? increment : startLimit + increment;
 		    final Integer end = endLimit == null ? null : endLimit + increment;

@@ -18,12 +18,12 @@ import org.jboss.pressgang.ccms.rest.v1.collections.items.RESTTopicCollectionIte
 import org.jboss.pressgang.ccms.rest.v1.collections.items.RESTTopicSourceUrlCollectionItemV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.items.join.RESTAssignedPropertyTagCollectionItemV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.join.RESTAssignedPropertyTagCollectionV1;
-import org.jboss.pressgang.ccms.rest.v1.collections.join.RESTCategoryTagCollectionV1;
+import org.jboss.pressgang.ccms.rest.v1.collections.join.RESTCategoryInTagCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryTagV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryInTagV1;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 
@@ -80,10 +80,10 @@ public class RESTWriter
 			RESTTagV1 tag = new RESTTagV1();
 			tag.explicitSetName(name);
 			tag.explicitSetDescription(description);
-			final RESTCategoryTagCollectionV1 newCategories = new RESTCategoryTagCollectionV1();
+			final RESTCategoryInTagCollectionV1 newCategories = new RESTCategoryInTagCollectionV1();
 			for (final RESTCategoryV1 category : categories.returnItems())
 			{
-			    final RESTCategoryTagV1 newCategory = new RESTCategoryTagV1(category);
+			    final RESTCategoryInTagV1 newCategory = new RESTCategoryInTagV1(category);
 			    newCategories.addNewItem(newCategory);
 			}
 			tag.explicitSetCategories(newCategories);

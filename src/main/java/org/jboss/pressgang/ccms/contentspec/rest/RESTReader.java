@@ -34,7 +34,7 @@ import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTUserV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryTagV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryInTagV1;
 import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataDetails;
 import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataTrunk;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
@@ -138,13 +138,13 @@ public class RESTReader
 	/*
 	 * Gets a Category item assuming that tags can only have one category
 	 */
-	public RESTCategoryTagV1 getCategoryByTagId(final int tagId)
+	public RESTCategoryInTagV1 getCategoryByTagId(final int tagId)
 	{
 		final RESTTagV1 tag = getTagById(tagId);
 		if (tag == null)
 			return null;
 
-		final List<RESTCategoryTagV1> categories = tag.getCategories().returnItems();
+		final List<RESTCategoryInTagV1> categories = tag.getCategories().returnItems();
 		return categories.size() > 0 ? categories.get(0) : null;
 	}
 

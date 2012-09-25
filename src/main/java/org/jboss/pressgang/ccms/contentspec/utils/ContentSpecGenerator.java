@@ -20,8 +20,8 @@ import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryTagV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTTagCategoryV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryInTagV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTTagInCategoryV1;
 import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataDetails;
 import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataTrunk;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
@@ -245,18 +245,18 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 			 * we get the tags out of the tech and common names categories, and
 			 * pull outthose that are not encompassed.
 			 */
-			final List<RESTTagCategoryV1> topLevelTags = new ArrayList<RESTTagCategoryV1>();
+			final List<RESTTagInCategoryV1> topLevelTags = new ArrayList<RESTTagInCategoryV1>();
 			for (final RESTCategoryV1 category : new RESTCategoryV1[]
 			{ technologyCategroy, commonNamesCategory })
 			{
 				if (category.getTags().returnItems() != null)
 				{
-					for (final RESTTagCategoryV1 tag : category.getTags().returnItems())
+					for (final RESTTagInCategoryV1 tag : category.getTags().returnItems())
 					{
 						boolean isEmcompassed = false;
 						for (final RESTTagV1 parentTag : tag.getParentTags().returnItems())
 						{
-							for (final RESTCategoryTagV1 parentTagCategory : parentTag.getCategories().returnItems())
+							for (final RESTCategoryInTagV1 parentTagCategory : parentTag.getCategories().returnItems())
 							{
 								if (parentTagCategory.getId().equals(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID) || parentTagCategory.getId().equals(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID))
 								{
@@ -300,7 +300,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 			final RESTTagV1 taskTag = restClient.getJSONTag(DocbookBuilderConstants.TASK_TAG_ID, "");
 
 			/* add TocFormatBranch objects for each top level tag */
-			for (final RESTTagCategoryV1 tag : topLevelTags)
+			for (final RESTTagInCategoryV1 tag : topLevelTags)
 			{
 				/*
 				 * Create the top level tag. This level is represented by the
@@ -322,7 +322,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 				
 				populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
-				for (final RESTTagCategoryV1 concernTag : concernCategory.getTags().returnItems())
+				for (final RESTTagInCategoryV1 concernTag : concernCategory.getTags().returnItems())
 				{
 					/*
 					 * the second level of the toc are the concerns, which will

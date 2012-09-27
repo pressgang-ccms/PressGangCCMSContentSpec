@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionItemV1;
+import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
@@ -14,7 +16,7 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
+public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
 {
 	public static enum ErrorLevel {ERROR, WARNING};
 	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
@@ -85,7 +87,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 		for (final String locale : errors.keySet())
 			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
 			{
-				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
+				if (ComponentBaseTopicV1.<T, U, V>returnIsDummyTopic(topic))
 				{
 					if (topic.getClass() == RESTTranslatedTopicV1.class && topicErrorData.getTopic() instanceof RESTTranslatedTopicV1)
 					{

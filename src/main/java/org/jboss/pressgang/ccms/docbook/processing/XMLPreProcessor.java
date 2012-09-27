@@ -25,6 +25,7 @@ import org.jboss.pressgang.ccms.docbook.structures.GenericInjectionPointDatabase
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
+import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionItemV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
@@ -56,7 +57,7 @@ import com.google.code.regexp.NamedPattern;
 /**
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
-public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTBaseCollectionV1<T, U, ?>>
+public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
 {
 	/**
 	 * Used to identify that an <orderedlist> should be generated for the injection point
@@ -439,9 +440,9 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTB
 
 	@SuppressWarnings("unchecked")
 	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final Document xmlDocument,
-			final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase<T> relatedTopicsDatabase, final boolean usedFixedUrls)
+			final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase<T, U, V> relatedTopicsDatabase, final boolean usedFixedUrls)
 	{
-		TocTopicDatabase<T> relatedTopicDatabase = relatedTopicsDatabase;
+		TocTopicDatabase<T, U, V> relatedTopicDatabase = relatedTopicsDatabase;
 		if (relatedTopicDatabase == null)
 		{
 			/*
@@ -454,7 +455,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTB
 			 * TocTopicDatabase provides a convenient way to access
 			 * these topics
 			 */
-			relatedTopicDatabase = new TocTopicDatabase<T>();
+			relatedTopicDatabase = new TocTopicDatabase<T, U, V>();
 			relatedTopicDatabase.setTopics(relatedTopics);
 		}
 		
@@ -523,7 +524,7 @@ public class XMLPreProcessor<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTB
 
 	public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections,
 			final int injectionPointType, final Document xmlDocument, final String regularExpression, final ExternalListSort<Integer, T, InjectionTopicData> sortComparator,
-			final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase<T> relatedTopicsDatabase, final boolean usedFixedUrls)
+			final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase<T, U, V> relatedTopicsDatabase, final boolean usedFixedUrls)
 	{
 		final List<Integer> retValue = new ArrayList<Integer>();
 

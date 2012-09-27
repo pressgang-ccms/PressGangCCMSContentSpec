@@ -13,6 +13,7 @@ import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
+import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionItemV1;
 import org.jboss.pressgang.ccms.rest.v1.collections.base.RESTBaseCollectionV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTCategoryV1;
@@ -29,7 +30,7 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 
 
-public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends RESTBaseCollectionV1<T, U, ?>>
+public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
 {
 	/** The REST client */
 	private final RESTInterfaceV1 restClient;
@@ -130,7 +131,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 				boolean doesMatch = true;
 				for (final RESTBaseTagV1 andTag : requirements.getMatchAllOf())
 				{
-					if (!ComponentBaseTopicV1.hasTag(topic, andTag.getId()))
+					if (!ComponentBaseTopicV1.<T, U, V>hasTag(topic, andTag.getId()))
 					{
 						doesMatch = false;
 						break;
@@ -146,7 +147,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, ?>, U extends 
 							boolean matchesOrBlock = false;
 							for (final RESTBaseTagV1 orTag : orBlock)
 							{
-								if (ComponentBaseTopicV1.hasTag(topic, orTag.getId()))
+								if (ComponentBaseTopicV1.<T, U, V>hasTag(topic, orTag.getId()))
 								{
 									matchesOrBlock = true;
 									break;

@@ -131,7 +131,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 				boolean doesMatch = true;
 				for (final RESTBaseTagV1 andTag : requirements.getMatchAllOf())
 				{
-					if (!ComponentBaseTopicV1.<T, U, V>hasTag(topic, andTag.getId()))
+					if (!ComponentBaseTopicV1.<T>hasTag(topic, andTag.getId()))
 					{
 						doesMatch = false;
 						break;
@@ -147,7 +147,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 							boolean matchesOrBlock = false;
 							for (final RESTBaseTagV1 orTag : orBlock)
 							{
-								if (ComponentBaseTopicV1.<T, U, V>hasTag(topic, orTag.getId()))
+								if (ComponentBaseTopicV1.<T>hasTag(topic, orTag.getId()))
 								{
 									matchesOrBlock = true;
 									break;

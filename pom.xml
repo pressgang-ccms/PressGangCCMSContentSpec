@@ -9,10 +9,12 @@
 
 	<name>PressGang CCMS ContentSpec</name>
 	<url>http://maven.apache.org</url>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-	</properties>
+	
+		<parent>
+		<groupId>org.jboss.pressgang</groupId>
+		<artifactId>pressgang-parent</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
 
 	<build>
 		<plugins>

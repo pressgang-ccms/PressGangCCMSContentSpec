@@ -9,10 +9,10 @@ import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
 
 
-public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
-        implements ExternalListSort<Integer, T, InjectionTopicData>
+public class TopicTitleSorter
+        implements ExternalListSort<Integer, RESTBaseTopicV1<?, ?, ?>, InjectionTopicData>
 {
-	public void sort(final List<T> topics, final List<InjectionTopicData> list) 
+	public void sort(final List<RESTBaseTopicV1<?, ?, ?>> topics, final List<InjectionTopicData> list) 
 	    {
 	        if (topics == null || list == null)
 	        	return;
@@ -21,10 +21,10 @@ public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
 	        {
 				public int compare(final InjectionTopicData o1, final InjectionTopicData o2)
 	            {
-	            	T topic1 = null;
-	            	T topic2 = null;
+	            	RESTBaseTopicV1<?, ?, ?> topic1 = null;
+	            	RESTBaseTopicV1<?, ?, ?> topic2 = null;
 	            	
-	            	for (final T topic : topics)
+	            	for (final RESTBaseTopicV1<?, ?, ?> topic : topics)
 	            	{
 	            		if (topic.getId().equals(o1.topicId))
 	            			topic1 = topic;
@@ -45,8 +45,8 @@ public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
 	            	if (!v2Exists)
 	            		return 1;
 	            	
-	            	final T v1 = topic1;
-	            	final T v2 = topic2;
+	            	final RESTBaseTopicV1<?, ?, ?> v1 = topic1;
+	            	final RESTBaseTopicV1<?, ?, ?> v2 = topic2;
 	            	
 	            	if (v1 == null && v2 == null)
 	            		return 0;

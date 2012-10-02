@@ -131,7 +131,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 				boolean doesMatch = true;
 				for (final RESTBaseTagV1 andTag : requirements.getMatchAllOf())
 				{
-					if (!ComponentBaseTopicV1.<T>hasTag(topic, andTag.getId()))
+					if (!ComponentBaseTopicV1.hasTag(topic, andTag.getId()))
 					{
 						doesMatch = false;
 						break;
@@ -140,14 +140,14 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 
 				if (doesMatch && requirements.getMatchOneOf().size() != 0)
 				{
-					for (final ArrayList<RESTBaseTagV1> orBlock : requirements.getMatchOneOf())
+					for (final ArrayList<RESTBaseTagV1<?, ?, ?>> orBlock : requirements.getMatchOneOf())
 					{
 						if (orBlock.size() != 0)
 						{
 							boolean matchesOrBlock = false;
 							for (final RESTBaseTagV1 orTag : orBlock)
 							{
-								if (ComponentBaseTopicV1.<T>hasTag(topic, orTag.getId()))
+								if (ComponentBaseTopicV1.hasTag(topic, orTag.getId()))
 								{
 									matchesOrBlock = true;
 									break;
@@ -308,7 +308,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 				 * tags that are not encompased, and includes any topic that has
 				 * that tag or any tag that is encompassed by this tag.
 				 */
-				final TagRequirements topLevelBranchTags = new TagRequirements((RESTBaseTagV1) null, new ArrayList<RESTBaseTagV1>()
+				final TagRequirements topLevelBranchTags = new TagRequirements((RESTBaseTagV1<?, ?, ?>) null, new ArrayList<RESTBaseTagV1<?, ?, ?>>()
 				{
 					private static final long serialVersionUID = 7499166852563779981L;
 
@@ -331,7 +331,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 					 */
 					final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (RESTTagV1) null);
 					concernLevelChildTags.merge(topLevelBranchTags);
-					final TagRequirements concernLevelDisplayTags = new TagRequirements((RESTBaseTagV1) null, new ArrayList<RESTBaseTagV1>()
+					final TagRequirements concernLevelDisplayTags = new TagRequirements((RESTBaseTagV1<?, ?, ?>) null, new ArrayList<RESTBaseTagV1<?, ?, ?>>()
 					{
                         private static final long serialVersionUID = -204535050439409584L;
 

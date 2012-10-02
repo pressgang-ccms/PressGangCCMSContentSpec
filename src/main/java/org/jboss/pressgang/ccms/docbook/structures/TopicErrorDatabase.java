@@ -87,7 +87,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, U, V>, U extends RE
 		for (final String locale : errors.keySet())
 			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
 			{
-				if (ComponentBaseTopicV1.<T>returnIsDummyTopic(topic))
+				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
 				{
 					if (topic.getClass() == RESTTranslatedTopicV1.class && topicErrorData.getTopic() instanceof RESTTranslatedTopicV1)
 					{

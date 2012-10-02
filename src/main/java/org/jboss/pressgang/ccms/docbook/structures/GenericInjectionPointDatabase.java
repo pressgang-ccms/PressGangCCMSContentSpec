@@ -9,18 +9,18 @@ import org.jboss.pressgang.ccms.utils.structures.Pair;
 /**
  * Provides a way to manage a collection of GenericInjectionPoint objects.
  */
-public class GenericInjectionPointDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
+public class GenericInjectionPointDatabase
 {
-	private List<GenericInjectionPoint<T>> injectionPoints = new ArrayList<GenericInjectionPoint<T>>();
+	private List<GenericInjectionPoint> injectionPoints = new ArrayList<GenericInjectionPoint>();
 	
-	public GenericInjectionPoint<T> getInjectionPoint(final Pair<Integer, String> tagDetails)
+	public GenericInjectionPoint getInjectionPoint(final Pair<Integer, String> tagDetails)
 	{
 		return getInjectionPoint(tagDetails.getFirst());
 	}
 	
-	public GenericInjectionPoint<T> getInjectionPoint(final Integer tagId)
+	public GenericInjectionPoint getInjectionPoint(final Integer tagId)
 	{
-		for (final GenericInjectionPoint<T> genericInjectionPoint : injectionPoints)
+		for (final GenericInjectionPoint genericInjectionPoint : injectionPoints)
 		{
 			if (genericInjectionPoint.getCategoryIDAndName().getFirst().equals(tagId))
 				return genericInjectionPoint;
@@ -29,23 +29,23 @@ public class GenericInjectionPointDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 		return null;
 	}
 	
-	public void addInjectionTopic(final Pair<Integer, String> tagDetails, final T topic)
+	public void addInjectionTopic(final Pair<Integer, String> tagDetails, final RESTBaseTopicV1 topic)
 	{
-		GenericInjectionPoint<T> genericInjectionPoint = getInjectionPoint(tagDetails);
+		GenericInjectionPoint genericInjectionPoint = getInjectionPoint(tagDetails);
 		if (genericInjectionPoint == null)
 		{
-			genericInjectionPoint = new GenericInjectionPoint<T>(tagDetails);
+			genericInjectionPoint = new GenericInjectionPoint(tagDetails);
 			injectionPoints.add(genericInjectionPoint);
 		}
 		genericInjectionPoint.addTopic(topic);
 	}
 
-	public List<GenericInjectionPoint<T>> getInjectionPoints()
+	public List<GenericInjectionPoint> getInjectionPoints()
 	{
 		return injectionPoints;
 	}
 
-	public void setInjectionPoints(List<GenericInjectionPoint<T>> injectionPoints)
+	public void setInjectionPoints(List<GenericInjectionPoint> injectionPoints)
 	{
 		this.injectionPoints = injectionPoints;
 	}

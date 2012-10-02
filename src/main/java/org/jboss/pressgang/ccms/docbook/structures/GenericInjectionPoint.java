@@ -21,12 +21,12 @@ import org.jboss.pressgang.ccms.utils.structures.Pair;
  * already has the listed of related topics available to it in a child
  * collection.
  */
-public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, ?, ?>>
+public class GenericInjectionPoint
 {
 	/** The details of the topic type tag */
 	private Pair<Integer, String> categoryIDAndName;
 	/** The topics to be linked to */
-	private List<T> topics;
+	private List<RESTBaseTopicV1> topics;
 
 	public Pair<Integer, String> getCategoryIDAndName()
 	{
@@ -38,17 +38,17 @@ public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, ?, ?>>
 		this.categoryIDAndName = categoryIDAndName;
 	}
 
-	public List<T> getTopics()
+	public List<RESTBaseTopicV1> getTopics()
 	{
 		return topics;
 	}
 
-	public void setTopics(List<T> topics)
+	public void setTopics(final List<RESTBaseTopicV1> topics)
 	{
 		this.topics = topics;
 	}
 
-	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<T> topics)
+	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<RESTBaseTopicV1> topics)
 	{
 		this.categoryIDAndName = categoryIDAndName;
 		this.topics = topics;
@@ -57,10 +57,10 @@ public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, ?, ?>>
 	public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName)
 	{
 		this.categoryIDAndName = categoryIDAndName;
-		this.topics = new ArrayList<T>();
+		this.topics = new ArrayList<RESTBaseTopicV1>();
 	}
 	
-	public void addTopic(final T topic)
+	public void addTopic(final RESTBaseTopicV1 topic)
 	{
 		this.topics.add(topic);
 	}

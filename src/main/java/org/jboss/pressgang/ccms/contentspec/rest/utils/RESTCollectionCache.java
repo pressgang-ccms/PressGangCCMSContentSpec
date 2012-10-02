@@ -12,28 +12,24 @@ import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 public class RESTCollectionCache
 {
 	private final RESTEntityCache entityCache;
-	private final HashMap<String, RESTBaseCollectionV1<? extends RESTBaseEntityV1<?, ?, ?>, ? extends RESTBaseCollectionV1<?, ?, ?>, ? extends RESTBaseCollectionItemV1<?, ?, ?>>> collections
-	        = new HashMap<String, RESTBaseCollectionV1<? extends RESTBaseEntityV1<?, ?, ?>, ? extends RESTBaseCollectionV1<?, ?, ?>, ? extends RESTBaseCollectionItemV1<?, ?, ?>>>();
+	private final HashMap<String, RESTBaseCollectionV1> collections = new HashMap<String, RESTBaseCollectionV1>();
 
 	public RESTCollectionCache(final RESTEntityCache entityCache)
 	{
 		this.entityCache = entityCache;
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        void add(final Class<T> clazz, final U value)
+	public void add(final Class<? extends RESTBaseEntityV1> clazz, final RESTBaseCollectionV1 value)
 	{
 		add(clazz, value, null);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        void add(final Class<T> clazz, final U value, final List<String> additionalKeys)
+	public void add(final Class<? extends RESTBaseEntityV1> clazz, final RESTBaseCollectionV1 value, final List<String> additionalKeys)
 	{
 		add(clazz, value, additionalKeys, false);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        void add(final Class<T> clazz, final U value, final List<String> additionalKeys, final boolean isRevisions)
+	public void add(final Class<? extends RESTBaseEntityV1> clazz, final RESTBaseCollectionV1 value, final List<String> additionalKeys, final boolean isRevisions)
 	{
 		String key = clazz.getSimpleName();
 		if (additionalKeys != null && !additionalKeys.isEmpty())
@@ -44,14 +40,12 @@ public class RESTCollectionCache
 		collections.put(key, value);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        boolean containsKey(final Class<T> clazz)
+	public boolean containsKey(final Class<? extends RESTBaseEntityV1> clazz)
 	{
 		return containsKey(clazz, null);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        boolean containsKey(final Class<T> clazz, final List<String> additionalKeys)
+	public boolean containsKey(final Class<? extends RESTBaseEntityV1> clazz, final List<String> additionalKeys)
 	{
 		String key = clazz.getSimpleName();
 		if (additionalKeys != null && !additionalKeys.isEmpty())
@@ -61,15 +55,12 @@ public class RESTCollectionCache
 		return collections.containsKey(key);
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        U get(final Class<T> clazz, final Class<U> containerClass)
+	public RESTBaseCollectionV1 get(final Class<? extends RESTBaseEntityV1> clazz, final Class<? extends RESTBaseCollectionV1> containerClass)
 	{
 		return get(clazz, containerClass, new ArrayList<String>());
 	}
 
-	@SuppressWarnings("unchecked")
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        U get(final Class<T> clazz, final Class<U> containerClass, final List<String> additionalKeys)
+	public RESTBaseCollectionV1 get(final Class<? extends RESTBaseEntityV1> clazz, final Class<? extends RESTBaseCollectionV1> containerClass, final List<String> additionalKeys)
 	{
 		try
 		{
@@ -78,7 +69,7 @@ public class RESTCollectionCache
 			{
 				key += "-" + StringUtilities.buildString(additionalKeys.toArray(new String[additionalKeys.size()]), "-");
 			}
-			return containsKey(clazz, additionalKeys) ? (U) collections.get(key) : containerClass.newInstance();
+			return containsKey(clazz, additionalKeys) ? collections.get(key) : containerClass.newInstance();
 		}
 		catch (final Exception ex)
 		{
@@ -86,14 +77,12 @@ public class RESTCollectionCache
 		}
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        void expire(final Class<T> clazz)
+	public void expire(final Class<? extends RESTBaseEntityV1> clazz)
 	{
 		collections.remove(clazz.getSimpleName());
 	}
 
-	public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>>
-	        void expire(final Class<T> clazz, final List<String> additionalKeys)
+	public void expire(final Class<? extends RESTBaseEntityV1> clazz, final List<String> additionalKeys)
 	{
 		collections.remove(clazz.getSimpleName() + "-" + StringUtilities.buildString(additionalKeys.toArray(new String[additionalKeys.size()]), "-"));
 		expireByRegex("^" + clazz.getSimpleName() + ".*");

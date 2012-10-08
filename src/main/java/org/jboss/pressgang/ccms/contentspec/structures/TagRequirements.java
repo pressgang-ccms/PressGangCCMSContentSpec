@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTagV1;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
  * This class defines the tags that a topic needs to have in order to be

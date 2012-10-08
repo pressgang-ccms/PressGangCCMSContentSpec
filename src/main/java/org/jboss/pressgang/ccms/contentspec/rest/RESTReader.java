@@ -99,7 +99,7 @@ public class RESTReader
 		    final RESTCategoryCollectionV1 categories;
 		    if (collectionsCache.containsKey(RESTCategoryV1.class))
 		    {
-		        categories = (RESTCategoryCollectionV1) collectionsCache.get(RESTCategoryV1.class, RESTCategoryCollectionV1.class);
+		        categories = collectionsCache.get(RESTCategoryV1.class, RESTCategoryCollectionV1.class);
 		    }
 		    else
 			{
@@ -199,7 +199,7 @@ public class RESTReader
 		    final RESTTagCollectionV1 tags;
 		    if (collectionsCache.containsKey(RESTTagV1.class))
 		    {
-		        tags = (RESTTagCollectionV1) collectionsCache.get(RESTTagV1.class, RESTTagCollectionV1.class);
+		        tags = collectionsCache.get(RESTTagV1.class, RESTTagCollectionV1.class);
 		    }
 		    else
 			{
@@ -423,7 +423,7 @@ public class RESTReader
 			final RESTTopicCollectionV1 topicRevisions;
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = (RESTTopicCollectionV1) collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{
@@ -689,7 +689,7 @@ public class RESTReader
             final List<String> additionalKeys = CollectionUtilities.toArrayList("revision" + rev, "translatedTopic" + translatedTopic.getId());
             if (collectionsCache.containsKey(RESTTranslatedTopicStringV1.class, additionalKeys))
             {
-                return (RESTTranslatedTopicStringCollectionV1) collectionsCache.get(RESTTranslatedTopicStringV1.class, RESTTranslatedTopicStringCollectionV1.class, additionalKeys);
+                return collectionsCache.get(RESTTranslatedTopicStringV1.class, RESTTranslatedTopicStringCollectionV1.class, additionalKeys);
             }
             else
             {
@@ -870,7 +870,7 @@ public class RESTReader
 			final RESTUserCollectionV1 users;
 			if (collectionsCache.containsKey(RESTUserV1.class))
 			{
-				users = (RESTUserCollectionV1) collectionsCache.get(RESTUserV1.class, RESTUserCollectionV1.class);
+				users = collectionsCache.get(RESTUserV1.class, RESTUserCollectionV1.class);
 			}
 			else
 			{
@@ -1016,7 +1016,7 @@ public class RESTReader
 			final RESTTopicCollectionV1 topicRevisions;
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topicRevisions = (RESTTopicCollectionV1) collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
+				topicRevisions = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{
@@ -1097,7 +1097,7 @@ public class RESTReader
 			final List<String> additionalKeys = CollectionUtilities.toArrayList("start-" + startPos, "end-" + (startPos + limit));
 			if (collectionsCache.containsKey(RESTTopicV1.class, additionalKeys))
 			{
-				topics = (RESTTopicCollectionV1) collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
+				topics = collectionsCache.get(RESTTopicV1.class, RESTTopicCollectionV1.class, additionalKeys);
 			}
 			else
 			{

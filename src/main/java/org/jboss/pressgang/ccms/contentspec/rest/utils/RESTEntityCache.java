@@ -78,11 +78,11 @@ public class RESTEntityCache {
         add(value.getRevisions(), true);
     }
 
-    public void add(final RESTBaseEntityV1<?, ?, ?>  value, final boolean isRevision) {
+    public void add(final RESTBaseEntityV1<?, ?, ?> value, final boolean isRevision) {
         add(value, isRevision ? value.getRevision() : null);
     }
 
-    public void add(final RESTBaseEntityV1<?, ?, ?>  value, final Number revision) {
+    public void add(final RESTBaseEntityV1<?, ?, ?> value, final Number revision) {
         add(value, value.getId(), revision);
         if (value instanceof RESTTranslatedTopicV1) {
             final RESTTranslatedTopicV1 translatedTopic = (RESTTranslatedTopicV1) value;
@@ -92,45 +92,51 @@ public class RESTEntityCache {
         }
     }
 
-    public <T extends RESTBaseEntityV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>, V extends RESTBaseCollectionItemV1<T, U, V>> 
-    U  get(final Class<T> clazz, final Class<U> collectionClass) {
-        try {
+    public <T extends RESTBaseEntityV1<T, U, ?>, U extends RESTBaseCollectionV1<T, U, ?>>
+            U  get(final Class<T> clazz, final Class<U> collectionClass)
+    {
+        try
+        {
             final U  values = collectionClass.newInstance();
-            if (singleEntities.containsKey(clazz)) {
-                for (final String key : singleEntities.get(clazz).keySet()) {
+            if (singleEntities.containsKey(clazz))
+            {
+                for (final String key : singleEntities.get(clazz).keySet())
+                {
                     values.addItem(clazz.cast(singleEntities.get(clazz).get(key)));
                 }
             }
             return values;
-        } catch (final Exception ex) {
+        }
+        catch (final Exception ex)
+        {
             return null;
         }
     }
 
-    public RESTBaseEntityV1<?, ?, ?>  get(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final Number id) {
+    public <T extends RESTBaseEntityV1<T, ?, ?>> T get(final Class<T> clazz, final Number id) {
         return get(clazz, id.toString(), null);
     }
 
-    public RESTBaseEntityV1<?, ?, ?>  get(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final String id) {
+    public <T extends RESTBaseEntityV1<T, ?, ?>> T get(final Class<T> clazz, final String id) {
         return get(clazz, id, null);
     }
 
-    public RESTBaseEntityV1<?, ?, ?>  get(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final Number id, final Number revision) {
+    public <T extends RESTBaseEntityV1<T, ?, ?>> T get(final Class<T> clazz, final Number id, final Number revision) {
         return get(clazz, id.toString(), revision);
     }
 
-    public RESTBaseEntityV1<?, ?, ?>  get(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final String id, final Number revision) {
+    public <T extends RESTBaseEntityV1<T, ?, ?>> T get(final Class<T> clazz, final String id, final Number revision) {
         if (!containsKeyValue(clazz, id, revision))
             return null;
         return clazz.cast(revision == null ? singleEntities.get(clazz).get(clazz.getSimpleName() + "-" + id) : singleEntities
                 .get(clazz).get(clazz.getSimpleName() + "-" + id + "-" + revision));
     }
 
-    public void expire(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final Integer id) {
+    public void expire(final Class<? extends RESTBaseEntityV1<?, ?, ?>> clazz, final Integer id) {
         expire(clazz, id, null);
     }
 
-    public void expire(final Class<? extends RESTBaseEntityV1<?, ?, ?> > clazz, final Integer id, final Number revision) {
+    public void expire(final Class<? extends RESTBaseEntityV1<?, ?, ?>> clazz, final Integer id, final Number revision) {
         final String keyValue = revision == null ? (clazz.getSimpleName() + "-" + id)
                 : (clazz.getSimpleName() + "-" + id + "-" + revision);
         if (singleEntities.containsKey(clazz)) {

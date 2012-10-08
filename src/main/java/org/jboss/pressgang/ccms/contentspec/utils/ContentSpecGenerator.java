@@ -196,8 +196,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 	 * @param docbookBuildingOptions The options that are to be used from a docbook build to generate the content spec.
 	 * @return A ContentSpec object that represents the assembled Content Specification. The toString() method can be used to get the text based version.
 	 */
-	@SuppressWarnings("rawtypes")
-    private ContentSpec doFormattedTocPass(final Class<T> clazz, final U topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
+	private ContentSpec doFormattedTocPass(final Class<T> clazz, final U topics, final String locale, final DocbookBuildingOptions docbookBuildingOptions)
 	{
 		try
 		{

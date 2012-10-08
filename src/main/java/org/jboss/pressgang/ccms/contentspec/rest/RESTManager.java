@@ -4,12 +4,6 @@ import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTCollectionCache;
 import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTEntityCache;
 import org.jboss.pressgang.ccms.rest.v1.client.PressGangCCMSProxyFactoryV1;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
-import org.jboss.resteasy.client.ProxyFactory;
-import org.jboss.resteasy.plugins.providers.RegisterBuiltin;
-import org.jboss.resteasy.plugins.providers.jackson.ResteasyJacksonProvider;
-import org.jboss.resteasy.spi.ResteasyProviderFactory;
-
-
 
 /**
  * A class to store and manage database reading and writing via REST Interface

@@ -680,7 +680,7 @@ public class RESTReader
      */
     public RESTTranslatedTopicStringCollectionV1 getTranslatedTopicStringsByTopicId(final Integer id, final Integer rev, final String locale)
     {
-        final RESTTranslatedTopicV1 translatedTopic = getTranslatedTopicByTopicId(id, rev, locale);
+        final RESTTranslatedTopicV1 translatedTopic = getClosestTranslatedTopicByTopicId(id, rev, locale, false);
         
         if (translatedTopic == null) return null;
         

@@ -28,5 +28,4 @@ public class SpecTopicLineNumberComparator implements Comparator<SpecTopic> {
         
         return line1.compareTo(line2);
     }
-
 }

@@ -9,7 +9,7 @@ import java.util.Comparator;
  * @author lnewson
  *
  */
-public class RevisionSort implements Comparator<Object[]>
+public class EnversRevisionSort implements Comparator<Object[]>
 {
 
 	public int compare(final Object[] o1, final Object[] o2)

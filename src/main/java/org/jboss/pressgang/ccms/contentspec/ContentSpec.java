@@ -963,7 +963,7 @@ public class ContentSpec extends Node {
     }
 
     private List<SpecTopic> getLevelSpecTopics(final Level level) {
-        final List<SpecTopic> specTopics = level.getSpecTopics();
+        final List<SpecTopic> specTopics = new ArrayList<SpecTopic>(level.getSpecTopics());
         for (final Level childLevel : level.getChildLevels()) {
             specTopics.addAll(getLevelSpecTopics(childLevel));
         }

@@ -4,16 +4,6 @@ public class DocbookBuilderConstants
 {
 	/** The standard xml preamble for docbook xml files */
 	public static final String DOCBOOK_XML_PREAMBLE = "<!DOCTYPE bookinfo PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [<!ENTITY % BOOK_ENTITIES SYSTEM \"Book.ent\">%BOOK_ENTITIES;]>";
-
-	/** The Docbook role (which becomes a CSS class) for the bug link para */
-	public static final String ROLE_CREATE_BUG_PARA = "RoleCreateBugPara";
-	/** The Docbook role (which becomes a CSS class) for the skynet link para */
-	public static final String ROLE_VIEW_IN_SKYNET_PARA = "RoleViewInSkyNetPara";
-	/**
-	 * The Docbook role (which becomes a CSS class) for the Skynet build version
-	 * para
-	 */
-	public static final String ROLE_BUILD_VERSION_PARA = "RoleBuildVersionPara";
 	
 	/** The Concept tag ID */
 	public static final Integer CONCEPT_TAG_ID = 5;

@@ -1,9 +1,9 @@
 package org.jboss.pressgang.ccms.docbook.structures;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
+import java.util.Set;
 
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
@@ -16,21 +16,15 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
  * a set of tags to match or exclude.
  */
 public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
-    private Map<T, TopicProcessingData> topics = new HashMap<T, TopicProcessingData>();
+    private Set<T> topics = new HashSet<T>();
 
     public void addTopic(final T topic) {
         if (!containsTopic(topic))
-            topics.put(topic, new TopicProcessingData());
-    }
-
-    public TopicProcessingData getTopicProcessingData(final T topic) {
-        if (containsTopic(topic))
-            return topics.get(topic);
-        return null;
+            topics.add(topic);
     }
 
     public boolean containsTopic(final T topic) {
-        return topics.keySet().contains(topic);
+        return topics.contains(topic);
     }
 
     public boolean containsTopic(final Integer topicId) {
@@ -38,7 +32,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     }
 
     public T getTopic(final Integer topicId) {
-        for (final T topic : topics.keySet())
+        for (final T topic : topics)
             if (topic instanceof RESTTranslatedTopicV1) {
                 if (((RESTTranslatedTopicV1) topic).getTopicId().equals(topicId))
                     return topic;
@@ -61,7 +55,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     public List<RESTTagV1> getTagsFromCategories(final List<Integer> categoryIds) {
         final List<RESTTagV1> retValue = new ArrayList<RESTTagV1>();
 
-        for (final T topic : topics.keySet()) {
+        for (final T topic : topics) {
             final List<RESTTagV1> topicTags = ComponentBaseTopicV1.returnTagsInCategoriesByID(topic, categoryIds);
             CollectionUtilities.addAllThatDontExist(topicTags, retValue);
         }
@@ -76,7 +70,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
 
         final List<T> topicList = new ArrayList<T>();
 
-        for (final T topic : topics.keySet()) {
+        for (final T topic : topics) {
             /* landing pages ahev negative topic ids */
             if (landingPagesOnly && topic.getId() >= 0)
                 continue;
@@ -159,12 +153,12 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     }
 
     public List<T> getTopics() {
-        return CollectionUtilities.toArrayList(topics.keySet());
+        return CollectionUtilities.toArrayList(topics);
     }
 
     public List<T> getNonLandingPageTopics() {
         final List<T> retValue = new ArrayList<T>();
-        for (final T topic : topics.keySet())
+        for (final T topic : topics)
             if (topic.getId() >= 0)
                 retValue.add(topic);
         return retValue;
@@ -174,10 +168,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         if (topics == null)
             return;
 
-        this.topics = new HashMap<T, TopicProcessingData>();
-
-        for (final T topic : topics)
-            this.topics.put(topic, new TopicProcessingData());
+        this.topics = new HashSet<T>(topics);
     }
 
     public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags, final List<RESTTagV1> excludeTags) {

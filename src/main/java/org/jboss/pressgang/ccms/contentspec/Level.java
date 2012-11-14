@@ -498,6 +498,7 @@ public class Level extends SpecNode {
         /*
          * Check this level to see if the topic exists
          */
+        final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
             if (childTopic == topic || childTopic.getId().equals(topic.getId())) {
                 return childTopic;
@@ -508,7 +509,8 @@ public class Level extends SpecNode {
          * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
          * first.
          */
-        for (final Level childLevel : levels) {
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
             if (callerNode == childLevel) {
                 continue;
             } else {
@@ -552,6 +554,7 @@ public class Level extends SpecNode {
         /*
          * Check this level to see if the topic exists
          */
+        final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
             if (childTopic.getDBId() == DBId) {
                 return childTopic;
@@ -562,7 +565,8 @@ public class Level extends SpecNode {
          * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
          * first.
          */
-        for (final Level childLevel : levels) {
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
             if (childLevel == callerNode) {
                 continue;
             } else {
@@ -593,6 +597,7 @@ public class Level extends SpecNode {
         /*
          * Check this level to see if the topic exists
          */
+        final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
             if (childTopic == topic || childTopic.getId().equals(topic.getId())) {
                 return true;
@@ -603,7 +608,8 @@ public class Level extends SpecNode {
          * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
          * first.
          */
-        for (final Level childLevel : levels) {
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
             if (childLevel.isSpecTopicInLevel(topic)) {
                 return true;
             }
@@ -622,6 +628,7 @@ public class Level extends SpecNode {
         /*
          * Check this level to see if the topic exists
          */
+        final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
             if (childTopic.getDBId() == topicId) {
                 return true;
@@ -632,7 +639,8 @@ public class Level extends SpecNode {
          * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
          * first.
          */
-        for (final Level childLevel : levels) {
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
             if (childLevel.isSpecTopicInLevelByTopicID(topicId)) {
                 return true;
             }

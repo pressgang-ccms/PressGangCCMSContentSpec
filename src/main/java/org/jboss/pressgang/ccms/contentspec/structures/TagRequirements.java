@@ -3,31 +3,30 @@ package org.jboss.pressgang.ccms.contentspec.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTagV1;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 
 /**
  * This class defines the tags that a topic needs to have in order to be
  * displayed in a particular TOC level
  */
-@SuppressWarnings("rawtypes")
 public class TagRequirements
 {
 	/** One of these tags needs to be present */
-	private final List<ArrayList<RESTBaseTagV1<?, ?, ?>>> matchOneOf = new ArrayList<ArrayList<RESTBaseTagV1<?, ?, ?>>>();
+	private final List<ArrayList<TagWrapper>> matchOneOf = new ArrayList<ArrayList<TagWrapper>>();
 	/** All of these tags needs to be present */
-	private final List<RESTBaseTagV1<?, ?, ?>> matchAllOf = new ArrayList<RESTBaseTagV1<?, ?, ?>>();
+	private final List<TagWrapper> matchAllOf = new ArrayList<TagWrapper>();
 
-    public List<ArrayList<RESTBaseTagV1<?, ?, ?>>> getMatchOneOf()
+    public List<ArrayList<TagWrapper>> getMatchOneOf()
 	{
 		return matchOneOf;
 	}
 
-	public List<RESTBaseTagV1<?, ?, ?>> getMatchAllOf()
+	public List<TagWrapper> getMatchAllOf()
 	{
 		return matchAllOf;
 	}
 
-	public TagRequirements(final ArrayList<RESTBaseTagV1<?, ?, ?>> matchAllOf, final ArrayList<RESTBaseTagV1<?, ?, ?>> matchOneOf)
+	public TagRequirements(final ArrayList<TagWrapper> matchAllOf, final ArrayList<TagWrapper> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
@@ -36,11 +35,11 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final ArrayList<RESTBaseTagV1<?, ?, ?>> matchAllOf, final RESTBaseTagV1<?, ?, ?> matchOneOf)
+	public TagRequirements(final ArrayList<TagWrapper> matchAllOf, final TagWrapper matchOneOf)
 	{
 		if (matchOneOf != null)
 		{
-			final ArrayList<RESTBaseTagV1<?, ?, ?>> newArray = new ArrayList<RESTBaseTagV1<?, ?, ?>>();
+			final ArrayList<TagWrapper> newArray = new ArrayList<TagWrapper>();
 			newArray.add(matchOneOf);
 		    this.matchOneOf.add(newArray);
 		}
@@ -48,7 +47,7 @@ public class TagRequirements
 			this.matchAllOf.addAll(matchAllOf);
 	}
 
-	public TagRequirements(final RESTBaseTagV1 matchAllOf, final ArrayList<RESTBaseTagV1<?, ?, ?>> matchOneOf)
+	public TagRequirements(final TagWrapper matchAllOf, final ArrayList<TagWrapper> matchOneOf)
 	{
 		if (matchOneOf != null)
 			this.matchOneOf.add(matchOneOf);
@@ -56,11 +55,11 @@ public class TagRequirements
 			this.matchAllOf.add(matchAllOf);
 	}
 
-	public TagRequirements(final RESTBaseTagV1<?, ?, ?> matchAllOf, final RESTBaseTagV1<?, ?, ?> matchOneOf)
+	public TagRequirements(final TagWrapper matchAllOf, final TagWrapper matchOneOf)
 	{
 		if (matchOneOf != null)
 		{
-            final ArrayList<RESTBaseTagV1<?, ?, ?>> newArray = new ArrayList<RESTBaseTagV1<?, ?, ?>>();
+            final ArrayList<TagWrapper> newArray = new ArrayList<TagWrapper>();
             newArray.add(matchOneOf);
             this.matchOneOf.add(newArray);
         }

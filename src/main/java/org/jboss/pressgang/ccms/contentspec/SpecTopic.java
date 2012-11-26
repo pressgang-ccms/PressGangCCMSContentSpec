@@ -16,11 +16,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.rest.v1.components.ComponentTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.components.ComponentTranslatedTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.w3c.dom.Document;
@@ -37,7 +33,7 @@ public class SpecTopic extends SpecNode {
     private String targetId = null;
     private String title = null;
     private String duplicateId = null;
-    private RESTBaseTopicV1<?, ?, ?> topic = null;
+    private TopicWrapper topic = null;
     private Document xmlDocument = null;
     private Integer revision = null;
 
@@ -96,7 +92,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @return The underlying topic if it has been set otherwise null.
      */
-    public RESTBaseTopicV1<?, ?, ?> getTopic() {
+    public TopicWrapper getTopic() {
         return topic;
     }
 
@@ -105,7 +101,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @param topic The underlying topic.
      */
-    public <T extends RESTBaseTopicV1<T, ?, ?>> void setTopic(final T topic) {
+    public void setTopic(final TopicWrapper topic) {
         this.topic = topic;
     }
 
@@ -756,20 +752,10 @@ public class SpecTopic extends SpecNode {
     @Override
     public String getUniqueLinkId(final boolean useFixedUrls) {
         final String topicXRefId;
-        if (topic instanceof RESTTranslatedTopicV1) {
-            if (useFixedUrls)
-                topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic,
-                        CommonConstants.FIXED_URL_PROP_TAG_ID);
-            else {
-                topicXRefId = ComponentTranslatedTopicV1.returnXRefID((RESTTranslatedTopicV1) topic);
-            }
-        } else {
-            if (useFixedUrls)
-                topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic,
-                        CommonConstants.FIXED_URL_PROP_TAG_ID);
-            else {
-                topicXRefId = ComponentTopicV1.returnXRefID((RESTTopicV1) topic);
-            }
+        if (useFixedUrls)
+            topicXRefId = topic.getXRefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
+        else {
+            topicXRefId = topic.getXRefId();
         }
 
         return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));

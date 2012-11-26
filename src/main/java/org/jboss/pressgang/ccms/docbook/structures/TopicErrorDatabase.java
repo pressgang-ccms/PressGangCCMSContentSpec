@@ -5,22 +5,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
+public class TopicErrorDatabase
 {
 	public static enum ErrorLevel {ERROR, WARNING};
 	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
 		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION}
 
-	private Map<String, List<TopicErrorData<T>>> errors = new HashMap<String, List<TopicErrorData<T>>>();
+	private Map<String, List<TopicErrorData>> errors = new HashMap<String, List<TopicErrorData>>();
 
 	public int getErrorCount(final String locale)
 	{
@@ -37,22 +35,22 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 		return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
 	}
 
-	public void addError(final T topic, final ErrorType errorType, final String error)
+	public void addError(final TopicWrapper topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, errorType);
 	}
 
-	public void addWarning(final T topic, final ErrorType errorType, final String error)
+	public void addWarning(final TopicWrapper topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, errorType);
 	}
 	
-	public void addError(final T topic, final String error)
+	public void addError(final TopicWrapper topic, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, null);
 	}
 
-	public void addWarning(final T topic, final String error)
+	public void addWarning(final TopicWrapper topic, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, null);
 	}
@@ -62,55 +60,44 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 	 * @param topic
 	 * @param error
 	 */
-	public void addTocError(final T topic, final ErrorType errorType, final String error)
+	public void addTocError(final TopicWrapper topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, errorType);
 	}
 
-	public void addTocWarning(final T topic, final ErrorType errorType, final String error)
+	public void addTocWarning(final TopicWrapper topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, errorType);
 	}
 
-	private void addItem(final T topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
+	private void addItem(final TopicWrapper topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
 	{
-		final TopicErrorData<T> topicErrorData = addOrGetTopicErrorData(topic);
+		final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
 		if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
 			topicErrorData.addError(item, errorLevel, errorType);
 	}
 
-	private TopicErrorData<T> getErrorData(final T topic)
+	private TopicErrorData getErrorData(final TopicWrapper topic)
 	{
 		for (final String locale : errors.keySet())
-			for (final TopicErrorData<T> topicErrorData : errors.get(locale))
+			for (final TopicErrorData topicErrorData : errors.get(locale))
 			{
-				if (ComponentBaseTopicV1.returnIsDummyTopic(topic))
-				{
-					if (topic.getClass() == RESTTranslatedTopicV1.class && topicErrorData.getTopic() instanceof RESTTranslatedTopicV1)
-					{
-						if (((RESTTranslatedTopicV1) topicErrorData.getTopic()).getTopicId().equals(((RESTTranslatedTopicV1) topic).getTopicId()))
-							return topicErrorData;
-					}
-				}
-				else
-				{
-					if (topicErrorData.getTopic().getId().equals(topic.getId()))
-						return topicErrorData;
-				}
+				if (topicErrorData.getTopic().getId().equals(topic.getId()))
+					return topicErrorData;
 			}
 		return null;
 	}
 
-	private TopicErrorData<T> addOrGetTopicErrorData(final T topic)
+	private TopicErrorData addOrGetTopicErrorData(final TopicWrapper topic)
 	{
-		TopicErrorData<T> topicErrorData = getErrorData(topic);
+		TopicErrorData topicErrorData = getErrorData(topic);
 		if (topicErrorData == null)
 		{
-			topicErrorData = new TopicErrorData<T>();
+			topicErrorData = new TopicErrorData();
 			topicErrorData.setTopic(topic);
 			if (!errors.containsKey(topic.getLocale()))
-				errors.put(topic.getLocale(), new ArrayList<TopicErrorData<T>>());
+				errors.put(topic.getLocale(), new ArrayList<TopicErrorData>());
 			errors.get(topic.getLocale()).add(topicErrorData);
 		}
 		return topicErrorData;
@@ -121,17 +108,17 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 		return CollectionUtilities.toArrayList(errors.keySet());
 	}
 
-	public List<TopicErrorData<T>> getErrors(final String locale)
+	public List<TopicErrorData> getErrors(final String locale)
 	{
 		return errors.containsKey(locale) ? errors.get(locale) : null;
 	}
 	
-	public List<TopicErrorData<T>> getErrorsOfType(final String locale, final ErrorType errorType)
+	public List<TopicErrorData> getErrorsOfType(final String locale, final ErrorType errorType)
 	{
-		final List<TopicErrorData<T>> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData<T>>();
+		final List<TopicErrorData> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData>();
 		
-		final List<TopicErrorData<T>> typeErrorDatas = new ArrayList<TopicErrorData<T>>();
-		for (final TopicErrorData<T> errorData : localeErrors)
+		final List<TopicErrorData> typeErrorDatas = new ArrayList<TopicErrorData>();
+		for (final TopicErrorData errorData : localeErrors)
 		{
 			if (errorData.hasErrorType(errorType))
 				typeErrorDatas.add(errorData);
@@ -140,7 +127,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>>
 		return typeErrorDatas;
 	}
 
-	public void setErrors(final String locale, final List<TopicErrorData<T>> errors)
+	public void setErrors(final String locale, final List<TopicErrorData> errors)
 	{
 		this.errors.put(locale, errors);
 	}

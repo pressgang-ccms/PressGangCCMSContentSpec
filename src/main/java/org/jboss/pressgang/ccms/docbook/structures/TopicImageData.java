@@ -1,23 +1,23 @@
 package org.jboss.pressgang.ccms.docbook.structures;
 
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 
 /**
  * This class is used to map an image referenced inside a topic to the topic
  * itself. This is mostly for error reporting purposes.
  */
-public class TopicImageData<T extends RESTBaseTopicV1<T, ?, ?>>
+public class TopicImageData
 {
-	private T topic = null;
+	private TopicWrapper topic = null;
 	private String imageName = null;
 	private Integer revision = null;
 
-	public T getTopic()
+	public TopicWrapper getTopic()
 	{
 		return topic;
 	}
 
-	public void setTopic(T topic)
+	public void setTopic(final TopicWrapper topic)
 	{
 		this.topic = topic;
 	}
@@ -42,13 +42,13 @@ public class TopicImageData<T extends RESTBaseTopicV1<T, ?, ?>>
 		this.revision = revision;
 	}
 
-	public TopicImageData(final T topic, final String imageName)
+	public TopicImageData(final TopicWrapper topic, final String imageName)
 	{
 		this.topic = topic;
 		this.imageName = imageName;
 	}
 
-	public TopicImageData(final T topic, final String imageName, final Integer revision)
+	public TopicImageData(final TopicWrapper topic, final String imageName, final Integer revision)
 	{
 		this.topic = topic;
 		this.imageName = imageName;

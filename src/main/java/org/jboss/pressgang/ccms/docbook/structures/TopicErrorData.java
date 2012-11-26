@@ -7,25 +7,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorType;
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 
 /**
  * Stores information on the errors and warnings that were detected in a topic.
  */
-public class TopicErrorData<T extends RESTBaseTopicV1<T, ?, ?>>
+public class TopicErrorData
 {	
-	private T topic;
+	private TopicWrapper topic;
 	private Map<ErrorLevel, Set<String>> errors = new HashMap<ErrorLevel, Set<String>>();
 	private List<ErrorType> errorTypes = new ArrayList<ErrorType>();
 
-	public T getTopic()
+	public TopicWrapper getTopic()
 	{
 		return topic;
 	}
 
-	public void setTopic(T topic)
+	public void setTopic(final TopicWrapper topic)
 	{
 		this.topic = topic;
 	}

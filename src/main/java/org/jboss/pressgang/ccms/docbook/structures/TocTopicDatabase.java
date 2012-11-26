@@ -5,25 +5,23 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
  * This class represents all the topics that will go into a docbook build, along with some function to retrieve topics based on
  * a set of tags to match or exclude.
  */
-public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
-    private Set<T> topics = new HashSet<T>();
+public class TocTopicDatabase {
+    private Set<TopicWrapper> topics = new HashSet<TopicWrapper>();
 
-    public void addTopic(final T topic) {
+    public void addTopic(final TopicWrapper topic) {
         if (!containsTopic(topic))
             topics.add(topic);
     }
 
-    public boolean containsTopic(final T topic) {
+    public boolean containsTopic(final TopicWrapper topic) {
         return topics.contains(topic);
     }
 
@@ -31,20 +29,17 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         return getTopic(topicId) != null;
     }
 
-    public T getTopic(final Integer topicId) {
-        for (final T topic : topics)
-            if (topic instanceof RESTTranslatedTopicV1) {
-                if (((RESTTranslatedTopicV1) topic).getTopicId().equals(topicId))
-                    return topic;
-            } else {
-                if (topic.getId().equals(topicId))
-                    return topic;
+    public TopicWrapper getTopic(final Integer topicId) {
+        for (final TopicWrapper topic : topics) {
+            if (topic.getId().equals(topicId)) {
+                return topic;
             }
+        }
 
         return null;
     }
 
-    public boolean containsTopicsWithTag(final RESTTagV1 tag) {
+    public boolean containsTopicsWithTag(final TagWrapper tag) {
         return getMatchingTopicsFromTag(tag).size() != 0;
     }
 
@@ -52,37 +47,37 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         return getMatchingTopicsFromInteger(tag).size() != 0;
     }
 
-    public List<RESTTagV1> getTagsFromCategories(final List<Integer> categoryIds) {
-        final List<RESTTagV1> retValue = new ArrayList<RESTTagV1>();
+    public List<TagWrapper> getTagsFromCategories(final List<Integer> categoryIds) {
+        final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
 
-        for (final T topic : topics) {
-            final List<RESTTagV1> topicTags = ComponentBaseTopicV1.returnTagsInCategoriesByID(topic, categoryIds);
+        for (final TopicWrapper topic : topics) {
+            final List<TagWrapper> topicTags = topic.getTagsInCategories(categoryIds);
             CollectionUtilities.addAllThatDontExist(topicTags, retValue);
         }
 
         return retValue;
     }
 
-    public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final List<Integer> excludeTags,
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final List<Integer> excludeTags,
             final boolean haveOnlyMatchingTags, final boolean landingPagesOnly) {
         assert matchingTags != null : "The matchingTags parameter can not be null";
         assert excludeTags != null : "The excludeTags parameter can not be null";
 
-        final List<T> topicList = new ArrayList<T>();
+        final List<TopicWrapper> topicList = new ArrayList<TopicWrapper>();
 
-        for (final T topic : topics) {
+        for (final TopicWrapper topic : topics) {
             /* landing pages ahev negative topic ids */
             if (landingPagesOnly && topic.getId() >= 0)
                 continue;
 
             /* check to see if the topic has only the matching tags */
-            if (haveOnlyMatchingTags && topic.getTags().returnItems().size() != matchingTags.size())
+            if (haveOnlyMatchingTags && topic.getTags().size() != matchingTags.size())
                 continue;
 
             /* check for matching tags */
             boolean foundMatchingTag = true;
             for (final Integer matchingTag : matchingTags) {
-                if (!ComponentBaseTopicV1.hasTag(topic, matchingTag)) {
+                if (!topic.hasTag(matchingTag)) {
                     foundMatchingTag = false;
                     break;
                 }
@@ -93,7 +88,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
             /* check for excluded tags */
             boolean foundExclusionTag = false;
             for (final Integer excludeTag : excludeTags) {
-                if (ComponentBaseTopicV1.hasTag(topic, excludeTag)) {
+                if (topic.hasTag(excludeTag)) {
                     foundExclusionTag = true;
                     break;
                 }
@@ -111,106 +106,106 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         return topicList;
     }
 
-    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final List<Integer> excludeTags,
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final Integer matchingTag, final List<Integer> excludeTags,
             final boolean haveOnlyMatchingTags) {
         return getMatchingTopicsFromInteger(CollectionUtilities.toArrayList(matchingTag), excludeTags, haveOnlyMatchingTags,
                 false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final Integer excludeTag,
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final Integer matchingTag, final Integer excludeTag,
             final boolean haveOnlyMatchingTags) {
         return getMatchingTopicsFromInteger(matchingTag, CollectionUtilities.toArrayList(excludeTag), haveOnlyMatchingTags);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final Integer excludeTag,
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final Integer excludeTag,
             final boolean haveOnlyMatchingTags) {
         return getMatchingTopicsFromInteger(matchingTags, CollectionUtilities.toArrayList(excludeTag), haveOnlyMatchingTags,
                 false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final List<Integer> excludeTags) {
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final List<Integer> excludeTags) {
         return getMatchingTopicsFromInteger(matchingTags, excludeTags, false, false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final List<Integer> excludeTags) {
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final Integer matchingTag, final List<Integer> excludeTags) {
         return getMatchingTopicsFromInteger(matchingTag, excludeTags, false);
     }
 
-    public List<T> getMatchingTopics(final Integer matchingTag, final Integer excludeTag) {
+    public List<TopicWrapper> getMatchingTopics(final Integer matchingTag, final Integer excludeTag) {
         return getMatchingTopicsFromInteger(matchingTag, excludeTag, false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final Integer excludeTag) {
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final Integer excludeTag) {
         return getMatchingTopicsFromInteger(matchingTags, excludeTag, false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag) {
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final Integer matchingTag) {
         return getMatchingTopicsFromInteger(matchingTag, new ArrayList<Integer>(), false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags) {
+    public List<TopicWrapper> getMatchingTopicsFromInteger(final List<Integer> matchingTags) {
         return getMatchingTopicsFromInteger(matchingTags, new ArrayList<Integer>(), false, false);
     }
 
-    public List<T> getTopics() {
+    public List<TopicWrapper> getTopics() {
         return CollectionUtilities.toArrayList(topics);
     }
 
-    public List<T> getNonLandingPageTopics() {
-        final List<T> retValue = new ArrayList<T>();
-        for (final T topic : topics)
+    public List<TopicWrapper> getNonLandingPageTopics() {
+        final List<TopicWrapper> retValue = new ArrayList<TopicWrapper>();
+        for (final TopicWrapper topic : topics)
             if (topic.getId() >= 0)
                 retValue.add(topic);
         return retValue;
     }
 
-    public void setTopics(final List<T> topics) {
+    public void setTopics(final List<TopicWrapper> topics) {
         if (topics == null)
             return;
 
-        this.topics = new HashSet<T>(topics);
+        this.topics = new HashSet<TopicWrapper>(topics);
     }
 
-    public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags, final List<RESTTagV1> excludeTags) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final List<TagWrapper> matchingTags, final List<TagWrapper> excludeTags) {
         return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags),
                 convertTagArrayToIntegerArray(excludeTags), false, false);
     }
 
-    public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag, final List<RESTTagV1> excludeTags) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final TagWrapper matchingTag, final List<TagWrapper> excludeTags) {
         if (matchingTag == null)
             return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), convertTagArrayToIntegerArray(excludeTags), false);
     }
 
-    public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag, final RESTTagV1 excludeTag) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final TagWrapper matchingTag, final TagWrapper excludeTag) {
         if (matchingTag == null || excludeTag == null)
             return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), excludeTag.getId(), false);
     }
 
-    public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags, final RESTTagV1 excludeTag) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final List<TagWrapper> matchingTags, final TagWrapper excludeTag) {
         if (excludeTag == null)
             return null;
 
         return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags), excludeTag.getId(), false);
     }
 
-    public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final TagWrapper matchingTag) {
         if (matchingTag == null)
             return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), new ArrayList<Integer>(), false);
     }
 
-    public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags) {
+    public List<TopicWrapper> getMatchingTopicsFromTag(final List<TagWrapper> matchingTags) {
         return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags), new ArrayList<Integer>(), false, false);
     }
 
-    private List<Integer> convertTagArrayToIntegerArray(final List<RESTTagV1> tags) {
+    private List<Integer> convertTagArrayToIntegerArray(final List<TagWrapper> tags) {
         final List<Integer> retValue = new ArrayList<Integer>();
-        for (final RESTTagV1 tag : tags)
+        for (final TagWrapper tag : tags)
             if (tag != null)
                 retValue.add(tag.getId());
         return retValue;

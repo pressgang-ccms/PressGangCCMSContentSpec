@@ -4,15 +4,14 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
-import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
 
-
-public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
-        implements ExternalListSort<Integer, T, InjectionTopicData>
+public class TopicTitleSorter
+        implements ExternalListSort<Integer, TopicWrapper, InjectionTopicData>
 {
-	public void sort(final List<T> topics, final List<InjectionTopicData> list) 
+	public void sort(final List<TopicWrapper> topics, final List<InjectionTopicData> list) 
 	    {
 	        if (topics == null || list == null)
 	        	return;
@@ -21,10 +20,10 @@ public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
 	        {
 				public int compare(final InjectionTopicData o1, final InjectionTopicData o2)
 	            {
-	            	T topic1 = null;
-	            	T topic2 = null;
+				    TopicWrapper topic1 = null;
+				    TopicWrapper topic2 = null;
 	            	
-	            	for (final T topic : topics)
+	            	for (final TopicWrapper topic : topics)
 	            	{
 	            		if (topic.getId().equals(o1.topicId))
 	            			topic1 = topic;
@@ -45,8 +44,8 @@ public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
 	            	if (!v2Exists)
 	            		return 1;
 	            	
-	            	final T v1 = topic1;
-	            	final T v2 = topic2;
+	            	final TopicWrapper v1 = topic1;
+	            	final TopicWrapper v2 = topic2;
 	            	
 	            	if (v1 == null && v2 == null)
 	            		return 0;
@@ -57,16 +56,16 @@ public class TopicTitleSorter<T extends RESTBaseTopicV1<T, ?, ?>>
 	            	if (v2 == null)
 	            		return 1;
 	            	
-	            	if (v1.getTitle() == null && v2.getTitle() == null)
+	            	if (v1.getTopicTitle() == null && v2.getTopicTitle() == null)
 	            		return 0;
 	            	
-	            	if (v1.getTitle() == null)
+	            	if (v1.getTopicTitle() == null)
 	            		return -1;
 	            	
-	            	if (v2.getTitle() == null)
+	            	if (v2.getTopicTitle() == null)
 	            		return 1;
 	            	
-	            	return v1.getTitle().toLowerCase().compareTo(v2.getTitle().toLowerCase());
+	            	return v1.getTopicTitle().toLowerCase().compareTo(v2.getTopicTitle().toLowerCase());
 	            }
 	        });
 	    }

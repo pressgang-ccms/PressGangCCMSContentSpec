@@ -2,8 +2,11 @@ package org.jboss.pressgang.ccms.contentspec.entities;
 
 import java.util.ArrayList;
 
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
 
 public class InjectionOptions
 {
@@ -16,10 +19,61 @@ public class InjectionOptions
 	{
 	}
 	
-	public InjectionOptions(UserType clientSetting)
+	public InjectionOptions(final String options)
+	{
+	    String[] types = null;
+	    if (StringUtilities.indexOf(options, '[') != -1 && StringUtilities.indexOf(options, ']') != -1)
+        {
+    	    final NamedPattern bracketPattern = NamedPattern.compile(String.format(CSConstants.BRACKET_NAMED_PATTERN, '[', ']'));
+            final NamedMatcher matcher = bracketPattern.matcher(options);
+            
+            
+            // Find all of the variables inside of the brackets defined by the regex
+            while (matcher.find())
+            {
+                final String topicTypes = matcher.group(CSConstants.BRACKET_CONTENTS);
+                types = StringUtilities.split(topicTypes, ',');
+                for (final String type: types)
+                {
+                    addStrictTopicType(type.trim());
+                }
+            }
+        }
+        
+        String injectionSetting = getInjectionSetting(options, '[');
+        if (injectionSetting.trim().equalsIgnoreCase("on"))
+        {
+            if (types != null)
+            {
+                setContentSpecType(InjectionOptions.UserType.STRICT);
+            }
+            else
+            {
+                setContentSpecType(InjectionOptions.UserType.ON);
+            }
+        }
+        else if (injectionSetting.trim().equalsIgnoreCase("off"))
+        {
+            setContentSpecType(InjectionOptions.UserType.OFF);
+        }
+	}
+	
+	public InjectionOptions(final UserType clientSetting)
 	{
 		clientType = clientSetting;
 	}
+	
+	/**
+     * Gets the Injection Setting for these options when using the String Constructor.
+     * 
+     * @param input The input to be parsed to get the setting.
+     * @param startDelim The delimiter that specifies that start of options (ie '[')
+     * @return The title as a String or null if the title is blank.
+     */
+    private String getInjectionSetting(final String input, final char startDelim)
+    {
+        return input == null || input.equals("") ? null : StringUtilities.split(input, startDelim)[0].trim();
+    }
 	
 	public boolean isInjectionAllowed()
 	{

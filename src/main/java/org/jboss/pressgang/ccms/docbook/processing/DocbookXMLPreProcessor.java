@@ -18,9 +18,9 @@ import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleComparator;
@@ -188,7 +188,7 @@ public class DocbookXMLPreProcessor {
 
     public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate) {
-        final TopicWrapper topic = specTopic.getTopic();
+        final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         /* SIMPLESECT TO HOLD OTHER LINKS */
         final Element bugzillaSection = document.createElement("simplesect");
@@ -226,7 +226,7 @@ public class DocbookXMLPreProcessor {
             final String bugzillaEnvironment = URLEncoder.encode(
                     "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: "
                             + specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), "UTF-8");
-            final String bugzillaSummary = URLEncoder.encode(topic.getTopicTitle(), "UTF-8");
+            final String bugzillaSummary = URLEncoder.encode(topic.getTitle(), "UTF-8");
             final StringBuilder bugzillaBuildID = new StringBuilder();
             bugzillaBuildID.append(topic.getBugzillaBuildId());
 
@@ -339,7 +339,7 @@ public class DocbookXMLPreProcessor {
     public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate,
             final ZanataDetails zanataDetails) {
-        final TopicWrapper topic = specTopic.getTopic();
+        final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
                 .getInsertEditorLinks()))) {
@@ -430,6 +430,7 @@ public class DocbookXMLPreProcessor {
         return retValue;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Integer> processInjections(final Level level, final SpecTopic topic,
             final ArrayList<Integer> customInjectionIds, final Document xmlDocument,
             final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
@@ -439,8 +440,8 @@ public class DocbookXMLPreProcessor {
             /*
              * get the outgoing relationships
              */
-            final TopicWrapper topicWrapper = topic.getTopic();
-            final List<TopicWrapper> relatedTopics = topicWrapper.getOutgoingRelationships();
+            final BaseTopicWrapper<?> topicWrapper = topic.getTopic();
+            final List<BaseTopicWrapper<?>> relatedTopics = (List<BaseTopicWrapper<?>>) topicWrapper.getOutgoingRelationships();
 
             /*
              * Create a TocTopicDatabase to hold the related topics. The TocTopicDatabase provides a convenient way to access
@@ -512,7 +513,7 @@ public class DocbookXMLPreProcessor {
     public List<Integer> processInjections(final Level level, final SpecTopic topic,
             final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections,
             final int injectionPointType, final Document xmlDocument, final String regularExpression,
-            final ExternalListSort<Integer, TopicWrapper, InjectionTopicData> sortComparator,
+            final ExternalListSort<Integer, BaseTopicWrapper<?>, InjectionTopicData> sortComparator,
             final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
             final boolean usedFixedUrls) {
         final List<Integer> retValue = new ArrayList<Integer>();
@@ -558,7 +559,7 @@ public class DocbookXMLPreProcessor {
                         /*
                          * Pull the topic out of the list of related topics
                          */
-                        final TopicWrapper relatedTopic = relatedTopicsDatabase.getTopic(sequenceID.topicId);
+                        final BaseTopicWrapper<?> relatedTopic = relatedTopicsDatabase.getTopic(sequenceID.topicId);
 
                         /*
                          * See if the topic is also available in the main database (if the main database is available)
@@ -590,9 +591,9 @@ public class DocbookXMLPreProcessor {
                                 final String url = relatedTopic.getInternalURL();
                                 if (sequenceID.optional) {
                                     list.add(DocBookUtilities.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX,
-                                            url, relatedTopic.getTopicTitle()));
+                                            url, relatedTopic.getTitle()));
                                 } else {
-                                    list.add(DocBookUtilities.buildULink(xmlDocument, url, relatedTopic.getTopicTitle()));
+                                    list.add(DocBookUtilities.buildULink(xmlDocument, url, relatedTopic.getTitle()));
                                 }
                             } else {
                                 final Integer topicId = relatedTopic.getId();
@@ -622,6 +623,7 @@ public class DocbookXMLPreProcessor {
         return retValue;
     }
 
+    @SuppressWarnings("unchecked")
     public List<Integer> processGenericInjections(final Level level, final SpecTopic specTopic, final Document xmlDocument,
             final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs,
             final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls) {
@@ -636,12 +638,12 @@ public class DocbookXMLPreProcessor {
         final GenericInjectionPointDatabase relatedLists = new GenericInjectionPointDatabase();
 
         // Get the topic instance
-        final TopicWrapper topic = specTopic.getTopic();
+        final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         /* wrap each related topic in a listitem tag */
         if (topic.getOutgoingRelationships() != null && topic.getOutgoingRelationships() != null) {
-            final List<TopicWrapper> relatedTopics = topic.getOutgoingRelationships();
-            for (final TopicWrapper relatedTopic : relatedTopics) {
+            final List<BaseTopicWrapper<?>> relatedTopics = (List<BaseTopicWrapper<?>>) topic.getOutgoingRelationships();
+            for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
                 final Integer topicId = relatedTopic.getId();
 
                 /*
@@ -701,7 +703,7 @@ public class DocbookXMLPreProcessor {
                 DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID)) {
             for (final GenericInjectionPoint genericInjectionPoint : relatedLists.getInjectionPoints()) {
                 if (genericInjectionPoint.getCategoryIDAndName().getFirst() == topTag) {
-                    final List<TopicWrapper> relatedTopics = genericInjectionPoint.getTopics();
+                    final List<BaseTopicWrapper<?>> relatedTopics = genericInjectionPoint.getTopics();
 
                     /* don't add an empty list */
                     if (relatedTopics.size() != 0) {
@@ -710,10 +712,10 @@ public class DocbookXMLPreProcessor {
 
                         Collections.sort(relatedTopics, new TopicTitleComparator());
 
-                        for (final TopicWrapper relatedTopic : relatedTopics) {
+                        for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
                             if (level == null) {
                                 final String internalURL = relatedTopic.getInternalURL();
-                                DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTopicTitle(),
+                                DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(),
                                         itemizedlist);
                             } else {
                                 final Integer topicId = relatedTopic.getId();

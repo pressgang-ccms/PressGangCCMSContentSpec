@@ -9,7 +9,7 @@ import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.interfaces.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
@@ -149,7 +149,7 @@ public class ContentSpecGenerator
 				if (doesMatch)
 				{
 					final Integer topicId = topic.getId();
-					final String topicTitle = topic.getTopicTitle();
+					final String topicTitle = topic.getTitle();
 					
 					final SpecTopic specTopic = new SpecTopic(topicId, topicTitle);
 					specTopic.setTopic(topic.clone(false));
@@ -190,24 +190,9 @@ public class ContentSpecGenerator
 			retValue.setCopyrightHolder("Red Hat, Inc");
 			retValue.setInjectSurveyLinks(docbookBuildingOptions.getInsertSurveyLink() == null ? false : docbookBuildingOptions.getInsertSurveyLink());
 
-			/* Create an expand block for the tag parent tags */
-			/*final ExpandDataTrunk expandParentTags = new ExpandDataTrunk(new ExpandDataDetails("parenttags"));
-			expandParentTags.setBranches(CollectionUtilities.toArrayList(new ExpandDataTrunk(new ExpandDataDetails("categories"))));
-
-			final ExpandDataTrunk expandChildTags = new ExpandDataTrunk(new ExpandDataDetails("childtags"));
-
-			final ExpandDataTrunk expandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-			expandTags.setBranches(CollectionUtilities.toArrayList(expandParentTags, expandChildTags));
-
-			final ExpandDataTrunk expand = new ExpandDataTrunk();
-			expand.setBranches(CollectionUtilities.toArrayList(expandTags));
-
-			final String expandString = mapper.writeValueAsString(expand);
-			//final String expandEncodedString = URLEncoder.encode(expandString, "UTF-8");*/
-
 			/* Get the technology and common names categories */
-			final CategoryWrapper technologyCategroy = dataProvider.getCategoryById(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID);
-			final CategoryWrapper commonNamesCategory = dataProvider.getCategoryById(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID);
+			final CategoryWrapper technologyCategroy = dataProvider.getCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID);
+			final CategoryWrapper commonNamesCategory = dataProvider.getCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID);
 
 			/*
 			 * The top level TOC elements are made up of the technology and
@@ -255,22 +240,14 @@ public class ContentSpecGenerator
 				}
 			}
 
-			/* Create an expand block for the tag parent tags */
-			/*final ExpandDataTrunk concernCategoryExpand = new ExpandDataTrunk();
-			final ExpandDataTrunk concernCategoryExpandTags = new ExpandDataTrunk(new ExpandDataDetails("tags"));
-			concernCategoryExpand.setBranches(CollectionUtilities.toArrayList(concernCategoryExpandTags));
-
-			final String concernCategoryExpandString = mapper.writeValueAsString(concernCategoryExpand);
-			//final String concernCategoryExpandStringEncoded = URLEncoder.encode(concernCategoryExpandString, "UTF-8");*/
-
 			/* Get the technology and common names categories */
-			final CategoryWrapper concernCategory = dataProvider.getCategoryById(DocbookBuilderConstants.CONCERN_CATEGORY_ID);
+			final CategoryWrapper concernCategory = dataProvider.getCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID);
 
 			/* Get the task reference and concept tag*/
-			final TagWrapper referenceTag = dataProvider.getTagById(DocbookBuilderConstants.REFERENCE_TAG_ID);
-			final TagWrapper conceptTag = dataProvider.getTagById(DocbookBuilderConstants.CONCEPT_TAG_ID);
-			final TagWrapper conceptualOverviewTag = dataProvider.getTagById(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID);
-			final TagWrapper taskTag = dataProvider.getTagById(DocbookBuilderConstants.TASK_TAG_ID);
+			final TagWrapper referenceTag = dataProvider.getTag(DocbookBuilderConstants.REFERENCE_TAG_ID);
+			final TagWrapper conceptTag = dataProvider.getTag(DocbookBuilderConstants.CONCEPT_TAG_ID);
+			final TagWrapper conceptualOverviewTag = dataProvider.getTag(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID);
+			final TagWrapper taskTag = dataProvider.getTag(DocbookBuilderConstants.TASK_TAG_ID);
 
 			/* add TocFormatBranch objects for each top level tag */
 			for (final TagWrapper tag : topLevelTags)

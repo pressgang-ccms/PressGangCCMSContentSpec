@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
@@ -35,22 +35,22 @@ public class TopicErrorDatabase
 		return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
 	}
 
-	public void addError(final TopicWrapper topic, final ErrorType errorType, final String error)
+	public void addError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, errorType);
 	}
 
-	public void addWarning(final TopicWrapper topic, final ErrorType errorType, final String error)
+	public void addWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, errorType);
 	}
 	
-	public void addError(final TopicWrapper topic, final String error)
+	public void addError(final BaseTopicWrapper<?> topic, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, null);
 	}
 
-	public void addWarning(final TopicWrapper topic, final String error)
+	public void addWarning(final BaseTopicWrapper<?> topic, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, null);
 	}
@@ -60,17 +60,17 @@ public class TopicErrorDatabase
 	 * @param topic
 	 * @param error
 	 */
-	public void addTocError(final TopicWrapper topic, final ErrorType errorType, final String error)
+	public void addTocError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.ERROR, errorType);
 	}
 
-	public void addTocWarning(final TopicWrapper topic, final ErrorType errorType, final String error)
+	public void addTocWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
 	{
 		addItem(topic, error, ErrorLevel.WARNING, errorType);
 	}
 
-	private void addItem(final TopicWrapper topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
+	private void addItem(final BaseTopicWrapper<?> topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
 	{
 		final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);
 		/* don't add duplicates */
@@ -78,7 +78,7 @@ public class TopicErrorDatabase
 			topicErrorData.addError(item, errorLevel, errorType);
 	}
 
-	private TopicErrorData getErrorData(final TopicWrapper topic)
+	private TopicErrorData getErrorData(final BaseTopicWrapper<?> topic)
 	{
 		for (final String locale : errors.keySet())
 			for (final TopicErrorData topicErrorData : errors.get(locale))
@@ -89,7 +89,7 @@ public class TopicErrorDatabase
 		return null;
 	}
 
-	private TopicErrorData addOrGetTopicErrorData(final TopicWrapper topic)
+	private TopicErrorData addOrGetTopicErrorData(final BaseTopicWrapper<?> topic)
 	{
 		TopicErrorData topicErrorData = getErrorData(topic);
 		if (topicErrorData == null)

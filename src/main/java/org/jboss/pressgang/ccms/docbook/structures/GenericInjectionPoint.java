@@ -3,7 +3,7 @@ package org.jboss.pressgang.ccms.docbook.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 
 /**
@@ -21,7 +21,7 @@ public class GenericInjectionPoint {
     /** The details of the topic type tag */
     private Pair<Integer, String> categoryIDAndName;
     /** The topics to be linked to */
-    private List<TopicWrapper> topics;
+    private List<BaseTopicWrapper<?>> topics;
 
     public Pair<Integer, String> getCategoryIDAndName() {
         return categoryIDAndName;
@@ -31,25 +31,25 @@ public class GenericInjectionPoint {
         this.categoryIDAndName = categoryIDAndName;
     }
 
-    public List<TopicWrapper> getTopics() {
+    public List<BaseTopicWrapper<?>> getTopics() {
         return topics;
     }
 
-    public void setTopics(List<TopicWrapper> topics) {
+    public void setTopics(List<BaseTopicWrapper<?>> topics) {
         this.topics = topics;
     }
 
-    public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<TopicWrapper> topics) {
+    public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName, final List<BaseTopicWrapper<?>> topics) {
         this.categoryIDAndName = categoryIDAndName;
         this.topics = topics;
     }
 
     public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName) {
         this.categoryIDAndName = categoryIDAndName;
-        this.topics = new ArrayList<TopicWrapper>();
+        this.topics = new ArrayList<BaseTopicWrapper<?>>();
     }
 
-    public void addTopic(final TopicWrapper topic) {
+    public void addTopic(final BaseTopicWrapper<?> topic) {
         this.topics.add(topic);
     }
 }

@@ -16,7 +16,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.w3c.dom.Document;
@@ -33,7 +33,7 @@ public class SpecTopic extends SpecNode {
     private String targetId = null;
     private String title = null;
     private String duplicateId = null;
-    private TopicWrapper topic = null;
+    private BaseTopicWrapper<?> topic = null;
     private Document xmlDocument = null;
     private Integer revision = null;
 
@@ -92,7 +92,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @return The underlying topic if it has been set otherwise null.
      */
-    public TopicWrapper getTopic() {
+    public BaseTopicWrapper<?> getTopic() {
         return topic;
     }
 
@@ -101,7 +101,7 @@ public class SpecTopic extends SpecNode {
      * 
      * @param topic The underlying topic.
      */
-    public void setTopic(final TopicWrapper topic) {
+    public void setTopic(final BaseTopicWrapper<?> topic) {
         this.topic = topic;
     }
 

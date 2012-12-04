@@ -12,10 +12,9 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.interfaces.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.WrapperFactory;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
@@ -207,17 +206,15 @@ public class Process extends Level {
                     || nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)
                     || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
                 // Get the topic information from the database
-                final Object object;
+                final TopicWrapper topic;
                 if (nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)) {
-                    object = reader.getTopicById(Integer.parseInt(nonUniqueId.substring(1)), null);
+                    topic = reader.getTopic(Integer.parseInt(nonUniqueId.substring(1)), null);
                 } else if (nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
-                    object = reader.getTopicById(Integer.parseInt(nonUniqueId.substring(2)), null);
+                    topic = reader.getTopic(Integer.parseInt(nonUniqueId.substring(2)), null);
                 } else {
-                    object = reader.getTopicById(Integer.parseInt(nonUniqueId), null);
+                    topic = reader.getTopic(Integer.parseInt(nonUniqueId), null);
                 }
                 
-                final TopicWrapper topic = WrapperFactory.getInstance().createTopic(object);
-
                 if (topic != null) {
                     // Add relationships if the topic is a task
                     if (topic.hasTag(CSConstants.TASK_TAG_ID)) {

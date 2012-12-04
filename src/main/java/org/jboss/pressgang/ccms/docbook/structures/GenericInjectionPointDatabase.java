@@ -3,7 +3,7 @@ package org.jboss.pressgang.ccms.docbook.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 
 /**
@@ -29,7 +29,7 @@ public class GenericInjectionPointDatabase
 		return null;
 	}
 	
-	public void addInjectionTopic(final Pair<Integer, String> tagDetails, final TopicWrapper topic)
+	public void addInjectionTopic(final Pair<Integer, String> tagDetails, final BaseTopicWrapper<?> topic)
 	{
 		GenericInjectionPoint genericInjectionPoint = getInjectionPoint(tagDetails);
 		if (genericInjectionPoint == null)

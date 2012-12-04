@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorType;
 
@@ -16,16 +16,16 @@ import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorType;
  */
 public class TopicErrorData
 {	
-	private TopicWrapper topic;
+	private BaseTopicWrapper<?> topic;
 	private Map<ErrorLevel, Set<String>> errors = new HashMap<ErrorLevel, Set<String>>();
 	private List<ErrorType> errorTypes = new ArrayList<ErrorType>();
 
-	public TopicWrapper getTopic()
+	public BaseTopicWrapper<?> getTopic()
 	{
 		return topic;
 	}
 
-	public void setTopic(final TopicWrapper topic)
+	public void setTopic(final BaseTopicWrapper<?> topic)
 	{
 		this.topic = topic;
 	}

@@ -9,4 +9,5 @@ public interface TagWrapper extends EntityWrapper<TagWrapper> {
     List<CategoryWrapper> getCategories();
     PropertyTagWrapper getProperty(final int propertyId);
     Integer getInCategorySort();
+    boolean containedInCategory(int categoryId);
 }

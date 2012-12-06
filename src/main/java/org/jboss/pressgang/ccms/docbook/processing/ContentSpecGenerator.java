@@ -9,7 +9,7 @@ import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
@@ -21,9 +21,9 @@ import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 public class ContentSpecGenerator
 {
 	/** The REST client */
-	private final DataProvider dataProvider;
+	private final DataProviderFactory dataProvider;
 	
-	public ContentSpecGenerator(final DataProvider dataProvider)
+	public ContentSpecGenerator(final DataProviderFactory dataProvider)
 	{
 		this.dataProvider = dataProvider;
 	}

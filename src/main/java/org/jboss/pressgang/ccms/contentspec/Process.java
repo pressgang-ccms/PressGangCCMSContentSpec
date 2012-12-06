@@ -12,7 +12,7 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
@@ -187,11 +187,11 @@ public class Process extends Level {
      * 
      * @param specTopics A mapping of all the topics in a content specification to their unique ids
      * @param topicTargets The topic targets that already exist in a content specification
-     * @param reader A DBReader object that is used to access database objects via the REST Interface
+     * @param topicDataProvider A DBReader object that is used to access database objects via the REST Interface
      * @return True if everything loaded successfully otherwise false
      */
     public boolean processTopics(final HashMap<String, SpecTopic> specTopics, final HashMap<String, SpecTopic> topicTargets,
-            final DataProvider reader) {
+            final TopicProvider topicDataProvider) {
         boolean successfullyLoaded = true;
         SpecTopic prevTopic = null;
         String prevTopicTargetId = null;
@@ -208,11 +208,11 @@ public class Process extends Level {
                 // Get the topic information from the database
                 final TopicWrapper topic;
                 if (nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)) {
-                    topic = reader.getTopic(Integer.parseInt(nonUniqueId.substring(1)), null);
+                    topic = topicDataProvider.getTopic(Integer.parseInt(nonUniqueId.substring(1)), null);
                 } else if (nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
-                    topic = reader.getTopic(Integer.parseInt(nonUniqueId.substring(2)), null);
+                    topic = topicDataProvider.getTopic(Integer.parseInt(nonUniqueId.substring(2)), null);
                 } else {
-                    topic = reader.getTopic(Integer.parseInt(nonUniqueId), null);
+                    topic = topicDataProvider.getTopic(Integer.parseInt(nonUniqueId), null);
                 }
                 
                 if (topic != null) {

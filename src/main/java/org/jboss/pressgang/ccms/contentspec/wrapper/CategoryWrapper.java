@@ -1,9 +1,9 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-import java.util.List;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface CategoryWrapper extends EntityWrapper<CategoryWrapper> {
-    List<TagWrapper> getTags();
+    CollectionWrapper<TagWrapper> getTags();
     boolean isMutuallyExclusive();
     String getName();
 }

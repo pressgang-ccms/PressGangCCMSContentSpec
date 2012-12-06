@@ -2,9 +2,12 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.TranslatedTopicProvider;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public class EntityUtilities {
 
@@ -24,11 +27,12 @@ public class EntityUtilities {
             return null;
         }
 
-        final List<TranslatedTopicWrapper> translatedTopics = DataProvider.getInstance().getTopic(id, rev).getTranslatedTopics();
+        final CollectionWrapper<TranslatedTopicWrapper> translatedTopics = DataProviderFactory.getInstance(TopicProvider.class).getTopic(id, rev).getTranslatedTopics();
 
         TranslatedTopicWrapper closestTranslation = null;
-        if (translatedTopics != null) {
-            for (final TranslatedTopicWrapper translatedTopic : translatedTopics) {
+        if (translatedTopics != null && translatedTopics.getItems() != null) {
+            final List<TranslatedTopicWrapper> entities = translatedTopics.getItems();
+            for (final TranslatedTopicWrapper translatedTopic : entities) {
                 if (translatedTopic.getLocale().equals(locale)
                 /* Ensure that the translation is the newest translation possible */
                 && (closestTranslation == null || closestTranslation.getRevision() < translatedTopic.getRevision())
@@ -43,7 +47,7 @@ public class EntityUtilities {
         if (!expand) {
             return closestTranslation;
         } else if (closestTranslation != null) {
-            return DataProvider.getInstance().getTranslatedTopic(closestTranslation.getId(), null);
+            return DataProviderFactory.getInstance(TranslatedTopicProvider.class).getTranslatedTopic(closestTranslation.getId(), null);
         } else {
             return null;
         }
@@ -52,7 +56,7 @@ public class EntityUtilities {
     /**
      * Gets a translated topic based on a topic id, revision and locale.
      */
-    public static List<TranslatedTopicStringWrapper> getTranslatedTopicStringsByTopicId(final Integer id, final Integer rev,
+    public static CollectionWrapper<TranslatedTopicStringWrapper> getTranslatedTopicStringsByTopicId(final Integer id, final Integer rev,
             final String locale) {
         final TranslatedTopicWrapper translatedTopic = getClosestTranslatedTopicByTopicId(id, rev, locale, false);
 
@@ -68,7 +72,7 @@ public class EntityUtilities {
     public static TranslatedTopicWrapper getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale) {
         if (locale == null)
             return null;
-        final List<TranslatedTopicWrapper> translatedTopics = DataProvider.getInstance().getTopicTranslations(id, rev);
+        final List<TranslatedTopicWrapper> translatedTopics = DataProviderFactory.getInstance(TopicProvider.class).getTopicTranslations(id, rev);
 
         if (translatedTopics != null) {
             for (final TranslatedTopicWrapper translatedTopic : translatedTopics) {

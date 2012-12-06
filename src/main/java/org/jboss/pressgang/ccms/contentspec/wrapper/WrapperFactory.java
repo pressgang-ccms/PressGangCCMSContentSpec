@@ -3,7 +3,6 @@ package org.jboss.pressgang.ccms.contentspec.wrapper;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
@@ -13,12 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.jboss.pressgang.ccms.contentspec.provider.DataProvider;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public abstract class WrapperFactory {
     private static Map<Class<?>, WrapperFactory> wrapperFactories = new HashMap<Class<?>, WrapperFactory>();
-
-    private final DataProvider dataProvider;
 
     static ClassLoader getContextClassLoader() {
         return AccessController.doPrivileged(new PrivilegedAction<ClassLoader>() {
@@ -38,8 +35,7 @@ public abstract class WrapperFactory {
         if (!wrapperFactories.containsKey(clazz)) {
             try {
                 // Find the defined wrapper factory implementation class.
-                final Constructor<?> constructor = clazz.getConstructors()[0];
-                wrapperFactories.put(clazz, (WrapperFactory) constructor.newInstance(DataProvider.getInstance()));
+                wrapperFactories.put(clazz, clazz.newInstance());
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
@@ -84,8 +80,7 @@ public abstract class WrapperFactory {
             try {
                 // Find the defined wrapper factory implementation class.
                 final Class<? extends WrapperFactory> wrapperClass = findWrapperFactoryImpl();
-                final Constructor<?> constructor = wrapperClass.getConstructors()[0];
-                final WrapperFactory wrapperFactory = (WrapperFactory) constructor.newInstance(DataProvider.getInstance());
+                final WrapperFactory wrapperFactory = wrapperClass.newInstance();
                 wrapperFactories.put(wrapperClass, wrapperFactory);
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -162,21 +157,19 @@ public abstract class WrapperFactory {
         }
     }
 
-    protected WrapperFactory(final DataProvider dataProvider) {
-        this.dataProvider = dataProvider;
+    protected WrapperFactory() {
     }
 
     /*
      * TOPIC METHODS
      */
     
-    public abstract TopicWrapper createNewTopic();
-    public abstract TopicWrapper createTopic(final Object entity);
+    public abstract TopicWrapper createTopic(final Object entity, boolean isRevision);
 
-    public List<TopicWrapper> createTopicList(final Collection<?> entities) {
+    public List<TopicWrapper> createTopicList(final Collection<?> entities, boolean isRevisionList) {
         final List<TopicWrapper> retValue = new ArrayList<TopicWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTopic(object));
+            retValue.add(createTopic(object, isRevisionList));
         }
 
         return retValue;
@@ -186,13 +179,12 @@ public abstract class WrapperFactory {
      * TOPIC SOURCE URL METHODS
      */
     
-    public abstract TopicSourceURLWrapper createNewTopicSourceURL();
-    public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity);
+    public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity, final BaseTopicWrapper<?> topic);
 
-    public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities) {
+    public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities, final BaseTopicWrapper<?> topic) {
         final List<TopicSourceURLWrapper> retValue = new ArrayList<TopicSourceURLWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTopicSourceURL(object));
+            retValue.add(createTopicSourceURL(object, topic));
         }
 
         return retValue;
@@ -202,13 +194,12 @@ public abstract class WrapperFactory {
      * TRANSLATED TOPIC METHODS
      */
     
-    public abstract TranslatedTopicWrapper createNewTranslatedTopic();
-    public abstract TranslatedTopicWrapper createTranslatedTopic(final Object entity);
+    public abstract TranslatedTopicWrapper createTranslatedTopic(final Object entity, boolean isRevision);
 
-    public List<TranslatedTopicWrapper> createTranslatedTopicList(final Collection<?> entities) {
+    public List<TranslatedTopicWrapper> createTranslatedTopicList(final Collection<?> entities, boolean isRevisionList) {
         final List<TranslatedTopicWrapper> retValue = new ArrayList<TranslatedTopicWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTranslatedTopic(object));
+            retValue.add(createTranslatedTopic(object, isRevisionList));
         }
 
         return retValue;
@@ -218,13 +209,12 @@ public abstract class WrapperFactory {
      * TRANSLATED TOPIC STRING METHODS
      */
     
-    public abstract TranslatedTopicStringWrapper createNewTranslatedTopicString();
-    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity);
+    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity, final TranslatedTopicWrapper translatedTopic);
 
-    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities) {
+    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities, final TranslatedTopicWrapper translatedTopic) {
         final List<TranslatedTopicStringWrapper> retValue = new ArrayList<TranslatedTopicStringWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTranslatedTopicString(object));
+            retValue.add(createTranslatedTopicString(object, translatedTopic));
         }
 
         return retValue;
@@ -234,13 +224,13 @@ public abstract class WrapperFactory {
      * TAG METHODS
      */
 
-    public abstract TagWrapper createNewTag();
-    public abstract TagWrapper createTag(final Object entity);
-
-    public List<TagWrapper> createTagList(final Collection<?> entities) {
+    public abstract TagWrapper createTag(final Object entity, boolean isRevision);
+    public abstract CollectionWrapper<TagWrapper> createTagCollection(final Object collection, boolean isRevisionCollection);
+    
+    public List<TagWrapper> createTagList(final Collection<?> entities, boolean isRevisionList) {
         final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTag(object));
+            retValue.add(createTag(object, isRevisionList));
         }
 
         return retValue;
@@ -250,13 +240,12 @@ public abstract class WrapperFactory {
      * CATEGORY METHODS
      */
 
-    public abstract CategoryWrapper createNewCategory();
-    public abstract CategoryWrapper createCategory(final Object entity);
+    public abstract CategoryWrapper createCategory(final Object entity, boolean isRevision);
 
-    public List<CategoryWrapper> createCategoryList(final Collection<?> entities) {
+    public List<CategoryWrapper> createCategoryList(final Collection<?> entities, boolean isRevisionList) {
         final List<CategoryWrapper> retValue = new ArrayList<CategoryWrapper>();
         for (final Object object : entities) {
-            retValue.add(createCategory(object));
+            retValue.add(createCategory(object, isRevisionList));
         }
 
         return retValue;
@@ -266,13 +255,12 @@ public abstract class WrapperFactory {
      * PROPERTY TAG METHODS
      */
     
-    public abstract PropertyTagWrapper createNewPropertyTag();
-    public abstract PropertyTagWrapper createPropertyTag(final Object entity);
+    public abstract PropertyTagWrapper createPropertyTag(final Object entity, boolean isRevision);
 
-    public List<PropertyTagWrapper> createPropertyTagList(final Collection<?> entities) {
+    public List<PropertyTagWrapper> createPropertyTagList(final Collection<?> entities, boolean isRevisionList) {
         final List<PropertyTagWrapper> retValue = new ArrayList<PropertyTagWrapper>();
         for (final Object object : entities) {
-            retValue.add(createPropertyTag(object));
+            retValue.add(createPropertyTag(object, isRevisionList));
         }
 
         return retValue;
@@ -282,13 +270,12 @@ public abstract class WrapperFactory {
      * BLOB CONSTANT METHODS
      */
 
-    public abstract BlobConstantWrapper createNewBlobConstant();
-    public abstract BlobConstantWrapper createBlobConstant(final Object entity);
+    public abstract BlobConstantWrapper createBlobConstant(final Object entity, boolean isRevision);
 
-    public List<BlobConstantWrapper> createBlobConstantList(final Collection<?> entities) {
+    public List<BlobConstantWrapper> createBlobConstantList(final Collection<?> entities, boolean isRevisionList) {
         final List<BlobConstantWrapper> retValue = new ArrayList<BlobConstantWrapper>();
         for (final Object object : entities) {
-            retValue.add(createBlobConstant(object));
+            retValue.add(createBlobConstant(object, isRevisionList));
         }
 
         return retValue;
@@ -298,13 +285,12 @@ public abstract class WrapperFactory {
      * STRING CONSTANT METHODS
      */
     
-    public abstract StringConstantWrapper createNewStringConstant();
-    public abstract StringConstantWrapper createStringConstant(final Object entity);
+    public abstract StringConstantWrapper createStringConstant(final Object entity, boolean isRevision);
 
-    public List<StringConstantWrapper> createStringConstantList(final Collection<?> entities) {
+    public List<StringConstantWrapper> createStringConstantList(final Collection<?> entities, boolean isRevisionList) {
         final List<StringConstantWrapper> retValue = new ArrayList<StringConstantWrapper>();
         for (final Object object : entities) {
-            retValue.add(createStringConstant(object));
+            retValue.add(createStringConstant(object, isRevisionList));
         }
 
         return retValue;
@@ -314,13 +300,12 @@ public abstract class WrapperFactory {
      * IMAGE METHODS
      */
     
-    public abstract ImageWrapper createNewImage();
-    public abstract ImageWrapper createImage(final Object entity);
+    public abstract ImageWrapper createImage(final Object entity, boolean isRevision);
 
-    public List<ImageWrapper> createImageList(final Collection<?> entities) {
+    public List<ImageWrapper> createImageList(final Collection<?> entities, boolean isRevisionList) {
         final List<ImageWrapper> retValue = new ArrayList<ImageWrapper>();
         for (final Object object : entities) {
-            retValue.add(createImage(object));
+            retValue.add(createImage(object, isRevisionList));
         }
 
         return retValue;
@@ -330,7 +315,6 @@ public abstract class WrapperFactory {
      * LANGUAGE IMAGE METHODS
      */
     
-    public abstract LanguageImageWrapper createNewLanguageImage(final ImageWrapper parent);
     public abstract LanguageImageWrapper createLanguageImage(final Object entity, final ImageWrapper parent);
 
     public List<LanguageImageWrapper> createLanguageImageList(final Collection<?> entities, final ImageWrapper parent) {
@@ -340,9 +324,5 @@ public abstract class WrapperFactory {
         }
 
         return retValue;
-    }
-
-    protected DataProvider getDataProvider() {
-        return dataProvider;
     }
 }

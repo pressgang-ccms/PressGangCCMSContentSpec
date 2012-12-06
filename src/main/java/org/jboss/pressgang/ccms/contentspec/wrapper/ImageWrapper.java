@@ -1,8 +1,8 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-import java.util.List;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface ImageWrapper extends EntityWrapper<ImageWrapper> {
     String getDescription();
-    List<LanguageImageWrapper> getLanguageImages();
+    CollectionWrapper<LanguageImageWrapper> getLanguageImages();
 }

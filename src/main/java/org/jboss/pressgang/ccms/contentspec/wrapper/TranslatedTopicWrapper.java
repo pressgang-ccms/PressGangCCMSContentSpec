@@ -1,8 +1,8 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-import java.util.List;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopicWrapper> {
     Integer getTranslationPercentage();
-    List<TranslatedTopicStringWrapper> getTranslatedStrings();
+    CollectionWrapper<TranslatedTopicStringWrapper> getTranslatedStrings();
 }

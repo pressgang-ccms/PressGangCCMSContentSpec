@@ -10,4 +10,5 @@ public abstract interface EntityWrapper<T extends EntityWrapper<T>> {
      */
     Object unwrap();
     T clone(boolean deepCopy);
+    boolean isRevisionEntity();
 }

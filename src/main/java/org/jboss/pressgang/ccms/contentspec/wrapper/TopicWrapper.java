@@ -1,11 +1,11 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-import java.util.List;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface TopicWrapper extends BaseTopicWrapper<TopicWrapper> {
 
     @Override
-    List<TopicWrapper> getOutgoingRelationships();
-    List<TranslatedTopicWrapper> getTranslatedTopics();
+    CollectionWrapper<TopicWrapper> getOutgoingRelationships();
+    CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopics();
     String getEditorURL();
 }

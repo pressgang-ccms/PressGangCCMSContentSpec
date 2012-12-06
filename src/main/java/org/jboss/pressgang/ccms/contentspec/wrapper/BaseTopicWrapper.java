@@ -2,6 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.wrapper;
 
 import java.util.List;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 
 public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityWrapper<T> {
@@ -19,12 +20,12 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
     String getXml();
     String getLocale();
     boolean hasTag(final int tagId);
-    List<TagWrapper> getTags();
-    List<T> getOutgoingRelationships();
-    List<T> getIncomingRelationships();
-    List<TagWrapper> getTagsInCategories(final List<Integer> categoryIds);
-    List<PropertyTagWrapper> getProperties();
-    List<TopicSourceURLWrapper> getSourceURLs();
+    CollectionWrapper<TagWrapper> getTags();
+    CollectionWrapper<T> getOutgoingRelationships();
+    CollectionWrapper<T> getIncomingRelationships();
+    CollectionWrapper<TagWrapper> getTagsInCategories(final List<Integer> categoryIds);
+    CollectionWrapper<PropertyTagWrapper> getProperties();
+    CollectionWrapper<TopicSourceURLWrapper> getSourceURLs();
     PropertyTagWrapper getProperty(final int propertyId);
     String getBugzillaBuildId();
     String getEditorURL(final ZanataDetails zanataDetails);
@@ -32,6 +33,5 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
     String getErrorXRefId();
     String getXRefId();
     String getXRefPropertyOrId(final int propertyId);
-    List<TagWrapper> getAuthors();
-    boolean isRevisionTopic();
+    CollectionWrapper<TagWrapper> getAuthors();
 }

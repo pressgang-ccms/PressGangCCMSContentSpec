@@ -72,10 +72,11 @@ public class EntityUtilities {
     public static TranslatedTopicWrapper getTranslatedTopicByTopicId(final Integer id, final Integer rev, final String locale) {
         if (locale == null)
             return null;
-        final List<TranslatedTopicWrapper> translatedTopics = DataProviderFactory.getInstance(TopicProvider.class).getTopicTranslations(id, rev);
+        final CollectionWrapper<TranslatedTopicWrapper> translatedTopics = DataProviderFactory.getInstance(TopicProvider.class).getTopicTranslations(id, rev);
 
         if (translatedTopics != null) {
-            for (final TranslatedTopicWrapper translatedTopic : translatedTopics) {
+            final List<TranslatedTopicWrapper> translatedTopicItems = translatedTopics.getItems();
+            for (final TranslatedTopicWrapper translatedTopic : translatedTopicItems) {
                 if (rev != null && translatedTopic.getRevision().equals(rev) && translatedTopic.getLocale().equals(locale)) {
                     return translatedTopic;
                 } else if (rev == null) {

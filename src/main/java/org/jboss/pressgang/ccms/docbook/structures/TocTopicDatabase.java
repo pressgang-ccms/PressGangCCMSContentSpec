@@ -52,7 +52,7 @@ public class TocTopicDatabase {
         final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
 
         for (final BaseTopicWrapper<?> topic : topics) {
-            final List<TagWrapper> topicTags = topic.getTagsInCategories(categoryIds);
+            final List<TagWrapper> topicTags = topic.getTagsInCategories(categoryIds).getItems();
             CollectionUtilities.addAllThatDontExist(topicTags, retValue);
         }
 
@@ -72,7 +72,7 @@ public class TocTopicDatabase {
                 continue;
 
             /* check to see if the topic has only the matching tags */
-            if (haveOnlyMatchingTags && topic.getTags().size() != matchingTags.size())
+            if (haveOnlyMatchingTags && topic.getTags().getItems().size() != matchingTags.size())
                 continue;
 
             /* check for matching tags */

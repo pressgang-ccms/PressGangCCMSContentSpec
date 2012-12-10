@@ -9,7 +9,9 @@ import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.provider.CategoryProvider;
 import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
@@ -20,15 +22,6 @@ import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 
 public class ContentSpecGenerator
 {
-	/** The REST client */
-	private final DataProviderFactory dataProvider;
-	
-	public ContentSpecGenerator(final DataProviderFactory dataProvider)
-	{
-		this.dataProvider = dataProvider;
-	}
-	
-
 	/**
 	 * Generates a Content Specification and fills it in using a set of topics. Once the content
 	 * specification is assembled it then removes any empty sections.
@@ -191,8 +184,9 @@ public class ContentSpecGenerator
 			retValue.setInjectSurveyLinks(docbookBuildingOptions.getInsertSurveyLink() == null ? false : docbookBuildingOptions.getInsertSurveyLink());
 
 			/* Get the technology and common names categories */
-			final CategoryWrapper technologyCategroy = dataProvider.getCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID);
-			final CategoryWrapper commonNamesCategory = dataProvider.getCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID);
+			final CategoryProvider catProvider = DataProviderFactory.getInstance(CategoryProvider.class);
+			final CategoryWrapper technologyCategroy = catProvider.getCategory(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID);
+			final CategoryWrapper commonNamesCategory = catProvider.getCategory(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID);
 
 			/*
 			 * The top level TOC elements are made up of the technology and
@@ -206,14 +200,14 @@ public class ContentSpecGenerator
 			{
 				if (category.getTags() != null)
 				{
-				    final List<TagWrapper> tags = category.getTags();
+				    final List<TagWrapper> tags = category.getTags().getItems();
 					for (final TagWrapper tag : tags)
 					{
 						boolean isEmcompassed = false;
-						final List<TagWrapper> parentTags = tag.getParentTags();
+						final List<TagWrapper> parentTags = tag.getParentTags().getItems();
 						for (final TagWrapper parentTag : parentTags)
 						{
-						    final List<CategoryWrapper> parentTagCategories = parentTag.getCategories();
+						    final List<CategoryWrapper> parentTagCategories = parentTag.getCategories().getItems();
 							for (final CategoryWrapper parentTagCategory : parentTagCategories)
 							{
 								if (parentTagCategory.getId().equals(DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID) || parentTagCategory.getId().equals(DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID))
@@ -241,13 +235,14 @@ public class ContentSpecGenerator
 			}
 
 			/* Get the technology and common names categories */
-			final CategoryWrapper concernCategory = dataProvider.getCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID);
+			final CategoryWrapper concernCategory = catProvider.getCategory(DocbookBuilderConstants.CONCERN_CATEGORY_ID);
 
 			/* Get the task reference and concept tag*/
-			final TagWrapper referenceTag = dataProvider.getTag(DocbookBuilderConstants.REFERENCE_TAG_ID);
-			final TagWrapper conceptTag = dataProvider.getTag(DocbookBuilderConstants.CONCEPT_TAG_ID);
-			final TagWrapper conceptualOverviewTag = dataProvider.getTag(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID);
-			final TagWrapper taskTag = dataProvider.getTag(DocbookBuilderConstants.TASK_TAG_ID);
+			final TagProvider tagProvider = DataProviderFactory.getInstance(TagProvider.class);
+			final TagWrapper referenceTag = tagProvider.getTag(DocbookBuilderConstants.REFERENCE_TAG_ID);
+			final TagWrapper conceptTag = tagProvider.getTag(DocbookBuilderConstants.CONCEPT_TAG_ID);
+			final TagWrapper conceptualOverviewTag = tagProvider.getTag(DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID);
+			final TagWrapper taskTag = tagProvider.getTag(DocbookBuilderConstants.TASK_TAG_ID);
 
 			/* add TocFormatBranch objects for each top level tag */
 			for (final TagWrapper tag : topLevelTags)
@@ -263,7 +258,7 @@ public class ContentSpecGenerator
 
 					{
 						add(tag);
-						addAll(tag.getChildTags());
+						addAll(tag.getChildTags().getItems());
 					}
 				});
 
@@ -272,7 +267,7 @@ public class ContentSpecGenerator
 				
 				populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
-				final List<TagWrapper> concernTags = concernCategory.getTags();
+				final List<TagWrapper> concernTags = concernCategory.getTags().getItems();
 				for (final TagWrapper concernTag : concernTags)
 				{
 					/*

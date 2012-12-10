@@ -238,7 +238,7 @@ public class DocbookXMLPreProcessor {
 
             /* look for the bugzilla options */
             if (topic.getTags() != null && topic.getTags() != null) {
-                final List<TagWrapper> tags = topic.getTags();
+                final List<TagWrapper> tags = topic.getTags().getItems();
                 for (final TagWrapper tag : tags) {
                     final PropertyTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
                     final PropertyTagWrapper bugzillaComponentTag = tag

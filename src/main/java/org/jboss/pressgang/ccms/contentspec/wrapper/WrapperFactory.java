@@ -29,7 +29,7 @@ public abstract class WrapperFactory {
             }
         });
     }
-    
+
     @SuppressWarnings("unchecked")
     public static <T extends WrapperFactory> T getInstance(final Class<T> clazz) {
         if (!wrapperFactories.containsKey(clazz)) {
@@ -40,43 +40,32 @@ public abstract class WrapperFactory {
                 throw new RuntimeException(e);
             }
         }
-        
+
         return (T) wrapperFactories.get(clazz);
     }
 
     public static WrapperFactory getInstance() {
         if (wrapperFactories.isEmpty()) {
-            /*if (dataProviders.isEmpty()) {
-                throw new IllegalStateException("No Data Providers have been registered.");
-            }
+            /*
+             * if (dataProviders.isEmpty()) { throw new IllegalStateException("No Data Providers have been registered."); }
+             * 
+             * // Find the defined wrapper factory implementation class. final Class<?> wrapperClass = findWrapperFactoryImpl();
+             * 
+             * try { // Find the constructor for the class. final Constructor<?> constructor =
+             * wrapperClass.getConstructors()[0]; final Class<?> dataProviderClass = constructor.getParameterTypes()[0];
+             * 
+             * // Find a data provider that works with the WrapperFactory DataProvider dataProvider = null; for (final
+             * DataProvider provider : dataProviders) { if (provider.getClass().equals(dataProviderClass)) { dataProvider =
+             * provider; } }
+             * 
+             * // Check to make sure we have a data provider registered. if (dataProvider == null) { throw new
+             * IllegalStateException("No Data Providers have been registered that are usable by the \"" + wrapperClass.getName()
+             * + "\" WrapperFactory."); }
+             * 
+             * wrapperFactory = (WrapperFactory) constructor.newInstance(dataProvider); } catch (Exception e) { throw new
+             * RuntimeException(e); }
+             */
 
-            // Find the defined wrapper factory implementation class.
-            final Class<?> wrapperClass = findWrapperFactoryImpl();
-
-            try {
-                // Find the constructor for the class.
-                final Constructor<?> constructor = wrapperClass.getConstructors()[0];
-                final Class<?> dataProviderClass = constructor.getParameterTypes()[0];
-
-                // Find a data provider that works with the WrapperFactory
-                DataProvider dataProvider = null;
-                for (final DataProvider provider : dataProviders) {
-                    if (provider.getClass().equals(dataProviderClass)) {
-                        dataProvider = provider;
-                    }
-                }
-
-                // Check to make sure we have a data provider registered.
-                if (dataProvider == null) {
-                    throw new IllegalStateException("No Data Providers have been registered that are usable by the \""
-                            + wrapperClass.getName() + "\" WrapperFactory.");
-                }
-
-                wrapperFactory = (WrapperFactory) constructor.newInstance(dataProvider);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
-            }*/
-            
             try {
                 // Find the defined wrapper factory implementation class.
                 final Class<? extends WrapperFactory> wrapperClass = findWrapperFactoryImpl();
@@ -163,8 +152,10 @@ public abstract class WrapperFactory {
     /*
      * TOPIC METHODS
      */
-    
+
     public abstract TopicWrapper createTopic(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<TopicWrapper> createTopicCollection(final Object collection, boolean isRevisionCollection);
 
     public List<TopicWrapper> createTopicList(final Collection<?> entities, boolean isRevisionList) {
         final List<TopicWrapper> retValue = new ArrayList<TopicWrapper>();
@@ -174,12 +165,15 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * TOPIC SOURCE URL METHODS
      */
-    
+
     public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity, final BaseTopicWrapper<?> topic);
+
+    public abstract CollectionWrapper<TopicSourceURLWrapper> createTopicSourceURLCollection(final Object collection,
+            final BaseTopicWrapper<?> topic);
 
     public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities, final BaseTopicWrapper<?> topic) {
         final List<TopicSourceURLWrapper> retValue = new ArrayList<TopicSourceURLWrapper>();
@@ -189,12 +183,15 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * TRANSLATED TOPIC METHODS
      */
-    
+
     public abstract TranslatedTopicWrapper createTranslatedTopic(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<TranslatedTopicWrapper> createTranslatedTopicCollection(final Object collection,
+            boolean isRevisionCollection);
 
     public List<TranslatedTopicWrapper> createTranslatedTopicList(final Collection<?> entities, boolean isRevisionList) {
         final List<TranslatedTopicWrapper> retValue = new ArrayList<TranslatedTopicWrapper>();
@@ -204,14 +201,19 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * TRANSLATED TOPIC STRING METHODS
      */
-    
-    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity, final TranslatedTopicWrapper translatedTopic);
 
-    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities, final TranslatedTopicWrapper translatedTopic) {
+    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity,
+            final TranslatedTopicWrapper translatedTopic);
+
+    public abstract CollectionWrapper<TranslatedTopicStringWrapper> createTranslatedTopicStringCollection(
+            final Object collection, final TranslatedTopicWrapper translatedTopic);
+
+    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities,
+            final TranslatedTopicWrapper translatedTopic) {
         final List<TranslatedTopicStringWrapper> retValue = new ArrayList<TranslatedTopicStringWrapper>();
         for (final Object object : entities) {
             retValue.add(createTranslatedTopicString(object, translatedTopic));
@@ -225,8 +227,9 @@ public abstract class WrapperFactory {
      */
 
     public abstract TagWrapper createTag(final Object entity, boolean isRevision);
+
     public abstract CollectionWrapper<TagWrapper> createTagCollection(final Object collection, boolean isRevisionCollection);
-    
+
     public List<TagWrapper> createTagList(final Collection<?> entities, boolean isRevisionList) {
         final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
         for (final Object object : entities) {
@@ -235,12 +238,15 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * CATEGORY METHODS
      */
 
     public abstract CategoryWrapper createCategory(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<CategoryWrapper> createCategoryCollection(final Object collection,
+            boolean isRevisionCollection);
 
     public List<CategoryWrapper> createCategoryList(final Collection<?> entities, boolean isRevisionList) {
         final List<CategoryWrapper> retValue = new ArrayList<CategoryWrapper>();
@@ -254,8 +260,11 @@ public abstract class WrapperFactory {
     /*
      * PROPERTY TAG METHODS
      */
-    
+
     public abstract PropertyTagWrapper createPropertyTag(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<PropertyTagWrapper> createPropertyTagCollection(final Object collection,
+            boolean isRevisionCollection);
 
     public List<PropertyTagWrapper> createPropertyTagList(final Collection<?> entities, boolean isRevisionList) {
         final List<PropertyTagWrapper> retValue = new ArrayList<PropertyTagWrapper>();
@@ -265,12 +274,15 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * BLOB CONSTANT METHODS
      */
 
     public abstract BlobConstantWrapper createBlobConstant(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<BlobConstantWrapper> createBlobConstantCollection(final Object collection,
+            boolean isRevisionCollection);
 
     public List<BlobConstantWrapper> createBlobConstantList(final Collection<?> entities, boolean isRevisionList) {
         final List<BlobConstantWrapper> retValue = new ArrayList<BlobConstantWrapper>();
@@ -284,8 +296,11 @@ public abstract class WrapperFactory {
     /*
      * STRING CONSTANT METHODS
      */
-    
+
     public abstract StringConstantWrapper createStringConstant(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<StringConstantWrapper> createStringConstantCollection(final Object collection,
+            boolean isRevisionCollection);
 
     public List<StringConstantWrapper> createStringConstantList(final Collection<?> entities, boolean isRevisionList) {
         final List<StringConstantWrapper> retValue = new ArrayList<StringConstantWrapper>();
@@ -295,12 +310,14 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * IMAGE METHODS
      */
-    
+
     public abstract ImageWrapper createImage(final Object entity, boolean isRevision);
+
+    public abstract CollectionWrapper<ImageWrapper> createImageCollection(final Object collection, boolean isRevisionCollection);
 
     public List<ImageWrapper> createImageList(final Collection<?> entities, boolean isRevisionList) {
         final List<ImageWrapper> retValue = new ArrayList<ImageWrapper>();
@@ -310,12 +327,15 @@ public abstract class WrapperFactory {
 
         return retValue;
     }
-    
+
     /*
      * LANGUAGE IMAGE METHODS
      */
-    
+
     public abstract LanguageImageWrapper createLanguageImage(final Object entity, final ImageWrapper parent);
+
+    public abstract CollectionWrapper<LanguageImageWrapper> createLanguageImageCollection(final Object collection,
+            final ImageWrapper parent);
 
     public List<LanguageImageWrapper> createLanguageImageList(final Collection<?> entities, final ImageWrapper parent) {
         final List<LanguageImageWrapper> retValue = new ArrayList<LanguageImageWrapper>();

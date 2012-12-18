@@ -8,10 +8,26 @@ import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollect
 
 public interface TagProvider {
     TagWrapper getTag(final int id);
+
+    TagWrapper getTag(final int id, Integer revision);
+
     CollectionWrapper<TagWrapper> getTagsByName(final String name);
+
     UpdateableCollectionWrapper<CategoryWrapper> getTagCategories(int id);
+
     UpdateableCollectionWrapper<CategoryWrapper> getTagCategories(int id, Integer revision);
+
     CollectionWrapper<TagWrapper> getTagChildTags(int id, Integer revision);
+
     CollectionWrapper<TagWrapper> getTagParentTags(int id, Integer revision);
+
     CollectionWrapper<PropertyTagWrapper> getTagProperties(int id, Integer revision);
+
+    TagWrapper newTag();
+
+    TagWrapper newTagInCategory();
+
+    CollectionWrapper<TagWrapper> newTagCollection();
+
+    CollectionWrapper<TagWrapper> newTagInCategoryCollection();
 }

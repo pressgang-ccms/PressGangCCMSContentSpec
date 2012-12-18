@@ -46,26 +46,6 @@ public abstract class WrapperFactory {
 
     public static WrapperFactory getInstance() {
         if (wrapperFactories.isEmpty()) {
-            /*
-             * if (dataProviders.isEmpty()) { throw new IllegalStateException("No Data Providers have been registered."); }
-             * 
-             * // Find the defined wrapper factory implementation class. final Class<?> wrapperClass = findWrapperFactoryImpl();
-             * 
-             * try { // Find the constructor for the class. final Constructor<?> constructor =
-             * wrapperClass.getConstructors()[0]; final Class<?> dataProviderClass = constructor.getParameterTypes()[0];
-             * 
-             * // Find a data provider that works with the WrapperFactory DataProvider dataProvider = null; for (final
-             * DataProvider provider : dataProviders) { if (provider.getClass().equals(dataProviderClass)) { dataProvider =
-             * provider; } }
-             * 
-             * // Check to make sure we have a data provider registered. if (dataProvider == null) { throw new
-             * IllegalStateException("No Data Providers have been registered that are usable by the \"" + wrapperClass.getName()
-             * + "\" WrapperFactory."); }
-             * 
-             * wrapperFactory = (WrapperFactory) constructor.newInstance(dataProvider); } catch (Exception e) { throw new
-             * RuntimeException(e); }
-             */
-
             try {
                 // Find the defined wrapper factory implementation class.
                 final Class<? extends WrapperFactory> wrapperClass = findWrapperFactoryImpl();
@@ -123,7 +103,7 @@ public abstract class WrapperFactory {
 
     /**
      * Creates an instance of the specified class using the specified <code>ClassLoader</code> object.
-     * 
+     *
      * @throws ClassNotFoundException if the given class could not be found or could not be instantiated
      */
     private static Class<?> findClass(String className, ClassLoader classLoader) throws ClassNotFoundException {
@@ -209,8 +189,8 @@ public abstract class WrapperFactory {
     public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity,
             final TranslatedTopicWrapper translatedTopic);
 
-    public abstract CollectionWrapper<TranslatedTopicStringWrapper> createTranslatedTopicStringCollection(
-            final Object collection, final TranslatedTopicWrapper translatedTopic);
+    public abstract CollectionWrapper<TranslatedTopicStringWrapper> createTranslatedTopicStringCollection(final Object collection,
+            final TranslatedTopicWrapper translatedTopic);
 
     public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities,
             final TranslatedTopicWrapper translatedTopic) {
@@ -245,8 +225,7 @@ public abstract class WrapperFactory {
 
     public abstract CategoryWrapper createCategory(final Object entity, boolean isRevision);
 
-    public abstract CollectionWrapper<CategoryWrapper> createCategoryCollection(final Object collection,
-            boolean isRevisionCollection);
+    public abstract CollectionWrapper<CategoryWrapper> createCategoryCollection(final Object collection, boolean isRevisionCollection);
 
     public List<CategoryWrapper> createCategoryList(final Collection<?> entities, boolean isRevisionList) {
         final List<CategoryWrapper> retValue = new ArrayList<CategoryWrapper>();
@@ -341,6 +320,37 @@ public abstract class WrapperFactory {
         final List<LanguageImageWrapper> retValue = new ArrayList<LanguageImageWrapper>();
         for (final Object object : entities) {
             retValue.add(createLanguageImage(object, parent));
+        }
+
+        return retValue;
+    }
+
+    /*
+     * USER METHODS
+     */
+
+    /**
+     * Create a wrapper around a specific user.
+     *
+     * @param entity     The user entity to be wrapped.
+     * @param isRevision Whether the entity is a revision or not.
+     * @return The Wrapper around the user entity.
+     */
+    public abstract UserWrapper createUser(final Object entity, boolean isRevision);
+
+    /**
+     * Create a wrapper around a collection of users.
+     *
+     * @param collection           The collection to be wrapped.
+     * @param isRevisionCollection Whether or not the collection is a collection of revision entities.
+     * @return The Wrapper around the collection of users.
+     */
+    public abstract CollectionWrapper<UserWrapper> createUserCollection(final Object collection, boolean isRevisionCollection);
+
+    public List<UserWrapper> createUserList(final Collection<?> entities, boolean isRevisionList) {
+        final List<UserWrapper> retValue = new ArrayList<UserWrapper>();
+        for (final Object object : entities) {
+            retValue.add(createUser(object, isRevisionList));
         }
 
         return retValue;

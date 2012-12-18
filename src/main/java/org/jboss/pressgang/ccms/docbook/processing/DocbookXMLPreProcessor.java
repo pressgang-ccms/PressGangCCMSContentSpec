@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -44,9 +46,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Text;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
-
 /**
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
@@ -67,15 +66,25 @@ public class DocbookXMLPreProcessor {
      * Used to identify that an <xref> should be generated for the injection point
      */
     protected static final int LIST_INJECTION_POINT = 4;
-    /** Identifies a named regular expression group */
+    /**
+     * Identifies a named regular expression group
+     */
     protected static final String TOPICIDS_RE_NAMED_GROUP = "TopicIDs";
-    /** This text identifies an option task in a list */
+    /**
+     * This text identifies an option task in a list
+     */
     protected static final String OPTIONAL_MARKER = "OPT:";
-    /** The text to be prefixed to a list item if a topic is optional */
+    /**
+     * The text to be prefixed to a list item if a topic is optional
+     */
     protected static final String OPTIONAL_LIST_PREFIX = "Optional: ";
-    /** A regular expression that identifies a topic id */
+    /**
+     * A regular expression that identifies a topic id
+     */
     protected static final String OPTIONAL_TOPIC_ID_RE = "(" + OPTIONAL_MARKER + "\\s*)?\\d+";
-    /** A regular expression that identifies a topic id */
+    /**
+     * A regular expression that identifies a topic id
+     */
     protected static final String TOPIC_ID_RE = "\\d+";
 
     /**
@@ -85,55 +94,59 @@ public class DocbookXMLPreProcessor {
     /*
      * start xml comment and 'InjectSequence:' surrounded by optional white space
      */
-    "\\s*InjectSequence:\\s*" +
+            "\\s*InjectSequence:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
-    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
+                    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-    "\\s*";
+                    "\\s*";
 
-    /** A regular expression that matches an InjectList custom injection point */
+    /**
+     * A regular expression that matches an InjectList custom injection point
+     */
     public static final String CUSTOM_INJECTION_LIST_RE =
     /* start xml comment and 'InjectList:' surrounded by optional white space */
-    "\\s*InjectList:\\s*" +
+            "\\s*InjectList:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
-    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
+                    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-    "\\s*";
+                    "\\s*";
 
     public static final String CUSTOM_INJECTION_LISTITEMS_RE =
     /* start xml comment and 'InjectList:' surrounded by optional white space */
-    "\\s*InjectListItems:\\s*" +
+            "\\s*InjectListItems:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
-    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
+                    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-    "\\s*";
+                    "\\s*";
 
     public static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
     /*
      * start xml comment and 'InjectListAlphaSort:' surrounded by optional white space
      */
-    "\\s*InjectListAlphaSort:\\s*" +
+            "\\s*InjectListAlphaSort:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
-    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
+                    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-    "\\s*";
+                    "\\s*";
 
-    /** A regular expression that matches an Inject custom injection point */
+    /**
+     * A regular expression that matches an Inject custom injection point
+     */
     public static final String CUSTOM_INJECTION_SINGLE_RE =
     /* start xml comment and 'Inject:' surrounded by optional white space */
-    "\\s*Inject:\\s*" +
+            "\\s*Inject:\\s*" +
     /* one digit block */
-    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(" + OPTIONAL_TOPIC_ID_RE + "))" +
+                    "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(" + OPTIONAL_TOPIC_ID_RE + "))" +
     /* xml comment end */
-    "\\s*";
+                    "\\s*";
 
     /**
      * The noinject value for the role attribute indicates that an element should not be included in the Topic Fragment
@@ -157,7 +170,9 @@ public class DocbookXMLPreProcessor {
     protected static final String NEXT_STEPS_PROPERTY = "NEXT_STEPS";
 
     // ROLE/STYLE CONSTANTS
-    /** The Docbook role (which becomes a CSS class) for the bug link para */
+    /**
+     * The Docbook role (which becomes a CSS class) for the bug link para
+     */
     protected static final String ROLE_CREATE_BUG_PARA = "RoleCreateBugPara";
     protected static final String ROLE_PREREQUISITE_LIST = "prereqs-list";
     protected static final String ROLE_PREREQUISITE = "prereq";
@@ -224,8 +239,9 @@ public class DocbookXMLPreProcessor {
             String bugzillaKeywords = null;
             String bugzillaAssignedTo = null;
             final String bugzillaEnvironment = URLEncoder.encode(
-                    "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: "
-                            + specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), "UTF-8");
+                    "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: " +
+                            specifiedBuildName + "\n" + "Build Date: " + formatter.format(
+                            buildDate), "UTF-8");
             final String bugzillaSummary = URLEncoder.encode(topic.getTitle(), "UTF-8");
             final StringBuilder bugzillaBuildID = new StringBuilder();
             bugzillaBuildID.append(topic.getBugzillaBuildId());
@@ -241,10 +257,8 @@ public class DocbookXMLPreProcessor {
                 final List<TagWrapper> tags = topic.getTags().getItems();
                 for (final TagWrapper tag : tags) {
                     final PropertyTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaComponentTag = tag
-                            .getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaKeywordsTag = tag
-                            .getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
+                    final PropertyTagWrapper bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
+                    final PropertyTagWrapper bugzillaKeywordsTag = tag.getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
                     final PropertyTagWrapper bugzillaVersionTag = tag.getProperty(CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
                     final PropertyTagWrapper bugzillaAssignedToTag = tag.getProperty(CommonConstants.BUGZILLA_PROFILE_PROPERTY);
 
@@ -357,8 +371,9 @@ public class DocbookXMLPreProcessor {
                 surveyPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
                 bugzillaSection.appendChild(surveyPara);
 
-                final Text startSurveyText = document
-                        .createTextNode("Thank you for evaluating the new documentation format for JBoss Enterprise Application Platform. Let us know what you think by taking a short ");
+                final Text startSurveyText = document.createTextNode(
+                        "Thank you for evaluating the new documentation format for JBoss Enterprise Application Platform. Let us know " +
+                                "what you think by taking a short ");
                 surveyPara.appendChild(startSurveyText);
 
                 final Element surveyULink = document.createElement("ulink");
@@ -388,8 +403,7 @@ public class DocbookXMLPreProcessor {
                      * Since the returnEditorURL method only returns null for translations we don't need to check the topic
                      * type.
                      */
-                    editorLinkPara
-                            .setTextContent("No editor available for this topic, as it hasn't been pushed for translation.");
+                    editorLinkPara.setTextContent("No editor available for this topic, as it hasn't been pushed for translation.");
                 }
             }
         }
@@ -431,9 +445,8 @@ public class DocbookXMLPreProcessor {
     }
 
     @SuppressWarnings("unchecked")
-    public List<Integer> processInjections(final Level level, final SpecTopic topic,
-            final ArrayList<Integer> customInjectionIds, final Document xmlDocument,
-            final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
+    public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds,
+            final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
             final boolean usedFixedUrls) {
         TocTopicDatabase relatedTopicDatabase = relatedTopicsDatabase;
         if (relatedTopicDatabase == null) {
@@ -441,14 +454,16 @@ public class DocbookXMLPreProcessor {
              * get the outgoing relationships
              */
             final BaseTopicWrapper<?> topicWrapper = topic.getTopic();
-            final List<BaseTopicWrapper<?>> relatedTopics = (List<BaseTopicWrapper<?>>) topicWrapper.getOutgoingRelationships();
+            if (topicWrapper.getOutgoingRelationships() != null) {
+                final List<? extends BaseTopicWrapper<?>> relatedTopics = topicWrapper.getOutgoingRelationships().getItems();
 
-            /*
-             * Create a TocTopicDatabase to hold the related topics. The TocTopicDatabase provides a convenient way to access
-             * these topics
-             */
-            relatedTopicDatabase = new TocTopicDatabase();
-            relatedTopicDatabase.setTopics(relatedTopics);
+                /*
+                 * Create a TocTopicDatabase to hold the related topics. The TocTopicDatabase provides a convenient way to access
+                 * these topics
+                 */
+                relatedTopicDatabase = new TocTopicDatabase();
+                relatedTopicDatabase.setTopics(relatedTopics);
+            }
         }
 
         /*
@@ -459,23 +474,21 @@ public class DocbookXMLPreProcessor {
 
         final List<Integer> errorTopics = new ArrayList<Integer>();
 
-        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT,
-                xmlDocument, CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
-        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT,
-                xmlDocument, CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
-        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT,
-                xmlDocument, CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
-        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT,
-                xmlDocument, CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), docbookBuildingOptions,
-                relatedTopicDatabase, usedFixedUrls));
-        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT,
-                xmlDocument, CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
+        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument,
+                CUSTOM_INJECTION_SEQUENCE_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
+        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument,
+                CUSTOM_INJECTION_SINGLE_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
+        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument,
+                CUSTOM_INJECTION_LIST_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
+        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument,
+                CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
+        errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument,
+                CUSTOM_INJECTION_LISTITEMS_RE, null, docbookBuildingOptions, relatedTopicDatabase, usedFixedUrls));
 
         /*
          * If we are not ignoring errors, return the list of topics that could not be injected
          */
-        if (errorTopics.size() != 0 && docbookBuildingOptions != null
-                && !docbookBuildingOptions.getIgnoreMissingCustomInjections())
+        if (errorTopics.size() != 0 && docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections())
             return errorTopics;
 
         /* now make the custom injection point substitutions */
@@ -510,16 +523,14 @@ public class DocbookXMLPreProcessor {
         return errorTopics;
     }
 
-    public List<Integer> processInjections(final Level level, final SpecTopic topic,
-            final ArrayList<Integer> customInjectionIds, final HashMap<Node, InjectionListData> customInjections,
-            final int injectionPointType, final Document xmlDocument, final String regularExpression,
-            final ExternalListSort<Integer, BaseTopicWrapper<?>, InjectionTopicData> sortComparator,
+    public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds,
+            final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument,
+            final String regularExpression, final ExternalListSort<Integer, BaseTopicWrapper<?>, InjectionTopicData> sortComparator,
             final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
             final boolean usedFixedUrls) {
         final List<Integer> retValue = new ArrayList<Integer>();
 
-        if (xmlDocument == null)
-            return retValue;
+        if (xmlDocument == null) return retValue;
 
         /* loop over all of the comments in the document */
         for (final Node comment : XMLUtilities.getComments(xmlDocument)) {
@@ -564,8 +575,7 @@ public class DocbookXMLPreProcessor {
                         /*
                          * See if the topic is also available in the main database (if the main database is available)
                          */
-                        final boolean isInDatabase = level == null ? true : level
-                                .isSpecTopicInLevelByTopicID(sequenceID.topicId);
+                        final boolean isInDatabase = level == null ? true : level.isSpecTopicInLevelByTopicID(sequenceID.topicId);
 
                         /*
                          * It is possible that the topic id referenced in the injection point has not been related, or has not
@@ -583,28 +593,26 @@ public class DocbookXMLPreProcessor {
                              * the xrefs we are generating for the related topic with the text in the xml file that these xrefs
                              * will eventually replace
                              */
-                            if (customInjections.containsKey(comment))
-                                list = customInjections.get(comment).listItems;
+                            if (customInjections.containsKey(comment)) list = customInjections.get(comment).listItems;
 
                             /* if the toc is null, we are building an internal page */
                             if (level == null) {
                                 final String url = relatedTopic.getInternalURL();
                                 if (sequenceID.optional) {
-                                    list.add(DocBookUtilities.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX,
-                                            url, relatedTopic.getTitle()));
+                                    list.add(DocBookUtilities.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url,
+                                            relatedTopic.getTitle()));
                                 } else {
                                     list.add(DocBookUtilities.buildULink(xmlDocument, url, relatedTopic.getTitle()));
                                 }
                             } else {
-                                final Integer topicId = relatedTopic.getId();
+                                final Integer topicId = relatedTopic.getTopicId();
 
                                 final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
                                 if (sequenceID.optional) {
                                     list.add(DocBookUtilities.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX,
                                             closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
                                 } else {
-                                    list.add(DocBookUtilities.buildXRef(xmlDocument,
-                                            closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+                                    list.add(DocBookUtilities.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
                                 }
                             }
 
@@ -629,8 +637,7 @@ public class DocbookXMLPreProcessor {
             final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls) {
         final List<Integer> errors = new ArrayList<Integer>();
 
-        if (xmlDocument == null)
-            return errors;
+        if (xmlDocument == null) return errors;
 
         /*
          * this collection will hold the lists of related topics
@@ -644,7 +651,7 @@ public class DocbookXMLPreProcessor {
         if (topic.getOutgoingRelationships() != null && topic.getOutgoingRelationships() != null) {
             final List<BaseTopicWrapper<?>> relatedTopics = (List<BaseTopicWrapper<?>>) topic.getOutgoingRelationships();
             for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
-                final Integer topicId = relatedTopic.getId();
+                final Integer topicId = relatedTopic.getTopicId();
 
                 /*
                  * don't process those topics that were injected into custom injection points
@@ -653,7 +660,7 @@ public class DocbookXMLPreProcessor {
                     /* make sure the topic is available to be linked to */
                     if (level != null && !level.isSpecTopicInLevelByTopicID(topicId)) {
                         if ((docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections()))
-                            errors.add(relatedTopic.getId());
+                            errors.add(relatedTopic.getTopicId());
                     } else {
                         // loop through the topic type tags
                         for (final Pair<Integer, String> primaryTopicTypeTag : topicTypeTagIDs) {
@@ -707,30 +714,27 @@ public class DocbookXMLPreProcessor {
 
                     /* don't add an empty list */
                     if (relatedTopics.size() != 0) {
-                        final Node itemizedlist = DocBookUtilities.createRelatedTopicItemizedList(xmlDoc, "Related "
-                                + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
+                        final Node itemizedlist = DocBookUtilities.createRelatedTopicItemizedList(xmlDoc,
+                                "Related " + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
 
                         Collections.sort(relatedTopics, new TopicTitleComparator());
 
                         for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
                             if (level == null) {
                                 final String internalURL = relatedTopic.getInternalURL();
-                                DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(),
-                                        itemizedlist);
+                                DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(), itemizedlist);
                             } else {
-                                final Integer topicId = relatedTopic.getId();
+                                final Integer topicId = relatedTopic.getTopicId();
 
                                 final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
-                                DocBookUtilities.createRelatedTopicXRef(xmlDoc,
-                                        closestSpecTopic.getUniqueLinkId(usedFixedUrls), itemizedlist);
+                                DocBookUtilities.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls),
+                                        itemizedlist);
                             }
 
                         }
 
-                        if (simplesectNode != null)
-                            xmlDoc.getDocumentElement().insertBefore(itemizedlist, simplesectNode);
-                        else
-                            xmlDoc.getDocumentElement().appendChild(itemizedlist);
+                        if (simplesectNode != null) xmlDoc.getDocumentElement().insertBefore(itemizedlist, simplesectNode);
+                        else xmlDoc.getDocumentElement().appendChild(itemizedlist);
                     }
                 }
             }
@@ -740,14 +744,13 @@ public class DocbookXMLPreProcessor {
     /**
      * Insert a itemized list into the start of the topic, below the title with any PREVIOUS relationships that exists for the
      * Spec Topic. The title for the list is set to "Previous Step(s) in <TOPIC_PARENT_NAME>".
-     * 
-     * @param topic The topic to process the injection for.
-     * @param doc The DOM Document object that represents the topics XML.
+     *
+     * @param topic        The topic to process the injection for.
+     * @param doc          The DOM Document object that represents the topics XML.
      * @param useFixedUrls Whether fixed URL's should be used in the injected links.
      */
     public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
-        if (topic.getPrevTopicRelationships().isEmpty())
-            return;
+        if (topic.getPrevTopicRelationships().isEmpty()) return;
 
         // Get the title element so that it can be used later to add the prev topic node
         Element titleEle = null;
@@ -822,8 +825,7 @@ public class DocbookXMLPreProcessor {
 
             // Insert the node after the title node
             Node nextNode = titleEle.getNextSibling();
-            while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE
-                    && nextNode.getNodeType() != Node.COMMENT_NODE) {
+            while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE) {
                 nextNode = nextNode.getNextSibling();
             }
             doc.getDocumentElement().insertBefore(rootEle, nextNode);
@@ -833,14 +835,13 @@ public class DocbookXMLPreProcessor {
     /**
      * Insert a itemized list into the end of the topic with any NEXT relationships that exists for the Spec Topic. The title
      * for the list is set to "Next Step(s) in <TOPIC_PARENT_NAME>".
-     * 
-     * @param topic The topic to process the injection for.
-     * @param doc The DOM Document object that represents the topics XML.
+     *
+     * @param topic        The topic to process the injection for.
+     * @param doc          The DOM Document object that represents the topics XML.
      * @param useFixedUrls Whether fixed URL's should be used in the injected links.
      */
     public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
-        if (topic.getNextTopicRelationships().isEmpty())
-            return;
+        if (topic.getNextTopicRelationships().isEmpty()) return;
 
         // Attempt to get the previous topic and process it
         final List<TopicRelationship> nextList = topic.getNextTopicRelationships();
@@ -909,14 +910,13 @@ public class DocbookXMLPreProcessor {
     /**
      * Insert a itemized list into the start of the topic, below the title with any PREREQUISITE relationships that exists for
      * the Spec Topic. The title for the list is set to the "PREREQUISITE" property or "Prerequisites:" by default.
-     * 
-     * @param topic The topic to process the injection for.
-     * @param doc The DOM Document object that represents the topics XML.
+     *
+     * @param topic        The topic to process the injection for.
+     * @param doc          The DOM Document object that represents the topics XML.
      * @param useFixedUrls Whether fixed URL's should be used in the injected links.
      */
     public void processPrerequisiteInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
-        if (topic.getPrerequisiteRelationships().isEmpty())
-            return;
+        if (topic.getPrerequisiteRelationships().isEmpty()) return;
 
         // Get the title element so that it can be used later to add the prerequisite topic nodes
         Element titleEle = null;
@@ -961,8 +961,7 @@ public class DocbookXMLPreProcessor {
 
             // Add the paragraph and list after the title node
             Node nextNode = titleEle.getNextSibling();
-            while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE
-                    && nextNode.getNodeType() != Node.COMMENT_NODE) {
+            while (nextNode != null && nextNode.getNodeType() != Node.ELEMENT_NODE && nextNode.getNodeType() != Node.COMMENT_NODE) {
                 nextNode = nextNode.getNextSibling();
             }
 
@@ -973,15 +972,14 @@ public class DocbookXMLPreProcessor {
     /**
      * Insert a itemized list into the end of the topic with any RELATED relationships that exists for the Spec Topic. The title
      * for the list is set to "See Also:".
-     * 
-     * @param topic The topic to process the injection for.
-     * @param doc The DOM Document object that represents the topics XML.
+     *
+     * @param topic        The topic to process the injection for.
+     * @param doc          The DOM Document object that represents the topics XML.
      * @param useFixedUrls Whether fixed URL's should be used in the injected links.
      */
     public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
         // Create the paragraph and list of prerequisites.
-        if (topic.getRelatedRelationships().isEmpty())
-            return;
+        if (topic.getRelatedRelationships().isEmpty()) return;
         final Element formalParaEle = doc.createElement("formalpara");
         formalParaEle.setAttribute("role", ROLE_SEE_ALSO_LIST);
         final Element formalParaTitleEle = doc.createElement("title");
@@ -1017,15 +1015,14 @@ public class DocbookXMLPreProcessor {
 
     /**
      * Insert a itemized list into the end of the topic with the any LINKLIST relationships that exists for the Spec Topic.
-     * 
-     * @param topic The topic to process the injection for.
-     * @param doc The DOM Document object that represents the topics XML.
+     *
+     * @param topic        The topic to process the injection for.
+     * @param doc          The DOM Document object that represents the topics XML.
      * @param useFixedUrls Whether fixed URL's should be used in the injected links.
      */
     public void processLinkListRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
         // Create the paragraph and list of prerequisites.
-        if (topic.getLinkListRelationships().isEmpty())
-            return;
+        if (topic.getLinkListRelationships().isEmpty()) return;
         final Element formalParaEle = doc.createElement("formalpara");
         formalParaEle.setAttribute("role", ROLE_LINK_LIST_LIST);
         final Element formalParaTitleEle = doc.createElement("title");
@@ -1064,9 +1061,7 @@ public class DocbookXMLPreProcessor {
             final String fixedPreamble = preamble == null ? "" : preamble + "\n";
             final String fixedXML = preamble == null ? xml : xml.replace(preamble, "");
 
-            return fixedPreamble
-                    + "<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" []>\n"
-                    + fixedXML;
+            return fixedPreamble + "<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" []>\n" + fixedXML;
         }
 
         return xml;

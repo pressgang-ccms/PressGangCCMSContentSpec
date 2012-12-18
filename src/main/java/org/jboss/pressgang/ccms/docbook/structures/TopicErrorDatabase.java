@@ -12,123 +12,105 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
  * Provides a central location for storing and adding messages that are
  * generated while compiling to docbook.
  */
-public class TopicErrorDatabase
-{
-	public static enum ErrorLevel {ERROR, WARNING};
-	public static enum ErrorType {NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED, 
-		NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION}
+public class TopicErrorDatabase {
+    public static enum ErrorLevel {ERROR, WARNING}
 
-	private Map<String, List<TopicErrorData>> errors = new HashMap<String, List<TopicErrorData>>();
+    ;
 
-	public int getErrorCount(final String locale)
-	{
-		return errors.containsKey(locale) ? errors.get(locale).size() : 0;
-	}
+    public static enum ErrorType {
+        NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED,
+        NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION
+    }
 
-	public boolean hasItems()
-	{
-		return errors.size() != 0;
-	}
-	
-	public boolean hasItems(final String locale)
-	{
-		return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
-	}
+    private Map<String, List<TopicErrorData>> errors = new HashMap<String, List<TopicErrorData>>();
 
-	public void addError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
-	{
-		addItem(topic, error, ErrorLevel.ERROR, errorType);
-	}
+    public int getErrorCount(final String locale) {
+        return errors.containsKey(locale) ? errors.get(locale).size() : 0;
+    }
 
-	public void addWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
-	{
-		addItem(topic, error, ErrorLevel.WARNING, errorType);
-	}
-	
-	public void addError(final BaseTopicWrapper<?> topic, final String error)
-	{
-		addItem(topic, error, ErrorLevel.ERROR, null);
-	}
+    public boolean hasItems() {
+        return errors.size() != 0;
+    }
 
-	public void addWarning(final BaseTopicWrapper<?> topic, final String error)
-	{
-		addItem(topic, error, ErrorLevel.WARNING, null);
-	}
-	
-	/**
-	 * Add a error for a topic that was included in the TOC
-	 * @param topic
-	 * @param error
-	 */
-	public void addTocError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
-	{
-		addItem(topic, error, ErrorLevel.ERROR, errorType);
-	}
+    public boolean hasItems(final String locale) {
+        return errors.containsKey(locale) ? errors.get(locale).size() != 0 : false;
+    }
 
-	public void addTocWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error)
-	{
-		addItem(topic, error, ErrorLevel.WARNING, errorType);
-	}
+    public void addError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error) {
+        addItem(topic, error, ErrorLevel.ERROR, errorType);
+    }
 
-	private void addItem(final BaseTopicWrapper<?> topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType)
-	{
-		final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);
-		/* don't add duplicates */
-		if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
-			topicErrorData.addError(item, errorLevel, errorType);
-	}
+    public void addWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error) {
+        addItem(topic, error, ErrorLevel.WARNING, errorType);
+    }
 
-	private TopicErrorData getErrorData(final BaseTopicWrapper<?> topic)
-	{
-		for (final String locale : errors.keySet())
-			for (final TopicErrorData topicErrorData : errors.get(locale))
-			{
-				if (topicErrorData.getTopic().getId().equals(topic.getId()))
-					return topicErrorData;
-			}
-		return null;
-	}
+    public void addError(final BaseTopicWrapper<?> topic, final String error) {
+        addItem(topic, error, ErrorLevel.ERROR, null);
+    }
 
-	private TopicErrorData addOrGetTopicErrorData(final BaseTopicWrapper<?> topic)
-	{
-		TopicErrorData topicErrorData = getErrorData(topic);
-		if (topicErrorData == null)
-		{
-			topicErrorData = new TopicErrorData();
-			topicErrorData.setTopic(topic);
-			if (!errors.containsKey(topic.getLocale()))
-				errors.put(topic.getLocale(), new ArrayList<TopicErrorData>());
-			errors.get(topic.getLocale()).add(topicErrorData);
-		}
-		return topicErrorData;
-	}
-	
-	public List<String> getLocales()
-	{
-		return CollectionUtilities.toArrayList(errors.keySet());
-	}
+    public void addWarning(final BaseTopicWrapper<?> topic, final String error) {
+        addItem(topic, error, ErrorLevel.WARNING, null);
+    }
 
-	public List<TopicErrorData> getErrors(final String locale)
-	{
-		return errors.containsKey(locale) ? errors.get(locale) : null;
-	}
-	
-	public List<TopicErrorData> getErrorsOfType(final String locale, final ErrorType errorType)
-	{
-		final List<TopicErrorData> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData>();
-		
-		final List<TopicErrorData> typeErrorDatas = new ArrayList<TopicErrorData>();
-		for (final TopicErrorData errorData : localeErrors)
-		{
-			if (errorData.hasErrorType(errorType))
-				typeErrorDatas.add(errorData);
-		}
-		
-		return typeErrorDatas;
-	}
+    /**
+     * Add a error for a topic that was included in the TOC
+     *
+     * @param topic
+     * @param error
+     */
+    public void addTocError(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error) {
+        addItem(topic, error, ErrorLevel.ERROR, errorType);
+    }
 
-	public void setErrors(final String locale, final List<TopicErrorData> errors)
-	{
-		this.errors.put(locale, errors);
-	}
+    public void addTocWarning(final BaseTopicWrapper<?> topic, final ErrorType errorType, final String error) {
+        addItem(topic, error, ErrorLevel.WARNING, errorType);
+    }
+
+    private void addItem(final BaseTopicWrapper<?> topic, final String item, final ErrorLevel errorLevel, final ErrorType errorType) {
+        final TopicErrorData topicErrorData = addOrGetTopicErrorData(topic);        /* don't add duplicates */
+        if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
+            topicErrorData.addError(item, errorLevel, errorType);
+    }
+
+    private TopicErrorData getErrorData(final BaseTopicWrapper<?> topic) {
+        for (final String locale : errors.keySet())
+            for (final TopicErrorData topicErrorData : errors.get(locale)) {
+                if (topicErrorData.getTopic().getTopicId().equals(topic.getTopicId())) return topicErrorData;
+            }
+        return null;
+    }
+
+    private TopicErrorData addOrGetTopicErrorData(final BaseTopicWrapper<?> topic) {
+        TopicErrorData topicErrorData = getErrorData(topic);
+        if (topicErrorData == null) {
+            topicErrorData = new TopicErrorData();
+            topicErrorData.setTopic(topic);
+            if (!errors.containsKey(topic.getLocale())) errors.put(topic.getLocale(), new ArrayList<TopicErrorData>());
+            errors.get(topic.getLocale()).add(topicErrorData);
+        }
+        return topicErrorData;
+    }
+
+    public List<String> getLocales() {
+        return CollectionUtilities.toArrayList(errors.keySet());
+    }
+
+    public List<TopicErrorData> getErrors(final String locale) {
+        return errors.containsKey(locale) ? errors.get(locale) : null;
+    }
+
+    public List<TopicErrorData> getErrorsOfType(final String locale, final ErrorType errorType) {
+        final List<TopicErrorData> localeErrors = errors.containsKey(locale) ? errors.get(locale) : new ArrayList<TopicErrorData>();
+
+        final List<TopicErrorData> typeErrorDatas = new ArrayList<TopicErrorData>();
+        for (final TopicErrorData errorData : localeErrors) {
+            if (errorData.hasErrorType(errorType)) typeErrorDatas.add(errorData);
+        }
+
+        return typeErrorDatas;
+    }
+
+    public void setErrors(final String locale, final List<TopicErrorData> errors) {
+        this.errors.put(locale, errors);
+    }
 }

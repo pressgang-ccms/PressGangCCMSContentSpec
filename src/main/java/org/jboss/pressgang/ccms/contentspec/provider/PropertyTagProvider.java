@@ -9,11 +9,14 @@ public interface PropertyTagProvider {
 
     PropertyTagWrapper getPropertyTag(int id, Integer revision);
 
-    UpdateableCollectionWrapper<PropertyTagWrapper> getPropertyTagCategories(int id, Integer revision);
+    //UpdateableCollectionWrapper<PropertyCategoryWrapper> getPropertyTagCategories(int id, Integer revision);
+    CollectionWrapper<PropertyTagWrapper> getPropertyTagRevisions(int id, Integer revision);
 
     PropertyTagWrapper newPropertyTag();
 
     PropertyTagWrapper newAssignedPropertyTag();
+
+    PropertyTagWrapper newAssignedPropertyTag(PropertyTagWrapper propertyTag);
 
     PropertyTagWrapper newPropertyTagInPropertyCategory();
 

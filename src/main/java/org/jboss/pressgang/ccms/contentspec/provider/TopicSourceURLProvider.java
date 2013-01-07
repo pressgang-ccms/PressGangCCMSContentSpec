@@ -5,7 +5,10 @@ import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface TopicSourceURLProvider {
-    TopicSourceURLWrapper newTopicSourceURL(TopicWrapper topic);
 
-    CollectionWrapper<TopicSourceURLWrapper> newTopicSourceURLCollection(TopicWrapper topic);
+    CollectionWrapper<TopicSourceURLWrapper> getTopicSourceURLRevisions(int id, Integer revision);
+
+    TopicSourceURLWrapper newTopicSourceURL(TopicWrapper parent);
+
+    CollectionWrapper<TopicSourceURLWrapper> newTopicSourceURLCollection(TopicWrapper parent);
 }

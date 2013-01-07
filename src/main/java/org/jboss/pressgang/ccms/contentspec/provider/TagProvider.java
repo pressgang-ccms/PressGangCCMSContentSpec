@@ -23,6 +23,8 @@ public interface TagProvider {
 
     CollectionWrapper<PropertyTagWrapper> getTagProperties(int id, Integer revision);
 
+    CollectionWrapper<TagWrapper> getTagRevisions(int id, Integer revision);
+
     TagWrapper newTag();
 
     TagWrapper newTagInCategory();

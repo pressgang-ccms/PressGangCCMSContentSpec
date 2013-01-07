@@ -127,7 +127,7 @@ public abstract class DataProviderFactory {
         }
     }
 
-    protected void DataProviderFactory() {
+    protected DataProviderFactory() {
         // Get the wrapper factory to be used by the data providers.
         wrapperFactory = WrapperFactory.getInstance();
     }

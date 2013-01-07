@@ -51,7 +51,7 @@ public class TocTopicDatabase {
         final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
 
         for (final BaseTopicWrapper<?> topic : topics) {
-            final List<TagWrapper> topicTags = topic.getTagsInCategories(categoryIds).getItems();
+            final List<TagWrapper> topicTags = topic.getTagsInCategories(categoryIds);
             CollectionUtilities.addAllThatDontExist(topicTags, retValue);
         }
 
@@ -152,7 +152,7 @@ public class TocTopicDatabase {
         return retValue;
     }
 
-    public <T extends BaseTopicWrapper<T>> void setTopics(final List<T> topics) {
+    public void setTopics(final List<? extends BaseTopicWrapper<?>> topics) {
         if (topics == null) return;
 
         this.topics = new HashSet<BaseTopicWrapper<?>>(topics);

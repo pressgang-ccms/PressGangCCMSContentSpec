@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
+import java.util.Date;
+
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopicWrapper> {
@@ -21,7 +23,15 @@ public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopic
 
     Integer getTranslationPercentage();
 
+    void tempSetTranslationPercentage(Integer percentage);
+
     void setTranslationPercentage(Integer percentage);
+
+    Date getHtmlUpdated();
+
+    void tempSetHtmlUpdated(Date htmlUpdated);
+
+    void setHtmlUpdated(Date htmlUpdated);
 
     CollectionWrapper<TranslatedTopicStringWrapper> getTranslatedStrings();
 

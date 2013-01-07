@@ -2,7 +2,6 @@ package org.jboss.pressgang.ccms.contentspec.provider;
 
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicSourceURLWrapper;
@@ -22,7 +21,9 @@ public interface TranslatedTopicProvider {
 
     CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopicIncomingRelationships(int id, Integer revision);
 
-    CollectionWrapper<TopicSourceURLWrapper> getTranslatedTopicSourceUrls(int id, Integer revision, BaseTopicWrapper<?> parent);
+    CollectionWrapper<TopicSourceURLWrapper> getTranslatedTopicSourceUrls(int id, Integer revision);
+
+    CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopicRevisions(int id, Integer revision);
 
     TranslatedTopicWrapper createTranslatedTopic(TranslatedTopicWrapper translatedTopic) throws Exception;
 

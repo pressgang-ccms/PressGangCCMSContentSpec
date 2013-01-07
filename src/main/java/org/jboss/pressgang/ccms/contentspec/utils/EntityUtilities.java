@@ -14,6 +14,7 @@ import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
 import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
@@ -214,5 +215,26 @@ public class EntityUtilities {
         }
 
         return baseTranslationExists;
+    }
+
+    /*
+     * Gets a list of Revision's from the CSProcessor database for a specific content spec
+     */
+    public static List<Object[]> getTopicRevisionsById(final TopicProvider topicProvider, final Integer csId) {
+        final List<Object[]> results = new ArrayList<Object[]>();
+        final CollectionWrapper<TopicWrapper> topicRevisions = topicProvider.getTopic(csId).getRevisions();
+
+        // Create the unique array from the revisions
+        if (topicRevisions != null && topicRevisions.getItems() != null) {
+            final List<TopicWrapper> topicRevs = topicRevisions.getItems();
+            for (final TopicWrapper topicRev : topicRevs) {
+                Object[] revision = new Object[3];
+                revision[0] = topicRev.getRevision();
+                revision[1] = topicRev.getLastModified();
+                revision[2] = "";
+                results.add(revision);
+            }
+        }
+        return results;
     }
 }

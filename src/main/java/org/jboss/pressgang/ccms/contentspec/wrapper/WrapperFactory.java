@@ -150,15 +150,15 @@ public abstract class WrapperFactory {
      * TOPIC SOURCE URL METHODS
      */
 
-    public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity, final BaseTopicWrapper<?> topic);
+    public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity, boolean isRevision);
 
     public abstract CollectionWrapper<TopicSourceURLWrapper> createTopicSourceURLCollection(final Object collection,
-            final BaseTopicWrapper<?> topic);
+            boolean isRevisionCollection);
 
-    public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities, final BaseTopicWrapper<?> topic) {
+    public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities, boolean isRevisionList) {
         final List<TopicSourceURLWrapper> retValue = new ArrayList<TopicSourceURLWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTopicSourceURL(object, topic));
+            retValue.add(createTopicSourceURL(object, isRevisionList));
         }
 
         return retValue;
@@ -186,17 +186,15 @@ public abstract class WrapperFactory {
      * TRANSLATED TOPIC STRING METHODS
      */
 
-    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity,
-            final TranslatedTopicWrapper translatedTopic);
+    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity, boolean isRevision);
 
     public abstract CollectionWrapper<TranslatedTopicStringWrapper> createTranslatedTopicStringCollection(final Object collection,
-            final TranslatedTopicWrapper translatedTopic);
+            boolean isRevisionCollection);
 
-    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities,
-            final TranslatedTopicWrapper translatedTopic) {
+    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities, boolean isRevisionList) {
         final List<TranslatedTopicStringWrapper> retValue = new ArrayList<TranslatedTopicStringWrapper>();
         for (final Object object : entities) {
-            retValue.add(createTranslatedTopicString(object, translatedTopic));
+            retValue.add(createTranslatedTopicString(object, isRevisionList));
         }
 
         return retValue;
@@ -311,15 +309,15 @@ public abstract class WrapperFactory {
      * LANGUAGE IMAGE METHODS
      */
 
-    public abstract LanguageImageWrapper createLanguageImage(final Object entity, final ImageWrapper parent);
+    public abstract LanguageImageWrapper createLanguageImage(final Object entity, boolean isRevision);
 
     public abstract CollectionWrapper<LanguageImageWrapper> createLanguageImageCollection(final Object collection,
-            final ImageWrapper parent);
+            boolean isRevisionCollection);
 
-    public List<LanguageImageWrapper> createLanguageImageList(final Collection<?> entities, final ImageWrapper parent) {
+    public List<LanguageImageWrapper> createLanguageImageList(final Collection<?> entities, boolean isRevisionList) {
         final List<LanguageImageWrapper> retValue = new ArrayList<LanguageImageWrapper>();
         for (final Object object : entities) {
-            retValue.add(createLanguageImage(object, parent));
+            retValue.add(createLanguageImage(object, isRevisionList));
         }
 
         return retValue;

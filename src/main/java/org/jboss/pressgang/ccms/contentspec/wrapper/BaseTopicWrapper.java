@@ -65,7 +65,7 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
 
     void setSourceURLs(CollectionWrapper<TopicSourceURLWrapper> sourceURLs);
 
-    CollectionWrapper<TagWrapper> getTagsInCategories(final List<Integer> categoryIds);
+    List<TagWrapper> getTagsInCategories(final List<Integer> categoryIds);
 
     boolean hasTag(final int tagId);
 
@@ -85,5 +85,5 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
 
     String getXRefPropertyOrId(final int propertyId);
 
-    CollectionWrapper<TagWrapper> getAuthors();
+    List<TagWrapper> getAuthors();
 }

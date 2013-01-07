@@ -9,5 +9,7 @@ public interface ImageProvider {
 
     ImageWrapper getImage(int id, Integer revision);
 
-    CollectionWrapper<LanguageImageWrapper> getImageLanguageImages(int id, Integer revision, ImageWrapper parent);
+    CollectionWrapper<LanguageImageWrapper> getImageLanguageImages(int id, Integer revision);
+
+    CollectionWrapper<ImageWrapper> getImageRevisions(int id, Integer revision);
 }

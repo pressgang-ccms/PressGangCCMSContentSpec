@@ -18,7 +18,7 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
      */
     String getTitle();
 
-    void tempSetTitle(String title);
+    void setTitle(String title);
 
     /**
      * Get the Topics XML Content.
@@ -27,41 +27,33 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
      */
     String getXml();
 
-    void tempSetXml(String xml);
-
     void setXml(String xml);
 
     String getLocale();
-
-    void tempSetLocale(String locale);
 
     void setLocale(String locale);
 
     String getHtml();
 
-    void tempSetHtml(String html);
-
     void setHtml(String html);
 
     CollectionWrapper<TagWrapper> getTags();
 
-    void tempSetTags(CollectionWrapper<TagWrapper> tags);
+    void setTags(CollectionWrapper<TagWrapper> tags);
 
     CollectionWrapper<T> getOutgoingRelationships();
 
-    void tempSetOutgoingRelationships(CollectionWrapper<T> outgoingTopics);
+    void setOutgoingRelationships(CollectionWrapper<T> outgoingTopics);
 
     CollectionWrapper<T> getIncomingRelationships();
 
-    void tempSetIncomingRelationships(CollectionWrapper<T> incomingTopics);
+    void setIncomingRelationships(CollectionWrapper<T> incomingTopics);
 
     UpdateableCollectionWrapper<PropertyTagWrapper> getProperties();
 
-    void tempSetProperties(UpdateableCollectionWrapper<PropertyTagWrapper> properties);
+    void setProperties(UpdateableCollectionWrapper<PropertyTagWrapper> properties);
 
     CollectionWrapper<TopicSourceURLWrapper> getSourceURLs();
-
-    void tempSetSourceURLs(CollectionWrapper<TopicSourceURLWrapper> sourceURLs);
 
     void setSourceURLs(CollectionWrapper<TopicSourceURLWrapper> sourceURLs);
 

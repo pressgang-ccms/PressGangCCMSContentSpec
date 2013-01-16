@@ -9,10 +9,6 @@ public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopic
 
     void setTopicRevision(Integer revision);
 
-    void tempSetTopicId(Integer id);
-
-    void tempSetTopicRevision(Integer revision);
-
     Integer getTranslatedTopicId();
 
     void setTranslatedTopicId(Integer translatedTopicId);
@@ -23,13 +19,9 @@ public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopic
 
     Integer getTranslationPercentage();
 
-    void tempSetTranslationPercentage(Integer percentage);
-
     void setTranslationPercentage(Integer percentage);
 
     Date getHtmlUpdated();
-
-    void tempSetHtmlUpdated(Date htmlUpdated);
 
     void setHtmlUpdated(Date htmlUpdated);
 

@@ -6,10 +6,14 @@ import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 
-public interface CSTransformer<T, U, V, W> {
-    ContentSpec transformCS(T arg);
-    KeyValueNode<?> transformMetaData(final U arg);
-    Comment transformComment(final V arg);
-    Level transformLevel(final W arg);
-    SpecTopic transformSpecTopic(final W arg);
+public abstract class CSTransformer<T, U, V, W> {
+    public abstract ContentSpec transform(T arg);
+
+    protected abstract KeyValueNode<?> transformMetaData(final U arg);
+
+    protected abstract Comment transformComment(final V arg);
+
+    protected abstract Level transformLevel(final W arg);
+
+    protected abstract SpecTopic transformSpecTopic(final W arg);
 }

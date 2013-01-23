@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.wrapper.collection;
 
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.EntityWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.EntityWrapper;
 
 public interface CollectionWrapper<T extends EntityWrapper<T>> {
     public void addItem(T entity);
@@ -14,6 +14,10 @@ public interface CollectionWrapper<T extends EntityWrapper<T>> {
     public void remove(T entity);
 
     public List<T> getItems();
+
+    public List<T> getAddItems();
+
+    public List<T> getRemoveItems();
 
     public Object unwrap();
 

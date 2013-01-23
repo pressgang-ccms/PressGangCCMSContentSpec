@@ -1,7 +1,7 @@
 package org.jboss.pressgang.ccms.docbook.structures;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 
 /**
  * This class is used to map an image referenced inside a topic to the topic

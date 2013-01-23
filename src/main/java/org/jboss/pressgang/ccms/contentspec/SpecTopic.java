@@ -9,6 +9,7 @@ package org.jboss.pressgang.ccms.contentspec;
  */
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -17,7 +18,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.w3c.dom.Document;
@@ -331,6 +332,13 @@ public class SpecTopic extends SpecNode {
     // End of the basic getter/setter methods for this Topic.
 
     /**
+     * Gets a list of relationships for the Topic.
+     */
+    public List<Relationship> getRelationships() {
+        return Collections.unmodifiableList(relationships);
+    }
+
+    /**
      * Gets a list of previous relationships for the Topic.
      */
     public List<Relationship> getPreviousRelationship() {
@@ -375,7 +383,7 @@ public class SpecTopic extends SpecNode {
     public List<Relationship> getRelatedRelationships() {
         final List<Relationship> relatedRelationships = new LinkedList<Relationship>();
         for (final Relationship r : relationships) {
-            if (r.getType() == RelationshipType.RELATED) {
+            if (r.getType() == RelationshipType.REFER_TO) {
                 relatedRelationships.add(r);
             }
         }
@@ -455,10 +463,9 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Gets the list of Topic to Topic relationships where the main Topic matches the topic parameter.
+     * Gets the list of Topic to Topic relationships.
      *
-     * @param topicId The topic object of the main topic to be found.
-     * @return An ArrayList of TopicRelationship's where the main topic matches the topic or an empty array if none are found.
+     * @return An ArrayList of TopicRelationship's or an empty array if none are found.
      */
     public List<TopicRelationship> getTopicRelationships() {
         ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>(topicRelationships);
@@ -470,12 +477,14 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Gets the list of Topic to Level relationships where the Topic matches the topic parameter.
+     * Gets the list of Target relationships.
      *
-     * @return A List of LevelRelationship's where the Topic matches the topic or an empty array if none are found.
+     * @return A List of TargetRelationship's or an empty array if none are found.
      */
-    public List<TargetRelationship> getLevelRelationships() {
-        return levelRelationships;
+    public List<TargetRelationship> getTargetRelationships() {
+        final List<TargetRelationship> relationships = new ArrayList<TargetRelationship>(levelRelationships);
+        relationships.addAll(topicTargetRelationships);
+        return relationships;
     }
 
     /**
@@ -487,13 +496,13 @@ public class SpecTopic extends SpecNode {
         final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
         /* Check the topic to topic relationships for related relationships */
         for (final TopicRelationship relationship : topicRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
+            if (relationship.getType() == RelationshipType.REFER_TO) {
                 relationships.add(relationship);
             }
         }
         /* Check the topic to target relationships for related relationships */
         for (final TargetRelationship relationship : topicTargetRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
+            if (relationship.getType() == RelationshipType.REFER_TO) {
                 relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
                         relationship.getType()));
             }
@@ -509,7 +518,7 @@ public class SpecTopic extends SpecNode {
     public List<TargetRelationship> getRelatedLevelRelationships() {
         final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
         for (final TargetRelationship relationship : levelRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
+            if (relationship.getType() == RelationshipType.REFER_TO) {
                 relationships.add(relationship);
             }
         }
@@ -681,7 +690,7 @@ public class SpecTopic extends SpecNode {
         spacer.append(SPACER);
 
         if (!getRelatedRelationships().isEmpty()) {
-            output.append(generateRelationshipText(RelationshipType.RELATED, false, spacer.toString()));
+            output.append(generateRelationshipText(RelationshipType.REFER_TO, false, spacer.toString()));
         }
 
         if (!getPrerequisiteRelationships().isEmpty()) {
@@ -699,7 +708,7 @@ public class SpecTopic extends SpecNode {
     private String generateRelationshipText(final RelationshipType relationshipType, boolean shortSyntax, final String spacer) {
         final StringBuilder retValue;
         final List<Relationship> relationships;
-        if (relationshipType == RelationshipType.RELATED) {
+        if (relationshipType == RelationshipType.REFER_TO) {
             if (shortSyntax) {
                 retValue = new StringBuilder(" [R: ");
             } else {

@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.EntityWrapper;
+
 public interface TopicSourceURLWrapper extends EntityWrapper<TopicSourceURLWrapper> {
     String getTitle();
 

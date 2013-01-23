@@ -2,6 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.wrapper;
 
 import java.util.Date;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public interface TranslatedTopicWrapper extends BaseTopicWrapper<TranslatedTopicWrapper> {

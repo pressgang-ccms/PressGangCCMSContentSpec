@@ -1,4 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-public interface CSMetaDataWrapper extends EntityWrapper<CSMetaDataWrapper> {
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseCSMetaDataWrapper;
+
+public interface CSMetaDataWrapper extends BaseCSMetaDataWrapper<CSMetaDataWrapper> {
 }

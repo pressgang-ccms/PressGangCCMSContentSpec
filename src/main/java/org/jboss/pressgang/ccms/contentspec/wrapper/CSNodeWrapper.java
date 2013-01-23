@@ -1,4 +1,14 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-public interface CSNodeWrapper extends EntityWrapper<CSNodeWrapper> {
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseCSNodeWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
+
+public interface CSNodeWrapper extends BaseCSNodeWrapper<CSNodeWrapper> {
+    UpdateableCollectionWrapper<CSRelatedNodeWrapper> getRelatedToNodes();
+
+    void setRelatedToNodes(UpdateableCollectionWrapper<CSRelatedNodeWrapper> relatedToNodes);
+
+    UpdateableCollectionWrapper<CSRelatedNodeWrapper> getRelatedFromNodes();
+
+    void setRelatedFromNodes(UpdateableCollectionWrapper<CSRelatedNodeWrapper> relatedFromNodes);
 }

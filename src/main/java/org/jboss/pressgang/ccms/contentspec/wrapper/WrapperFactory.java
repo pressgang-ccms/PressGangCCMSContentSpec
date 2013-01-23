@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.EntityWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 
 public abstract class WrapperFactory {
@@ -117,233 +118,42 @@ public abstract class WrapperFactory {
         return providerFactory;
     }
 
-    /*
-     * TOPIC METHODS
-     */
-
-    public abstract TopicWrapper createTopic(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<TopicWrapper> createTopicCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<TopicWrapper> createTopicList(final Collection<?> entities, boolean isRevisionList) {
-        final List<TopicWrapper> retValue = new ArrayList<TopicWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createTopic(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * TOPIC SOURCE URL METHODS
-     */
-
-    public abstract TopicSourceURLWrapper createTopicSourceURL(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<TopicSourceURLWrapper> createTopicSourceURLCollection(final Object collection,
-            final Class<?> entityClass, boolean isRevisionCollection);
-
-    public List<TopicSourceURLWrapper> createTopicSourceURLList(final Collection<?> entities, boolean isRevisionList) {
-        final List<TopicSourceURLWrapper> retValue = new ArrayList<TopicSourceURLWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createTopicSourceURL(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * TRANSLATED TOPIC METHODS
-     */
-
-    public abstract TranslatedTopicWrapper createTranslatedTopic(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<TranslatedTopicWrapper> createTranslatedTopicCollection(final Object collection,
-            final Class<?> entityClass, boolean isRevisionCollection);
-
-    public List<TranslatedTopicWrapper> createTranslatedTopicList(final Collection<?> entities, boolean isRevisionList) {
-        final List<TranslatedTopicWrapper> retValue = new ArrayList<TranslatedTopicWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createTranslatedTopic(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * TRANSLATED TOPIC STRING METHODS
-     */
-
-    public abstract TranslatedTopicStringWrapper createTranslatedTopicString(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<TranslatedTopicStringWrapper> createTranslatedTopicStringCollection(final Object collection,
-            final Class<?> entityClass, boolean isRevisionCollection);
-
-    public List<TranslatedTopicStringWrapper> createTranslatedTopicStringList(final Collection<?> entities, boolean isRevisionList) {
-        final List<TranslatedTopicStringWrapper> retValue = new ArrayList<TranslatedTopicStringWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createTranslatedTopicString(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * TAG METHODS
-     */
-
-    public abstract TagWrapper createTag(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<TagWrapper> createTagCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<TagWrapper> createTagList(final Collection<?> entities, boolean isRevisionList) {
-        final List<TagWrapper> retValue = new ArrayList<TagWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createTag(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * CATEGORY METHODS
-     */
-
-    public abstract CategoryWrapper createCategory(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<CategoryWrapper> createCategoryCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<CategoryWrapper> createCategoryList(final Collection<?> entities, boolean isRevisionList) {
-        final List<CategoryWrapper> retValue = new ArrayList<CategoryWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createCategory(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * PROPERTY TAG METHODS
-     */
-
-    public abstract PropertyTagWrapper createPropertyTag(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<PropertyTagWrapper> createPropertyTagCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<PropertyTagWrapper> createPropertyTagList(final Collection<?> entities, boolean isRevisionList) {
-        final List<PropertyTagWrapper> retValue = new ArrayList<PropertyTagWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createPropertyTag(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * BLOB CONSTANT METHODS
-     */
-
-    public abstract BlobConstantWrapper createBlobConstant(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<BlobConstantWrapper> createBlobConstantCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<BlobConstantWrapper> createBlobConstantList(final Collection<?> entities, boolean isRevisionList) {
-        final List<BlobConstantWrapper> retValue = new ArrayList<BlobConstantWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createBlobConstant(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * STRING CONSTANT METHODS
-     */
-
-    public abstract StringConstantWrapper createStringConstant(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<StringConstantWrapper> createStringConstantCollection(final Object collection,
-            final Class<?> entityClass, boolean isRevisionCollection);
-
-    public List<StringConstantWrapper> createStringConstantList(final Collection<?> entities, boolean isRevisionList) {
-        final List<StringConstantWrapper> retValue = new ArrayList<StringConstantWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createStringConstant(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * IMAGE METHODS
-     */
-
-    public abstract ImageWrapper createImage(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<ImageWrapper> createImageCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<ImageWrapper> createImageList(final Collection<?> entities, boolean isRevisionList) {
-        final List<ImageWrapper> retValue = new ArrayList<ImageWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createImage(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * LANGUAGE IMAGE METHODS
-     */
-
-    public abstract LanguageImageWrapper createLanguageImage(final Object entity, boolean isRevision);
-
-    public abstract CollectionWrapper<LanguageImageWrapper> createLanguageImageCollection(final Object collection,
-            final Class<?> entityClass, boolean isRevisionCollection);
-
-    public List<LanguageImageWrapper> createLanguageImageList(final Collection<?> entities, boolean isRevisionList) {
-        final List<LanguageImageWrapper> retValue = new ArrayList<LanguageImageWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createLanguageImage(object, isRevisionList));
-        }
-
-        return retValue;
-    }
-
-    /*
-     * USER METHODS
-     */
-
     /**
-     * Create a wrapper around a specific user.
+     * Create a wrapper around a specific entity.
      *
-     * @param entity     The user entity to be wrapped.
+     * @param entity     The entity to be wrapped.
      * @param isRevision Whether the entity is a revision or not.
-     * @return The Wrapper around the user entity.
+     * @param <T>        The wrapper class that is returned.
+     * @return The Wrapper around the entity.
      */
-    public abstract UserWrapper createUser(final Object entity, boolean isRevision);
+    public abstract <T extends EntityWrapper<T>> T create(final Object entity, boolean isRevision);
 
     /**
-     * Create a wrapper around a collection of users.
+     * Create a list of wrapped entities.
+     *
+     * @param entities       The collection of entities to wrap.
+     * @param isRevisionList Whether or not the collection is a collection of revision entities.
+     * @param <T>            The wrapper class that is returned.
+     * @return An ArrayList of wrapped entities.
+     */
+    public <T extends EntityWrapper<T>> List<T> createList(final Collection<?> entities, boolean isRevisionList) {
+        final List<T> retValue = new ArrayList<T>();
+        for (final Object object : entities) {
+            retValue.add((T) create(object, isRevisionList));
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Create a wrapper around a collection of entities.
      *
      * @param collection           The collection to be wrapped.
+     * @param entityClass          The class of the entity that the collection contains.
      * @param isRevisionCollection Whether or not the collection is a collection of revision entities.
-     * @return The Wrapper around the collection of users.
+     * @param <T>                  The wrapper class that is returned.
+     * @return The Wrapper around the collection of entities.
      */
-    public abstract CollectionWrapper<UserWrapper> createUserCollection(final Object collection, final Class<?> entityClass,
-            boolean isRevisionCollection);
-
-    public List<UserWrapper> createUserList(final Collection<?> entities, boolean isRevisionList) {
-        final List<UserWrapper> retValue = new ArrayList<UserWrapper>();
-        for (final Object object : entities) {
-            retValue.add(createUser(object, isRevisionList));
-        }
-
-        return retValue;
-    }
+    public abstract <T extends EntityWrapper<T>> CollectionWrapper<T> createCollection(final Object entity, final Class<?> entityClass,
+            boolean isRevision);
 }

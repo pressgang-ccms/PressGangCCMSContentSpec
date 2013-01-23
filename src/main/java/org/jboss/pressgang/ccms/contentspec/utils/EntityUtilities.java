@@ -11,12 +11,12 @@ import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
 import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
-import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 
@@ -101,7 +101,7 @@ public class EntityUtilities {
             final List<TagWrapper> tagItems = source.getTags().getItems();
             for (final TagWrapper tag : tagItems) {
                 if (tag.getCategories() != null && tag.getCategories().getItems() != null) {
-                    final List<CategoryWrapper> categories = tag.getCategories().getItems();
+                    final List<CategoryInTagWrapper> categories = tag.getCategories().getItems();
 
                     if (categories.size() == 0) {
                         final NameIDSortMap categoryDetails = new NameIDSortMap("Uncategorised", -1, 0);
@@ -110,7 +110,7 @@ public class EntityUtilities {
 
                         tags.get(categoryDetails).add(tag);
                     } else {
-                        for (final CategoryWrapper category : categories) {
+                        for (final CategoryInTagWrapper category : categories) {
                             final NameIDSortMap categoryDetails = new NameIDSortMap(category.getName(), category.getId(),
                                     category.getRelationshipSort() == null ? 0 : category.getRelationshipSort());
 

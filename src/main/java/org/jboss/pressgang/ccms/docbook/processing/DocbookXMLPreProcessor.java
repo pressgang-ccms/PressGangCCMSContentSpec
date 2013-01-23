@@ -20,9 +20,9 @@ import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
-import org.jboss.pressgang.ccms.contentspec.wrapper.BaseTopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleComparator;
@@ -240,8 +240,7 @@ public class DocbookXMLPreProcessor {
             String bugzillaAssignedTo = null;
             final String bugzillaEnvironment = URLEncoder.encode(
                     "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: " +
-                            specifiedBuildName + "\n" + "Build Date: " + formatter.format(
-                            buildDate), "UTF-8");
+                            specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), "UTF-8");
             final String bugzillaSummary = URLEncoder.encode(topic.getTitle(), "UTF-8");
             final StringBuilder bugzillaBuildID = new StringBuilder();
             bugzillaBuildID.append(topic.getBugzillaBuildId());
@@ -256,11 +255,11 @@ public class DocbookXMLPreProcessor {
             if (topic.getTags() != null && topic.getTags() != null) {
                 final List<TagWrapper> tags = topic.getTags().getItems();
                 for (final TagWrapper tag : tags) {
-                    final PropertyTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaKeywordsTag = tag.getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaVersionTag = tag.getProperty(CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
-                    final PropertyTagWrapper bugzillaAssignedToTag = tag.getProperty(CommonConstants.BUGZILLA_PROFILE_PROPERTY);
+                    final PropertyTagInTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
+                    final PropertyTagInTagWrapper bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
+                    final PropertyTagInTagWrapper bugzillaKeywordsTag = tag.getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
+                    final PropertyTagInTagWrapper bugzillaVersionTag = tag.getProperty(CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
+                    final PropertyTagInTagWrapper bugzillaAssignedToTag = tag.getProperty(CommonConstants.BUGZILLA_PROFILE_PROPERTY);
 
                     if (bugzillaProduct == null && bugzillaProductTag != null)
                         bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), "UTF-8");
@@ -1061,7 +1060,8 @@ public class DocbookXMLPreProcessor {
             final String fixedPreamble = preamble == null ? "" : preamble + "\n";
             final String fixedXML = preamble == null ? xml : xml.replace(preamble, "");
 
-            return fixedPreamble + "<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" []>\n" + fixedXML;
+            return fixedPreamble + "<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open" +
+                    ".org/docbook/xml/4.5/docbookx.dtd\" []>\n" + fixedXML;
         }
 
         return xml;

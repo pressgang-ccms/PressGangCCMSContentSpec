@@ -13,9 +13,12 @@ import org.jboss.pressgang.ccms.contentspec.provider.CategoryProvider;
 import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
+import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TagInCategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTagWrapper;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
@@ -104,7 +107,7 @@ public class ContentSpecGenerator {
 
             for (final TopicWrapper topic : topics) {
                 boolean doesMatch = true;
-                for (final TagWrapper andTag : requirements.getMatchAllOf()) {
+                for (final BaseTagWrapper andTag : requirements.getMatchAllOf()) {
                     if (!topic.hasTag(andTag.getId())) {
                         doesMatch = false;
                         break;
@@ -112,10 +115,10 @@ public class ContentSpecGenerator {
                 }
 
                 if (doesMatch && requirements.getMatchOneOf().size() != 0) {
-                    for (final ArrayList<TagWrapper> orBlock : requirements.getMatchOneOf()) {
+                    for (final ArrayList<BaseTagWrapper> orBlock : requirements.getMatchOneOf()) {
                         if (orBlock.size() != 0) {
                             boolean matchesOrBlock = false;
-                            for (final TagWrapper orTag : orBlock) {
+                            for (final BaseTagWrapper orTag : orBlock) {
                                 if (topic.hasTag(orTag.getId())) {
                                     matchesOrBlock = true;
                                     break;
@@ -188,16 +191,16 @@ public class ContentSpecGenerator {
              * we get the tags out of the tech and common names categories, and
              * pull outthose that are not encompassed.
              */
-            final List<TagWrapper> topLevelTags = new ArrayList<TagWrapper>();
+            final List<TagInCategoryWrapper> topLevelTags = new ArrayList<TagInCategoryWrapper>();
             for (final CategoryWrapper category : new CategoryWrapper[]{technologyCategroy, commonNamesCategory}) {
                 if (category.getTags() != null) {
-                    final List<TagWrapper> tags = category.getTags().getItems();
-                    for (final TagWrapper tag : tags) {
+                    final List<TagInCategoryWrapper> tags = category.getTags().getItems();
+                    for (final TagInCategoryWrapper tag : tags) {
                         boolean isEmcompassed = false;
                         final List<TagWrapper> parentTags = tag.getParentTags().getItems();
                         for (final TagWrapper parentTag : parentTags) {
-                            final List<CategoryWrapper> parentTagCategories = parentTag.getCategories().getItems();
-                            for (final CategoryWrapper parentTagCategory : parentTagCategories) {
+                            final List<CategoryInTagWrapper> parentTagCategories = parentTag.getCategories().getItems();
+                            for (final CategoryInTagWrapper parentTagCategory : parentTagCategories) {
                                 if (parentTagCategory.getId().equals(
                                         DocbookBuilderConstants.TECHNOLOGY_CATEGORY_ID) || parentTagCategory.getId().equals(
                                         DocbookBuilderConstants.COMMON_NAME_CATEGORY_ID)) {
@@ -232,35 +235,36 @@ public class ContentSpecGenerator {
             final TagWrapper taskTag = tagProvider.getTag(DocbookBuilderConstants.TASK_TAG_ID);
 
             /* add TocFormatBranch objects for each top level tag */
-            for (final TagWrapper tag : topLevelTags) {
+            for (final TagInCategoryWrapper tag : topLevelTags) {
                 /*
                  * Create the top level tag. This level is represented by the
                  * tags that are not encompased, and includes any topic that has
                  * that tag or any tag that is encompassed by this tag.
                  */
-                final TagRequirements topLevelBranchTags = new TagRequirements((TagWrapper) null, new ArrayList<TagWrapper>() {
-                    private static final long serialVersionUID = 7499166852563779981L;
+                final TagRequirements topLevelBranchTags = new TagRequirements((TagInCategoryWrapper) null,
+                        new ArrayList<BaseTagWrapper>() {
+                            private static final long serialVersionUID = 7499166852563779981L;
 
-                    {
-                        add(tag);
-                        addAll(tag.getChildTags().getItems());
-                    }
-                });
+                            {
+                                add(tag);
+                                addAll(tag.getChildTags().getItems());
+                            }
+                        });
 
                 final Chapter topLevelTagChapter = new Chapter(tag.getName());
                 retValue.appendChapter(topLevelTagChapter);
 
                 populateContentSpecLevel(topics, topLevelTagChapter, topLevelBranchTags, null);
 
-                final List<TagWrapper> concernTags = concernCategory.getTags().getItems();
-                for (final TagWrapper concernTag : concernTags) {
+                final List<TagInCategoryWrapper> concernTags = concernCategory.getTags().getItems();
+                for (final TagInCategoryWrapper concernTag : concernTags) {
                     /*
                      * the second level of the toc are the concerns, which will
                      * display the tasks and conceptual overviews beneath them
                      */
-                    final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (TagWrapper) null);
+                    final TagRequirements concernLevelChildTags = new TagRequirements(concernTag, (TagInCategoryWrapper) null);
                     concernLevelChildTags.merge(topLevelBranchTags);
-                    final TagRequirements concernLevelDisplayTags = new TagRequirements((TagWrapper) null, new ArrayList<TagWrapper>() {
+                    final TagRequirements concernLevelDisplayTags = new TagRequirements((TagWrapper) null, new ArrayList<BaseTagWrapper>() {
                         private static final long serialVersionUID = -204535050439409584L;
 
                         {

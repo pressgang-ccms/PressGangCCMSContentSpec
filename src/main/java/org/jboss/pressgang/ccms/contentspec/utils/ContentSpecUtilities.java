@@ -3,18 +3,14 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
+import org.jboss.pressgang.ccms.contentspec.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
-import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
@@ -170,23 +166,17 @@ public class ContentSpecUtilities {
     /*
      * Gets a list of Revision's from the CSProcessor database for a specific content spec
      */
-    public static List<Object[]> getContentSpecRevisionsById(final TopicProvider topicProvider, final Integer csId) {
+    public static List<Object[]> getContentSpecRevisionsById(final ContentSpecProvider contentSpecProvider, final Integer csId) {
         final List<Object[]> results = new ArrayList<Object[]>();
-        final CollectionWrapper<TopicWrapper> topicRevisions = topicProvider.getTopic(csId).getRevisions();
+        final CollectionWrapper<ContentSpecWrapper> contentSpecRevisions = contentSpecProvider.getContentSpec(csId).getRevisions();
 
         // Create the unique array from the revisions
-        if (topicRevisions != null && topicRevisions.getItems() != null) {
-            final List<TopicWrapper> topicRevs = topicRevisions.getItems();
-            for (final TopicWrapper topicRev : topicRevs) {
-                Object[] revision = new Object[3];
-                revision[0] = topicRev.getRevision();
-                revision[1] = topicRev.getLastModified();
-                final PropertyTagWrapper type = topicRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID);
-                if (type != null) {
-                    revision[2] = type.getValue();
-                } else {
-                    revision[2] = "";
-                }
+        if (contentSpecRevisions != null && contentSpecRevisions.getItems() != null) {
+            final List<ContentSpecWrapper> contentSpecRevs = contentSpecRevisions.getItems();
+            for (final ContentSpecWrapper contentSpecRev : contentSpecRevs) {
+                Object[] revision = new Object[2];
+                revision[0] = contentSpecRev.getRevision();
+                revision[1] = contentSpecRev.getLastModified();
                 results.add(revision);
             }
         }
@@ -196,7 +186,7 @@ public class ContentSpecUtilities {
     /*
      * Get the Pre Processed Content Specification for a ID and Revision
      */
-    public static TopicWrapper getPreContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
+    /*public static TopicWrapper getPreContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
         final TopicWrapper cs = topicProvider.getTopic(id, revision);
 
         // Check if the latest is a pre content spec
@@ -233,12 +223,12 @@ public class ContentSpecUtilities {
         }
 
         return preContentSpec;
-    }
+    }*/
 
     /*
      * Get the Post Processed Content Specification for a ID and Revision
      */
-    public static TopicWrapper getPostContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
+    /*public static TopicWrapper getPostContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
         final TopicWrapper cs = topicProvider.getTopic(id, revision);
 
         if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
@@ -276,7 +266,7 @@ public class ContentSpecUtilities {
         }
 
         return postContentSpec;
-    }
+    }*/
 }
 
 /**

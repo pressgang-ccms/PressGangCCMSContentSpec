@@ -1,11 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper;
 
-public interface PropertyTagWrapper extends EntityWrapper<PropertyTagWrapper> {
-    String getValue();
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BasePropertyTagWrapper;
 
-    void setValue(String value);
+public interface PropertyTagWrapper extends BasePropertyTagWrapper<PropertyTagWrapper> {
 
-    Boolean isValid();
-
-    Integer getRelationshipId();
 }

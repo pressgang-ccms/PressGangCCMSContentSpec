@@ -1,5 +1,8 @@
 package org.jboss.pressgang.ccms.contentspec.provider;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInPropertyCategoryWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
@@ -14,15 +17,21 @@ public interface PropertyTagProvider {
 
     PropertyTagWrapper newPropertyTag();
 
-    PropertyTagWrapper newAssignedPropertyTag();
+    PropertyTagInTopicWrapper newPropertyTagInTopic();
 
-    PropertyTagWrapper newAssignedPropertyTag(PropertyTagWrapper propertyTag);
+    PropertyTagInTopicWrapper newPropertyTagInTopic(PropertyTagWrapper propertyTag);
 
-    PropertyTagWrapper newPropertyTagInPropertyCategory();
+    PropertyTagInTagWrapper newPropertyTagInTag();
+
+    PropertyTagInTagWrapper newPropertyTagInTag(PropertyTagWrapper propertyTag);
+
+    PropertyTagInPropertyCategoryWrapper newPropertyTagInPropertyCategory();
 
     CollectionWrapper<PropertyTagWrapper> newPropertyTagCollection();
 
-    UpdateableCollectionWrapper<PropertyTagWrapper> newAssignedPropertyTagCollection();
+    UpdateableCollectionWrapper<PropertyTagInTopicWrapper> newPropertyTagInTopicCollection();
 
-    UpdateableCollectionWrapper<PropertyTagWrapper> newPropertyTagInPropertyCategoryCollection();
+    UpdateableCollectionWrapper<PropertyTagInTagWrapper> newPropertyTagInTagCollection();
+
+    UpdateableCollectionWrapper<PropertyTagInPropertyCategoryWrapper> newPropertyTagInPropertyCategoryCollection();
 }

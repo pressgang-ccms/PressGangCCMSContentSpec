@@ -1,4 +1,4 @@
-package org.jboss.pressgang.ccms.contentspec.wrapper;
+package org.jboss.pressgang.ccms.contentspec.wrapper.base;
 
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 

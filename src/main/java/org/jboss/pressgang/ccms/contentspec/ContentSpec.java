@@ -2,16 +2,20 @@ package org.jboss.pressgang.ccms.contentspec;
 
 /**
  * A class that is used to hold the data for a Content Specification. It holds a basic data(Title, Product, Version, etc...) and
- * the original pre processed text of the Content Specification and all of the levels (Appendixes, Chapters, Sections, etc...) inside the Content Spec.
+ * the original pre processed text of the Content Specification and all of the levels (Appendixes, Chapters, Sections,
+ * etc...) inside the Content Spec.
  */
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
+import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
@@ -54,10 +58,10 @@ public class ContentSpec extends Node {
 
     /**
      * Constructor
-     * 
-     * @param title The Title of the Content Specification.
-     * @param product The Product that the Content Specification documents.
-     * @param version The Version of the Product that the Content Specification documents.
+     *
+     * @param title           The Title of the Content Specification.
+     * @param product         The Product that the Content Specification documents.
+     * @param version         The Version of the Product that the Content Specification documents.
      * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
      */
     public ContentSpec(final String title, final String product, final String version, final String copyrightHolder) {
@@ -69,7 +73,7 @@ public class ContentSpec extends Node {
 
     /**
      * Constructor
-     * 
+     *
      * @param title The title of the Content Specification.
      */
     public ContentSpec(final String title) {
@@ -78,8 +82,8 @@ public class ContentSpec extends Node {
 
     /**
      * Constructor
-     * 
-     * @param id The Database ID of the Content Specification.
+     *
+     * @param id    The Database ID of the Content Specification.
      * @param title The title of the Content Specification.
      */
     public ContentSpec(final int id, final String title) {
@@ -95,7 +99,7 @@ public class ContentSpec extends Node {
     /**
      * Get the base Level of the Content Specification. This level will contain all the other levels in the content
      * specification.
-     * 
+     *
      * @return The Base Level object of a Content Specification.
      */
     public Level getBaseLevel() {
@@ -104,7 +108,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the Product that the Content Specification documents.
-     * 
+     *
      * @return The name of the product.
      */
     public String getProduct() {
@@ -113,7 +117,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the name of the product that the Content Specification documents.
-     * 
+     *
      * @param product The name of the Product.
      */
     public void setProduct(final String product) {
@@ -131,7 +135,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the version of the product that the Content Specification documents.
-     * 
+     *
      * @return The version of the product or an empty string if the version is null.
      */
     public String getVersion() {
@@ -140,7 +144,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the version of the product that the Content Specification documents.
-     * 
+     *
      * @param version The product version.
      */
     public void setVersion(final String version) {
@@ -158,7 +162,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the brand of the product that the Content Specification documents.
-     * 
+     *
      * @return The brand of the product or null if one doesn't exist.
      */
     public String getBrand() {
@@ -167,7 +171,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the brand of the product that the Content Specification documents.
-     * 
+     *
      * @param brand The brand of the product.
      */
     public void setBrand(final String brand) {
@@ -185,7 +189,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the ID of the Content Specification.
-     * 
+     *
      * @param id The database ID of the content specification.
      */
     public void setId(final int id) {
@@ -204,7 +208,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the ID of the Content Specification
-     * 
+     *
      * @return The Content Specification database ID or 0 if one hasn't been set.
      */
     public int getId() {
@@ -214,7 +218,7 @@ public class ContentSpec extends Node {
     /**
      * The revision number for this Content Spec as it exists in the database. This property is not exposible in a Content
      * Specification and is used internally only.
-     * 
+     *
      * @return The Content Specifications Database revision, or null for the latest version.
      */
     public Integer getRevision() {
@@ -224,7 +228,7 @@ public class ContentSpec extends Node {
     /**
      * Sets the revision number for this Content Spec as it exists in the database. This property is not exposible in a Content
      * Specification and is used internally only.
-     * 
+     *
      * @param revision The Content Specifications Database revision, or null for the latest version.
      */
     public void setRevision(final Integer revision) {
@@ -233,7 +237,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the title of the Content Specification.
-     * 
+     *
      * @return The Content Specification title or an empty string if it is null.
      */
     public String getTitle() {
@@ -242,7 +246,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the escaped version of the title for the Content Specification.
-     * 
+     *
      * @return The Content Specification title.
      */
     public String getEscapedTitle() {
@@ -251,7 +255,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Content Specifications title.
-     * 
+     *
      * @param title The title for the content specification
      */
     public void setTitle(final String title) {
@@ -269,7 +273,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the Subtitle for the Content Specification.
-     * 
+     *
      * @return The Subtitle of the Content Specification or null if one doesn't exist.
      */
     public String getSubtitle() {
@@ -278,7 +282,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Subtitle for the Content Specification
-     * 
+     *
      * @param subtitle
      */
     public void setSubtitle(final String subtitle) {
@@ -296,7 +300,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the Book Version of the book the Content Specification will create.
-     * 
+     *
      * @return The Content Specifications Book Edition or null if one doesn't exist.
      */
     public String getBookVersion() {
@@ -305,7 +309,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the BookVersion of the Book the Content Specification represents.
-     * 
+     *
      * @param edition The Book Edition.
      */
     public void setBookVersion(final String bookVersion) {
@@ -320,10 +324,10 @@ public class ContentSpec extends Node {
             this.edition.setValue(bookVersion);
         }
     }
-    
+
     /**
      * Gets the Edition of the book the Content Specification will create.
-     * 
+     *
      * @return The Content Specifications Book Edition or null if one doesn't exist.
      */
     public String getEdition() {
@@ -332,7 +336,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the Edition of the Book the Content Specification represents.
-     * 
+     *
      * @param edition The Book Edition.
      */
     public void setEdition(final String edition) {
@@ -350,7 +354,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the publication number used by publican
-     * 
+     *
      * @return The publication number or null if one doesn't exist.
      */
     public Integer getPubsNumber() {
@@ -359,7 +363,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the publication number for the Content Specification.
-     * 
+     *
      * @param pubsNumber The publication number.
      */
     public void setPubsNumber(final Integer pubsNumber) {
@@ -377,7 +381,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the data what will be appended to the publican.cfg file when built.
-     * 
+     *
      * @return The data to be appended or null if none exist.
      */
     public String getPublicanCfg() {
@@ -386,7 +390,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the data that will be appended to the publican.cfg file when built.
-     * 
+     *
      * @param publicanCfg The data to be appended.
      */
     public void setPublicanCfg(final String publicanCfg) {
@@ -404,7 +408,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the pre processed text of a specific line in the Content Specification.
-     * 
+     *
      * @param line The line number of the text.
      * @return The text at "line" in the Content Specification or null if the line doesn't exist.
      */
@@ -414,7 +418,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets a list of all the pre processed lines in the Content Specification.
-     * 
+     *
      * @return A List of pre processed Content Specification lines.
      */
     public List<String> getPreProcessedText() {
@@ -424,7 +428,7 @@ public class ContentSpec extends Node {
     /**
      * Sets the pre processed text of a content specification for a specific line. If the line doesn't exist then a
      * IndexOutOfBoundsException will be thrown.
-     * 
+     *
      * @param text The text to be set at "line".
      * @param line The line number in the content specification to set the text for.
      */
@@ -434,7 +438,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the DTD of the Content Specification. The default value is "Docbook 4.5".
-     * 
+     *
      * @return The DTD of the Content Specification or the default value if one isn't set.
      */
     public String getDtd() {
@@ -443,7 +447,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the DTD for a Content Specification.
-     * 
+     *
      * @param dtd The DTD of the Content Specification.
      */
     public void setDtd(final String dtd) {
@@ -461,7 +465,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the created by Username for the author who created/uploaded the Content Specification.
-     * 
+     *
      * @param username The Username of the User who created/uploaded the Content Specification or null if one doesn't exist.
      */
     public void setCreatedBy(final String username) {
@@ -470,7 +474,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the Username of the user who created/uploaded the Content Specification.
-     * 
+     *
      * @return The Username of the Content Specification creator.
      */
     public String getCreatedBy() {
@@ -480,7 +484,7 @@ public class ContentSpec extends Node {
     /**
      * Gets the SpecRevision number for the Content Specification. This number is used to validate that the Content
      * Specification hasn't been modified since the last upload.
-     * 
+     *
      * @return The SpecRevision number or null if one doesn't exist.
      */
     @Deprecated
@@ -490,7 +494,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the SpecRevision number for a ContentSpecification.
-     * 
+     *
      * @param specRevision The SpecRevision number.
      */
     @Deprecated
@@ -505,9 +509,9 @@ public class ContentSpec extends Node {
 
     /**
      * Get the set Checksum value for a Content Specification.
-     * 
+     * <p/>
      * Note: This function doesn't calculate the Checksum of a Content Specification.
-     * 
+     *
      * @return The set value of the Content Specifications Checksum or null if one doesn't exist.
      */
     public String getChecksum() {
@@ -516,9 +520,9 @@ public class ContentSpec extends Node {
 
     /**
      * Set the Checksum value for a Content Specification.
-     * 
+     * <p/>
      * Note: This value isn't used by the toString() function as it re calculates the Checksum.
-     * 
+     *
      * @param checksum The Checksum of the Content Specification.
      */
     public void setChecksum(final String checksum) {
@@ -536,7 +540,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the Abstract (or Description) for a Content Specification that will be added to a book when built.
-     * 
+     *
      * @return The abstract for the Content Specification or null if one doesn't exist.
      */
     public String getAbstract() {
@@ -545,7 +549,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Abstract (or Description) for a Content Specification.
-     * 
+     *
      * @param description The Abstract for the Content Specifications book.
      */
     public void setAbstract(final String description) {
@@ -563,7 +567,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the Copyright Holder of the Content Specification and the book it creates.
-     * 
+     *
      * @return The name of the Copyright Holder.
      */
     public String getCopyrightHolder() {
@@ -572,7 +576,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the Copyright Holder of the Content Specification and the book it creates.
-     * 
+     *
      * @param copyrightHolder The name of the Copyright Holder.
      */
     public void setCopyrightHolder(final String copyrightHolder) {
@@ -591,7 +595,7 @@ public class ContentSpec extends Node {
     /**
      * Get the Type of Book the Content Specification should be created for. The current values that are supported are "Book"
      * and "Article".
-     * 
+     *
      * @return The type of book the Content Specification should be transformed into or BOOK if the type isn't set.
      */
     public BookType getBookType() {
@@ -601,7 +605,7 @@ public class ContentSpec extends Node {
     /**
      * Set the Type of Book the Content Specification should be created for. The current values that are supported are "Book"
      * and "Article".
-     * 
+     *
      * @param bookType The type the book should be built as.
      */
     public void setBookType(final BookType bookType) {
@@ -615,7 +619,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the injection Options for the Content Specification that will be used when building a book.
-     * 
+     *
      * @return A InjectionOptions object containing the Injection Options to be used when building.
      */
     public InjectionOptions getInjectionOptions() {
@@ -624,7 +628,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the InjectionOptions that will be used by the Builder when building a book.
-     * 
+     *
      * @param injectionOptions The InjectionOptions to be used when building a book.
      */
     public void setInjectionOptions(final InjectionOptions injectionOptions) {
@@ -638,7 +642,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the description for the global tags.
-     * 
+     *
      * @param desc The description.
      */
     public void setDescription(final String desc) {
@@ -647,7 +651,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the description that will be applied globally.
-     * 
+     *
      * @return The description as a String
      */
     public String getDescription() {
@@ -656,7 +660,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the locale of the Content Specification.
-     * 
+     *
      * @return The Content Specification locale.
      */
     public String getLocale() {
@@ -665,7 +669,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Content Specifications locale.
-     * 
+     *
      * @param locale The locale for the content specification
      */
     public void setLocale(final String locale) {
@@ -683,7 +687,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the output style for the Content Specification. The default is CSP.
-     * 
+     *
      * @return The Content Specification output style.
      */
     public String getOutputStyle() {
@@ -692,7 +696,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Content Specifications output style.
-     * 
+     *
      * @param outputStyle The output style for the content specification
      */
     public void setOutputStyle(final String outputStyle) {
@@ -710,7 +714,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the Assigned Writer for the global tags.
-     * 
+     *
      * @param writer The writers name that matches to the assigned writer tag in the database
      */
     public void setAssignedWriter(final String writer) {
@@ -719,7 +723,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the Assigned Writer that will be applied globally.
-     * 
+     *
      * @return The Assigned Writers name as a String
      */
     public String getAssignedWriter() {
@@ -728,7 +732,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the set of tags for the global tags
-     * 
+     *
      * @param tags A List of tags by their name.
      */
     public void setTags(final List<String> tags) {
@@ -737,7 +741,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the set of tags for the global tags.
-     * 
+     *
      * @return A list of tag names
      */
     public List<String> getTags() {
@@ -746,7 +750,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the list of tags that are to be removed in the global options.
-     * 
+     *
      * @param tags An ArrayList of tags to be removed
      */
     public void setRemoveTags(List<String> tags) {
@@ -755,7 +759,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets an ArrayList of tags that are to be removed globally.
-     * 
+     *
      * @return An ArrayList of tags
      */
     public List<String> getRemoveTags() {
@@ -764,7 +768,7 @@ public class ContentSpec extends Node {
 
     /**
      * Sets the list of source urls to be applied globally
-     * 
+     *
      * @param sourceUrls A List of urls
      */
     public void setSourceUrls(final List<String> sourceUrls) {
@@ -773,7 +777,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the Source Urls that are to be applied globally.
-     * 
+     *
      * @return A List of Strings that represent the source urls
      */
     public List<String> getSourceUrls() {
@@ -809,7 +813,7 @@ public class ContentSpec extends Node {
     /**
      * Adds a tag to the global list of tags. If the tag starts with a - then its added to the remove tag list otherwise its
      * added to the normal tag mapping. Also strips off + & - from the start of tags.
-     * 
+     *
      * @param tagName The name of the Tag to be added.
      * @return True if the tag was added successfully otherwise false.
      */
@@ -819,7 +823,7 @@ public class ContentSpec extends Node {
 
     /**
      * Adds a list of tags to the global list of tags
-     * 
+     *
      * @param tagArray A list of tags by name that are to be added.
      * @return True if all the tags were added successfully otherwise false.
      */
@@ -829,7 +833,7 @@ public class ContentSpec extends Node {
 
     /**
      * Adds a source URL to the list of global URL's
-     * 
+     *
      * @param url The URL to be added
      */
     public void addSourceUrl(final String url) {
@@ -838,7 +842,7 @@ public class ContentSpec extends Node {
 
     /**
      * Removes a specific Source URL from the list of global URL's
-     * 
+     *
      * @param url The URL to be removed.
      */
     public void removeSourceUrl(final String url) {
@@ -848,7 +852,7 @@ public class ContentSpec extends Node {
     /**
      * Adds a Chapter to the Content Specification. If the Chapter already has a parent, then it is removed from that parent and
      * added to this level.
-     * 
+     *
      * @param chapter A Chapter to be added to the Content Specification.
      */
     public void appendChapter(final Chapter chapter) {
@@ -858,7 +862,7 @@ public class ContentSpec extends Node {
     /**
      * Adds a Part to the Content Specification. If the Part already has a parent, then it is removed from that parent and added
      * to this level.
-     * 
+     *
      * @param chapter The Chapter to be removed from the Content Specification.
      */
     public void appendPart(final Part part) {
@@ -867,7 +871,7 @@ public class ContentSpec extends Node {
 
     /**
      * Removes a Chapter from the Content Specification and removes the Content Specification as the Chapters parent.
-     * 
+     *
      * @param chapter The Chapter to be removed from the Content Specification.
      */
     public void removeChapter(final Chapter chapter) {
@@ -876,7 +880,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets a ordered linked list of the child nodes within the Content Specification. This includes comments and chapters.
-     * 
+     *
      * @return The ordered list of nodes for the Content Specification.
      */
     public LinkedList<Node> getChildNodes() {
@@ -885,7 +889,7 @@ public class ContentSpec extends Node {
 
     /**
      * Gets the number of Chapters in the Content Specification.
-     * 
+     *
      * @return The number of Child Levels
      */
     public int getNumberOfChapters() {
@@ -894,9 +898,9 @@ public class ContentSpec extends Node {
 
     /**
      * Gets a List of all the chapters in this level.
-     * 
+     * <p/>
      * Note: The Chapters may not be in order.
-     * 
+     *
      * @return A List of Chapters.
      */
     public List<Level> getChapters() {
@@ -905,7 +909,7 @@ public class ContentSpec extends Node {
 
     /**
      * Appends a Comment to the Content Specification.
-     * 
+     *
      * @param comment The comment node to be appended to the Content Specification.
      */
     public void appendComment(final Comment comment) {
@@ -918,7 +922,7 @@ public class ContentSpec extends Node {
 
     /**
      * Creates and appends a Comment node to the Content Specification.
-     * 
+     *
      * @param comment The Comment to be appended.
      */
     public void appendComment(final String comment) {
@@ -927,7 +931,7 @@ public class ContentSpec extends Node {
 
     /**
      * Removes a Comment from the Content Specification.
-     * 
+     *
      * @param comment The Comment node to be removed.
      */
     public void removeComment(final Comment comment) {
@@ -939,7 +943,7 @@ public class ContentSpec extends Node {
 
     /**
      * Appends a pre processed line to the list of lines in the Content Specification.
-     * 
+     *
      * @param line The Line to be added.
      */
     public void appendPreProcessedLine(final String line) {
@@ -949,7 +953,7 @@ public class ContentSpec extends Node {
     /**
      * Appends a String to a pre processed line that has already been added to the Content Specification. Throws a
      * IndexOutOfBoundsException if the line doesn't exist.
-     * 
+     *
      * @param text The text to be appended.
      * @param line The line number of the original text that the new text should be appended to.
      */
@@ -968,6 +972,15 @@ public class ContentSpec extends Node {
             specTopics.addAll(getLevelSpecTopics(childLevel));
         }
         return specTopics;
+    }
+
+    public Map<SpecTopic, List<Relationship>> getRelationships() {
+        final List<SpecTopic> specTopics = getSpecTopics();
+        final Map<SpecTopic, List<Relationship>> relationships = new HashMap<SpecTopic, List<Relationship>>();
+        for (final SpecTopic specTopic : specTopics) {
+            relationships.put(specTopic, specTopic.getRelationships());
+        }
+        return relationships;
     }
 
     public List<Node> getNodes() {
@@ -1010,7 +1023,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the Bugzilla Version to be applied during building.
-     * 
+     *
      * @return The version of the product in bugzilla.
      */
     public String getBugzillaVersion() {
@@ -1019,7 +1032,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the Bugzilla Version to be applied during building.
-     * 
+     *
      * @param bugzillaVersion The version of the product in bugzilla.
      */
     public void setBugzillaVersion(final String bugzillaVersion) {
@@ -1037,7 +1050,7 @@ public class ContentSpec extends Node {
 
     /**
      * Get the URL component that is used in the .ent file when building the Docbook files.
-     * 
+     *
      * @return The BZURL component for the content specification.
      */
     public String getBugzillaURL() {
@@ -1046,7 +1059,7 @@ public class ContentSpec extends Node {
 
     /**
      * Set the URL component that is used in the .ent file when building the Docbook files.
-     * 
+     *
      * @param bugzillaURL The BZURL component to be used when building.
      */
     public void setBugzillaURL(final String bugzillaURL) {
@@ -1101,7 +1114,7 @@ public class ContentSpec extends Node {
     /**
      * Adds a Child Level to the Level. If the Child Level already has a parent, then it is removed from that parent and added
      * to this level.
-     * 
+     *
      * @param childLevel A Child Level to be added to the Level.
      */
     public void appendChild(final Node child) {
@@ -1114,7 +1127,7 @@ public class ContentSpec extends Node {
 
     /**
      * Removes a child node from the content spec and removes the content as the childs parent.
-     * 
+     *
      * @param child The Child Node to be removed from the Content Spec.
      */
     public void removeChild(final Node child) {
@@ -1132,8 +1145,8 @@ public class ContentSpec extends Node {
         for (final Node node : nodes) {
             if (node instanceof KeyValueNode) {
                 final KeyValueNode keyValueNode = (KeyValueNode) node;
-                if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID")
-                        && !keyValueNode.getKey().equals("SpecRevison") && !keyValueNode.getKey().equals("Pubsnumber")) {
+                if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID") && !keyValueNode.getKey().equals(
+                        "SpecRevison") && !keyValueNode.getKey().equals("Pubsnumber")) {
                     output.append(node.toString());
                 }
             } else {
@@ -1152,8 +1165,8 @@ public class ContentSpec extends Node {
 
         // If the id isn't null then add the id and checksum
         if (getId() != 0) {
-            output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5("ID = " + id.getValue() + "\n" + output) + "\n" + "ID = "
-                    + id.getValue() + "\n");
+            output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5(
+                    "ID = " + id.getValue() + "\n" + output) + "\n" + "ID = " + id.getValue() + "\n");
         }
         return output.toString();
     }

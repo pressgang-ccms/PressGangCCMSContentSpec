@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.provider;
 
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicSourceURLWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
@@ -21,7 +21,7 @@ public interface TopicProvider {
 
     CollectionWrapper<TagWrapper> getTopicTags(int id, final Integer revision);
 
-    UpdateableCollectionWrapper<PropertyTagWrapper> getTopicProperties(int id, Integer revision);
+    UpdateableCollectionWrapper<PropertyTagInTopicWrapper> getTopicProperties(int id, Integer revision);
 
     CollectionWrapper<TopicWrapper> getTopicOutgoingRelationships(int id, Integer revision);
 

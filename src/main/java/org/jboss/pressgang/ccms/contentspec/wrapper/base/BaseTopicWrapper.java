@@ -1,7 +1,10 @@
-package org.jboss.pressgang.ccms.contentspec.wrapper;
+package org.jboss.pressgang.ccms.contentspec.wrapper.base;
 
 import java.util.List;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TopicSourceURLWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
@@ -49,9 +52,9 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
 
     void setIncomingRelationships(CollectionWrapper<T> incomingTopics);
 
-    UpdateableCollectionWrapper<PropertyTagWrapper> getProperties();
+    UpdateableCollectionWrapper<PropertyTagInTopicWrapper> getProperties();
 
-    void setProperties(UpdateableCollectionWrapper<PropertyTagWrapper> properties);
+    void setProperties(UpdateableCollectionWrapper<PropertyTagInTopicWrapper> properties);
 
     CollectionWrapper<TopicSourceURLWrapper> getSourceURLs();
 
@@ -61,7 +64,7 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
 
     boolean hasTag(final int tagId);
 
-    PropertyTagWrapper getProperty(final int propertyId);
+    PropertyTagInTopicWrapper getProperty(final int propertyId);
 
     String getBugzillaBuildId();
 
@@ -76,6 +79,4 @@ public interface BaseTopicWrapper<T extends BaseTopicWrapper<T>> extends EntityW
     String getXRefId();
 
     String getXRefPropertyOrId(final int propertyId);
-
-    List<TagWrapper> getAuthors();
 }

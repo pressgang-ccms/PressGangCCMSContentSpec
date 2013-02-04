@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
@@ -34,8 +35,6 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> publicanCfg = null;
     private ArrayList<String> text = new ArrayList<String>();
     private KeyValueNode<String> dtd = null;
-    private String createdBy = null;
-    private KeyValueNode<Integer> specRevision = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
     private KeyValueNode<String> description = null;
@@ -46,12 +45,12 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaURL = null;
     private KeyValueNode<Boolean> injectBugLinks = null;
     private KeyValueNode<Boolean> injectSurveyLinks = null;
-    private KeyValueNode<String> locale = null;
     private KeyValueNode<String> outputStyle = null;
     private KeyValueNode<Boolean> allowDuplicateTopics = null;
     private KeyValueNode<Boolean> allowEmptyLevels = null;
     private KeyValueNode<BookType> bookType = null;
     private Integer revision = null;
+    private String locale = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
     private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);
@@ -126,7 +125,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.product == null) {
-            this.product = new KeyValueNode<String>("Product", product);
+            this.product = new KeyValueNode<String>(CSConstants.PRODUCT_TITLE, product);
             nodes.add(this.product);
         } else {
             this.product.setValue(product);
@@ -153,7 +152,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.version == null) {
-            this.version = new KeyValueNode<String>("Version", version);
+            this.version = new KeyValueNode<String>(CSConstants.VERSION_TITLE, version);
             nodes.add(this.version);
         } else {
             this.version.setValue(version);
@@ -180,7 +179,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.brand == null) {
-            this.brand = new KeyValueNode<String>("Brand", brand);
+            this.brand = new KeyValueNode<String>(CSConstants.BRAND_TITLE, brand);
             appendChild(this.brand);
         } else {
             this.brand.setValue(brand);
@@ -194,7 +193,7 @@ public class ContentSpec extends Node {
      */
     public void setId(final int id) {
         if (this.id == null) {
-            this.id = new KeyValueNode<Integer>("ID", id);
+            this.id = new KeyValueNode<Integer>(CSConstants.ID_TITLE, id);
             appendChild(this.id);
             nodes.addFirst(this.id);
             if (this.id.getParent() != null) {
@@ -264,7 +263,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.title == null) {
-            this.title = new KeyValueNode<String>("Title", title);
+            this.title = new KeyValueNode<String>(CSConstants.TITLE_TITLE, title);
             appendChild(this.title);
         } else {
             this.title.setValue(title);
@@ -283,7 +282,7 @@ public class ContentSpec extends Node {
     /**
      * Sets the Subtitle for the Content Specification
      *
-     * @param subtitle
+     * @param subtitle The subtitle for the Content Specification
      */
     public void setSubtitle(final String subtitle) {
         if (subtitle == null) {
@@ -291,7 +290,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.subtitle == null) {
-            this.subtitle = new KeyValueNode<String>("Subtitle", subtitle);
+            this.subtitle = new KeyValueNode<String>(CSConstants.SUBTITLE_TITLE, subtitle);
             appendChild(this.subtitle);
         } else {
             this.subtitle.setValue(subtitle);
@@ -310,7 +309,7 @@ public class ContentSpec extends Node {
     /**
      * Set the BookVersion of the Book the Content Specification represents.
      *
-     * @param edition The Book Edition.
+     * @param bookVersion The Book Version.
      */
     public void setBookVersion(final String bookVersion) {
         if (bookVersion == null) {
@@ -318,10 +317,10 @@ public class ContentSpec extends Node {
         }
 
         if (this.bookVersion == null) {
-            this.bookVersion = new KeyValueNode<String>("Book Version", bookVersion);
+            this.bookVersion = new KeyValueNode<String>(CSConstants.BOOK_VERSION_TITLE, bookVersion);
             appendChild(this.bookVersion);
         } else {
-            this.edition.setValue(bookVersion);
+            this.bookVersion.setValue(bookVersion);
         }
     }
 
@@ -345,7 +344,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.edition == null) {
-            this.edition = new KeyValueNode<String>("Edition", edition);
+            this.edition = new KeyValueNode<String>(CSConstants.EDITION_TITLE, edition);
             appendChild(this.edition);
         } else {
             this.edition.setValue(edition);
@@ -372,7 +371,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.pubsNumber == null) {
-            this.pubsNumber = new KeyValueNode<Integer>("Pubsnumber", pubsNumber);
+            this.pubsNumber = new KeyValueNode<Integer>(CSConstants.PUBSNUMBER_TITLE, pubsNumber);
             appendChild(this.pubsNumber);
         } else {
             this.pubsNumber.setValue(pubsNumber);
@@ -399,7 +398,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.publicanCfg == null) {
-            this.publicanCfg = new KeyValueNode<String>("publican.cfg", publicanCfg);
+            this.publicanCfg = new KeyValueNode<String>(CSConstants.PUBLICAN_CFG_TITLE, publicanCfg);
             appendChild(this.publicanCfg);
         } else {
             this.publicanCfg.setValue(publicanCfg);
@@ -456,54 +455,10 @@ public class ContentSpec extends Node {
         }
 
         if (this.dtd == null) {
-            this.dtd = new KeyValueNode<String>("DTD", dtd);
+            this.dtd = new KeyValueNode<String>(CSConstants.DTD_TITLE, dtd);
             appendChild(this.dtd);
         } else {
             this.dtd.setValue(dtd);
-        }
-    }
-
-    /**
-     * Sets the created by Username for the author who created/uploaded the Content Specification.
-     *
-     * @param username The Username of the User who created/uploaded the Content Specification or null if one doesn't exist.
-     */
-    public void setCreatedBy(final String username) {
-        this.createdBy = username;
-    }
-
-    /**
-     * Get the Username of the user who created/uploaded the Content Specification.
-     *
-     * @return The Username of the Content Specification creator.
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * Gets the SpecRevision number for the Content Specification. This number is used to validate that the Content
-     * Specification hasn't been modified since the last upload.
-     *
-     * @return The SpecRevision number or null if one doesn't exist.
-     */
-    @Deprecated
-    public Integer getSpecRevision() {
-        return (Integer) (specRevision == null ? null : specRevision.getValue());
-    }
-
-    /**
-     * Sets the SpecRevision number for a ContentSpecification.
-     *
-     * @param specRevision The SpecRevision number.
-     */
-    @Deprecated
-    public void setSpecRevision(final int specRevision) {
-        if (this.specRevision == null) {
-            this.specRevision = new KeyValueNode<Integer>("SpecRevision", specRevision);
-            appendChild(this.specRevision);
-        } else {
-            this.specRevision.setValue(specRevision);
         }
     }
 
@@ -531,7 +486,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.checksum == null) {
-            this.checksum = new KeyValueNode<String>("CHECKSUM", checksum);
+            this.checksum = new KeyValueNode<String>(CSConstants.CHECKSUM_TITLE, checksum);
             appendChild(this.checksum);
         } else {
             this.checksum.setValue(checksum);
@@ -558,7 +513,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.description == null) {
-            this.description = new KeyValueNode<String>("Abstract", description);
+            this.description = new KeyValueNode<String>(CSConstants.ABSTRACT_TITLE, description);
             appendChild(this.description);
         } else {
             this.description.setValue(description);
@@ -585,7 +540,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.copyrightHolder == null) {
-            this.copyrightHolder = new KeyValueNode<String>("Copyright Holder", copyrightHolder);
+            this.copyrightHolder = new KeyValueNode<String>(CSConstants.COPYRIGHT_HOLDER_TITLE, copyrightHolder);
             appendChild(this.copyrightHolder);
         } else {
             this.copyrightHolder.setValue(copyrightHolder);
@@ -610,7 +565,7 @@ public class ContentSpec extends Node {
      */
     public void setBookType(final BookType bookType) {
         if (this.bookType == null) {
-            this.bookType = new KeyValueNode<BookType>("Type", bookType);
+            this.bookType = new KeyValueNode<BookType>(CSConstants.BOOK_TYPE_TITLE, bookType);
             appendChild(this.bookType);
         } else {
             this.bookType.setValue(bookType);
@@ -633,7 +588,7 @@ public class ContentSpec extends Node {
      */
     public void setInjectionOptions(final InjectionOptions injectionOptions) {
         if (this.injectionOptions == null) {
-            this.injectionOptions = new KeyValueNode<InjectionOptions>("Inline Injection", injectionOptions);
+            this.injectionOptions = new KeyValueNode<InjectionOptions>(CSConstants.INLINE_INJECTION_TITLE, injectionOptions);
             appendChild(this.injectionOptions);
         } else {
             this.injectionOptions.setValue(injectionOptions);
@@ -664,7 +619,7 @@ public class ContentSpec extends Node {
      * @return The Content Specification locale.
      */
     public String getLocale() {
-        return locale == null ? null : locale.getValue();
+        return locale;
     }
 
     /**
@@ -673,16 +628,7 @@ public class ContentSpec extends Node {
      * @param locale The locale for the content specification
      */
     public void setLocale(final String locale) {
-        if (locale == null) {
-            return;
-        }
-
-        if (this.locale == null) {
-            this.locale = new KeyValueNode<String>("Translation Locale", locale);
-            appendChild(this.locale);
-        } else {
-            this.locale.setValue(locale);
-        }
+        this.locale = locale;
     }
 
     /**
@@ -705,7 +651,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.outputStyle == null) {
-            this.outputStyle = new KeyValueNode<String>("Output Style", outputStyle);
+            this.outputStyle = new KeyValueNode<String>(CSConstants.OUTPUT_STYLE_TITLE, outputStyle);
             appendChild(this.outputStyle);
         } else {
             this.outputStyle.setValue(outputStyle);
@@ -863,7 +809,7 @@ public class ContentSpec extends Node {
      * Adds a Part to the Content Specification. If the Part already has a parent, then it is removed from that parent and added
      * to this level.
      *
-     * @param chapter The Chapter to be removed from the Content Specification.
+     * @param part The Part to be added to the Content Specification.
      */
     public void appendPart(final Part part) {
         level.appendChild(part);
@@ -913,11 +859,7 @@ public class ContentSpec extends Node {
      * @param comment The comment node to be appended to the Content Specification.
      */
     public void appendComment(final Comment comment) {
-        nodes.add(comment);
-        if (comment.getParent() != null) {
-            comment.removeParent();
-        }
-        comment.setParent(this);
+        appendChild(comment);
     }
 
     /**
@@ -935,8 +877,7 @@ public class ContentSpec extends Node {
      * @param comment The Comment node to be removed.
      */
     public void removeComment(final Comment comment) {
-        nodes.remove(comment);
-        comment.removeParent();
+        removeChild(comment);
     }
 
     // End of the basic getter/setter methods for this ContentSpec.
@@ -947,7 +888,7 @@ public class ContentSpec extends Node {
      * @param line The Line to be added.
      */
     public void appendPreProcessedLine(final String line) {
-        this.text.add(line);
+        text.add(line);
     }
 
     /**
@@ -963,7 +904,7 @@ public class ContentSpec extends Node {
     }
 
     public List<SpecTopic> getSpecTopics() {
-        return getLevelSpecTopics(level);
+        return getLevelSpecTopics(getBaseLevel());
     }
 
     private List<SpecTopic> getLevelSpecTopics(final Level level) {
@@ -997,7 +938,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.bugzillaProduct == null) {
-            this.bugzillaProduct = new KeyValueNode<String>("BZProduct", bugzillaProduct);
+            this.bugzillaProduct = new KeyValueNode<String>(CSConstants.BUGZILLA_PRODUCT_TITLE, bugzillaProduct);
             appendChild(this.bugzillaProduct);
         } else {
             this.bugzillaProduct.setValue(bugzillaProduct);
@@ -1014,7 +955,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.bugzillaComponent == null) {
-            this.bugzillaComponent = new KeyValueNode<String>("BZComponent", bugzillaComponent);
+            this.bugzillaComponent = new KeyValueNode<String>(CSConstants.BUGZILLA_COMPONENT_TITLE, bugzillaComponent);
             appendChild(this.bugzillaComponent);
         } else {
             this.bugzillaComponent.setValue(bugzillaComponent);
@@ -1041,7 +982,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.bugzillaVersion == null) {
-            this.bugzillaVersion = new KeyValueNode<String>("BZVersion", bugzillaVersion);
+            this.bugzillaVersion = new KeyValueNode<String>(CSConstants.BUGZILLA_VERSION_TITLE, bugzillaVersion);
             appendChild(this.bugzillaVersion);
         } else {
             this.bugzillaVersion.setValue(bugzillaVersion);
@@ -1068,7 +1009,7 @@ public class ContentSpec extends Node {
         }
 
         if (this.bugzillaURL == null) {
-            this.bugzillaURL = new KeyValueNode<String>("BZURL", bugzillaURL);
+            this.bugzillaURL = new KeyValueNode<String>(CSConstants.BUGZILLA_URL_TITLE, bugzillaURL);
             appendChild(this.bugzillaURL);
         } else {
             this.bugzillaURL.setValue(bugzillaURL);
@@ -1081,7 +1022,7 @@ public class ContentSpec extends Node {
 
     public void setInjectBugLinks(boolean injectBugLinks) {
         if (this.injectBugLinks == null) {
-            this.injectBugLinks = new KeyValueNode<Boolean>("Bug Links", injectBugLinks);
+            this.injectBugLinks = new KeyValueNode<Boolean>(CSConstants.BUG_LINKS_TITLE, injectBugLinks);
             appendChild(this.injectBugLinks);
         } else {
             this.injectBugLinks.setValue(injectBugLinks);
@@ -1094,7 +1035,7 @@ public class ContentSpec extends Node {
 
     public void setInjectSurveyLinks(boolean injectSurveyLinks) {
         if (this.injectSurveyLinks == null) {
-            this.injectSurveyLinks = new KeyValueNode<Boolean>("Survey Links", injectSurveyLinks);
+            this.injectSurveyLinks = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, injectSurveyLinks);
             appendChild(this.injectSurveyLinks);
         } else {
             this.injectSurveyLinks.setValue(injectSurveyLinks);
@@ -1112,10 +1053,10 @@ public class ContentSpec extends Node {
     }
 
     /**
-     * Adds a Child Level to the Level. If the Child Level already has a parent, then it is removed from that parent and added
-     * to this level.
+     * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
+     * to this content spec.
      *
-     * @param childLevel A Child Level to be added to the Level.
+     * @param child A Child Node to be added to the ContentSpec.
      */
     public void appendChild(final Node child) {
         nodes.add(child);
@@ -1136,6 +1077,74 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Appends a KeyValueNode to the content specification. This method will also set the appropriate getter/setter for all metadata
+     * values.
+     *
+     * @param node The KeyValue node to be added.
+     * @throws NumberFormatException Throw if the node needs an Integer but the value is not a valid Number string.
+     */
+    public void appendKeyValueNode(final KeyValueNode<String> node) throws NumberFormatException {
+        final String uppercaseKey = node.getKey().toUpperCase(Locale.ENGLISH);
+        if (uppercaseKey.equals(CSConstants.TITLE_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setTitle(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.ID_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setId(Integer.parseInt(node.getValue()));
+        } else if (uppercaseKey.equals(CSConstants.CHECKSUM_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setChecksum(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.PRODUCT_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setProduct(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.VERSION_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setVersion(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BOOK_TYPE_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBookType(BookType.getBookType(node.getValue()));
+        } else if (uppercaseKey.equals(CSConstants.EDITION_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setEdition(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BOOK_VERSION_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBookVersion(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH))) {
+            if (node.getValue().toUpperCase(Locale.ENGLISH).equals("ON")) {
+                setInjectBugLinks(true);
+            } else {
+                setInjectBugLinks(Boolean.parseBoolean(node.getValue()));
+            }
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_COMPONENT_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBugzillaComponent(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_PRODUCT_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBugzillaProduct(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_VERSION_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBugzillaVersion(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_URL_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBugzillaURL(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.INLINE_INJECTION_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setInjectionOptions(new InjectionOptions(node.getValue()));
+        } else if (uppercaseKey.equals(CSConstants.DTD_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setDtd(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.OUTPUT_STYLE_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setOutputStyle(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.PUBSNUMBER_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setPubsNumber(Integer.parseInt(node.getValue()));
+        } else if (uppercaseKey.equals(CSConstants.PUBLICAN_CFG_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setPublicanCfg(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.SURVEY_LINK_TITLE.toUpperCase(Locale.ENGLISH))) {
+            if (node.getValue().toUpperCase(Locale.ENGLISH).equals("ON")) {
+                setInjectSurveyLinks(true);
+            } else {
+                setInjectSurveyLinks(Boolean.parseBoolean(node.getValue()));
+            }
+        } else if (uppercaseKey.equals(CSConstants.BRAND_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setBrand(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.ABSTRACT_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setAbstract(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.COPYRIGHT_HOLDER_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setCopyrightHolder(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.SUBTITLE_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setSubtitle(node.getValue());
+        } else {
+            appendChild(node);
+        }
+    }
+
+    /**
      * Returns a String representation of the Content Specification.
      */
     @SuppressWarnings("rawtypes")
@@ -1145,8 +1154,8 @@ public class ContentSpec extends Node {
         for (final Node node : nodes) {
             if (node instanceof KeyValueNode) {
                 final KeyValueNode keyValueNode = (KeyValueNode) node;
-                if (!keyValueNode.getKey().equals("CHECKSUM") && !keyValueNode.getKey().equals("ID") && !keyValueNode.getKey().equals(
-                        "SpecRevison") && !keyValueNode.getKey().equals("Pubsnumber")) {
+                if (!keyValueNode.getKey().equals(CSConstants.CHECKSUM_TITLE) && !keyValueNode.getKey().equals(CSConstants.ID_TITLE) &&
+                        !keyValueNode.getKey().equals(CSConstants.PUBSNUMBER_TITLE)) {
                     output.append(node.toString());
                 }
             } else {
@@ -1165,8 +1174,9 @@ public class ContentSpec extends Node {
 
         // If the id isn't null then add the id and checksum
         if (getId() != 0) {
-            output.insert(0, "CHECKSUM=" + HashUtilities.generateMD5(
-                    "ID = " + id.getValue() + "\n" + output) + "\n" + "ID = " + id.getValue() + "\n");
+            output.insert(0, CSConstants.CHECKSUM_TITLE + "=" + HashUtilities.generateMD5(
+                    CSConstants.ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CSConstants.ID_TITLE + " = " + id.getValue() +
+                    "\n");
         }
         return output.toString();
     }
@@ -1178,6 +1188,6 @@ public class ContentSpec extends Node {
 
     @Override
     protected void removeParent() {
-
+        return;
     }
 }

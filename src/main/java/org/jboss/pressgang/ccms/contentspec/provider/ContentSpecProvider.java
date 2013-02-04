@@ -24,4 +24,8 @@ public interface ContentSpecProvider {
     CollectionWrapper<CSNodeWrapper> getContentSpecNodes(int id, Integer revision);
 
     CollectionWrapper<ContentSpecWrapper> getContentSpecRevisions(int id, Integer revision);
+
+    String getContentSpecAsString(int id);
+
+    String getContentSpecAsString(int id, Integer revision);
 }

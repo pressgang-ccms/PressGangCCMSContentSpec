@@ -52,7 +52,7 @@ public abstract class DataProviderFactory {
             final Constructor<? extends DataProviderFactory> dataProviderConstructor = dataProviderClass.getConstructor(
                     argClasses.toArray(new Class<?>[argClasses.size()]));
 
-            factory = (DataProviderFactory) dataProviderConstructor.newInstance(args);
+            factory = dataProviderConstructor.newInstance(args);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

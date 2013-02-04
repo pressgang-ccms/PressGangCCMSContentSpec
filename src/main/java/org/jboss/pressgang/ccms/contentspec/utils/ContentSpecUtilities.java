@@ -1,13 +1,17 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.code.regexp.NamedMatcher;
+import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
 import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
@@ -17,31 +21,59 @@ import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 
 
 public class ContentSpecUtilities {
+    public static NamedPattern CS_CHECKSUM_PATTERN = NamedPattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)");
     private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(
             new String[]{"Title", "Product", "Subtitle", "Abstract", "Copyright Holder", "Version", "Edition"});
+
+    /**
+     * Get the checksum of a Content Specification object.
+     *
+     * @param contentSpec The content spec object to calculate the checksum for.
+     * @return The MD5 hash representing the content spec contents.
+     */
+    public static String getContentSpecChecksum(final ContentSpec contentSpec) {
+        final String contentSpecString = contentSpec.toString();
+        return getContentSpecChecksum(contentSpecString);
+    }
+
+    /**
+     * Get the checksum of a Content Specification object.
+     *
+     * @param contentSpec The content spec string to calculate the checksum for.
+     * @return The MD5 hash representing the content spec contents.
+     */
+    public static String getContentSpecChecksum(final String contentSpecString) {
+        final NamedMatcher matcher = CS_CHECKSUM_PATTERN.matcher(contentSpecString);
+        if (matcher.find()) {
+            return matcher.group("Checksum");
+        }
+
+        return null;
+    }
 
     /**
      * Generates a random target it in the form of T<Line Number>0<Random Number><count>.
      * I.e. The topic is on line 50 and the target to be created for is topic 4 in a process, the
      * output would be T500494
      *
-     * @param count The count of topics in the process.
+     * @param uniqueId The unique id for a topic.
+     * @param count    The count of topics in the process.
      * @return The partially random target id.
      */
-    public static String generateRandomTargetId(final int line, final int count) {
-        return generateRandomTargetId(line) + count;
+    public static String generateRandomTargetId(final String uniqueId, final int count) {
+        return generateRandomTargetId(uniqueId) + count;
     }
 
     /**
-     * Generates a random target it in the form of T<Line Number>0<Random Number>.
+     * Generates a random target it in the form of T-<UniqueId>0<Random Number>.
      * The random number is between 0-49.
      *
-     * @param line The line number the topic is on.
+     * @param uniqueId The unique id for a topic.
      * @return The partially random target id.
      */
-    public static String generateRandomTargetId(final int line) {
+    public static String generateRandomTargetId(final String uniqueId) {
         int randomNum = (int) (Math.random() * 50);
-        return "T" + line + "0" + randomNum;
+        return "T-" + uniqueId + "0" + randomNum;
     }
 
     public static List<StringToCSNodeCollection> getTranslatableStrings(final ContentSpec contentSpec, final boolean allowDuplicates) {
@@ -183,90 +215,100 @@ public class ContentSpecUtilities {
         return results;
     }
 
+    public static Map<String, SpecTopic> getUniqueIdSpecTopicMap(ContentSpec contentSpec) {
+        // Create the map of unique ids to spec topics
+        final Map<String, SpecTopic> specTopicMap = new HashMap<String, SpecTopic>();
+        final List<SpecTopic> specTopics = contentSpec.getSpecTopics();
+        for (final SpecTopic specTopic : specTopics) {
+            specTopicMap.put(specTopic.getUniqueId(), specTopic);
+        }
+        return specTopicMap;
+    }
+
     /*
      * Get the Pre Processed Content Specification for a ID and Revision
      */
-    /*public static TopicWrapper getPreContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
-        final TopicWrapper cs = topicProvider.getTopic(id, revision);
-
-        // Check if the latest is a pre content spec
-        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
-                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
-            return cs;
-        }
-
-        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
-
-        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
-
-        // Create a sorted set of revision ids that are less the the current revision
-        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
-        for (final Object[] specRev : specRevisions) {
-            if ((Integer) specRev[0] <= cs.getRevision()) {
-                sortedSpecRevisions.add((Integer) specRev[0]);
-            }
-        }
-
-        // Find the Pre Content Spec from the revisions
-        TopicWrapper preContentSpec = null;
-        if (sortedSpecRevisions.size() > 0) {
-            Integer specRev = sortedSpecRevisions.last();
-            while (specRev != null) {
-                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
-                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
-                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
-                    preContentSpec = contentSpecRev;
-                    break;
-                }
-                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
-            }
-        }
-
-        return preContentSpec;
-    }*/
+//    public static TopicWrapper getPreContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
+//        final TopicWrapper cs = topicProvider.getTopic(id, revision);
+//
+//        // Check if the latest is a pre content spec
+//        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
+//                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
+//            return cs;
+//        }
+//
+//        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
+//
+//        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
+//
+//        // Create a sorted set of revision ids that are less the the current revision
+//        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
+//        for (final Object[] specRev : specRevisions) {
+//            if ((Integer) specRev[0] <= cs.getRevision()) {
+//                sortedSpecRevisions.add((Integer) specRev[0]);
+//            }
+//        }
+//
+//        // Find the Pre Content Spec from the revisions
+//        TopicWrapper preContentSpec = null;
+//        if (sortedSpecRevisions.size() > 0) {
+//            Integer specRev = sortedSpecRevisions.last();
+//            while (specRev != null) {
+//                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
+//                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
+//                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
+//                    preContentSpec = contentSpecRev;
+//                    break;
+//                }
+//                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+//            }
+//        }
+//
+//        return preContentSpec;
+//    }
 
     /*
      * Get the Post Processed Content Specification for a ID and Revision
      */
-    /*public static TopicWrapper getPostContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
-        final TopicWrapper cs = topicProvider.getTopic(id, revision);
-
-        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
-                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
-                getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
-            return cs;
-        }
-
-        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
-
-        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
-
-        // Create a sorted set of revision ids that are less the the current revision
-        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
-        for (final Object[] specRev : specRevisions) {
-            if ((Integer) specRev[0] <= cs.getRevision()) {
-                sortedSpecRevisions.add((Integer) specRev[0]);
-            }
-        }
-
-        // Find the Post Content Spec from the revisions
-        TopicWrapper postContentSpec = null;
-        if (sortedSpecRevisions.size() > 0) {
-            Integer specRev = sortedSpecRevisions.last();
-            while (specRev != null) {
-                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
-                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
-                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
-                        getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
-                    postContentSpec = contentSpecRev;
-                    break;
-                }
-                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
-            }
-        }
-
-        return postContentSpec;
-    }*/
+//    public static TopicWrapper getPostContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
+//        final TopicWrapper cs = topicProvider.getTopic(id, revision);
+//
+//        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
+//                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
+//                getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
+//            return cs;
+//        }
+//
+//        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
+//
+//        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
+//
+//        // Create a sorted set of revision ids that are less the the current revision
+//        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
+//        for (final Object[] specRev : specRevisions) {
+//            if ((Integer) specRev[0] <= cs.getRevision()) {
+//                sortedSpecRevisions.add((Integer) specRev[0]);
+//            }
+//        }
+//
+//        // Find the Post Content Spec from the revisions
+//        TopicWrapper postContentSpec = null;
+//        if (sortedSpecRevisions.size() > 0) {
+//            Integer specRev = sortedSpecRevisions.last();
+//            while (specRev != null) {
+//                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
+//                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
+//                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
+//                        getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
+//                    postContentSpec = contentSpecRev;
+//                    break;
+//                }
+//                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
+//            }
+//        }
+//
+//        return postContentSpec;
+//    }
 }
 
 /**
@@ -287,9 +329,10 @@ class ZanataStringDetails {
      */
     private final String fixedString;
 
-    ZanataStringDetails(final Map<String, String> translations, final String originalString) {        /*
+    ZanataStringDetails(final Map<String, String> translations, final String originalString) {
+        /*
          * Here we account for any trimming that is done by Zanata.
-		 */
+         */
         final String lTrimtString = StringUtilities.ltrim(originalString);
         final String rTrimString = StringUtilities.rtrim(originalString);
         final String trimString = originalString.trim();
@@ -299,7 +342,7 @@ class ZanataStringDetails {
         final boolean rTrimMatch = translations.containsKey(rTrimString);
         final boolean trimMatch = translations.containsKey(trimString);
 
-		/* remember the details of the trimming, so we can add the padding back */
+        /* remember the details of the trimming, so we can add the padding back */
         if (containsExactMacth) {
             this.leftTrimCount = 0;
             this.rightTrimCount = 0;

@@ -2,7 +2,9 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
@@ -236,5 +238,26 @@ public class EntityUtilities {
             }
         }
         return results;
+    }
+
+    /**
+     * Converts a list of tags into a mapping of categories to tags. The key is the Category and the value is a List
+     * of Tags for that category.
+     *
+     * @param tags The List of tags to be converted.
+     * @return The mapping of Categories to Tags.
+     */
+    public static Map<CategoryInTagWrapper, List<TagWrapper>> getCategoryMappingFromTagList(final List<TagWrapper> tags) {
+        final HashMap<CategoryInTagWrapper, List<TagWrapper>> mapping = new HashMap<CategoryInTagWrapper, List<TagWrapper>>();
+        for (final TagWrapper tag : tags) {
+            final List<CategoryInTagWrapper> catList = tag.getCategories().getItems();
+            if (catList != null) {
+                for (final CategoryInTagWrapper cat : catList) {
+                    if (!mapping.containsKey(cat)) mapping.put(cat, new ArrayList<TagWrapper>());
+                    mapping.get(cat).add(tag);
+                }
+            }
+        }
+        return mapping;
     }
 }

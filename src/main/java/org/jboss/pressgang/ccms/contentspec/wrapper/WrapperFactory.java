@@ -136,6 +136,7 @@ public abstract class WrapperFactory {
      * @param <T>            The wrapper class that is returned.
      * @return An ArrayList of wrapped entities.
      */
+    @SuppressWarnings("unchecked")
     public <T extends EntityWrapper<T>> List<T> createList(final Collection<?> entities, boolean isRevisionList) {
         final List<T> retValue = new ArrayList<T>();
         for (final Object object : entities) {

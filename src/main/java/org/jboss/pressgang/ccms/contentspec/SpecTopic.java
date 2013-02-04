@@ -25,7 +25,7 @@ import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {
     private String id;
-    private String uniqueParserId;
+    private String uniqueId;
     private int DBId = 0;
     private String type;
     private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
@@ -130,12 +130,12 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Set the Unique ID for the Content Specification Topic.
+     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
      *
-     * @param id The Content Specification Topic ID.
+     * @param uniqueId The Content Specification Topic ID.
      */
     public void setUniqueId(final String uniqueId) {
-        this.uniqueParserId = uniqueId;
+        this.uniqueId = uniqueId == null ? null : uniqueId.replaceAll("[^\\w\\d\\-]", "");
     }
 
     /**
@@ -144,7 +144,7 @@ public class SpecTopic extends SpecNode {
      * @return The Unique CS Topic ID.
      */
     public String getUniqueId() {
-        return uniqueParserId;
+        return uniqueId;
     }
 
     /**
@@ -669,7 +669,7 @@ public class SpecTopic extends SpecNode {
     @Override
     public String getText() {
         final StringBuilder output = new StringBuilder();
-        if (this.isTopicANewTopic()) {
+        if (isTopicANewTopic()) {
             final String options = getOptionsString();
             output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
         } else {
@@ -678,7 +678,7 @@ public class SpecTopic extends SpecNode {
                     "") ? "" : (", " + options)) + "]");
         }
 
-        if (targetId != null && !((parent instanceof Process) && targetId.matches("^T" + this.getLineNumber() + "0[0-9]+$"))) {
+        if (targetId != null && !((parent instanceof Process) && targetId.matches("^T-" + getUniqueId() + "0[0-9]+$"))) {
             output.append(" [" + targetId + "]");
         }
 
@@ -705,9 +705,18 @@ public class SpecTopic extends SpecNode {
         return text;
     }
 
-    private String generateRelationshipText(final RelationshipType relationshipType, boolean shortSyntax, final String spacer) {
+    /**
+     * Creates the relationship text to be added to a topic's text.
+     *
+     * @param relationshipType The type of relationship to generate the text for.
+     * @param shortSyntax      If the short relationship syntax should be used.
+     * @param spacer           The spacer that should be added to the start of every new line.
+     * @return The generated relationship text.
+     */
+    protected String generateRelationshipText(final RelationshipType relationshipType, boolean shortSyntax, final String spacer) {
         final StringBuilder retValue;
         final List<Relationship> relationships;
+        // Create the relationship heading
         if (relationshipType == RelationshipType.REFER_TO) {
             if (shortSyntax) {
                 retValue = new StringBuilder(" [R: ");
@@ -734,6 +743,7 @@ public class SpecTopic extends SpecNode {
                     "relationship type.");
         }
 
+        // Create the list of relationships
         if (shortSyntax) {
             final List<String> relatedIds = new ArrayList<String>();
             for (final Relationship related : relationships) {

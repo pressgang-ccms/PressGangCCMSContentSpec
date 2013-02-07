@@ -120,11 +120,12 @@ public class ContentSpec extends Node {
      * @param product The name of the Product.
      */
     public void setProduct(final String product) {
-        if (product == null) {
+        if (product == null && this.product == null) {
             return;
-        }
-
-        if (this.product == null) {
+        } else if (product == null) {
+            removeChild(this.product);
+            this.product = null;
+        } else if (this.product == null) {
             this.product = new KeyValueNode<String>(CSConstants.PRODUCT_TITLE, product);
             nodes.add(this.product);
         } else {
@@ -147,11 +148,12 @@ public class ContentSpec extends Node {
      * @param version The product version.
      */
     public void setVersion(final String version) {
-        if (version == null) {
+        if (version == null && this.version == null) {
             return;
-        }
-
-        if (this.version == null) {
+        } else if (version == null) {
+            removeChild(this.version);
+            this.version = null;
+        } else if (this.version == null) {
             this.version = new KeyValueNode<String>(CSConstants.VERSION_TITLE, version);
             nodes.add(this.version);
         } else {
@@ -174,11 +176,12 @@ public class ContentSpec extends Node {
      * @param brand The brand of the product.
      */
     public void setBrand(final String brand) {
-        if (brand == null) {
+        if (brand == null && this.brand == null) {
             return;
-        }
-
-        if (this.brand == null) {
+        } else if (brand == null) {
+            removeChild(this.brand);
+            this.brand = null;
+        } else if (this.brand == null) {
             this.brand = new KeyValueNode<String>(CSConstants.BRAND_TITLE, brand);
             appendChild(this.brand);
         } else {
@@ -191,10 +194,14 @@ public class ContentSpec extends Node {
      *
      * @param id The database ID of the content specification.
      */
-    public void setId(final int id) {
-        if (this.id == null) {
+    public void setId(final Integer id) {
+        if (id == null && this.id == null) {
+            return;
+        } else if (id == null) {
+            removeChild(this.id);
+            this.id = null;
+        } else if (this.id == null) {
             this.id = new KeyValueNode<Integer>(CSConstants.ID_TITLE, id);
-            appendChild(this.id);
             nodes.addFirst(this.id);
             if (this.id.getParent() != null) {
                 this.id.removeParent();
@@ -258,11 +265,12 @@ public class ContentSpec extends Node {
      * @param title The title for the content specification
      */
     public void setTitle(final String title) {
-        if (title == null) {
+        if (title == null && this.title == null) {
             return;
-        }
-
-        if (this.title == null) {
+        } else if (title == null) {
+            removeChild(this.title);
+            this.title = null;
+        } else if (this.title == null) {
             this.title = new KeyValueNode<String>(CSConstants.TITLE_TITLE, title);
             appendChild(this.title);
         } else {
@@ -285,11 +293,12 @@ public class ContentSpec extends Node {
      * @param subtitle The subtitle for the Content Specification
      */
     public void setSubtitle(final String subtitle) {
-        if (subtitle == null) {
+        if (subtitle == null && this.subtitle == null) {
             return;
-        }
-
-        if (this.subtitle == null) {
+        } else if (subtitle == null) {
+            removeChild(this.subtitle);
+            this.subtitle = null;
+        } else if (this.subtitle == null) {
             this.subtitle = new KeyValueNode<String>(CSConstants.SUBTITLE_TITLE, subtitle);
             appendChild(this.subtitle);
         } else {
@@ -312,11 +321,12 @@ public class ContentSpec extends Node {
      * @param bookVersion The Book Version.
      */
     public void setBookVersion(final String bookVersion) {
-        if (bookVersion == null) {
+        if (bookVersion == null && this.bookVersion == null) {
             return;
-        }
-
-        if (this.bookVersion == null) {
+        } else if (bookVersion == null) {
+            removeChild(this.bookVersion);
+            this.bookVersion = null;
+        } else if (this.bookVersion == null) {
             this.bookVersion = new KeyValueNode<String>(CSConstants.BOOK_VERSION_TITLE, bookVersion);
             appendChild(this.bookVersion);
         } else {
@@ -339,11 +349,12 @@ public class ContentSpec extends Node {
      * @param edition The Book Edition.
      */
     public void setEdition(final String edition) {
-        if (edition == null) {
+        if (edition == null && this.edition == null) {
             return;
-        }
-
-        if (this.edition == null) {
+        } else if (edition == null) {
+            removeChild(this.edition);
+            this.edition = null;
+        } else if (this.edition == null) {
             this.edition = new KeyValueNode<String>(CSConstants.EDITION_TITLE, edition);
             appendChild(this.edition);
         } else {
@@ -366,11 +377,12 @@ public class ContentSpec extends Node {
      * @param pubsNumber The publication number.
      */
     public void setPubsNumber(final Integer pubsNumber) {
-        if (pubsNumber == null) {
+        if (pubsNumber == null && this.pubsNumber == null) {
             return;
-        }
-
-        if (this.pubsNumber == null) {
+        } else if (pubsNumber == null) {
+            removeChild(this.pubsNumber);
+            this.pubsNumber = null;
+        } else if (this.pubsNumber == null) {
             this.pubsNumber = new KeyValueNode<Integer>(CSConstants.PUBSNUMBER_TITLE, pubsNumber);
             appendChild(this.pubsNumber);
         } else {
@@ -393,11 +405,12 @@ public class ContentSpec extends Node {
      * @param publicanCfg The data to be appended.
      */
     public void setPublicanCfg(final String publicanCfg) {
-        if (publicanCfg == null) {
+        if (publicanCfg == null && this.publicanCfg == null) {
             return;
-        }
-
-        if (this.publicanCfg == null) {
+        } else if (publicanCfg == null) {
+            removeChild(this.publicanCfg);
+            this.publicanCfg = null;
+        } else if (this.publicanCfg == null) {
             this.publicanCfg = new KeyValueNode<String>(CSConstants.PUBLICAN_CFG_TITLE, publicanCfg);
             appendChild(this.publicanCfg);
         } else {
@@ -450,11 +463,12 @@ public class ContentSpec extends Node {
      * @param dtd The DTD of the Content Specification.
      */
     public void setDtd(final String dtd) {
-        if (dtd == null) {
+        if (dtd == null && this.dtd == null) {
             return;
-        }
-
-        if (this.dtd == null) {
+        } else if (dtd == null) {
+            removeChild(this.dtd);
+            this.dtd = null;
+        } else if (this.dtd == null) {
             this.dtd = new KeyValueNode<String>(CSConstants.DTD_TITLE, dtd);
             appendChild(this.dtd);
         } else {
@@ -481,11 +495,12 @@ public class ContentSpec extends Node {
      * @param checksum The Checksum of the Content Specification.
      */
     public void setChecksum(final String checksum) {
-        if (checksum == null) {
+        if (checksum == null && this.checksum == null) {
             return;
-        }
-
-        if (this.checksum == null) {
+        } else if (checksum == null) {
+            removeChild(this.checksum);
+            this.checksum = null;
+        } else if (this.checksum == null) {
             this.checksum = new KeyValueNode<String>(CSConstants.CHECKSUM_TITLE, checksum);
             appendChild(this.checksum);
         } else {
@@ -508,11 +523,12 @@ public class ContentSpec extends Node {
      * @param description The Abstract for the Content Specifications book.
      */
     public void setAbstract(final String description) {
-        if (description == null) {
+        if (description == null && this.description == null) {
             return;
-        }
-
-        if (this.description == null) {
+        } else if (description == null) {
+            removeChild(this.description);
+            this.description = null;
+        } else if (this.description == null) {
             this.description = new KeyValueNode<String>(CSConstants.ABSTRACT_TITLE, description);
             appendChild(this.description);
         } else {
@@ -535,11 +551,12 @@ public class ContentSpec extends Node {
      * @param copyrightHolder The name of the Copyright Holder.
      */
     public void setCopyrightHolder(final String copyrightHolder) {
-        if (copyrightHolder == null) {
+        if (copyrightHolder == null && this.copyrightHolder == null) {
             return;
-        }
-
-        if (this.copyrightHolder == null) {
+        } else if (copyrightHolder == null) {
+            removeChild(this.copyrightHolder);
+            this.copyrightHolder = null;
+        } else if (this.copyrightHolder == null) {
             this.copyrightHolder = new KeyValueNode<String>(CSConstants.COPYRIGHT_HOLDER_TITLE, copyrightHolder);
             appendChild(this.copyrightHolder);
         } else {
@@ -564,7 +581,12 @@ public class ContentSpec extends Node {
      * @param bookType The type the book should be built as.
      */
     public void setBookType(final BookType bookType) {
-        if (this.bookType == null) {
+        if (bookType == null && this.bookType == null) {
+            return;
+        } else if (bookType == null) {
+            removeChild(this.bookType);
+            this.bookType = null;
+        } else if (this.bookType == null) {
             this.bookType = new KeyValueNode<BookType>(CSConstants.BOOK_TYPE_TITLE, bookType);
             appendChild(this.bookType);
         } else {
@@ -587,7 +609,12 @@ public class ContentSpec extends Node {
      * @param injectionOptions The InjectionOptions to be used when building a book.
      */
     public void setInjectionOptions(final InjectionOptions injectionOptions) {
-        if (this.injectionOptions == null) {
+        if (injectionOptions == null && this.injectionOptions == null) {
+            return;
+        } else if (injectionOptions == null) {
+            removeChild(this.injectionOptions);
+            this.injectionOptions = null;
+        } else if (this.injectionOptions == null) {
             this.injectionOptions = new KeyValueNode<InjectionOptions>(CSConstants.INLINE_INJECTION_TITLE, injectionOptions);
             appendChild(this.injectionOptions);
         } else {
@@ -646,11 +673,12 @@ public class ContentSpec extends Node {
      * @param outputStyle The output style for the content specification
      */
     public void setOutputStyle(final String outputStyle) {
-        if (outputStyle == null) {
+        if (outputStyle == null && this.outputStyle == null) {
             return;
-        }
-
-        if (this.outputStyle == null) {
+        } else if (outputStyle == null) {
+            removeChild(this.outputStyle);
+            this.outputStyle = null;
+        } else if (this.outputStyle == null) {
             this.outputStyle = new KeyValueNode<String>(CSConstants.OUTPUT_STYLE_TITLE, outputStyle);
             appendChild(this.outputStyle);
         } else {
@@ -735,7 +763,12 @@ public class ContentSpec extends Node {
     }
 
     public void setAllowDuplicateTopics(final Boolean allowDuplicateTopics) {
-        if (this.allowDuplicateTopics == null) {
+        if (allowDuplicateTopics == null && this.allowDuplicateTopics == null) {
+            return;
+        } else if (allowDuplicateTopics == null) {
+            removeChild(this.allowDuplicateTopics);
+            this.allowDuplicateTopics = null;
+        } else if (this.allowDuplicateTopics == null) {
             this.allowDuplicateTopics = new KeyValueNode<Boolean>("Duplicate Topics", allowDuplicateTopics);
             appendChild(this.allowDuplicateTopics);
         } else {
@@ -748,7 +781,12 @@ public class ContentSpec extends Node {
     }
 
     public void setAllowEmptyLevels(final Boolean allowEmptyLevels) {
-        if (this.allowEmptyLevels == null) {
+        if (allowEmptyLevels == null && this.allowEmptyLevels == null) {
+            return;
+        } else if (allowEmptyLevels == null) {
+            removeChild(this.allowEmptyLevels);
+            this.allowEmptyLevels = null;
+        } else if (this.allowEmptyLevels == null) {
             this.allowEmptyLevels = new KeyValueNode<Boolean>("Allow Empty Levels", allowEmptyLevels);
             appendChild(this.allowEmptyLevels);
         } else {
@@ -933,11 +971,12 @@ public class ContentSpec extends Node {
     }
 
     public void setBugzillaProduct(final String bugzillaProduct) {
-        if (bugzillaProduct == null) {
+        if (bugzillaProduct == null && this.bugzillaProduct == null) {
             return;
-        }
-
-        if (this.bugzillaProduct == null) {
+        } else if (bugzillaProduct == null) {
+            removeChild(this.bugzillaProduct);
+            this.bugzillaProduct = null;
+        } else if (this.bugzillaProduct == null) {
             this.bugzillaProduct = new KeyValueNode<String>(CSConstants.BUGZILLA_PRODUCT_TITLE, bugzillaProduct);
             appendChild(this.bugzillaProduct);
         } else {
@@ -950,11 +989,12 @@ public class ContentSpec extends Node {
     }
 
     public void setBugzillaComponent(final String bugzillaComponent) {
-        if (bugzillaComponent == null) {
+        if (bugzillaComponent == null && this.bugzillaComponent == null) {
             return;
-        }
-
-        if (this.bugzillaComponent == null) {
+        } else if (bugzillaComponent == null) {
+            removeChild(this.bugzillaComponent);
+            this.bugzillaComponent = null;
+        } else if (this.bugzillaComponent == null) {
             this.bugzillaComponent = new KeyValueNode<String>(CSConstants.BUGZILLA_COMPONENT_TITLE, bugzillaComponent);
             appendChild(this.bugzillaComponent);
         } else {
@@ -977,11 +1017,12 @@ public class ContentSpec extends Node {
      * @param bugzillaVersion The version of the product in bugzilla.
      */
     public void setBugzillaVersion(final String bugzillaVersion) {
-        if (bugzillaVersion == null) {
+        if (bugzillaVersion == null && this.bugzillaVersion == null) {
             return;
-        }
-
-        if (this.bugzillaVersion == null) {
+        } else if (bugzillaVersion == null) {
+            removeChild(this.bugzillaVersion);
+            this.bugzillaVersion = null;
+        } else if (this.bugzillaVersion == null) {
             this.bugzillaVersion = new KeyValueNode<String>(CSConstants.BUGZILLA_VERSION_TITLE, bugzillaVersion);
             appendChild(this.bugzillaVersion);
         } else {
@@ -1004,11 +1045,12 @@ public class ContentSpec extends Node {
      * @param bugzillaURL The BZURL component to be used when building.
      */
     public void setBugzillaURL(final String bugzillaURL) {
-        if (bugzillaURL == null) {
+        if (bugzillaURL == null && this.bugzillaURL == null) {
             return;
-        }
-
-        if (this.bugzillaURL == null) {
+        } else if (bugzillaURL == null) {
+            removeChild(this.bugzillaURL);
+            this.bugzillaURL = null;
+        } else if (this.bugzillaURL == null) {
             this.bugzillaURL = new KeyValueNode<String>(CSConstants.BUGZILLA_URL_TITLE, bugzillaURL);
             appendChild(this.bugzillaURL);
         } else {
@@ -1020,8 +1062,13 @@ public class ContentSpec extends Node {
         return (Boolean) (injectBugLinks == null ? true : injectBugLinks.getValue());
     }
 
-    public void setInjectBugLinks(boolean injectBugLinks) {
-        if (this.injectBugLinks == null) {
+    public void setInjectBugLinks(final Boolean injectBugLinks) {
+        if (injectBugLinks == null && this.injectBugLinks == null) {
+            return;
+        } else if (injectBugLinks == null) {
+            removeChild(this.injectBugLinks);
+            this.injectBugLinks = null;
+        } else if (this.injectBugLinks == null) {
             this.injectBugLinks = new KeyValueNode<Boolean>(CSConstants.BUG_LINKS_TITLE, injectBugLinks);
             appendChild(this.injectBugLinks);
         } else {
@@ -1033,8 +1080,13 @@ public class ContentSpec extends Node {
         return (Boolean) (injectSurveyLinks == null ? false : injectSurveyLinks.getValue());
     }
 
-    public void setInjectSurveyLinks(boolean injectSurveyLinks) {
-        if (this.injectSurveyLinks == null) {
+    public void setInjectSurveyLinks(final Boolean injectSurveyLinks) {
+        if (injectSurveyLinks == null && this.injectSurveyLinks == null) {
+            return;
+        } else if (injectSurveyLinks == null) {
+            removeChild(this.injectSurveyLinks);
+            this.injectSurveyLinks = null;
+        } else if (this.injectSurveyLinks == null) {
             this.injectSurveyLinks = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, injectSurveyLinks);
             appendChild(this.injectSurveyLinks);
         } else {

@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,7 +13,10 @@ import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.entities.Revision;
+import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.provider.ContentSpecProvider;
+import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
 import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
@@ -198,21 +202,26 @@ public class ContentSpecUtilities {
     /*
      * Gets a list of Revision's from the CSProcessor database for a specific content spec
      */
-    public static List<Object[]> getContentSpecRevisionsById(final ContentSpecProvider contentSpecProvider, final Integer csId) {
-        final List<Object[]> results = new ArrayList<Object[]>();
+    public static RevisionList getContentSpecRevisionsById(final ContentSpecProvider contentSpecProvider, final Integer csId) {
+        final List<Revision> results = new ArrayList<Revision>();
         final CollectionWrapper<ContentSpecWrapper> contentSpecRevisions = contentSpecProvider.getContentSpec(csId).getRevisions();
 
         // Create the unique array from the revisions
         if (contentSpecRevisions != null && contentSpecRevisions.getItems() != null) {
             final List<ContentSpecWrapper> contentSpecRevs = contentSpecRevisions.getItems();
             for (final ContentSpecWrapper contentSpecRev : contentSpecRevs) {
-                Object[] revision = new Object[2];
-                revision[0] = contentSpecRev.getRevision();
-                revision[1] = contentSpecRev.getLastModified();
+                Revision revision = new Revision();
+                revision.setRevision(contentSpecRev.getRevision());
+                revision.setDate(contentSpecRev.getLastModified());
                 results.add(revision);
             }
+
+            Collections.sort(results, new EnversRevisionSort());
+
+            return new RevisionList(csId, "Content Specification", results);
+        } else {
+            return null;
         }
-        return results;
     }
 
     public static Map<String, SpecTopic> getUniqueIdSpecTopicMap(ContentSpec contentSpec) {

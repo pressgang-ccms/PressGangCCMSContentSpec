@@ -43,6 +43,47 @@ public class CSTransformer {
     private List<CSNodeWrapper> relationshipFromNodes = new ArrayList<CSNodeWrapper>();
     private List<Process> processes = new ArrayList<Process>();
 
+//    public ContentSpecWrapper transform(final ContentSpec contentSpec, final DataProviderFactory providerFactory) {
+//        final ContentSpecProvider contentSpecProvider = providerFactory.getProvider(ContentSpecProvider.class);
+//        final ContentSpecWrapper contentSpecEntity;
+//        if (contentSpec.getId() != null) {
+//            contentSpecEntity = contentSpecProvider.getContentSpec(contentSpec.getId());
+//        } else {
+//            contentSpecEntity = contentSpecProvider.newContentSpec();
+//        }
+//
+//        // check if the basic data has changed
+//        if (contentSpec.getTitle() != null && !contentSpec.getTitle().equals(contentSpecEntity.getTitle())) {
+//            contentSpecEntity.setTitle(contentSpec.getTitle());
+//        }
+//
+//        if (contentSpec.getProduct() != null && !contentSpec.getProduct().equals(contentSpecEntity.getProduct())) {
+//            contentSpecEntity.setProduct(contentSpec.getProduct());
+//        }
+//
+//        if (contentSpec.getVersion() != null && !contentSpec.getVersion().equals(contentSpecEntity.getVersion())) {
+//            contentSpecEntity.setVersion(contentSpec.getVersion());
+//        }
+//
+//        if (contentSpec.getLocale() != null && !contentSpec.getLocale().equals(contentSpecEntity.getLocale())) {
+//            contentSpecEntity.setLocale(contentSpec.getLocale());
+//        }
+//
+//        return contentSpecEntity;
+//    }
+//
+//    protected <T> CSMetaDataInContentSpecWrapper transformMetaData(KeyValueNode<T> metaData, final ContentSpecWrapper contentSpec) {
+//        CSMetaDataInContentSpecWrapper metaDataEntity = null;
+//        // find metadata
+//        return metaDataEntity;
+//    }
+
+    /**
+     * Transforms a content spec datasource entity into a generic content spec object.
+     *
+     * @param spec The content spec entity to be transformed.
+     * @return The generic Content Spec object that was transformed from the entity.
+     */
     public ContentSpec transform(final ContentSpecWrapper spec) {
         // Reset local variables
         nodes = new HashMap<Integer, Node>();

@@ -28,4 +28,8 @@ public interface ContentSpecProvider {
     String getContentSpecAsString(int id);
 
     String getContentSpecAsString(int id, Integer revision);
+
+    ContentSpecWrapper newContentSpec();
+
+    CollectionWrapper<ContentSpecWrapper> newContentSpecCollection();
 }

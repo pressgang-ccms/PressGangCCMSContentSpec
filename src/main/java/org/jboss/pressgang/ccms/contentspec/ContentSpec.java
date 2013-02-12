@@ -217,8 +217,8 @@ public class ContentSpec extends Node {
      *
      * @return The Content Specification database ID or 0 if one hasn't been set.
      */
-    public int getId() {
-        return (Integer) (id == null ? 0 : id.getValue());
+    public Integer getId() {
+        return (Integer) (id == null ? null : id.getValue());
     }
 
     /**
@@ -1225,7 +1225,7 @@ public class ContentSpec extends Node {
         output.append(level.toString());
 
         // If the id isn't null then add the id and checksum
-        if (getId() != 0) {
+        if (getId() != null) {
             output.insert(0, CSConstants.CHECKSUM_TITLE + "=" + HashUtilities.generateMD5(
                     CSConstants.ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CSConstants.ID_TITLE + " = " + id.getValue() +
                     "\n");

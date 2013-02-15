@@ -33,7 +33,6 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bookVersion = null;
     private KeyValueNode<Integer> pubsNumber = null;
     private KeyValueNode<String> publicanCfg = null;
-    private ArrayList<String> text = new ArrayList<String>();
     private KeyValueNode<String> dtd = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
@@ -416,36 +415,6 @@ public class ContentSpec extends Node {
         } else {
             this.publicanCfg.setValue(publicanCfg);
         }
-    }
-
-    /**
-     * Get the pre processed text of a specific line in the Content Specification.
-     *
-     * @param line The line number of the text.
-     * @return The text at "line" in the Content Specification or null if the line doesn't exist.
-     */
-    public String getPreProcessedTextForLine(int line) {
-        return text.size() >= line ? text.get(line - 1) : null;
-    }
-
-    /**
-     * Gets a list of all the pre processed lines in the Content Specification.
-     *
-     * @return A List of pre processed Content Specification lines.
-     */
-    public List<String> getPreProcessedText() {
-        return text;
-    }
-
-    /**
-     * Sets the pre processed text of a content specification for a specific line. If the line doesn't exist then a
-     * IndexOutOfBoundsException will be thrown.
-     *
-     * @param text The text to be set at "line".
-     * @param line The line number in the content specification to set the text for.
-     */
-    public void setPreProcessedTextForLine(final String text, final int line) {
-        this.text.set(line - 1, text);
     }
 
     /**
@@ -920,26 +889,6 @@ public class ContentSpec extends Node {
 
     // End of the basic getter/setter methods for this ContentSpec.
 
-    /**
-     * Appends a pre processed line to the list of lines in the Content Specification.
-     *
-     * @param line The Line to be added.
-     */
-    public void appendPreProcessedLine(final String line) {
-        text.add(line);
-    }
-
-    /**
-     * Appends a String to a pre processed line that has already been added to the Content Specification. Throws a
-     * IndexOutOfBoundsException if the line doesn't exist.
-     *
-     * @param text The text to be appended.
-     * @param line The line number of the original text that the new text should be appended to.
-     */
-    public void appendPreProcessedLineText(final String text, final int line) {
-        String temp = this.text.get(line - 1) + text;
-        this.text.set(line - 1, temp);
-    }
 
     public List<SpecTopic> getSpecTopics() {
         return getLevelSpecTopics(getBaseLevel());

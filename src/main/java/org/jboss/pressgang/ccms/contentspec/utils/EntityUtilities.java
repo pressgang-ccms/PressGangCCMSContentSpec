@@ -16,6 +16,7 @@ import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
 import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
+import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
@@ -23,6 +24,7 @@ import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 
 public class EntityUtilities {
@@ -266,5 +268,18 @@ public class EntityUtilities {
             }
         }
         return mapping;
+    }
+
+    /**
+     * Gets the CSNode Topic entity that is represented by the node.
+     *
+     * @param node          The node that represents a topic entry.
+     * @param topicProvider The topic provider to lookup the topic entity from.
+     * @return The topic entity represented by the node, or null if there isn't one that matches.
+     */
+    public static TopicWrapper getCSNodeTopicEntity(final CSNodeWrapper node, final TopicProvider topicProvider) {
+        if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) return null;
+
+        return topicProvider.getTopic(node.getEntityId(), node.getEntityRevision());
     }
 }

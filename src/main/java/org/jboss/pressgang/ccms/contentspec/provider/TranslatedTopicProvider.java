@@ -5,8 +5,10 @@ import java.util.List;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TopicSourceURLWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
 
 public interface TranslatedTopicProvider {
     TranslatedTopicWrapper getTranslatedTopic(final int id);
@@ -22,6 +24,8 @@ public interface TranslatedTopicProvider {
     CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopicIncomingRelationships(int id, Integer revision);
 
     CollectionWrapper<TopicSourceURLWrapper> getTranslatedTopicSourceUrls(int id, Integer revision);
+
+    UpdateableCollectionWrapper<TranslatedTopicStringWrapper> getTranslatedTopicStrings(int id, Integer revision);
 
     CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopicRevisions(int id, Integer revision);
 

@@ -11,10 +11,6 @@ public interface ContentSpecWrapper extends EntityWrapper<ContentSpecWrapper> {
 
     void setTags(CollectionWrapper<TagWrapper> tags);
 
-    UpdateableCollectionWrapper<CSMetaDataInContentSpecWrapper> getMetaData();
-
-    void setMetaData(CollectionWrapper<CSMetaDataInContentSpecWrapper> metaData);
-
     CollectionWrapper<CSNodeWrapper> getChildren();
 
     void setChildren(CollectionWrapper<CSNodeWrapper> nodes);
@@ -25,15 +21,9 @@ public interface ContentSpecWrapper extends EntityWrapper<ContentSpecWrapper> {
 
     String getTitle();
 
-    void setTitle(String title);
-
     String getProduct();
 
-    void setProduct(String product);
-
     String getVersion();
-
-    void setVersion(String version);
 
     String getLocale();
 
@@ -43,4 +33,5 @@ public interface ContentSpecWrapper extends EntityWrapper<ContentSpecWrapper> {
 
     PropertyTagInContentSpecWrapper getProperty(final int propertyId);
 
+    CSNodeWrapper getMetaData(final String metaDataTitle);
 }

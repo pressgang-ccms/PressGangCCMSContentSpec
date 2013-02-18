@@ -1,32 +1,29 @@
 package org.jboss.pressgang.ccms.contentspec.wrapper.base;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
-
 public interface BaseCSNodeWrapper<T extends BaseCSNodeWrapper<T>> extends EntityWrapper<T> {
-    CollectionWrapper<CSNodeWrapper> getChildren();
-
-    void setChildren(CollectionWrapper<CSNodeWrapper> nodes);
-
     String getTitle();
 
     void setTitle(String title);
 
-    String getAlternateTitle();
+    String getTargetId();
 
-    void setAlternateTitle(String alternateTitle);
+    void setTargetId(String targetId);
+
+    String getAdditionalText();
+
+    void setAdditionalText(String additionalText);
 
     String getCondition();
 
     void setCondition(String condition);
 
-    Integer getTopicId();
+    Integer getEntityId();
 
-    void setTopicId(Integer id);
+    void setEntityId(Integer id);
 
-    Integer getTopicRevision();
+    Integer getEntityRevision();
 
-    void setTopicRevision(Integer revision);
+    void setEntityRevision(Integer revision);
 
     Integer getNextNodeId();
 

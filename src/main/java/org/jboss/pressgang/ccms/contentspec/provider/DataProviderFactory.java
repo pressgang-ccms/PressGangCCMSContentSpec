@@ -160,4 +160,8 @@ public abstract class DataProviderFactory {
      * @return The created data provider instance if one was able to be found.
      */
     protected abstract <T> T loadProvider(final Class<T> clazz);
+
+    public abstract boolean isRollbackSupported();
+
+    public abstract void rollback();
 }

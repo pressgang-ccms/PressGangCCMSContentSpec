@@ -25,7 +25,6 @@ import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {
     private String id;
-    private String uniqueId;
     private int DBId = 0;
     private String type;
     private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
@@ -127,24 +126,6 @@ public class SpecTopic extends SpecNode {
      */
     public String getId() {
         return id;
-    }
-
-    /**
-     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
-     *
-     * @param uniqueId The Content Specification Topic ID.
-     */
-    public void setUniqueId(final String uniqueId) {
-        this.uniqueId = uniqueId == null ? null : uniqueId.replaceAll("[^\\w\\d\\-]", "");
-    }
-
-    /**
-     * Gets the Content Specification Unique ID for the topic.
-     *
-     * @return The Unique CS Topic ID.
-     */
-    public String getUniqueId() {
-        return uniqueId;
     }
 
     /**

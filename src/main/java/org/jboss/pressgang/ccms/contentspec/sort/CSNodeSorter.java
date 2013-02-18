@@ -15,6 +15,9 @@ public class CSNodeSorter {
     }
 
     public static LinkedHashMap<CSNodeWrapper, Node> sortMap(Map<CSNodeWrapper, Node> map) {
+        // If the map is empty then just return an empty map
+        if (map.isEmpty()) return new LinkedHashMap<CSNodeWrapper, Node>(map);
+
         final LinkedHashMap<CSNodeWrapper, Node> retValue = new LinkedHashMap<CSNodeWrapper, Node>();
         Map.Entry<CSNodeWrapper, Node> nodeEntry = null;
 

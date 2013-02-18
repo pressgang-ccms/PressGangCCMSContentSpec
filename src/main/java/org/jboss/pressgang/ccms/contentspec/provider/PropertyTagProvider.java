@@ -1,5 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.provider;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInPropertyCategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
@@ -25,6 +26,10 @@ public interface PropertyTagProvider {
 
     PropertyTagInTagWrapper newPropertyTagInTag(PropertyTagWrapper propertyTag);
 
+    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec();
+
+    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec(PropertyTagWrapper propertyTag);
+
     PropertyTagInPropertyCategoryWrapper newPropertyTagInPropertyCategory();
 
     CollectionWrapper<PropertyTagWrapper> newPropertyTagCollection();
@@ -32,6 +37,8 @@ public interface PropertyTagProvider {
     UpdateableCollectionWrapper<PropertyTagInTopicWrapper> newPropertyTagInTopicCollection();
 
     UpdateableCollectionWrapper<PropertyTagInTagWrapper> newPropertyTagInTagCollection();
+
+    UpdateableCollectionWrapper<PropertyTagInContentSpecWrapper> newPropertyTagInContentSpecCollection();
 
     UpdateableCollectionWrapper<PropertyTagInPropertyCategoryWrapper> newPropertyTagInPropertyCategoryCollection();
 }

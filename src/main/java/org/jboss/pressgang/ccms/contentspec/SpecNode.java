@@ -7,14 +7,14 @@ import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 
 /**
  * An abstract class that contains the base objects required for a Content Specification Node.
- * 
+ *
  * @author lnewson
- * 
  */
 public abstract class SpecNode extends Node {
     protected List<String> tags = new ArrayList<String>();
     protected List<String> removeTags = new ArrayList<String>();
     protected List<String> sourceUrls = new ArrayList<String>();
+    protected String uniqueId = null;
     protected String condition = null;
     protected String description = null;
     protected String assignedWriter = null;
@@ -33,7 +33,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the line number that the node is on in a Content Specification.
-     * 
+     *
      * @return The Line Number for the node.
      */
     @Override
@@ -43,7 +43,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the text for the node's line.
-     * 
+     *
      * @return The line of text for the node.
      */
     @Override
@@ -53,7 +53,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Sets the text for the node.
-     * 
+     *
      * @param text The nodes text.
      */
     @Override
@@ -63,7 +63,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the step number of the node in the Content Specification.
-     * 
+     *
      * @return The Step of the node.
      */
     @Override
@@ -71,7 +71,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the column the node starts at.
-     * 
+     *
      * @return The column the node starts at.
      */
     @Override
@@ -81,7 +81,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Get the parent of the node.
-     * 
+     *
      * @return The nodes parent.
      */
     @Override
@@ -91,7 +91,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Sets the nodes parent.
-     * 
+     *
      * @param parent The parent node.
      */
     protected void setParent(final SpecNode parent) {
@@ -100,7 +100,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Sets the description for a node.
-     * 
+     *
      * @param desc The description.
      */
     public void setDescription(final String desc) {
@@ -109,19 +109,18 @@ public abstract class SpecNode extends Node {
 
     /**
      * Get the description for a node. If useInherited is true then it will check for an inherited description as well.
-     * 
+     *
      * @param useInherited If the function should check for an inherited description
      * @return The description as a String
      */
     public String getDescription(final boolean useInherited) {
-        if (description == null && parent != null && useInherited)
-            return getParent().getDescription(true);
+        if (description == null && parent != null && useInherited) return getParent().getDescription(true);
         return description;
     }
 
     /**
      * Sets the Assigned Writer for this set of options
-     * 
+     *
      * @param writer The writers name that matches to the assigned writer tag in the database
      */
     public void setAssignedWriter(final String writer) {
@@ -130,21 +129,20 @@ public abstract class SpecNode extends Node {
 
     /**
      * Get the Assigned Writer for a topic. If useInherited is true then it will check for an inherited writer as well.
-     * 
+     *
      * @param useInherited If the function should check for an inherited writer
      * @return The Assigned Writers name as a String
      */
     public String getAssignedWriter(final boolean useInherited) {
-        if (assignedWriter == null && parent != null && useInherited)
-            return getParent().getAssignedWriter(true);
+        if (assignedWriter == null && parent != null && useInherited) return getParent().getAssignedWriter(true);
         return assignedWriter;
     }
 
     /**
      * Sets the set of tags for this set of options
-     * 
+     *
      * @param tags A HashMap of tags. The key in the map is the tags category name and the value is an ArrayList of tags for
-     *        each category.
+     *             each category.
      */
     public void setTags(final List<String> tags) {
         this.tags = tags;
@@ -152,9 +150,9 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the set of tags for this set of options. If useInherited is true then it will check for inherited options as well.
-     * 
+     * <p/>
      * This function also removes the tags from the HashMap for any tag that has a - in front of its name.
-     * 
+     *
      * @param useInherited If the function should check for inherited tags
      */
     public List<String> getTags(final boolean useInherited) {
@@ -197,7 +195,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Sets the list of tags that are to be removed in this set of options
-     * 
+     *
      * @param tags An ArrayList of tags to be removed
      */
     public void setRemoveTags(final List<String> tags) {
@@ -207,7 +205,7 @@ public abstract class SpecNode extends Node {
     /**
      * Gets an ArrayList of tags that are to be removed for these options. If useInherited is true then it will also add all
      * inherited removeable tags.
-     * 
+     *
      * @param useInherited If the function should check for inherited removable tags
      * @return An ArrayList of tags
      */
@@ -237,7 +235,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Sets the list of source urls in this node
-     * 
+     *
      * @param sourceUrls An ArrayList of urls
      */
     public void setSourceUrls(final List<String> sourceUrls) {
@@ -246,7 +244,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Get the Source Urls for a node and also checks to make sure the url hasn't already been inherited
-     * 
+     *
      * @return A List of Strings that represent the source urls
      */
     public List<String> getSourceUrls() {
@@ -266,7 +264,7 @@ public abstract class SpecNode extends Node {
     /**
      * Adds a tag to the list of tags. If the tag starts with a - then its added to the remove tag list otherwise its added to
      * the normal tag mapping. Also strips off + & - from the start of tags.
-     * 
+     *
      * @param tagName The name of the Tag to be added.
      * @return True if the tag was added successfully otherwise false.
      */
@@ -296,7 +294,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Adds an array of tags to the list of tags for this node
-     * 
+     *
      * @param tagArray A list of tags by name that are to be added.
      * @return True if all the tags were added successfully otherwise false.
      */
@@ -309,18 +307,17 @@ public abstract class SpecNode extends Node {
 
     /**
      * Adds a source URL to the list of URL's for this set of node
-     * 
+     *
      * @param url The URL to be added
      */
     public void addSourceUrl(final String url) {
-        if (sourceUrls.contains(url))
-            return;
+        if (sourceUrls.contains(url)) return;
         sourceUrls.add(url);
     }
 
     /**
      * Removes a specific Source URL from the list of URL's
-     * 
+     *
      * @param url The URL to be removed.
      */
     public void removeSourceUrl(final String url) {
@@ -329,7 +326,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Adds a source URL to the list of URL's for this set of node
-     * 
+     *
      * @param url The URL to be added
      */
     public void setConditionStatement(final String condition) {
@@ -338,7 +335,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the conditional statement to be used when building
-     * 
+     *
      * @return The conditional statement for this node and it's sub nodes.
      */
     public String getConditionStatement() {
@@ -347,7 +344,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets the conditional statement to be used when building
-     * 
+     *
      * @param useInherited If the conditional statement should be pulled from its parent nodes.
      * @return The conditional statement for this node and it's sub nodes.
      */
@@ -363,7 +360,7 @@ public abstract class SpecNode extends Node {
 
     /**
      * Gets a string representation of the options in this node. (Tags, Source URL's, Description and Writer)
-     * 
+     *
      * @return The String representation of the options.
      */
     protected String getOptionsString() {
@@ -392,6 +389,24 @@ public abstract class SpecNode extends Node {
             vars.add("Description = " + description);
         }
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
+    }
+
+    /**
+     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
+     *
+     * @param uniqueId The Content Specification Topic ID.
+     */
+    public void setUniqueId(final String uniqueId) {
+        this.uniqueId = uniqueId == null ? null : uniqueId.replaceAll("[^\\w\\d\\-]", "");
+    }
+
+    /**
+     * Gets the Content Specification Unique ID for the topic.
+     *
+     * @return The Unique CS Topic ID.
+     */
+    public String getUniqueId() {
+        return uniqueId;
     }
 
     public abstract String getUniqueLinkId(final boolean useFixedUrls);

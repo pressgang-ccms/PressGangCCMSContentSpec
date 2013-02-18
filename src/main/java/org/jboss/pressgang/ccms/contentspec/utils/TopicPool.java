@@ -99,8 +99,8 @@ public class TopicPool {
             if (newTopicPool != null && !newTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : newTopicPool.getItems()) {
                     if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
-                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
-                            specTopic.setDBId(topic.getId());
+                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
+                            specTopic.setId(Integer.toString(topic.getId()));
                             return specTopic;
                         }
                     }
@@ -109,8 +109,8 @@ public class TopicPool {
             if (updatedTopicPool != null && !updatedTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : updatedTopicPool.getItems()) {
                     if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
-                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(Integer.toString(specTopic.getLineNumber()))) {
-                            specTopic.setDBId(topic.getId());
+                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
+                            specTopic.setId(Integer.toString(topic.getId()));
                             return specTopic;
                         }
                     }

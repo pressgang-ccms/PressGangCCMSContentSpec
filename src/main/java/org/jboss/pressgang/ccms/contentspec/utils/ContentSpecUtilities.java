@@ -9,25 +9,26 @@ import java.util.Map;
 import com.google.code.regexp.NamedMatcher;
 import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
-import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
-import org.jboss.pressgang.ccms.contentspec.Level;
-import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
+import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 
 public class ContentSpecUtilities {
     public static NamedPattern CS_CHECKSUM_PATTERN = NamedPattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)");
     private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(
-            new String[]{"Title", "Product", "Subtitle", "Abstract", "Copyright Holder", "Version", "Edition"});
+            new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
+                    CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
 
     /**
      * Get the checksum of a Content Specification object.
@@ -80,69 +81,71 @@ public class ContentSpecUtilities {
         return "T-" + uniqueId + "0" + randomNum;
     }
 
-    public static List<StringToCSNodeCollection> getTranslatableStrings(final ContentSpec contentSpec, final boolean allowDuplicates) {
+    public static List<StringToCSNodeCollection> getTranslatableStrings(final ContentSpecWrapper contentSpec,
+            final boolean allowDuplicates) {
         if (contentSpec == null) return null;
 
         final List<StringToCSNodeCollection> retValue = new ArrayList<StringToCSNodeCollection>();
 
-        final List<Node> contentSpecNodes = contentSpec.getNodes();
-        for (final Node node : contentSpecNodes) {
-            if (node instanceof KeyValueNode) {
-                if (translatableMetaData.contains(((KeyValueNode<?>) node).getKey())) {
-                    final KeyValueNode<?> keyValueNode = (KeyValueNode<?>) node;
-
-                    addTranslationToNodeDetailsToCollection(keyValueNode.getValue().toString(), keyValueNode, allowDuplicates, retValue);
+        final CollectionWrapper<CSNodeWrapper> contentSpecNodes = contentSpec.getChildren();
+        for (final CSNodeWrapper node : contentSpecNodes.getItems()) {
+            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+                if (translatableMetaData.contains(node.getTitle())) {
+                    addTranslationToNodeDetailsToCollection(node.getAdditionalText().toString(), node, allowDuplicates, retValue);
                 }
             }
         }
 
-        final List<Level> levels = contentSpec.getBaseLevel().getChildLevels();
-        for (final Level level : levels) {
-            getTranslatableStringsFromLevel(level, retValue, allowDuplicates);
+        // Find the level nodes translations
+        for (final CSNodeWrapper childNode : contentSpec.getChildren().getItems()) {
+            if (childNode.getNodeType() != CommonConstants.CS_NODE_META_DATA && childNode.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
+                getTranslatableStringsFromLevel(childNode, retValue, allowDuplicates);
+            }
         }
 
         return CollectionUtilities.toArrayList(retValue);
     }
 
-    private static void getTranslatableStringsFromLevel(final Level level, final List<StringToCSNodeCollection> translationStrings,
+    private static void getTranslatableStringsFromLevel(final CSNodeWrapper level, final List<StringToCSNodeCollection> translationStrings,
             final boolean allowDuplicates) {
         if (level == null || translationStrings == null) return;
 
         addTranslationToNodeDetailsToCollection(level.getTitle(), level, allowDuplicates, translationStrings);
 
-        final List<Level> levels = level.getChildLevels();
-        for (final Level childLevel : levels) {
-            getTranslatableStringsFromLevel(childLevel, translationStrings, allowDuplicates);
+        for (final CSNodeWrapper childNode : level.getChildren().getItems()) {
+            if (childNode.getNodeType() != CommonConstants.CS_NODE_META_DATA && childNode.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
+                getTranslatableStringsFromLevel(childNode, translationStrings, allowDuplicates);
+            }
         }
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void replaceTranslatedStrings(final ContentSpec contentSpec, final Map<String, String> translations) {
+    public static void replaceTranslatedStrings(final ContentSpecWrapper contentSpec, final Map<String, String> translations) {
         if (contentSpec == null || translations == null || translations.size() == 0) return;
 
-		/*
+        /*
          * Get the translation strings and the nodes that the string maps to. We
-		 * assume that the text being provided here is an exact match for the
-		 * text that was supplied to getTranslatableStrings originally, which we
-		 * then assume matches the strings supplied as the keys in the
-		 * translations parameter.
-		 */
+         * assume that the text being provided here is an exact match for the
+         * text that was supplied to getTranslatableStrings originally, which we
+         * then assume matches the strings supplied as the keys in the
+         * translations parameter.
+         */
         final List<StringToCSNodeCollection> stringToNodeCollections = getTranslatableStrings(contentSpec, false);
 
         if (stringToNodeCollections == null || stringToNodeCollections.size() == 0) return;
 
         for (final StringToCSNodeCollection stringToNodeCollection : stringToNodeCollections) {
             final String originalString = stringToNodeCollection.getTranslationString();
-            final ArrayList<ArrayList<Node>> nodeCollections = stringToNodeCollection.getNodeCollections();
+            final ArrayList<CSNodeWrapper> nodeCollections = stringToNodeCollection.getNodeCollections();
 
-            if (nodeCollections != null && nodeCollections.size() != 0) {                /* Zanata will change the format of the strings
-            that it returns. Here we account for any trimming that was done. */
+            if (nodeCollections != null && nodeCollections.size() != 0) {
+                // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
                 final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
                 if (fixedStringDetails.getFixedString() != null) {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
 
-                    if (translation != null && !translation.isEmpty()) {                        /* Build up the padding that Zanata
-                    removed */
+                    if (translation != null && !translation.isEmpty()) {
+                        // Build up the padding that Zanata removed
                         final StringBuilder leftTrimPadding = new StringBuilder();
                         final StringBuilder rightTrimPadding = new StringBuilder();
 
@@ -154,15 +157,11 @@ public class ContentSpecUtilities {
 
                         final String fixedTranslation = leftTrimPadding.toString() + translation + rightTrimPadding.toString();
 
-                        for (final ArrayList<Node> nodes : nodeCollections) {
-                            if (nodes != null && nodes.size() != 0) {
-                                for (final Node node : nodes) {
-                                    if (node instanceof Level) {
-                                        ((Level) node).setTranslatedTitle(fixedTranslation);
-                                    } else if (node instanceof KeyValueNode) {
-                                        ((KeyValueNode) node).setValue(fixedTranslation);
-                                    }
-                                }
+                        for (final CSNodeWrapper node : nodeCollections) {
+                            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+                                node.setAdditionalText(fixedTranslation);
+                            } else if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
+                                node.setTitle(fixedTranslation);
                             }
                         }
                     }
@@ -179,14 +178,14 @@ public class ContentSpecUtilities {
         return null;
     }
 
-    private static void addTranslationToNodeDetailsToCollection(final String text, final Node node, final boolean allowDuplicates,
+    private static void addTranslationToNodeDetailsToCollection(final String text, final CSNodeWrapper node, final boolean allowDuplicates,
             final List<StringToCSNodeCollection> translationStrings) {
-        final ArrayList<Node> nodes = new ArrayList<Node>();
+        final ArrayList<CSNodeWrapper> nodes = new ArrayList<CSNodeWrapper>();
         nodes.add(node);
         addTranslationToNodeDetailsToCollection(text, nodes, allowDuplicates, translationStrings);
     }
 
-    private static void addTranslationToNodeDetailsToCollection(final String text, final ArrayList<Node> nodes,
+    private static void addTranslationToNodeDetailsToCollection(final String text, final ArrayList<CSNodeWrapper> nodes,
             final boolean allowDuplicates, final List<StringToCSNodeCollection> translationStrings) {
 
         if (allowDuplicates) {
@@ -233,91 +232,6 @@ public class ContentSpecUtilities {
         }
         return specTopicMap;
     }
-
-    /*
-     * Get the Pre Processed Content Specification for a ID and Revision
-     */
-//    public static TopicWrapper getPreContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
-//        final TopicWrapper cs = topicProvider.getTopic(id, revision);
-//
-//        // Check if the latest is a pre content spec
-//        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
-//                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
-//            return cs;
-//        }
-//
-//        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
-//
-//        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
-//
-//        // Create a sorted set of revision ids that are less the the current revision
-//        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
-//        for (final Object[] specRev : specRevisions) {
-//            if ((Integer) specRev[0] <= cs.getRevision()) {
-//                sortedSpecRevisions.add((Integer) specRev[0]);
-//            }
-//        }
-//
-//        // Find the Pre Content Spec from the revisions
-//        TopicWrapper preContentSpec = null;
-//        if (sortedSpecRevisions.size() > 0) {
-//            Integer specRev = sortedSpecRevisions.last();
-//            while (specRev != null) {
-//                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
-//                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
-//                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
-//                    preContentSpec = contentSpecRev;
-//                    break;
-//                }
-//                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
-//            }
-//        }
-//
-//        return preContentSpec;
-//    }
-
-    /*
-     * Get the Post Processed Content Specification for a ID and Revision
-     */
-//    public static TopicWrapper getPostContentSpecById(final TopicProvider topicProvider, final Integer id, final Integer revision) {
-//        final TopicWrapper cs = topicProvider.getTopic(id, revision);
-//
-//        if (cs != null && cs.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && cs.getProperty(
-//                CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
-//                getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
-//            return cs;
-//        }
-//
-//        final List<Object[]> specRevisions = getContentSpecRevisionsById(topicProvider, id);
-//
-//        if (cs == null || specRevisions == null || specRevisions.isEmpty()) return null;
-//
-//        // Create a sorted set of revision ids that are less the the current revision
-//        final SortedSet<Integer> sortedSpecRevisions = new TreeSet<Integer>();
-//        for (final Object[] specRev : specRevisions) {
-//            if ((Integer) specRev[0] <= cs.getRevision()) {
-//                sortedSpecRevisions.add((Integer) specRev[0]);
-//            }
-//        }
-//
-//        // Find the Post Content Spec from the revisions
-//        TopicWrapper postContentSpec = null;
-//        if (sortedSpecRevisions.size() > 0) {
-//            Integer specRev = sortedSpecRevisions.last();
-//            while (specRev != null) {
-//                final TopicWrapper contentSpecRev = topicProvider.getTopic(id, specRev);
-//                if (contentSpecRev.getProperty(CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && contentSpecRev.getProperty(
-//                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID).
-//                        getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
-//                    postContentSpec = contentSpecRev;
-//                    break;
-//                }
-//                specRev = sortedSpecRevisions.headSet(specRev).isEmpty() ? null : sortedSpecRevisions.headSet(specRev).last();
-//            }
-//        }
-//
-//        return postContentSpec;
-//    }
 }
 
 /**

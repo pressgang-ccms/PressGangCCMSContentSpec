@@ -22,6 +22,8 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
@@ -30,7 +32,6 @@ import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
-// TODO Figure out how to transform Process Relationships
 public class CSTransformer {
 
     /**
@@ -42,13 +43,15 @@ public class CSTransformer {
     /**
      * Transforms a content spec datasource entity into a generic content spec object.
      *
-     * @param spec The content spec entity to be transformed.
+     * @param spec            The content spec entity to be transformed.
+     * @param providerFactory
      * @return The generic Content Spec object that was transformed from the entity.
      */
-    public ContentSpec transform(final ContentSpecWrapper spec) {
+    public ContentSpec transform(final ContentSpecWrapper spec, final DataProviderFactory providerFactory) {
         // Reset local variables
         Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         Map<String, List<SpecTopic>> specTopicMap = new HashMap<String, List<SpecTopic>>();
+        Map<String, SpecTopic> topicTargets = new HashMap<String, SpecTopic>();
         List<CSNodeWrapper> relationshipFromNodes = new ArrayList<CSNodeWrapper>();
         List<Process> processes = new ArrayList<Process>();
 
@@ -84,7 +87,7 @@ public class CSTransformer {
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
             for (final CSNodeWrapper childNode : childNodes) {
                 if (childNode.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
-                    final SpecTopic topic = transformSpecTopic(childNode, nodes, specTopicMap, relationshipFromNodes);
+                    final SpecTopic topic = transformSpecTopic(childNode, nodes, specTopicMap, topicTargets, relationshipFromNodes);
                     levelNodes.put(childNode, topic);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
@@ -95,7 +98,7 @@ public class CSTransformer {
                         contentSpec.appendChild(metaDataNode);
                     }
                 } else {
-                    final Level level = transformLevel(childNode, nodes, specTopicMap, relationshipFromNodes, processes);
+                    final Level level = transformLevel(childNode, nodes, specTopicMap, topicTargets, relationshipFromNodes, processes);
                     levelNodes.put(childNode, level);
                 }
             }
@@ -114,7 +117,7 @@ public class CSTransformer {
         }
 
         // Apply the relationships to the nodes
-        applyRelationships(nodes, specTopicMap, relationshipFromNodes);
+        applyRelationships(contentSpec, nodes, specTopicMap, topicTargets, relationshipFromNodes, processes, providerFactory);
 
         return contentSpec;
     }
@@ -130,8 +133,8 @@ public class CSTransformer {
     }
 
     protected Level transformLevel(final CSNodeWrapper node, final Map<Integer, Node> nodes,
-            final Map<String, List<SpecTopic>> specTopicMap, final List<CSNodeWrapper> relationshipFromNodes,
-            final List<Process> processes) {
+            final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
+            final List<CSNodeWrapper> relationshipFromNodes, final List<Process> processes) {
         final Level level;
         if (node.getNodeType() == CommonConstants.CS_NODE_APPENDIX) {
             level = new Appendix(node.getTitle());
@@ -158,13 +161,13 @@ public class CSTransformer {
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
             for (final CSNodeWrapper childNode : childNodes) {
                 if (childNode.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
-                    final SpecTopic topic = transformSpecTopic(childNode, nodes, specTopicMap, relationshipFromNodes);
+                    final SpecTopic topic = transformSpecTopic(childNode, nodes, specTopicMap, targetTopics, relationshipFromNodes);
                     levelNodes.put(childNode, topic);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
                 } else {
-                    final Level childLevel = transformLevel(childNode, nodes, specTopicMap, relationshipFromNodes, processes);
+                    final Level childLevel = transformLevel(childNode, nodes, specTopicMap, targetTopics, relationshipFromNodes, processes);
                     levelNodes.put(childNode, childLevel);
                 }
             }
@@ -189,7 +192,8 @@ public class CSTransformer {
     }
 
     protected SpecTopic transformSpecTopic(final CSNodeWrapper node, final Map<Integer, Node> nodes,
-            final Map<String, List<SpecTopic>> specTopicMap, final List<CSNodeWrapper> relationshipFromNodes) {
+            final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
+            final List<CSNodeWrapper> relationshipFromNodes) {
         final SpecTopic specTopic;
         if (node.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
             specTopic = new SpecTopic(node.getEntityId(), node.getTitle());
@@ -214,6 +218,11 @@ public class CSTransformer {
         }
         specTopicMap.get(node.getEntityId().toString()).add(specTopic);
 
+        // If there is a target add it to the list
+        if (node.getTargetId() != null) {
+            targetTopics.put(node.getTargetId(), specTopic);
+        }
+
         return specTopic;
     }
 
@@ -232,8 +241,10 @@ public class CSTransformer {
      * Apply the relationships to all of the nodes in the content spec. This should be the last step since all nodes have to be converted
      * to levels and topics before this method can work.
      */
-    protected void applyRelationships(final Map<Integer, Node> nodes, final Map<String, List<SpecTopic>> specTopicMap,
-            final List<CSNodeWrapper> relationshipFromNodes) {
+    protected void applyRelationships(final ContentSpec contentSpec, final Map<Integer, Node> nodes,
+            final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
+            final List<CSNodeWrapper> relationshipFromNodes, final List<Process> processes, final DataProviderFactory providerFactory) {
+        // Apply the user defined relationships stored in the database
         for (final CSNodeWrapper node : relationshipFromNodes) {
             final SpecTopic fromNode = (SpecTopic) nodes.get(node.getId());
             for (final CSRelatedNodeWrapper relatedToNode : node.getRelatedToNodes().getItems()) {
@@ -259,6 +270,14 @@ public class CSTransformer {
                     }
                 }
             }
+        }
+
+        // Create the unique id map
+        final Map<String, SpecTopic> uniqueIdSpecTopicMap = ContentSpecUtilities.getUniqueIdSpecTopicMap(contentSpec);
+
+        // Apply the process relationships
+        for (final Process process : processes) {
+            process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class));
         }
     }
 }

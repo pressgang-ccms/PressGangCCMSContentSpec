@@ -176,14 +176,20 @@ public class Level extends SpecNode {
     public void appendChild(final Node child) {
         if (child instanceof Level) {
             levels.add((Level) child);
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         } else if (child instanceof SpecTopic) {
-            topics.add((SpecTopic) child);
+            appendSpecTopic((SpecTopic) child);
+        } else {
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         }
-        nodes.add(child);
-        if (child.getParent() != null) {
-            child.removeParent();
-        }
-        child.setParent(this);
     }
 
     /**
@@ -194,11 +200,14 @@ public class Level extends SpecNode {
     public void removeChild(final Node child) {
         if (child instanceof Level) {
             levels.remove(child);
+            nodes.remove(child);
+            child.setParent(null);
         } else if (child instanceof SpecTopic) {
-            topics.remove(child);
+            removeSpecTopic((SpecTopic) child);
+        } else {
+            nodes.remove(child);
+            child.setParent(null);
         }
-        nodes.remove(child);
-        child.setParent(null);
     }
 
     /**
@@ -307,11 +316,7 @@ public class Level extends SpecNode {
      * @param comment The Comment Node to be appended.
      */
     public void appendComment(final Comment comment) {
-        nodes.add(comment);
-        if (comment.getParent() != null) {
-            comment.removeParent();
-        }
-        comment.setParent(this);
+        appendChild(comment);
     }
 
     /**
@@ -329,8 +334,7 @@ public class Level extends SpecNode {
      * @param comment The Comment node to be removed.
      */
     public void removeComment(final Comment comment) {
-        nodes.remove(comment);
-        comment.removeParent();
+        removeChild(comment);
     }
 
     /**

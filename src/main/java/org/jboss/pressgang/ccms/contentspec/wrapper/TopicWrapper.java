@@ -19,6 +19,10 @@ public interface TopicWrapper extends BaseTopicWrapper<TopicWrapper> {
 
     void setLastModified(Date lastModified);
 
+    Integer getXmlDoctype();
+
+    void setXmlDoctype(Integer doctypeId);
+
     CollectionWrapper<TranslatedTopicWrapper> getTranslatedTopics();
 
     String getEditorURL();

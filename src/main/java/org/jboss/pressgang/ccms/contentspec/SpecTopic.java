@@ -41,12 +41,11 @@ public class SpecTopic extends SpecNode {
     /**
      * Constructor
      *
-     * @param id                     The ID for the Content Specification Topic (N, N<ID>, C<ID>, etc...)
-     * @param title                  The title of the Content Specification Topic.
-     * @param lineNumber             The post processed Line Number of the topic.
-     * @param specLine               The Content Specification Line that is used to create the Topic.
-     * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
-     * @param type                   The Topic Type for this topic (Concept, Task, etc...).
+     * @param id         The ID for the Content Specification Topic (N, N<ID>, C<ID>, etc...)
+     * @param title      The title of the Content Specification Topic.
+     * @param lineNumber The post processed Line Number of the topic.
+     * @param specLine   The Content Specification Line that is used to create the Topic.
+     * @param type       The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String id, final String title, final int lineNumber, final String specLine, final String type) {
         super(lineNumber, specLine);
@@ -61,11 +60,10 @@ public class SpecTopic extends SpecNode {
     /**
      * Constructor
      *
-     * @param title                  The title of the Content Specification Topic.
-     * @param lineNumber             The post processed Line Number of the topic.
-     * @param specLine               The Content Specification Line that is used to create the Topic.
-     * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
-     * @param type                   The Topic Type for this topic (Concept, Task, etc...).
+     * @param title      The title of the Content Specification Topic.
+     * @param lineNumber The post processed Line Number of the topic.
+     * @param specLine   The Content Specification Line that is used to create the Topic.
+     * @param type       The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String title, final int lineNumber, final String specLine, final String type) {
         super(lineNumber, specLine);
@@ -233,6 +231,15 @@ public class SpecTopic extends SpecNode {
      */
     public void setTargetId(final String targetId) {
         this.targetId = targetId;
+    }
+
+    /**
+     * Checks if the target id is only an internally used id, used for processes
+     *
+     * @return True if the target id is an internal id, otherwise false.
+     */
+    public boolean isTargetIdAnInternalId() {
+        return targetId == null ? false : getTargetId().matches("^T-" + getUniqueId() + "0[0-9]+$");
     }
 
     /**
@@ -659,7 +666,7 @@ public class SpecTopic extends SpecNode {
                     "") ? "" : (", " + options)) + "]");
         }
 
-        if (targetId != null && !((parent instanceof Process) && targetId.matches("^T-" + getUniqueId() + "0[0-9]+$"))) {
+        if (targetId != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
             output.append(" [" + targetId + "]");
         }
 

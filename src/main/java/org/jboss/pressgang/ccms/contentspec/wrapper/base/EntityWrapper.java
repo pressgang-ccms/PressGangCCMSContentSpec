@@ -39,6 +39,14 @@ public abstract interface EntityWrapper<T extends EntityWrapper<T>> {
     Object unwrap();
 
     /**
+     * Clone the entity and wrapper.
+     *
+     * @param deepCopy If the collections in the entity should be cloned as well.
+     * @return The cloned entity/wrapper.
+     */
+    T clone(boolean deepCopy);
+
+    /**
      * Check if the entity is a revision entity or the latest entity.
      *
      * @return True if the entity represents a revision otherwise false.

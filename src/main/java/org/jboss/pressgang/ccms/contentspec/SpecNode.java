@@ -301,7 +301,7 @@ public abstract class SpecNode extends Node {
     public boolean addTags(final List<String> tagArray) {
         boolean error = false;
         for (final String t : tagArray) {
-            if (!addTag(t)) {
+            if (!addTag(StringUtilities.replaceEscapeChars(t))) {
                 error = true;
             }
         }

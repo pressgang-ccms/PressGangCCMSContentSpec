@@ -1,4 +1,4 @@
-package org.jboss.pressgangccms.contentspec;
+package org.jboss.pressgang.ccms.contentspec;
 
 import junit.framework.Test;
 import junit.framework.TestCase;

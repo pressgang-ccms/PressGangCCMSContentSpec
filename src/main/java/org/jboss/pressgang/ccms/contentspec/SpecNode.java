@@ -299,10 +299,13 @@ public abstract class SpecNode extends Node {
      * @return True if all the tags were added successfully otherwise false.
      */
     public boolean addTags(final List<String> tagArray) {
+        boolean error = false;
         for (final String t : tagArray) {
-            return addTag(t);
+            if (!addTag(t)) {
+                error = true;
+            }
         }
-        return true;
+        return !error;
     }
 
     /**

@@ -678,19 +678,38 @@ public class SpecTopic extends SpecNode {
         spacer.append(SPACER);
 
         if (!getRelatedRelationships().isEmpty()) {
-            output.append(generateRelationshipText(RelationshipType.REFER_TO, false, spacer.toString()));
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
+            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer.toString()));
         }
 
         if (!getPrerequisiteRelationships().isEmpty()) {
-            output.append(generateRelationshipText(RelationshipType.PREREQUISITE, false, spacer.toString()));
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
+            output.append(generateRelationshipText(RelationshipType.PREREQUISITE, !useLongSyntax, spacer.toString()));
         }
 
         if (!getLinkListRelationships().isEmpty()) {
-            output.append(generateRelationshipText(RelationshipType.LINKLIST, false, spacer.toString()));
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getLinkListRelationships());
+            output.append(generateRelationshipText(RelationshipType.LINKLIST, !useLongSyntax, spacer.toString()));
         }
 
         setText(output.toString());
         return text;
+    }
+
+    /**
+     * Checks to see if a list of relationships should be printed using the long syntax.
+     *
+     * @param relationships The list of relationships to be checked.
+     * @return True if the relationships should be printed using the long syntax.
+     */
+    private boolean printRelationshipsWithLongSyntax(final List<Relationship> relationships) {
+        for (final Relationship relationship : relationships) {
+            if (relationship.getRelationshipTitle() != null && !relationship.getRelationshipTitle().trim().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     /**

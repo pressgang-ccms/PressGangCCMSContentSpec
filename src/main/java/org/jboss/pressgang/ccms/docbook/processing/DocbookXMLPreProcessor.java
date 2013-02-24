@@ -946,7 +946,7 @@ public class DocbookXMLPreProcessor {
 
                     list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_PREREQUISITE));
                 } else {
-                    final SpecNode specNode = ((TargetRelationship) prereq).getSecondaryElement();
+                    final SpecNode specNode = ((TargetRelationship) prereq).getSecondaryRelationship();
 
                     list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_PREREQUISITE));
                 }
@@ -996,7 +996,7 @@ public class DocbookXMLPreProcessor {
 
                 list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_SEE_ALSO));
             } else {
-                final SpecNode specNode = ((TargetRelationship) seeAlso).getSecondaryElement();
+                final SpecNode specNode = ((TargetRelationship) seeAlso).getSecondaryRelationship();
 
                 list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_SEE_ALSO));
             }
@@ -1036,7 +1036,7 @@ public class DocbookXMLPreProcessor {
 
                 list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_LINK_LIST));
             } else {
-                final SpecNode specNode = ((TargetRelationship) linkList).getSecondaryElement();
+                final SpecNode specNode = ((TargetRelationship) linkList).getSecondaryRelationship();
 
                 list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_LINK_LIST));
             }

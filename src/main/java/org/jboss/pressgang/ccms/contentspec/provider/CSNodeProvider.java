@@ -35,4 +35,10 @@ public interface CSNodeProvider {
     CSNodeWrapper newCSNode();
 
     UpdateableCollectionWrapper<CSNodeWrapper> newCSNodeCollection();
+
+    CSRelatedNodeWrapper newCSRelatedNode();
+
+    CSRelatedNodeWrapper newCSRelatedNode(final CSNodeWrapper node);
+
+    UpdateableCollectionWrapper<CSRelatedNodeWrapper> newCSRelatedNodeCollection();
 }

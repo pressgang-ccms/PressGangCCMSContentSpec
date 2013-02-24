@@ -14,6 +14,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
+import org.jboss.pressgang.ccms.contentspec.entities.ProcessRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
@@ -125,23 +126,6 @@ public class SpecTopic extends SpecNode {
     public String getId() {
         return id;
     }
-
-    /**
-     * Gets the Content Specification Unique ID for the topic.
-     *
-     * Note: The pre processed line number must be set to get the unique id.
-     *
-     * @return The unique id.
-     */
-    /*public String getUniqueId() {
-        if (id.equals("N") || id.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)
-                || id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || id.matches(CSConstants.CLONED_TOPIC_ID_REGEX)
-                || id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)) {
-            return Integer.toString(getLineNumber()) + "-" + id;
-        } else {
-            return id;
-        }
-    }*/
 
     /**
      * Sets the Database ID for the Topic.
@@ -317,6 +301,31 @@ public class SpecTopic extends SpecNode {
         relationships.add(relationship);
     }
 
+    /**
+     * Add a relationship to the topic.
+     *
+     * @param topic The topic that is to be related to.
+     * @param type  The type of the relationship.
+     */
+    public void addRelationshipToProcessTopic(final SpecTopic topic, final RelationshipType type) {
+        final ProcessRelationship relationship = new ProcessRelationship(this, topic, type);
+        topicTargetRelationships.add(relationship);
+        relationships.add(relationship);
+    }
+
+    /**
+     * Add a relationship to the topic.
+     *
+     * @param topic The topic that is to be related to.
+     * @param type  The type of the relationship.
+     * @param title The title of the topic to be related to.
+     */
+    public void addRelationshipToProcessTopic(final SpecTopic topic, final RelationshipType type, final String title) {
+        final ProcessRelationship relationship = new ProcessRelationship(this, topic, type, title);
+        topicTargetRelationships.add(relationship);
+        relationships.add(relationship);
+    }
+
     // End of the basic getter/setter methods for this Topic.
 
     /**
@@ -458,8 +467,8 @@ public class SpecTopic extends SpecNode {
     public List<TopicRelationship> getTopicRelationships() {
         ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>(topicRelationships);
         for (final TargetRelationship relationship : topicTargetRelationships) {
-            relationships.add(
-                    new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+            relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
+                    relationship.getType()));
         }
         return relationships;
     }
@@ -491,7 +500,7 @@ public class SpecTopic extends SpecNode {
         /* Check the topic to target relationships for related relationships */
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.REFER_TO) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -527,7 +536,7 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREREQUISITE) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -563,7 +572,7 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.LINKLIST) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -599,7 +608,7 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.NEXT) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -620,7 +629,7 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREVIOUS) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }

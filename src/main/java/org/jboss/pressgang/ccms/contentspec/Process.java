@@ -145,8 +145,8 @@ public class Process extends Level {
                         }
 
                         if (prevTopic != null) {
-                            specTopic.addRelationshipToTarget(prevTopic, RelationshipType.PREVIOUS);
-                            prevTopic.addRelationshipToTarget(specTopic, RelationshipType.NEXT);
+                            specTopic.addRelationshipToProcessTopic(prevTopic, RelationshipType.PREVIOUS);
+                            prevTopic.addRelationshipToProcessTopic(specTopic, RelationshipType.NEXT);
                         }
 
                         // Set the current topic as the previous topic
@@ -182,8 +182,8 @@ public class Process extends Level {
                     }
 
                     if (prevTopic != null) {
-                        specTopic.addRelationshipToTarget(prevTopic, RelationshipType.PREVIOUS);
-                        prevTopic.addRelationshipToTarget(specTopic, RelationshipType.NEXT);
+                        specTopic.addRelationshipToProcessTopic(prevTopic, RelationshipType.PREVIOUS);
+                        prevTopic.addRelationshipToProcessTopic(specTopic, RelationshipType.NEXT);
                     }
 
                     // Set the current topic as the previous topic

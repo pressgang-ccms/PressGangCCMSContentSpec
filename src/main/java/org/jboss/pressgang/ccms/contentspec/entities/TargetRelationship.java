@@ -40,7 +40,7 @@ public class TargetRelationship extends Relationship {
         return topic;
     }
 
-    public SpecNode getSecondaryElement() {
+    public SpecNode getSecondaryRelationship() {
         return secondaryNode;
     }
 }

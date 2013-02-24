@@ -10,4 +10,8 @@ public interface CSRelatedNodeWrapper extends BaseCSNodeWrapper<CSRelatedNodeWra
     Integer getRelationshipId();
 
     void setRelationshipId(Integer id);
+
+    Integer getRelationshipSort();
+
+    void setRelationshipSort(Integer sort);
 }

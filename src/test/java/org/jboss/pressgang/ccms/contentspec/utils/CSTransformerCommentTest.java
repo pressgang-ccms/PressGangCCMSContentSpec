@@ -12,7 +12,6 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.internal.matchers.StringContains.containsString;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.contains;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)
@@ -32,7 +31,7 @@ public class CSTransformerCommentTest extends CSTransformerTest {
             transformer.transformComment(nodeWrapper);
 
             // Then an exception is thrown with an appropriate error
-            fail("IllegalArgumentException was not thrown");
+            fail(ILLEGAL_ARG_EX_MISSING);
         } catch (IllegalArgumentException e) {
             assertThat(e.getMessage(), containsString("The passed node is not a Comment"));
         }

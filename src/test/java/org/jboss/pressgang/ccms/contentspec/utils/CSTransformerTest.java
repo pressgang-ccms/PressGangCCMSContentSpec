@@ -14,6 +14,8 @@ public class CSTransformerTest extends BaseUnitTest {
 
     @Rule public PowerMockRule rule = new PowerMockRule();
 
+    public static final String ILLEGAL_ARG_EX_MISSING = "IllegalArgumentException was not thrown";
+
     protected CSTransformer transformer;
 
     @Before

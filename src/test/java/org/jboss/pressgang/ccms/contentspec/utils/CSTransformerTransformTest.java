@@ -17,7 +17,6 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
 
 import java.util.Arrays;
 import java.util.List;
@@ -36,7 +35,6 @@ import static org.mockito.Mockito.verify;
 /**
  * @author kamiller@redhat.com (Katie Miller)
  */
-@PrepareForTest({CSTransformer.class})
 public class CSTransformerTransformTest extends CSTransformerTest {
 
     @ArbitraryString(type = StringType.ALPHANUMERIC) String title;

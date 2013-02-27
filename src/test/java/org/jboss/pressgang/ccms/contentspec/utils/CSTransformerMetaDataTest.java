@@ -9,15 +9,15 @@ import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.junit.Test;
-import org.mockito.Mock;
 
 import java.util.ArrayList;
 
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.selectRandomListItem;
+import static org.jboss.pressgang.ccms.contentspec.constants.CSConstants.INLINE_INJECTION_TITLE;
 import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)
@@ -27,20 +27,18 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
 
     @ArbitraryString(type = StringType.ALPHANUMERIC) String key;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String value;
-    @Mock CSNodeWrapper nodeWrapper;
 
     @Test
     public void shouldTransformBookMetaData() throws Exception {
         // Given a node with a book type title
-        given(nodeWrapper.getTitle()).willReturn(CSConstants.BOOK_TYPE_TITLE);
         // And a valid book type
         ArrayList<BookType> bookTypes = new ArrayList<BookType>(asList(BookType.values()));
         bookTypes.remove(BookType.INVALID);
         BookType bookType = selectRandomListItem(bookTypes);
-        given(nodeWrapper.getAdditionalText()).willReturn(bookType.toString());
+        CSNodeWrapper nodeWrapper = createMetaDataMock(CSConstants.BOOK_TYPE_TITLE, bookType.toString());
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>)transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) transformer.transformMetaData(nodeWrapper);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CSConstants.BOOK_TYPE_TITLE));
@@ -51,12 +49,11 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
     @Test
     public void shouldTransFormBookMetaDataWithInvalidType() throws Exception {
         // Given a node with a book type title
-        given(nodeWrapper.getTitle()).willReturn(CSConstants.BOOK_TYPE_TITLE);
         // And an invalid book type
-        given(nodeWrapper.getAdditionalText()).willReturn("foo");
+        CSNodeWrapper nodeWrapper = createMetaDataMock(CSConstants.BOOK_TYPE_TITLE, "foo");
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>)transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) transformer.transformMetaData(nodeWrapper);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CSConstants.BOOK_TYPE_TITLE));
@@ -67,15 +64,14 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
     @Test
     public void shouldTransformInjectionMetaData() throws Exception {
         // Given a node with an inline injection type title
-        given(nodeWrapper.getTitle()).willReturn(CSConstants.INLINE_INJECTION_TITLE);
         // And a valid injection
-        given(nodeWrapper.getAdditionalText()).willReturn("[topicType]");
+        CSNodeWrapper nodeWrapper = createMetaDataMock(INLINE_INJECTION_TITLE, "[topicType]");
 
         // When the node metadata is transformed
-        KeyValueNode<InjectionOptions> result = (KeyValueNode<InjectionOptions>)transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<InjectionOptions> result = (KeyValueNode<InjectionOptions>) transformer.transformMetaData(nodeWrapper);
 
         // Then the result has an inline injection type key
-        assertThat(result.getKey(), is(CSConstants.INLINE_INJECTION_TITLE));
+        assertThat(result.getKey(), is(INLINE_INJECTION_TITLE));
         // And the value is the injection options
         assertThat(result.getValue().getStrictTopicTypes(), Matchers.contains("topicType"));
     }
@@ -83,12 +79,11 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
     @Test
     public void shouldTransformArbitraryMetaData() throws Exception {
         // Given a node with a title that is not an inline injection or book type
-        given(nodeWrapper.getTitle()).willReturn(key);
         // And some string value
-        given(nodeWrapper.getAdditionalText()).willReturn(value);
+        CSNodeWrapper nodeWrapper = createMetaDataMock(key, value);
 
         // When the node metadata is transformed
-        KeyValueNode<String> result = (KeyValueNode<String>)transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<String> result = (KeyValueNode<String>) transformer.transformMetaData(nodeWrapper);
 
         // Then the result has the key given
         assertThat(result.getKey(), is(key));

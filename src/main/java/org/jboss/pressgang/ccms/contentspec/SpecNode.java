@@ -245,16 +245,19 @@ public abstract class SpecNode extends Node {
     /**
      * Get the Source Urls for a node and also checks to make sure the url hasn't already been inherited
      *
+     * @param useInherited If the function should check for inherited source urls
      * @return A List of Strings that represent the source urls
      */
-    public List<String> getSourceUrls() {
+    public List<String> getSourceUrls(boolean useInherited) {
         final List<String> temp = new ArrayList<String>(sourceUrls);
-        if (sourceUrls == null && parent != null) {
-            return getParent().getSourceUrls();
-        } else if (parent != null) {
-            for (final String url : getParent().getSourceUrls()) {
-                if (!temp.contains(url)) {
-                    temp.add(url);
+        if (useInherited) {
+            if (sourceUrls == null && parent != null) {
+                return getParent().getSourceUrls(true);
+            } else if (parent != null) {
+                for (final String url : getParent().getSourceUrls(true)) {
+                    if (!temp.contains(url)) {
+                        temp.add(url);
+                    }
                 }
             }
         }

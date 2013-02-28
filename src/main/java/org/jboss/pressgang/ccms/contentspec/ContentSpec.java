@@ -724,7 +724,7 @@ public class ContentSpec extends Node {
      * @return A List of Strings that represent the source urls
      */
     public List<String> getSourceUrls() {
-        return level.getSourceUrls();
+        return level.getSourceUrls(true);
     }
 
     public Boolean getAllowDuplicateTopics() {

@@ -15,6 +15,8 @@ public interface CollectionWrapper<T extends EntityWrapper<T>> {
 
     public List<T> getItems();
 
+    public List<T> getUnchangedItems();
+
     public List<T> getAddItems();
 
     public List<T> getRemoveItems();

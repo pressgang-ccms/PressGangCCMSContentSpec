@@ -552,7 +552,7 @@ public class Level extends SpecNode {
          */
         final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
-            if (childTopic.getDBId() == DBId) {
+            if (childTopic.getDBId().equals(DBId)) {
                 return childTopic;
             }
         }
@@ -626,7 +626,7 @@ public class Level extends SpecNode {
          */
         final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
-            if (childTopic.getDBId() == topicId) {
+            if (childTopic.getDBId().equals(topicId)) {
                 return true;
             }
         }

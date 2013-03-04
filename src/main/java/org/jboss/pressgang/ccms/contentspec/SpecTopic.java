@@ -26,7 +26,7 @@ import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {
     private String id;
-    private int DBId = 0;
+    private Integer DBId = null;
     private String type;
     private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
     private List<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
@@ -132,7 +132,7 @@ public class SpecTopic extends SpecNode {
      *
      * @param id The Database ID for the Topic.
      */
-    public void setDBId(int id) {
+    public void setDBId(Integer id) {
         DBId = id;
     }
 
@@ -141,7 +141,7 @@ public class SpecTopic extends SpecNode {
      *
      * @return The Topics database ID.
      */
-    public int getDBId() {
+    public Integer getDBId() {
         return DBId;
     }
 

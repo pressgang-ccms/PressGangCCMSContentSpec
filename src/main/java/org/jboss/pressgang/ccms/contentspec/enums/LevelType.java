@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.enums;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 
 /**
@@ -10,8 +11,8 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
  * @author lnewson
  */
 public enum LevelType {
-    BASE(CSConstants.LEVEL_BASE), CHAPTER(CSConstants.LEVEL_CHAPTER), APPENDIX(CSConstants.LEVEL_APPENDIX),
-    PROCESS(CSConstants.LEVEL_PROCESS), SECTION(CSConstants.LEVEL_SECTION), PART(CSConstants.LEVEL_PART);
+    BASE(CSConstants.LEVEL_BASE), CHAPTER(CommonConstants.CS_NODE_CHAPTER), APPENDIX(CommonConstants.CS_NODE_APPENDIX),
+    PROCESS(CommonConstants.CS_NODE_PROCESS), SECTION(CommonConstants.CS_NODE_SECTION), PART(CommonConstants.CS_NODE_PART);
 
     private final int type;
 
@@ -35,15 +36,15 @@ public enum LevelType {
      */
     public String getTitle() {
         switch (this.getId()) {
-            case CSConstants.LEVEL_CHAPTER:
+            case CommonConstants.CS_NODE_CHAPTER:
                 return CSConstants.CHAPTER;
-            case CSConstants.LEVEL_SECTION:
+            case CommonConstants.CS_NODE_SECTION:
                 return CSConstants.SECTION;
-            case CSConstants.LEVEL_APPENDIX:
+            case CommonConstants.CS_NODE_APPENDIX:
                 return CSConstants.APPENDIX;
-            case CSConstants.LEVEL_PROCESS:
+            case CommonConstants.CS_NODE_PROCESS:
                 return CSConstants.PROCESS;
-            case CSConstants.LEVEL_PART:
+            case CommonConstants.CS_NODE_PART:
                 return CSConstants.PART;
             default:
                 return null;

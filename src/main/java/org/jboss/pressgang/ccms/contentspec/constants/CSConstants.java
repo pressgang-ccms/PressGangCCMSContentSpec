@@ -4,19 +4,8 @@ public class CSConstants {
 
     public static final String BUGZILLA_URL_PROPERTY = "contentSpec.bugzillaUrl";
 
-    // Relationship Types
-    public static final Integer RELATIONSHIP_TYPE_ID = 1;
-    public static final Integer PREREQUISITE_TYPE_ID = 2;
-    public static final Integer NEXT_TYPE_ID = 3;
-    public static final Integer PREVIOUS_TYPE_ID = 4;
-
     // Level Type Constants
-    public static final int LEVEL_CHAPTER = 1;
-    public static final int LEVEL_SECTION = 2;
-    public static final int LEVEL_APPENDIX = 3;
-    public static final int LEVEL_BASE = 4;
-    public static final int LEVEL_PROCESS = 5;
-    public static final int LEVEL_PART = 6;
+    public static final int LEVEL_BASE = -1;
 
     // Other
     public static final int CSP_PROPERTY_ID = 15;
@@ -24,7 +13,7 @@ public class CSConstants {
     public static final String CSP_POST_PROCESSED_STRING = "Post Processed";
 
     // Output format constants
-    public static final String SKYNET_OUTPUT_FORMAT = "Cloud";
+    public static final String PRESSGANG_OUTPUT_FORMAT = "Cloud";
     public static final String CSP_OUTPUT_FORMAT = "Narrative";
 
     public static final Integer TYPE_CATEGORY_ID = 4;
@@ -112,7 +101,7 @@ public class CSConstants {
     /**
      * The Content Specification tag name
      */
-    public static final String CONTENT_SPEC_TAG_NAME = "Content Specfication";
+    public static final String CONTENT_SPEC_TAG_NAME = "Content Specification";
 
     /**
      * The Added By Property Tag ID

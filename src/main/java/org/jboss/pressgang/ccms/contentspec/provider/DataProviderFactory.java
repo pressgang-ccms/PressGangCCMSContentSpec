@@ -7,8 +7,6 @@ import java.lang.reflect.Constructor;
 import java.net.URL;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jboss.pressgang.ccms.contentspec.wrapper.WrapperFactory;
 
@@ -40,19 +38,37 @@ public abstract class DataProviderFactory {
         // Find the implementation for the DataProviderFactory.
         final Class<? extends DataProviderFactory> dataProviderClass = findDataProviderImpl();
 
-        // Get the classes of the arguments passed.
-        final List<Class<?>> argClasses = new ArrayList<Class<?>>();
-        for (final Object arg : args) {
-            argClasses.add(arg.getClass());
-        }
-
         // Find the constructor that matches the arguments passed.
         final DataProviderFactory factory;
         try {
-            final Constructor<? extends DataProviderFactory> dataProviderConstructor = dataProviderClass.getConstructor(
-                    argClasses.toArray(new Class<?>[argClasses.size()]));
+            Constructor<? extends DataProviderFactory> dataProviderConstructor = null;
+            final Constructor[] constructors = dataProviderClass.getDeclaredConstructors();
+            for (final Constructor constructor : constructors) {
+                final Class<?>[] params = constructor.getParameterTypes();
+                boolean matches = true;
 
-            factory = dataProviderConstructor.newInstance(args);
+                // Ensure that all the argument match
+                if (args.length == params.length) {
+                    for (int i = 0; i < params.length; i++) {
+                        if (!params[i].isAssignableFrom(args[i].getClass())) {
+                            matches = false;
+                        }
+                    }
+                }
+
+                // If the constructor matches then break the loop, as we've found the matching constructor
+                if (matches) {
+                    dataProviderConstructor = constructor;
+                    break;
+                }
+            }
+
+            // Make sure a constructor was found
+            if (dataProviderConstructor != null) {
+                factory = dataProviderConstructor.newInstance(args);
+            } else {
+                factory = null;
+            }
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -87,15 +103,15 @@ public abstract class DataProviderFactory {
                         return (Class<? extends DataProviderFactory>) findClass(factoryClassName, classLoader);
                     } catch (ClassNotFoundException e) {
                         final URL url = classLoader.getResource(serviceId);
-                        throw new ClassNotFoundException("Could not find from factory file" + url, e);
+                        throw new ClassNotFoundException("Could not find from factory file " + url, e);
                     }
                 } else {
                     final URL url = classLoader.getResource(serviceId);
-                    throw new ClassNotFoundException("Could not find from factory file" + url);
+                    throw new ClassNotFoundException("Could not find from factory file " + url);
                 }
             } else {
                 final URL url = classLoader.getResource(serviceId);
-                throw new ClassNotFoundException("Could not find from factory file" + url);
+                throw new ClassNotFoundException("Could not find from factory file " + url);
             }
         } catch (Exception ex) {
             throw new RuntimeException(ex);

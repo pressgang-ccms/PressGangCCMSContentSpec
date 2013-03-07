@@ -394,6 +394,10 @@ public abstract class SpecNode extends Node {
         if (description != null) {
             vars.add("Description = " + description);
         }
+
+        if (condition != null) {
+            vars.add("condition = " + condition);
+        }
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
     }
 

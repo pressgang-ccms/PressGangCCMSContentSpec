@@ -1,10 +1,39 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidCommentMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidLevelMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidTopicMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.getLevelTypeMapping;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.selectRandomListItem;
+import static org.jboss.pressgang.ccms.utils.constants.CommonConstants.CS_RELATIONSHIP_REFER_TO;
+import static org.junit.Assert.assertThat;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyList;
+import static org.mockito.Matchers.anyMap;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.util.Arrays;
+import java.util.List;
+
 import net.sf.ipsedixit.annotation.Arbitrary;
 import net.sf.ipsedixit.annotation.ArbitraryString;
 import net.sf.ipsedixit.core.StringType;
 import org.hamcrest.Matchers;
-import org.jboss.pressgang.ccms.contentspec.*;
+import org.jboss.pressgang.ccms.contentspec.Appendix;
+import org.jboss.pressgang.ccms.contentspec.Comment;
+import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
+import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.Section;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
@@ -18,20 +47,6 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 
-import java.util.Arrays;
-import java.util.List;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.jboss.pressgang.ccms.contentspec.TestUtil.*;
-import static org.jboss.pressgang.ccms.utils.constants.CommonConstants.CS_RELATIONSHIP_REFER_TO;
-import static org.junit.Assert.assertThat;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Matchers.*;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-
 /**
  * @author kamiller@redhat.com (Katie Miller)
  */
@@ -40,6 +55,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
     @ArbitraryString(type = StringType.ALPHANUMERIC) String title;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String text;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String product;
+    @ArbitraryString(type = StringType.ALPHANUMERIC) String condition;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String version;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String tagName;
     @ArbitraryString(type = StringType.ALPHANUMERIC) String tagName2;
@@ -60,6 +76,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(specWrapper.getTitle()).willReturn(title);
         given(specWrapper.getProduct()).willReturn(product);
         given(specWrapper.getVersion()).willReturn(version);
+        given(specWrapper.getCondition()).willReturn(condition);
 
         // When the spec is transformed
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
@@ -68,6 +85,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         assertThat(result.getTitle(), is(title));
         assertThat(result.getProduct(), is(product));
         assertThat(result.getVersion(), is(version));
+        assertThat(result.getBaseLevel().getConditionStatement(), is(condition));
     }
 
     @Test
@@ -274,7 +292,8 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         assertThat(result.getChildNodes().size(), is(1));
         // And the level should have been added to the spec's processes
         ArgumentCaptor<List> processesCaptor = ArgumentCaptor.forClass(List.class);
-        verify(transformerSpy, times(1)).applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyMap(), anyList(), processesCaptor.capture(), any(DataProviderFactory.class));
+        verify(transformerSpy, times(1)).applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyMap(), anyList(),
+                processesCaptor.capture(), any(DataProviderFactory.class));
         assertThat(processesCaptor.getValue().size(), is(1));
         Level expectedLevel = (Level) processesCaptor.getValue().get(0);
         assertThat(expectedLevel.getUniqueId(), is(id.toString()));

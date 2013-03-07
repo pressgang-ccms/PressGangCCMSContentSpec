@@ -29,6 +29,14 @@ public interface ContentSpecWrapper extends EntityWrapper<ContentSpecWrapper> {
 
     void setLocale(String locale);
 
+    Integer getType();
+
+    void setType(Integer typeId);
+
+    String getCondition();
+
+    void setCondition(String condition);
+
     Date getLastModified();
 
     PropertyTagInContentSpecWrapper getProperty(final int propertyId);

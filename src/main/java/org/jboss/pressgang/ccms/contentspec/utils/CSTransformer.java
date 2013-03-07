@@ -71,6 +71,10 @@ public class CSTransformer {
             contentSpec.setVersion(spec.getVersion());
         }
 
+        if (spec.getCondition() != null) {
+            contentSpec.getBaseLevel().setConditionStatement(spec.getCondition());
+        }
+
         // Add a space between the base metadata and optional metadata
         contentSpec.appendChild(new TextNode("\n"));
 

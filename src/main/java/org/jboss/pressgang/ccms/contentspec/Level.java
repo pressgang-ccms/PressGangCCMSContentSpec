@@ -455,11 +455,9 @@ public class Level extends SpecNode {
             output.append(getText() + "\n");
         }
 
-        if (hasSpecTopics()) {
-            for (final Node node : nodes) {
-                final String nodeOutput = node.toString();
-                output.append(nodeOutput);
-            }
+        for (final Node node : nodes) {
+            final String nodeOutput = node.toString();
+            output.append(nodeOutput);
         }
 
         return output.toString();

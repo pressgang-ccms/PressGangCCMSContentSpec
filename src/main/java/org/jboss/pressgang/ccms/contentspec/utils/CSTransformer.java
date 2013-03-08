@@ -40,7 +40,8 @@ public class CSTransformer {
      * A List of lower case metadata properties that should be ignored during transformation because they exist else where.
      */
     private static final List<String> IGNORE_META_DATA = CollectionUtilities.toArrayList(CSConstants.TITLE_TITLE.toLowerCase(),
-            CSConstants.PRODUCT_TITLE.toLowerCase(), CSConstants.VERSION_TITLE.toLowerCase());
+            CSConstants.PRODUCT_TITLE.toLowerCase(), CSConstants.VERSION_TITLE.toLowerCase(), CSConstants.ID_TITLE.toLowerCase(),
+            CSConstants.CHECKSUM_TITLE.toLowerCase());
 
     /**
      * Transforms a content spec datasource entity into a generic content spec object.

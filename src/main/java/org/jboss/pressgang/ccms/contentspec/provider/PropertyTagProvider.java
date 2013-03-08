@@ -1,10 +1,13 @@
 package org.jboss.pressgang.ccms.contentspec.provider;
 
+import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInPropertyCategoryWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagInTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.PropertyTagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
 
@@ -18,27 +21,27 @@ public interface PropertyTagProvider {
 
     PropertyTagWrapper newPropertyTag();
 
-    PropertyTagInTopicWrapper newPropertyTagInTopic();
+    PropertyTagInTopicWrapper newPropertyTagInTopic(BaseTopicWrapper<?> topic);
 
-    PropertyTagInTopicWrapper newPropertyTagInTopic(PropertyTagWrapper propertyTag);
+    PropertyTagInTopicWrapper newPropertyTagInTopic(PropertyTagWrapper propertyTag, BaseTopicWrapper<?> topic);
 
-    PropertyTagInTagWrapper newPropertyTagInTag();
+    PropertyTagInTagWrapper newPropertyTagInTag(TagWrapper tag);
 
-    PropertyTagInTagWrapper newPropertyTagInTag(PropertyTagWrapper propertyTag);
+    PropertyTagInTagWrapper newPropertyTagInTag(PropertyTagWrapper propertyTag, TagWrapper tag);
 
-    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec();
+    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec(ContentSpecWrapper contentSpec);
 
-    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec(PropertyTagWrapper propertyTag);
+    PropertyTagInContentSpecWrapper newPropertyTagInContentSpec(PropertyTagWrapper propertyTag, ContentSpecWrapper contentSpec);
 
     PropertyTagInPropertyCategoryWrapper newPropertyTagInPropertyCategory();
 
     CollectionWrapper<PropertyTagWrapper> newPropertyTagCollection();
 
-    UpdateableCollectionWrapper<PropertyTagInTopicWrapper> newPropertyTagInTopicCollection();
+    UpdateableCollectionWrapper<PropertyTagInTopicWrapper> newPropertyTagInTopicCollection(BaseTopicWrapper<?> topic);
 
-    UpdateableCollectionWrapper<PropertyTagInTagWrapper> newPropertyTagInTagCollection();
+    UpdateableCollectionWrapper<PropertyTagInTagWrapper> newPropertyTagInTagCollection(TagWrapper tag);
 
-    UpdateableCollectionWrapper<PropertyTagInContentSpecWrapper> newPropertyTagInContentSpecCollection();
+    UpdateableCollectionWrapper<PropertyTagInContentSpecWrapper> newPropertyTagInContentSpecCollection(ContentSpecWrapper contentSpec);
 
     UpdateableCollectionWrapper<PropertyTagInPropertyCategoryWrapper> newPropertyTagInPropertyCategoryCollection();
 }

@@ -73,32 +73,38 @@ public class CSTransformerTransformTest extends CSTransformerTest {
     @Test
     public void shouldSetBasicValues() throws Exception {
         // Given a contentSpecWrapper with some base values set
-        given(specWrapper.getTitle()).willReturn(title);
-        given(specWrapper.getProduct()).willReturn(product);
-        given(specWrapper.getVersion()).willReturn(version);
+        given(specWrapper.getId()).willReturn(id);
         given(specWrapper.getCondition()).willReturn(condition);
 
         // When the spec is transformed
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
 
         // Then those values should be set on the resulting spec
-        assertThat(result.getTitle(), is(title));
-        assertThat(result.getProduct(), is(product));
-        assertThat(result.getVersion(), is(version));
+        assertThat(result.getId(), is(id));
         assertThat(result.getBaseLevel().getConditionStatement(), is(condition));
     }
 
     @Test
-    public void shouldAddTextNodeToSeparateOptionalMetaData() throws Exception {
-        // Given a contentSpecWrapper
+    public void shouldAddTextNodeToSeparateMetaData() throws Exception {
+        // Given a contentSpecWrapper with a title
+        CSNodeWrapper metaDataNode = createMetaDataMock("Title", text);
+        CSNodeWrapper levelNode = createValidLevelMock(CommonConstants.CS_NODE_SECTION);
+        setChildren(asList(metaDataNode, levelNode));
+        // And appropriate values for sorting
+        given(metaDataNode.getPreviousNodeId()).willReturn(null);
+        given(metaDataNode.getNextNodeId()).willReturn(anotherId);
+        given(metaDataNode.getId()).willReturn(id);
+        given(levelNode.getPreviousNodeId()).willReturn(id);
+        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getId()).willReturn(anotherId);
 
         // When the spec is transformed
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
 
         // Then a textNode should have been added containing just a newline
-        assertThat(result.getNodes().size(), is(2)); // (the title node plus the new node)
-        assertThat(result.getNodes().get(1).getClass().equals(TextNode.class), is(true));
-        assertThat(result.getNodes().get(1).getText().equals(("\n")), is(true));
+        assertThat(result.getNodes().size(), is(3)); // (the id, title plus the new node)
+        assertThat(result.getNodes().get(2).getClass().equals(TextNode.class), is(true));
+        assertThat(result.getNodes().get(2).getText().equals(("\n")), is(true));
     }
 
     @Test
@@ -147,8 +153,8 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
 
         // Then the transformed comment should be a child node on the resulting spec
-        assertThat(result.getChildNodes().size(), is(1));
-        assertThat(result.getChildNodes().get(0).getClass().equals(Comment.class), is(true));
+        assertThat(result.getNodes().size(), is(2));
+        assertThat(result.getNodes().get(1).getClass().equals(Comment.class), is(true));
     }
 
     @Test
@@ -156,29 +162,35 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         // Given a spec with child metadata that does not have a title on the ignore list
         CSNodeWrapper metaDataNode = createMetaDataMock(title, text);
         setChildren(asList(metaDataNode));
+        // And appropriate values for sorting
+        given(metaDataNode.getPreviousNodeId()).willReturn(null);
+        given(metaDataNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
 
         // Then the transformed metadata should be a node on the resulting spec
         assertThat(result.getChildNodes().size(), is(0));
-        assertThat(result.getNodes().size(), is(3));
-        assertThat(result.getNodes().get(2).getClass().equals(KeyValueNode.class), is(true));
-        assertThat(result.getNodes().get(2).getText(), containsString(title));
+        assertThat(result.getNodes().size(), is(2));
+        assertThat(result.getNodes().get(1).getClass().equals(KeyValueNode.class), is(true));
+        assertThat(result.getNodes().get(1).getText(), containsString(title));
     }
 
     @Test
     public void shouldNotAddMetaDataIfOnIgnoreList() throws Exception {
         // Given a spec with child metadata that has a title on the ignore list
-        CSNodeWrapper metaDataNode = createMetaDataMock("Title", text);
+        CSNodeWrapper metaDataNode = createMetaDataMock("ID", text);
         setChildren(asList(metaDataNode));
+        // And appropriate values for sorting
+        given(metaDataNode.getPreviousNodeId()).willReturn(null);
+        given(metaDataNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = transformer.transform(specWrapper, providerFactory);
 
         // Then the transformed metadata should not be a node on the resulting spec
         assertThat(result.getChildNodes().size(), is(0));
-        assertThat(result.getNodes().size(), is(2));
+        assertThat(result.getNodes().size(), is(1));
         for (Node n : result.getNodes()) {
             assertThat(n.getText().contains(title), is(false));
         }
@@ -221,9 +233,9 @@ public class CSTransformerTransformTest extends CSTransformerTest {
 
         // Then the nodes should have been added as children of the resulting spec
         // And be in the order expected
-        assertThat(result.getChildNodes().get(0).getClass().equals(Comment.class), is(true));
-        assertThat(result.getChildNodes().get(1).getClass().equals(Appendix.class), is(true));
-        assertThat(result.getChildNodes().get(2).getClass().equals(SpecTopic.class), is(true));
+        assertThat(result.getNodes().get(1).getClass().equals(Comment.class), is(true));
+        assertThat(result.getChildNodes().get(0).getClass().equals(Appendix.class), is(true));
+        assertThat(result.getChildNodes().get(1).getClass().equals(SpecTopic.class), is(true));
     }
 
     @Test

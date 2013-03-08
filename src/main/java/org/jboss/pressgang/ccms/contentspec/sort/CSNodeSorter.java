@@ -19,15 +19,9 @@ public class CSNodeSorter {
         if (map.isEmpty()) return new LinkedHashMap<CSNodeWrapper, Node>(map);
 
         final LinkedHashMap<CSNodeWrapper, Node> retValue = new LinkedHashMap<CSNodeWrapper, Node>();
-        Map.Entry<CSNodeWrapper, Node> nodeEntry = null;
 
-        // Find the initial entry
-        for (final Map.Entry<CSNodeWrapper, Node> entry : map.entrySet()) {
-            if (entry.getKey().getPreviousNodeId() == null) {
-                nodeEntry = entry;
-                break;
-            }
-        }
+        // Find the initial node in the map
+        Map.Entry<CSNodeWrapper, Node> nodeEntry = findFirstEntry(map);
 
         // Add the initial entry to the linked hash map
         retValue.put(nodeEntry.getKey(), nodeEntry.getValue());
@@ -43,6 +37,8 @@ public class CSNodeSorter {
     /**
      * Find the entry specified by a node id.
      *
+     * @param map The map to find the entry from.
+     * @param id  The ID of the next node to find in the map
      * @return The Entry value where the key matches the node id otherwise null.
      */
     private static Map.Entry<CSNodeWrapper, Node> findEntry(Map<CSNodeWrapper, Node> map, Integer id) {
@@ -55,5 +51,25 @@ public class CSNodeSorter {
         }
 
         return null;
+    }
+
+    /**
+     * Finds the initial entry for the unordered map.
+     *
+     * @param map The unordered map.
+     * @return The initial entry to start sorting the map from.
+     */
+    private static Map.Entry<CSNodeWrapper, Node> findFirstEntry(Map<CSNodeWrapper, Node> map) {
+        Map.Entry<CSNodeWrapper, Node> nodeEntry = null;
+
+        // Find the initial entry
+        for (final Map.Entry<CSNodeWrapper, Node> entry : map.entrySet()) {
+            if (entry.getKey().getPreviousNodeId() == null) {
+                nodeEntry = entry;
+                break;
+            }
+        }
+
+        return nodeEntry;
     }
 }

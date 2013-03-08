@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -31,7 +32,6 @@ import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class CSTransformer {
@@ -39,8 +39,7 @@ public class CSTransformer {
     /**
      * A List of lower case metadata properties that should be ignored during transformation because they exist else where.
      */
-    private static final List<String> IGNORE_META_DATA = CollectionUtilities.toArrayList(CSConstants.TITLE_TITLE.toLowerCase(),
-            CSConstants.PRODUCT_TITLE.toLowerCase(), CSConstants.VERSION_TITLE.toLowerCase(), CSConstants.ID_TITLE.toLowerCase(),
+    private static final List<String> IGNORE_META_DATA = Arrays.asList(CSConstants.ID_TITLE.toLowerCase(),
             CSConstants.CHECKSUM_TITLE.toLowerCase());
 
     /**
@@ -62,22 +61,9 @@ public class CSTransformer {
         final ContentSpec contentSpec = new ContentSpec();
 
         contentSpec.setId(spec.getId());
-        if (spec.getTitle() != null) {
-            contentSpec.setTitle(spec.getTitle());
-        }
-        if (spec.getProduct() != null) {
-            contentSpec.setProduct(spec.getProduct());
-        }
-        if (spec.getVersion() != null) {
-            contentSpec.setVersion(spec.getVersion());
-        }
-
         if (spec.getCondition() != null) {
             contentSpec.getBaseLevel().setConditionStatement(spec.getCondition());
         }
-
-        // Add a space between the base metadata and optional metadata
-        contentSpec.appendChild(new TextNode("\n"));
 
         // Add all of the tags
         if (spec.getTags() != null && spec.getTags().getItems() != null) {
@@ -102,7 +88,7 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
                         final KeyValueNode<?> metaDataNode = transformMetaData(childNode);
-                        contentSpec.appendChild(metaDataNode);
+                        levelNodes.put(childNode, metaDataNode);
                     }
                 } else {
                     final Level level = transformLevel(childNode, nodes, specTopicMap, topicTargets, relationshipFromNodes);
@@ -118,12 +104,25 @@ public class CSTransformer {
             // Sort the level nodes so that they are in the right order based on next/prev values.
             final LinkedHashMap<CSNodeWrapper, Node> sortedMap = CSNodeSorter.sortMap(levelNodes);
 
-            // Add the child nodes to the level now that they are in the right order.
+            // Add the child nodes to the content spec now that they are in the right order.
+            boolean addToBaseLevel = false;
             for (final Map.Entry<CSNodeWrapper, Node> entry : sortedMap.entrySet()) {
-                contentSpec.getBaseLevel().appendChild(entry.getValue());
-                // Add a new line to separate chapters/parts
-                if (entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) {
-                    contentSpec.getBaseLevel().appendChild(new TextNode("\n"));
+                // If a level or spec topic is found then start adding to the base level instead of the content spec
+                if (entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) {
+                    addToBaseLevel = true;
+                    // Add a space between the base metadata and optional metadata
+                    contentSpec.appendChild(new TextNode("\n"));
+                }
+
+                // Add the node to the right component.
+                if (addToBaseLevel) {
+                    contentSpec.getBaseLevel().appendChild(entry.getValue());
+                    // Add a new line to separate chapters/parts
+                    if (entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) {
+                        contentSpec.getBaseLevel().appendChild(new TextNode("\n"));
+                    }
+                } else {
+                    contentSpec.appendChild(entry.getValue());
                 }
             }
         }

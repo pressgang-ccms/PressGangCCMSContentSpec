@@ -182,7 +182,7 @@ public class ContentSpec extends Node {
             this.brand = null;
         } else if (this.brand == null) {
             this.brand = new KeyValueNode<String>(CSConstants.BRAND_TITLE, brand);
-            appendChild(this.brand);
+            appendChild(this.brand, false);
         } else {
             this.brand.setValue(brand);
         }
@@ -271,7 +271,7 @@ public class ContentSpec extends Node {
             this.title = null;
         } else if (this.title == null) {
             this.title = new KeyValueNode<String>(CSConstants.TITLE_TITLE, title);
-            appendChild(this.title);
+            appendChild(this.title, false);
         } else {
             this.title.setValue(title);
         }
@@ -299,7 +299,7 @@ public class ContentSpec extends Node {
             this.subtitle = null;
         } else if (this.subtitle == null) {
             this.subtitle = new KeyValueNode<String>(CSConstants.SUBTITLE_TITLE, subtitle);
-            appendChild(this.subtitle);
+            appendChild(this.subtitle, false);
         } else {
             this.subtitle.setValue(subtitle);
         }
@@ -327,7 +327,7 @@ public class ContentSpec extends Node {
             this.bookVersion = null;
         } else if (this.bookVersion == null) {
             this.bookVersion = new KeyValueNode<String>(CSConstants.BOOK_VERSION_TITLE, bookVersion);
-            appendChild(this.bookVersion);
+            appendChild(this.bookVersion, false);
         } else {
             this.bookVersion.setValue(bookVersion);
         }
@@ -355,7 +355,7 @@ public class ContentSpec extends Node {
             this.edition = null;
         } else if (this.edition == null) {
             this.edition = new KeyValueNode<String>(CSConstants.EDITION_TITLE, edition);
-            appendChild(this.edition);
+            appendChild(this.edition, false);
         } else {
             this.edition.setValue(edition);
         }
@@ -383,7 +383,7 @@ public class ContentSpec extends Node {
             this.pubsNumber = null;
         } else if (this.pubsNumber == null) {
             this.pubsNumber = new KeyValueNode<Integer>(CSConstants.PUBSNUMBER_TITLE, pubsNumber);
-            appendChild(this.pubsNumber);
+            appendChild(this.pubsNumber, false);
         } else {
             this.pubsNumber.setValue(pubsNumber);
         }
@@ -411,7 +411,7 @@ public class ContentSpec extends Node {
             this.publicanCfg = null;
         } else if (this.publicanCfg == null) {
             this.publicanCfg = new KeyValueNode<String>(CSConstants.PUBLICAN_CFG_TITLE, publicanCfg);
-            appendChild(this.publicanCfg);
+            appendChild(this.publicanCfg, false);
         } else {
             this.publicanCfg.setValue(publicanCfg);
         }
@@ -439,7 +439,7 @@ public class ContentSpec extends Node {
             this.dtd = null;
         } else if (this.dtd == null) {
             this.dtd = new KeyValueNode<String>(CSConstants.DTD_TITLE, dtd);
-            appendChild(this.dtd);
+            appendChild(this.dtd, false);
         } else {
             this.dtd.setValue(dtd);
         }
@@ -471,7 +471,7 @@ public class ContentSpec extends Node {
             this.checksum = null;
         } else if (this.checksum == null) {
             this.checksum = new KeyValueNode<String>(CSConstants.CHECKSUM_TITLE, checksum);
-            appendChild(this.checksum);
+            appendChild(this.checksum, false);
         } else {
             this.checksum.setValue(checksum);
         }
@@ -499,7 +499,7 @@ public class ContentSpec extends Node {
             this.description = null;
         } else if (this.description == null) {
             this.description = new KeyValueNode<String>(CSConstants.ABSTRACT_TITLE, description);
-            appendChild(this.description);
+            appendChild(this.description, false);
         } else {
             this.description.setValue(description);
         }
@@ -527,7 +527,7 @@ public class ContentSpec extends Node {
             this.copyrightHolder = null;
         } else if (this.copyrightHolder == null) {
             this.copyrightHolder = new KeyValueNode<String>(CSConstants.COPYRIGHT_HOLDER_TITLE, copyrightHolder);
-            appendChild(this.copyrightHolder);
+            appendChild(this.copyrightHolder, false);
         } else {
             this.copyrightHolder.setValue(copyrightHolder);
         }
@@ -557,7 +557,7 @@ public class ContentSpec extends Node {
             this.bookType = null;
         } else if (this.bookType == null) {
             this.bookType = new KeyValueNode<BookType>(CSConstants.BOOK_TYPE_TITLE, bookType);
-            appendChild(this.bookType);
+            appendChild(this.bookType, false);
         } else {
             this.bookType.setValue(bookType);
         }
@@ -585,7 +585,7 @@ public class ContentSpec extends Node {
             this.injectionOptions = null;
         } else if (this.injectionOptions == null) {
             this.injectionOptions = new KeyValueNode<InjectionOptions>(CSConstants.INLINE_INJECTION_TITLE, injectionOptions);
-            appendChild(this.injectionOptions);
+            appendChild(this.injectionOptions, false);
         } else {
             this.injectionOptions.setValue(injectionOptions);
         }
@@ -649,7 +649,7 @@ public class ContentSpec extends Node {
             this.outputStyle = null;
         } else if (this.outputStyle == null) {
             this.outputStyle = new KeyValueNode<String>(CSConstants.OUTPUT_STYLE_TITLE, outputStyle);
-            appendChild(this.outputStyle);
+            appendChild(this.outputStyle, false);
         } else {
             this.outputStyle.setValue(outputStyle);
         }
@@ -739,7 +739,7 @@ public class ContentSpec extends Node {
             this.allowDuplicateTopics = null;
         } else if (this.allowDuplicateTopics == null) {
             this.allowDuplicateTopics = new KeyValueNode<Boolean>("Duplicate Topics", allowDuplicateTopics);
-            appendChild(this.allowDuplicateTopics);
+            appendChild(this.allowDuplicateTopics, false);
         } else {
             this.allowDuplicateTopics.setValue(allowDuplicateTopics);
         }
@@ -757,7 +757,7 @@ public class ContentSpec extends Node {
             this.allowEmptyLevels = null;
         } else if (this.allowEmptyLevels == null) {
             this.allowEmptyLevels = new KeyValueNode<Boolean>("Allow Empty Levels", allowEmptyLevels);
-            appendChild(this.allowEmptyLevels);
+            appendChild(this.allowEmptyLevels, false);
         } else {
             this.allowEmptyLevels.setValue(allowEmptyLevels);
         }
@@ -927,7 +927,7 @@ public class ContentSpec extends Node {
             this.bugzillaProduct = null;
         } else if (this.bugzillaProduct == null) {
             this.bugzillaProduct = new KeyValueNode<String>(CSConstants.BUGZILLA_PRODUCT_TITLE, bugzillaProduct);
-            appendChild(this.bugzillaProduct);
+            appendChild(this.bugzillaProduct, false);
         } else {
             this.bugzillaProduct.setValue(bugzillaProduct);
         }
@@ -945,7 +945,7 @@ public class ContentSpec extends Node {
             this.bugzillaComponent = null;
         } else if (this.bugzillaComponent == null) {
             this.bugzillaComponent = new KeyValueNode<String>(CSConstants.BUGZILLA_COMPONENT_TITLE, bugzillaComponent);
-            appendChild(this.bugzillaComponent);
+            appendChild(this.bugzillaComponent, false);
         } else {
             this.bugzillaComponent.setValue(bugzillaComponent);
         }
@@ -973,7 +973,7 @@ public class ContentSpec extends Node {
             this.bugzillaVersion = null;
         } else if (this.bugzillaVersion == null) {
             this.bugzillaVersion = new KeyValueNode<String>(CSConstants.BUGZILLA_VERSION_TITLE, bugzillaVersion);
-            appendChild(this.bugzillaVersion);
+            appendChild(this.bugzillaVersion, false);
         } else {
             this.bugzillaVersion.setValue(bugzillaVersion);
         }
@@ -1001,7 +1001,7 @@ public class ContentSpec extends Node {
             this.bugzillaURL = null;
         } else if (this.bugzillaURL == null) {
             this.bugzillaURL = new KeyValueNode<String>(CSConstants.BUGZILLA_URL_TITLE, bugzillaURL);
-            appendChild(this.bugzillaURL);
+            appendChild(this.bugzillaURL, false);
         } else {
             this.bugzillaURL.setValue(bugzillaURL);
         }
@@ -1019,7 +1019,7 @@ public class ContentSpec extends Node {
             this.injectBugLinks = null;
         } else if (this.injectBugLinks == null) {
             this.injectBugLinks = new KeyValueNode<Boolean>(CSConstants.BUG_LINKS_TITLE, injectBugLinks);
-            appendChild(this.injectBugLinks);
+            appendChild(this.injectBugLinks, false);
         } else {
             this.injectBugLinks.setValue(injectBugLinks);
         }
@@ -1037,7 +1037,7 @@ public class ContentSpec extends Node {
             this.injectSurveyLinks = null;
         } else if (this.injectSurveyLinks == null) {
             this.injectSurveyLinks = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, injectSurveyLinks);
-            appendChild(this.injectSurveyLinks);
+            appendChild(this.injectSurveyLinks, false);
         } else {
             this.injectSurveyLinks.setValue(injectSurveyLinks);
         }
@@ -1060,11 +1060,30 @@ public class ContentSpec extends Node {
      * @param child A Child Node to be added to the ContentSpec.
      */
     public void appendChild(final Node child) {
-        nodes.add(child);
-        if (child.getParent() != null) {
-            child.removeParent();
+        appendChild(child, true);
+    }
+
+    /**
+     * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
+     * to this content spec.
+     *
+     * @param child        A Child Node to be added to the ContentSpec.
+     * @param checkForType If the method should check the type of the child, and use a type specific method instead.
+     */
+    protected void appendChild(final Node child, boolean checkForType) {
+        if (checkForType && child instanceof KeyValueNode) {
+            appendKeyValueNode((KeyValueNode<String>) child);
+        } else if (checkForType && child instanceof Level) {
+            getBaseLevel().appendChild(child);
+        } else if (checkForType && child instanceof SpecTopic) {
+            getBaseLevel().appendChild(child);
+        } else {
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         }
-        child.setParent(this);
     }
 
     /**
@@ -1141,7 +1160,7 @@ public class ContentSpec extends Node {
         } else if (uppercaseKey.equals(CSConstants.SUBTITLE_TITLE.toUpperCase(Locale.ENGLISH))) {
             setSubtitle(node.getValue());
         } else {
-            appendChild(node);
+            appendChild(node, false);
         }
     }
 

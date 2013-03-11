@@ -19,9 +19,9 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {

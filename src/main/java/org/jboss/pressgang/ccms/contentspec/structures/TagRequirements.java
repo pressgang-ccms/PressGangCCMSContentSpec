@@ -3,8 +3,8 @@ package org.jboss.pressgang.ccms.contentspec.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTagWrapper;
 
 /**
  * This class defines the tags that a topic needs to have in order to be

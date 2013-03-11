@@ -1,5 +1,14 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.selectRandomListItem;
+import static org.jboss.pressgang.ccms.contentspec.constants.CSConstants.INLINE_INJECTION_TITLE;
+import static org.junit.Assert.assertThat;
+
+import java.util.ArrayList;
+
 import net.sf.ipsedixit.annotation.ArbitraryString;
 import net.sf.ipsedixit.core.StringType;
 import org.hamcrest.Matchers;
@@ -7,17 +16,8 @@ import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.junit.Test;
-
-import java.util.ArrayList;
-
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
-import static org.jboss.pressgang.ccms.contentspec.TestUtil.selectRandomListItem;
-import static org.jboss.pressgang.ccms.contentspec.constants.CSConstants.INLINE_INJECTION_TITLE;
-import static org.junit.Assert.assertThat;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)

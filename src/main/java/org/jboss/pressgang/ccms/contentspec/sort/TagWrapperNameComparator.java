@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.sort;
 
 import java.util.Comparator;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 
 public class TagWrapperNameComparator implements Comparator<TagWrapper> {
     public int compare(final TagWrapper o1, final TagWrapper o2) {

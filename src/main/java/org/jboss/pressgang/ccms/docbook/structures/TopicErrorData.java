@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorLevel;
 import org.jboss.pressgang.ccms.docbook.structures.TopicErrorDatabase.ErrorType;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 /**
  * Stores information on the errors and warnings that were detected in a topic.

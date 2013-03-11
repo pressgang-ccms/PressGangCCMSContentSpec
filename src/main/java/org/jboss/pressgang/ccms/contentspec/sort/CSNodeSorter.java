@@ -5,7 +5,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.contentspec.Node;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 public class CSNodeSorter {
     private final HashMap<CSNodeWrapper, Node> nodes;

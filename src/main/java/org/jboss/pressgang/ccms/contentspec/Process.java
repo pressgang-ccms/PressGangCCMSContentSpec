@@ -10,9 +10,9 @@ import java.util.Map.Entry;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.provider.TopicProvider;
+import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 
 /**
  * A class that is used to represent and process a "Process" within a Content Specification.

@@ -1,27 +1,27 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
-import net.sf.ipsedixit.annotation.Arbitrary;
-import net.sf.ipsedixit.annotation.ArbitraryString;
-import net.sf.ipsedixit.core.StringType;
-import org.jboss.pressgang.ccms.contentspec.Node;
-import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
-import org.junit.Test;
-import org.mockito.Mock;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import static com.google.common.collect.Maps.newHashMap;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.mockito.BDDMockito.given;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.ipsedixit.annotation.Arbitrary;
+import net.sf.ipsedixit.annotation.ArbitraryString;
+import net.sf.ipsedixit.core.StringType;
+import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
+import org.junit.Test;
+import org.mockito.Mock;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)

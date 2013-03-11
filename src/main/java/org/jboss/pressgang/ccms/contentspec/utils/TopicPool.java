@@ -6,10 +6,10 @@ import java.util.List;
 import org.apache.log4j.Logger;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.TopicProvider;
+import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 /**
  * A fairly simple container class to hold a set of topics that need to be updated or created

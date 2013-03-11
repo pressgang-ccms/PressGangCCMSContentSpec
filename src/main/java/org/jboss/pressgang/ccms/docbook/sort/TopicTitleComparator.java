@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.docbook.sort;
 
 import java.util.Comparator;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 public class TopicTitleComparator implements Comparator<BaseTopicWrapper<?>> {
     public int compare(final BaseTopicWrapper<?> o1, final BaseTopicWrapper<?> o2) {

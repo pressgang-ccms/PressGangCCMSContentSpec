@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.sort;
 
 import java.util.Comparator;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
 
 public class CSRelatedNodeSorter implements Comparator<CSRelatedNodeWrapper> {
 

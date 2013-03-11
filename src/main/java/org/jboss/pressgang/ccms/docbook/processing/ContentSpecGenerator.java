@@ -9,19 +9,19 @@ import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.provider.CategoryProvider;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
-import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
 import org.jboss.pressgang.ccms.contentspec.structures.TagRequirements;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryInTagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagInCategoryWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTagWrapper;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
+import org.jboss.pressgang.ccms.provider.CategoryProvider;
+import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.TagProvider;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
+import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
+import org.jboss.pressgang.ccms.wrapper.CategoryWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagInCategoryWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTagWrapper;
 
 public class ContentSpecGenerator {
     private final DataProviderFactory providerFactory;

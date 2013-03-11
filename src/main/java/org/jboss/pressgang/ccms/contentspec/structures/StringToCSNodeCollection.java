@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.structures;
 
 import java.util.ArrayList;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 
 /**

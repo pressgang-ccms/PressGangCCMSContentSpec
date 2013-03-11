@@ -13,15 +13,15 @@ import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
-import org.jboss.pressgang.ccms.contentspec.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 
 public class ContentSpecUtilities {

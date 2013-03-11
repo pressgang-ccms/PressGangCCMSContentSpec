@@ -1,17 +1,17 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
-import net.sf.ipsedixit.annotation.ArbitraryString;
-import net.sf.ipsedixit.core.StringType;
-import org.jboss.pressgang.ccms.contentspec.Comment;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.fail;
 import static org.junit.internal.matchers.StringContains.containsString;
 import static org.mockito.BDDMockito.given;
+
+import net.sf.ipsedixit.annotation.ArbitraryString;
+import net.sf.ipsedixit.core.StringType;
+import org.jboss.pressgang.ccms.contentspec.Comment;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.junit.Test;
+import org.mockito.Mock;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)

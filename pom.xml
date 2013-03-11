@@ -49,6 +49,11 @@
             <artifactId>pressgang-ccms-zanata</artifactId>
             <version>${pressgang.ccms.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.pressgang.ccms</groupId>
+            <artifactId>provider-commons</artifactId>
+            <version>${pressgang.ccms.version}</version>
+        </dependency>
 
         <!-- Testing Libraries -->
         <dependency>

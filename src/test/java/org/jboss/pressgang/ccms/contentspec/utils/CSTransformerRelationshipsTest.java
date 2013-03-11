@@ -1,28 +1,5 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
-import net.sf.ipsedixit.annotation.Arbitrary;
-import net.sf.ipsedixit.annotation.ArbitraryString;
-import net.sf.ipsedixit.core.StringType;
-import org.jboss.pressgang.ccms.contentspec.*;
-import org.jboss.pressgang.ccms.contentspec.Process;
-import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
-import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.UpdateableCollectionWrapper;
-import org.junit.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.asList;
 import static org.hamcrest.core.Is.is;
@@ -34,7 +11,36 @@ import static org.junit.internal.matchers.StringContains.containsString;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyMap;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.anyInt;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+
+import net.sf.ipsedixit.annotation.Arbitrary;
+import net.sf.ipsedixit.annotation.ArbitraryString;
+import net.sf.ipsedixit.core.StringType;
+import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.Process;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
+import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.TopicProvider;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
+import org.junit.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)
@@ -244,9 +250,12 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
 
         // Then the nodes are sorted and added as expected
         assertThat(specTopicFromNode.getRelationships().size() == 3, is(true));
-        assertThat(specTopicFromNode.getRelationships().get(0).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId3), is(true));
-        assertThat(specTopicFromNode.getRelationships().get(1).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId), is(true));
-        assertThat(specTopicFromNode.getRelationships().get(2).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId2), is(true));
+        assertThat(specTopicFromNode.getRelationships().get(0).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId3),
+                is(true));
+        assertThat(specTopicFromNode.getRelationships().get(1).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId),
+                is(true));
+        assertThat(specTopicFromNode.getRelationships().get(2).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId2),
+                is(true));
     }
 
     private void setUpRelatedToNodes(CSRelatedNodeWrapper relatedNodeWrapper, Integer relationshipType) {

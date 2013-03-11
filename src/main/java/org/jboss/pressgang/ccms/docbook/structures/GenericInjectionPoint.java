@@ -3,8 +3,8 @@ package org.jboss.pressgang.ccms.docbook.structures;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 /**
  * This class represents the topics that will be injected into a topic for a given category.

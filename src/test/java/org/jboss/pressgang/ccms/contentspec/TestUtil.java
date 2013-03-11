@@ -1,16 +1,16 @@
 package org.jboss.pressgang.ccms.contentspec;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import static com.google.common.collect.Maps.newHashMap;
+import static org.apache.commons.lang.math.RandomUtils.nextInt;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mock;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static org.apache.commons.lang.math.RandomUtils.nextInt;
-import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.mock;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 /**
  * Shared methods to assist with testing.

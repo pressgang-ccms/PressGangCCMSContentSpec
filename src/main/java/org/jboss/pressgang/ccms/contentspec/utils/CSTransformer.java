@@ -24,15 +24,15 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSRelatedNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.ContentSpecWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 
 public class CSTransformer {
 

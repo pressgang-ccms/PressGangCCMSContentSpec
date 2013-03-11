@@ -5,10 +5,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 /**
  * This class represents all the topics that will go into a docbook build, along with some function to retrieve topics based on

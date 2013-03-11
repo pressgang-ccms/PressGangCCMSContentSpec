@@ -4,9 +4,9 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 public class TopicTitleSorter implements ExternalListSort<Integer, BaseTopicWrapper<?>, InjectionTopicData> {
     public void sort(final List<BaseTopicWrapper<?>> topics, final List<InjectionTopicData> list) {

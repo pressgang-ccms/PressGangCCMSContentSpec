@@ -11,21 +11,21 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.AuthorInformation;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
-import org.jboss.pressgang.ccms.contentspec.provider.DataProviderFactory;
-import org.jboss.pressgang.ccms.contentspec.provider.TagProvider;
-import org.jboss.pressgang.ccms.contentspec.provider.TopicProvider;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CategoryInTagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TagWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicStringWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.TranslatedTopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.base.BaseTopicWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.TagProvider;
+import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
+import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.TranslatedTopicStringWrapper;
+import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 public class EntityUtilities {
 

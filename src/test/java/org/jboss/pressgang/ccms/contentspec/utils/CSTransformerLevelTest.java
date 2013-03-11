@@ -1,27 +1,36 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
-import net.sf.ipsedixit.annotation.Arbitrary;
-import net.sf.ipsedixit.annotation.ArbitraryString;
-import net.sf.ipsedixit.core.StringType;
-import org.jboss.pressgang.ccms.contentspec.*;
-import org.jboss.pressgang.ccms.contentspec.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.contentspec.wrapper.collection.CollectionWrapper;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
-import org.junit.Test;
-import org.mockito.Mock;
+import static com.google.common.collect.Maps.newHashMap;
+import static java.util.Arrays.asList;
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.StringContains.containsString;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidCommentMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidLevelMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidTopicMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.getLevelTypeMapping;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.getRandomLevelType;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.selectRandomListItem;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+import static org.mockito.BDDMockito.given;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Maps.newHashMap;
-import static java.util.Arrays.asList;
-import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.StringContains.containsString;
-import static org.jboss.pressgang.ccms.contentspec.TestUtil.*;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.fail;
-import static org.mockito.BDDMockito.given;
+import net.sf.ipsedixit.annotation.Arbitrary;
+import net.sf.ipsedixit.annotation.ArbitraryString;
+import net.sf.ipsedixit.core.StringType;
+import org.jboss.pressgang.ccms.contentspec.Appendix;
+import org.jboss.pressgang.ccms.contentspec.Comment;
+import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
+import org.junit.Test;
+import org.mockito.Mock;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)

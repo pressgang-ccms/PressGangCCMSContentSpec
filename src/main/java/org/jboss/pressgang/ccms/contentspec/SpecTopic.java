@@ -686,14 +686,14 @@ public class SpecTopic extends SpecNode {
         }
         spacer.append(SPACER);
 
-        if (!getRelatedRelationships().isEmpty()) {
-            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
-            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer.toString()));
-        }
-
         if (!getPrerequisiteRelationships().isEmpty()) {
             boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
             output.append(generateRelationshipText(RelationshipType.PREREQUISITE, !useLongSyntax, spacer.toString()));
+        }
+
+        if (!getRelatedRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
+            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer.toString()));
         }
 
         if (!getLinkListRelationships().isEmpty()) {
@@ -777,8 +777,10 @@ public class SpecTopic extends SpecNode {
                 }
                 retValue.append(spacer);
                 retValue.append(SPACER);
-                retValue.append(related.getRelationshipTitle());
-                retValue.append(" [");
+                if (related.getRelationshipTitle() != null && !related.getRelationshipTitle().trim().isEmpty()) {
+                    retValue.append(related.getRelationshipTitle()).append(" ");
+                }
+                retValue.append("[");
                 retValue.append(related.getSecondaryRelationshipTopicId());
                 retValue.append("]");
             }

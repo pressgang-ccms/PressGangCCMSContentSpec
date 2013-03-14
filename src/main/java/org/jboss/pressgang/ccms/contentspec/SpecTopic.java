@@ -1,9 +1,10 @@
 package org.jboss.pressgang.ccms.contentspec;
 
 /**
- * An object to store the contents of a Topic in a Content Specification. It stores the topics name, sequential step number, database ID, unique processed ID,
+ * An object to store the contents of a Topic in a Content Specification. It stores the topics name, sequential step number, database ID,
+ * unique processed ID,
  * description, an array of urls that relate to the topic and a list of tags. 
- * 
+ *
  * @author lnewson
  */
 
@@ -43,13 +44,13 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Constructor
-     * 
-     * @param id The ID for the Content Specification Topic (N, N<ID>, C<ID>, etc...)
-     * @param title The title of the Content Specification Topic.
-     * @param lineNumber The post processed Line Number of the topic.
-     * @param specLine The Content Specification Line that is used to create the Topic.
+     *
+     * @param id                     The ID for the Content Specification Topic (N, N<ID>, C<ID>, etc...)
+     * @param title                  The title of the Content Specification Topic.
+     * @param lineNumber             The post processed Line Number of the topic.
+     * @param specLine               The Content Specification Line that is used to create the Topic.
      * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
-     * @param type The Topic Type for this topic (Concept, Task, etc...).
+     * @param type                   The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String id, final String title, final int lineNumber, final String specLine, final String type) {
         super(lineNumber, specLine);
@@ -63,12 +64,12 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Constructor
-     * 
-     * @param title The title of the Content Specification Topic.
-     * @param lineNumber The post processed Line Number of the topic.
-     * @param specLine The Content Specification Line that is used to create the Topic.
+     *
+     * @param title                  The title of the Content Specification Topic.
+     * @param lineNumber             The post processed Line Number of the topic.
+     * @param specLine               The Content Specification Line that is used to create the Topic.
      * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
-     * @param type The Topic Type for this topic (Concept, Task, etc...).
+     * @param type                   The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String title, final int lineNumber, final String specLine, final String type) {
         super(lineNumber, specLine);
@@ -78,8 +79,8 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Constructor
-     * 
-     * @param DBId The Database ID of a Topic that will be used to create a Content Specification Topic.
+     *
+     * @param DBId  The Database ID of a Topic that will be used to create a Content Specification Topic.
      * @param title The Title of the Content Specification Topic.
      */
     public SpecTopic(int DBId, String title) {
@@ -93,7 +94,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Get the underlying topic that this Spec Topic represents.
-     * 
+     *
      * @return The underlying topic if it has been set otherwise null.
      */
     public RESTBaseTopicV1<?, ?, ?> getTopic() {
@@ -102,7 +103,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Set the underlying topic that this spec topic represents.
-     * 
+     *
      * @param topic The underlying topic.
      */
     public <T extends RESTBaseTopicV1<T, ?, ?>> void setTopic(final T topic) {
@@ -111,7 +112,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Set the ID for the Content Specification Topic.
-     * 
+     *
      * @param id The Content Specification Topic ID.
      */
     public void setId(final String id) {
@@ -124,16 +125,16 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Get the ID for the Content Specification Topic.
-     * 
+     *
      * @return The Topic ID.
      */
     public String getId() {
         return id;
     }
-    
+
     /**
      * Set the Unique ID for the Content Specification Topic.
-     * 
+     *
      * @param id The Content Specification Topic ID.
      */
     public void setUniqueId(final String uniqueId) {
@@ -142,7 +143,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the Content Specification Unique ID for the topic.
-     * 
+     *
      * @return The Unique CS Topic ID.
      */
     public String getUniqueId() {
@@ -151,9 +152,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the Content Specification Unique ID for the topic.
-     * 
+     *
      * Note: The pre processed line number must be set to get the unique id.
-     * 
+     *
      * @return The unique id.
      */
     /*public String getUniqueId() {
@@ -168,7 +169,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Sets the Database ID for the Topic.
-     * 
+     *
      * @param id The Database ID for the Topic.
      */
     public void setDBId(int id) {
@@ -177,7 +178,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Get the database ID for the Content Specification Topic.
-     * 
+     *
      * @return The Topics database ID.
      */
     public int getDBId() {
@@ -186,7 +187,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Get the revision number of the topic that the Spec Topic represents.
-     * 
+     *
      * @return The revision number for the underlying topic or null if the Spec Topic represents the latest copy.
      */
     public Integer getRevision() {
@@ -195,7 +196,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Set the revision number for the underlying topic that the Spec Topic represents.
-     * 
+     *
      * @param revision The underlying topic revision number or null if its the latest revision.
      */
     public void setRevision(final Integer revision) {
@@ -204,7 +205,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the title of the topic.
-     * 
+     *
      * @return The topics Title.
      */
     public String getTitle() {
@@ -213,7 +214,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Sets the title for the topic.
-     * 
+     *
      * @param title The title for the topic.
      */
     public void setTitle(String title) {
@@ -222,7 +223,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Set the Topic Type for the Content Specification Topic.
-     * 
+     *
      * @param type The Topic Type (Concept, Task, etc...).
      */
     public void setType(String type) {
@@ -231,7 +232,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the Content Specification Topic Type
-     * 
+     *
      * @return The Topics Type.
      */
     public String getType() {
@@ -240,7 +241,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the Target ID for the Content Specification Topic if one exists.
-     * 
+     *
      * @return The Target ID or null if none exist.
      */
     public String getTargetId() {
@@ -249,7 +250,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Set the Target ID for the Content Specification Topic.
-     * 
+     *
      * @param targetId The Target ID for the Topic.
      */
     public void setTargetId(final String targetId) {
@@ -258,9 +259,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      */
     public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type) {
         final TopicRelationship relationship = new TopicRelationship(this, topic, type);
@@ -270,9 +271,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      * @param title The title of the topic to be related to.
      */
     public void addRelationshipToTopic(final SpecTopic topic, final RelationshipType type, final String title) {
@@ -283,9 +284,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      */
     public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type) {
         final TargetRelationship relationship = new TargetRelationship(this, topic, type);
@@ -295,9 +296,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      * @param title The title of the topic to be related to.
      */
     public void addRelationshipToTarget(final SpecTopic topic, final RelationshipType type, final String title) {
@@ -308,9 +309,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      */
     public void addRelationshipToTarget(final Level level, final RelationshipType type) {
         final TargetRelationship relationship = new TargetRelationship(this, level, type);
@@ -320,9 +321,9 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Add a relationship to the topic.
-     * 
+     *
      * @param topic The topic that is to be related to.
-     * @param type The type of the relationship.
+     * @param type  The type of the relationship.
      * @param title The title of the topic to be related to.
      */
     public void addRelationshipToTarget(final Level level, final RelationshipType type, final String title) {
@@ -405,7 +406,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Sets the parent for the Content Specification Topic.
-     * 
+     *
      * @param parent The Level that is the parent of this topic.
      */
     protected void setParent(Level parent) {
@@ -414,7 +415,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Checks to see if the topic is a new topic based on its ID.
-     * 
+     *
      * @return True if the topic is a new Topic otherwise false.
      */
     public boolean isTopicANewTopic() {
@@ -423,7 +424,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Checks to see if the topic is an existing topic based on its ID.
-     * 
+     *
      * @return True if the topic is a existing Topic otherwise false.
      */
     public boolean isTopicAnExistingTopic() {
@@ -432,7 +433,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Checks to see if the topic is a cloned topic based on its ID.
-     * 
+     *
      * @return True if the topic is a cloned Topic otherwise false.
      */
     public boolean isTopicAClonedTopic() {
@@ -441,7 +442,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Checks to see if the topic is a duplicated topic based on its ID.
-     * 
+     *
      * @return True if the topic is a duplicated Topic otherwise false.
      */
     public boolean isTopicADuplicateTopic() {
@@ -450,7 +451,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Checks to see if the topic is a Duplicated Cloned topic based on its ID.
-     * 
+     *
      * @return True if the topic is a Duplicated Cloned Topic otherwise false.
      */
     public boolean isTopicAClonedDuplicateTopic() {
@@ -459,23 +460,22 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic to Topic relationships where the main Topic matches the topic parameter.
-     * 
+     *
      * @param topicId The topic object of the main topic to be found.
-     * 
      * @return An ArrayList of TopicRelationship's where the main topic matches the topic or an empty array if none are found.
      */
     public List<TopicRelationship> getTopicRelationships() {
         ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>(topicRelationships);
         for (final TargetRelationship relationship : topicTargetRelationships) {
-            relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
-                    relationship.getType()));
+            relationships.add(
+                    new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
         }
         return relationships;
     }
 
     /**
      * Gets the list of Topic to Level relationships where the Topic matches the topic parameter.
-     * 
+     *
      * @return A List of LevelRelationship's where the Topic matches the topic or an empty array if none are found.
      */
     public List<TargetRelationship> getLevelRelationships() {
@@ -484,7 +484,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic Relationships for this topic whose type is "RELATED".
-     * 
+     *
      * @return A list of related topic relationships
      */
     public List<TopicRelationship> getRelatedTopicRelationships() {
@@ -498,8 +498,8 @@ public class SpecTopic extends SpecNode {
         /* Check the topic to target relationships for related relationships */
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.RELATED) {
-                relationships.add(new TopicRelationship(relationship.getTopic(),
-                        (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                        relationship.getType()));
             }
         }
         return relationships;
@@ -507,7 +507,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Level Relationships for this topic whose type is "RELATED".
-     * 
+     *
      * @return A list of related level relationships
      */
     public List<TargetRelationship> getRelatedLevelRelationships() {
@@ -522,7 +522,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic Relationships for this topic whose type is "PREREQUISITE".
-     * 
+     *
      * @return A list of prerequisite topic relationships
      */
     public List<TopicRelationship> getPrerequisiteTopicRelationships() {
@@ -534,8 +534,8 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREREQUISITE) {
-                relationships.add(new TopicRelationship(relationship.getTopic(),
-                        (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                        relationship.getType()));
             }
         }
         return relationships;
@@ -543,7 +543,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Level Relationships for this topic whose type is "PREREQUISITE".
-     * 
+     *
      * @return A list of prerequisite level relationships
      */
     public List<TargetRelationship> getPrerequisiteLevelRelationships() {
@@ -558,7 +558,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic Relationships for this topic whose type is "LINKLIST".
-     * 
+     *
      * @return A list of link list topic relationships
      */
     public List<TopicRelationship> getLinkListTopicRelationships() {
@@ -570,8 +570,8 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.LINKLIST) {
-                relationships.add(new TopicRelationship(relationship.getTopic(),
-                        (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                        relationship.getType()));
             }
         }
         return relationships;
@@ -579,7 +579,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Level Relationships for this topic whose type is "LINKLIST".
-     * 
+     *
      * @return A list of link list level relationships
      */
     public List<TargetRelationship> getLinkListLevelRelationships() {
@@ -594,7 +594,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic Relationships for this topic whose type is "NEXT".
-     * 
+     *
      * @return A list of next topic relationships
      */
     public List<TopicRelationship> getNextTopicRelationships() {
@@ -606,8 +606,8 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.NEXT) {
-                relationships.add(new TopicRelationship(relationship.getTopic(),
-                        (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                        relationship.getType()));
             }
         }
         return relationships;
@@ -615,7 +615,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Gets the list of Topic Relationships for this topic whose type is "PREVIOUS".
-     * 
+     *
      * @return A list of previous topic relationships
      */
     public List<TopicRelationship> getPrevTopicRelationships() {
@@ -627,8 +627,8 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREVIOUS) {
-                relationships.add(new TopicRelationship(relationship.getTopic(),
-                        (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                        relationship.getType()));
             }
         }
         return relationships;
@@ -636,8 +636,7 @@ public class SpecTopic extends SpecNode {
 
     @Override
     public Integer getStep() {
-        if (getParent() == null)
-            return null;
+        if (getParent() == null) return null;
         Integer previousNode = 0;
 
         // Get the position of the level in its parents nodes
@@ -667,36 +666,126 @@ public class SpecTopic extends SpecNode {
         final StringBuilder output = new StringBuilder();
         if (this.isTopicANewTopic()) {
             final String options = getOptionsString();
-            output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options))
-                    + "]");
+            output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
         } else {
             final String options = getOptionsString();
-            output.append((title == null ? "" : title) + " [" + id + (revision == null ? "" : (", rev: " + revision))
-                    + (options.equals("") ? "" : (", " + options)) + "]");
+            output.append((title == null ? "" : title) + " [" + id + (revision == null ? "" : (", rev: " + revision)) + (options.equals(
+                    "") ? "" : (", " + options)) + "]");
         }
 
         if (targetId != null && !((parent instanceof Process) && targetId.matches("^T" + this.getLineNumber() + "0[0-9]+$"))) {
             output.append(" [" + targetId + "]");
         }
 
-        if (!getRelatedRelationships().isEmpty()) {
-            final List<String> relatedIds = new ArrayList<String>();
-            for (final Relationship related : getRelatedRelationships()) {
-                relatedIds.add(related.getSecondaryRelationshipTopicId());
-            }
-            output.append(" [R: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]");
+        final int indentationSize = parent != null ? getColumn() : 0;
+        final StringBuilder spacer = new StringBuilder();
+        for (int i = 1; i < indentationSize; i++) {
+            spacer.append("  ");
         }
+        spacer.append("  ");
 
         if (!getPrerequisiteRelationships().isEmpty()) {
-            final List<String> relatedIds = new ArrayList<String>();
-            for (final Relationship related : getPrerequisiteRelationships()) {
-                relatedIds.add(related.getSecondaryRelationshipTopicId());
-            }
-            output.append(" [P: " + StringUtilities.buildString(relatedIds.toArray(new String[0]), ", ") + "]");
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
+            output.append(generateRelationshipText(RelationshipType.PREREQUISITE, !useLongSyntax, spacer.toString()));
+        }
+
+        if (!getRelatedRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
+            output.append(generateRelationshipText(RelationshipType.RELATED, !useLongSyntax, spacer.toString()));
+        }
+
+        if (!getLinkListRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getLinkListRelationships());
+            output.append(generateRelationshipText(RelationshipType.LINKLIST, !useLongSyntax, spacer.toString()));
         }
 
         setText(output.toString());
         return text;
+    }
+
+    /**
+     * Checks to see if a list of relationships should be printed using the long syntax.
+     *
+     * @param relationships The list of relationships to be checked.
+     * @return True if the relationships should be printed using the long syntax.
+     */
+    private boolean printRelationshipsWithLongSyntax(final List<Relationship> relationships) {
+        for (final Relationship relationship : relationships) {
+            if (relationship.getRelationshipTitle() != null && !relationship.getRelationshipTitle().trim().isEmpty()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Creates the relationship text to be added to a topic's text.
+     *
+     * @param relationshipType The type of relationship to generate the text for.
+     * @param shortSyntax      If the short relationship syntax should be used.
+     * @param spacer           The spacer that should be added to the start of every new line.
+     * @return The generated relationship text.
+     */
+    protected String generateRelationshipText(final RelationshipType relationshipType, boolean shortSyntax, final String spacer) {
+        final StringBuilder retValue;
+        final List<Relationship> relationships;
+        // Create the relationship heading
+        if (relationshipType == RelationshipType.RELATED) {
+            if (shortSyntax) {
+                retValue = new StringBuilder(" [R: ");
+            } else {
+                retValue = new StringBuilder("\n" + spacer + "[Refer-to:");
+            }
+            relationships = getRelatedRelationships();
+        } else if (relationshipType == RelationshipType.PREREQUISITE) {
+            if (shortSyntax) {
+                retValue = new StringBuilder(" [P: ");
+            } else {
+                retValue = new StringBuilder("\n" + spacer + "[Prerequisite:");
+            }
+            relationships = getPrerequisiteRelationships();
+        } else if (relationshipType == RelationshipType.LINKLIST) {
+            if (shortSyntax) {
+                retValue = new StringBuilder(" [L: ");
+            } else {
+                retValue = new StringBuilder("\n" + spacer + "[Link-List:");
+            }
+            relationships = getLinkListRelationships();
+        } else {
+            throw new IllegalArgumentException("Unable to create a text based formation for the " + relationshipType.toString() + " " +
+                    "relationship type.");
+        }
+
+        // Create the list of relationships
+        if (shortSyntax) {
+            final List<String> relatedIds = new ArrayList<String>();
+            for (final Relationship related : relationships) {
+                relatedIds.add(related.getSecondaryRelationshipTopicId());
+            }
+            retValue.append(StringUtilities.buildString(relatedIds.toArray(new String[relatedIds.size()]), ", "));
+        } else {
+            boolean first = true;
+            for (final Relationship related : relationships) {
+                if (first) {
+                    retValue.append("\n");
+                    first = false;
+                } else {
+                    retValue.append(",\n");
+                }
+                retValue.append(spacer);
+                retValue.append("  ");
+                if (related.getRelationshipTitle() != null && !related.getRelationshipTitle().trim().isEmpty()) {
+                    retValue.append(related.getRelationshipTitle()).append(" ");
+                }
+                retValue.append("[");
+                retValue.append(related.getSecondaryRelationshipTopicId());
+                retValue.append("]");
+            }
+        }
+
+        retValue.append("]");
+        return retValue.toString();
     }
 
     @Override
@@ -717,7 +806,7 @@ public class SpecTopic extends SpecNode {
 
     /**
      * Finds the closest node in the contents of a level
-     * 
+     *
      * @param topic The node we need to find the closest match for
      * @return
      */
@@ -725,14 +814,12 @@ public class SpecTopic extends SpecNode {
         /*
          * Check this topic to see if it is the topic we are looking for
          */
-        if (this == topic || this.getId().equals(topic.getId()))
-            return this;
+        if (this == topic || this.getId().equals(topic.getId())) return this;
 
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null)
-            return getParent().getClosestTopic(topic, checkParentNode);
+        if (getParent() != null) return getParent().getClosestTopic(topic, checkParentNode);
 
         return null;
     }
@@ -741,14 +828,12 @@ public class SpecTopic extends SpecNode {
         /*
          * Check this topic to see if it is the topic we are looking for
          */
-        if (this.DBId == DBId)
-            return this;
+        if (this.DBId == DBId) return this;
 
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null)
-            return getParent().getClosestTopicByDBId(DBId, checkParentNode);
+        if (getParent() != null) return getParent().getClosestTopicByDBId(DBId, checkParentNode);
 
         return null;
     }
@@ -757,16 +842,14 @@ public class SpecTopic extends SpecNode {
     public String getUniqueLinkId(final boolean useFixedUrls) {
         final String topicXRefId;
         if (topic instanceof RESTTranslatedTopicV1) {
-            if (useFixedUrls)
-                topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic,
-                        CommonConstants.FIXED_URL_PROP_TAG_ID);
+            if (useFixedUrls) topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic,
+                    CommonConstants.FIXED_URL_PROP_TAG_ID);
             else {
                 topicXRefId = ComponentTranslatedTopicV1.returnXRefID((RESTTranslatedTopicV1) topic);
             }
         } else {
             if (useFixedUrls)
-                topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic,
-                        CommonConstants.FIXED_URL_PROP_TAG_ID);
+                topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
             else {
                 topicXRefId = ComponentTopicV1.returnXRefID((RESTTopicV1) topic);
             }

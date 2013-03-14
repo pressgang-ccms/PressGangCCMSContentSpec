@@ -86,7 +86,7 @@ public class CSConstants {
 	/** The Content Specification tag ID */
 	public static final Integer CONTENT_SPEC_TAG_ID = 268;
 	/** The Content Specification tag name */
-	public static final String CONTENT_SPEC_TAG_NAME = "Content Specfication";
+	public static final String CONTENT_SPEC_TAG_NAME = "Content Specification";
 	
 	/** The Added By Property Tag ID */
 	public static final Integer ADDED_BY_PROPERTY_TAG_ID = 14;
@@ -116,6 +116,8 @@ public class CSConstants {
 	public static final String REVISION_HISTORY_OVERRIDE = "Revision_History.xml";
 	
 	public static final String REVNUMBER_OVERRIDE = "revnumber";
+
+    public static final String PUBSNUMBER_OVERRIDE = "pubsnumber";
 	
 	public static final String BRAND_OVERRIDE = "brand";
 }

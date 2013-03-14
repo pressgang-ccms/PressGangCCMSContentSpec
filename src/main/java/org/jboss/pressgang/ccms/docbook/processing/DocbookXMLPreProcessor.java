@@ -183,6 +183,10 @@ public class DocbookXMLPreProcessor
     protected static final String ROLE_PROCESS_PREVIOUS_LINK = "process-previous-link";
     protected static final String ROLE_PROCESS_PREVIOUS_LISTITEM = "process-previous-listitem";
 
+    protected static final String ENCODING = "UTF-8";
+    protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
+            "improvement:\n\n\nAdditional information:";
+
     protected final Properties translations;
 
     public DocbookXMLPreProcessor() {
@@ -218,7 +222,7 @@ public class DocbookXMLPreProcessor
             final String reportBugTranslation = translations.getProperty(REPORT_A_BUG_PROPERTY);
             bugzillaULink.setTextContent(reportBugTranslation == null ? DEFAULT_REPORT_A_BUG : reportBugTranslation);
 
-            DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
             String specifiedBuildName = "";
             if (docbookBuildingOptions != null && docbookBuildingOptions.getBuildName() != null)
@@ -232,8 +236,8 @@ public class DocbookXMLPreProcessor
             String bugzillaAssignedTo = null;
             final String bugzillaEnvironment = URLEncoder.encode(
                     "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: "
-                            + specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), "UTF-8");
-            final String bugzillaSummary = URLEncoder.encode(topic.getTitle(), "UTF-8");
+                            + specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), ENCODING);
+            final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
             final StringBuilder bugzillaBuildID = new StringBuilder();
             if (topic instanceof RESTTranslatedTopicV1) {
                 bugzillaBuildID.append(ComponentTranslatedTopicV1.returnBugzillaBuildId((RESTTranslatedTopicV1) topic));
@@ -263,19 +267,19 @@ public class DocbookXMLPreProcessor
                             .returnProperty(tag, CommonConstants.BUGZILLA_PROFILE_PROPERTY);
 
                     if (bugzillaProduct == null && bugzillaProductTag != null)
-                        bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), "UTF-8");
+                        bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), ENCODING);
 
                     if (bugzillaComponent == null && bugzillaComponentTag != null)
-                        bugzillaComponent = URLEncoder.encode(bugzillaComponentTag.getValue(), "UTF-8");
+                        bugzillaComponent = URLEncoder.encode(bugzillaComponentTag.getValue(), ENCODING);
 
                     if (bugzillaKeywords == null && bugzillaKeywordsTag != null)
-                        bugzillaKeywords = URLEncoder.encode(bugzillaKeywordsTag.getValue(), "UTF-8");
+                        bugzillaKeywords = URLEncoder.encode(bugzillaKeywordsTag.getValue(), ENCODING);
 
                     if (bugzillaVersion == null && bugzillaVersionTag != null)
-                        bugzillaVersion = URLEncoder.encode(bugzillaVersionTag.getValue(), "UTF-8");
+                        bugzillaVersion = URLEncoder.encode(bugzillaVersionTag.getValue(), ENCODING);
 
                     if (bugzillaAssignedTo == null && bugzillaAssignedToTag != null)
-                        bugzillaAssignedTo = URLEncoder.encode(bugzillaAssignedToTag.getValue(), "UTF-8");
+                        bugzillaAssignedTo = URLEncoder.encode(bugzillaAssignedToTag.getValue(), ENCODING);
                 }
             }
 
@@ -286,10 +290,10 @@ public class DocbookXMLPreProcessor
             bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
 
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "cf_build_id=" + URLEncoder.encode(bugzillaBuildID.toString(), "UTF-8");
+            bugzillaURLComponents += "cf_build_id=" + URLEncoder.encode(bugzillaBuildID.toString(), ENCODING);
 
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "short_desc=" + bugzillaSummary;
+            bugzillaURLComponents += "comment=" + bugzillaDescription;
 
             if (bugzillaAssignedTo != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
@@ -299,16 +303,16 @@ public class DocbookXMLPreProcessor
             /* check the content spec options first */
             if (bzOptions != null && bzOptions.getProduct() != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), "UTF-8");
+                bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), ENCODING);
 
                 if (bzOptions.getComponent() != null) {
                     bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "component=" + URLEncoder.encode(bzOptions.getComponent(), "UTF-8");
+                    bugzillaURLComponents += "component=" + URLEncoder.encode(bzOptions.getComponent(), ENCODING);
                 }
 
                 if (bzOptions.getVersion() != null) {
                     bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), "UTF-8");
+                    bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), ENCODING);
                 }
             }
             /* we need at least a product */

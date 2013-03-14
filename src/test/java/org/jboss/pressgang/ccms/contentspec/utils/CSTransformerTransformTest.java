@@ -66,7 +66,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
     @Mock CollectionWrapper<TagWrapper> tagWrapper;
     @Mock TagWrapper tag;
     @Mock TagWrapper tag2;
-    @Mock CollectionWrapper<CSNodeWrapper> nodeCollectionWrapper;
+    @Mock UpdateableCollectionWrapper<CSNodeWrapper> nodeCollectionWrapper;
     @Mock UpdateableCollectionWrapper<CSRelatedNodeWrapper> collectionWrapper;
     @Mock CSRelatedNodeWrapper relatedNodeWrapper;
 

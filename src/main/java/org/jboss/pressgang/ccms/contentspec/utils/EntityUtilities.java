@@ -13,6 +13,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
+import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TagProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
@@ -22,6 +23,7 @@ import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.TranslatedContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -94,6 +96,28 @@ public class EntityUtilities {
                     return translatedTopic;
                 } else if (rev == null) {
                     return translatedTopic;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Gets a translated content spec based on a topic id, revision and locale.
+     */
+    public static TranslatedContentSpecWrapper getTranslatedContentSpecById(final DataProviderFactory providerFactory, final Integer id,
+            final Integer rev) {
+        final CollectionWrapper<TranslatedContentSpecWrapper> translatedContentSpecs = providerFactory.getProvider(
+                ContentSpecProvider.class).getContentSpecTranslations(id, rev);
+
+        if (translatedContentSpecs != null) {
+            final List<TranslatedContentSpecWrapper> translatedContentSpecItems = translatedContentSpecs.getItems();
+            for (final TranslatedContentSpecWrapper translatedContentSpec : translatedContentSpecItems) {
+                if (rev != null && translatedContentSpec.getContentSpecRevision().equals(rev)) {
+                    return translatedContentSpec;
+                } else if (rev == null) {
+                    return translatedContentSpec;
                 }
             }
         }

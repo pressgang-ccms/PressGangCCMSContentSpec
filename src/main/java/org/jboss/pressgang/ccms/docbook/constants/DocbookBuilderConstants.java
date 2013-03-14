@@ -4,7 +4,7 @@ public class DocbookBuilderConstants
 {
 	/** The standard xml preamble for docbook xml files */
 	public static final String DOCBOOK_XML_PREAMBLE = "<!DOCTYPE bookinfo PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open.org/docbook/xml/4.5/docbookx.dtd\" [<!ENTITY % BOOK_ENTITIES SYSTEM \"Book.ent\">%BOOK_ENTITIES;]>";
-	
+
 	/** The Concept tag ID */
 	public static final Integer CONCEPT_TAG_ID = 5;
 	/** The Concept tag name */
@@ -30,7 +30,7 @@ public class DocbookBuilderConstants
 
 	/** The Tag Description tag ID */
 	public static final Integer TAG_DESCRIPTION_TAG_ID = 215;
-	
+
 	public static final Integer TYPE_CATEGORY_ID = 4;
 	public static final Integer TECHNOLOGY_CATEGORY_ID = 3;
 	public static final Integer COMMON_NAME_CATEGORY_ID = 17;
@@ -40,7 +40,7 @@ public class DocbookBuilderConstants
 	public static final Integer HOME_TAG_ID = 216;
 	/** The BlobConstant ID for the Rocbook DTD */
 	public static final Integer ROCBOOK_DTD_BLOB_ID = 9;
-	
+
 	/** The StringConstantsID that represents the Revision_History.xml file */
 	public static final Integer REVISION_HISTORY_XML_ID = 15;
 	/** The StringConstantsID that represents the Book.xml file */
@@ -99,7 +99,7 @@ public class DocbookBuilderConstants
 	public static final Integer PLUGIN_XML_ID = 25;
 	public static final Integer ECLIPSE_PACKAGE_SH_ID = 26;
 	public static final Integer PUBLICAN_ECLIPSE_CFG_ID = 27;
-	
+
 	/** A marker to replace with the date in a string */
 	public static final String DATE_YYMMDD_TEXT_MARKER = "#YYMMDD#";
 	public static final String BOOK_XML_XI_INCLUDES_MARKER = "#XI_INCLUDES#";

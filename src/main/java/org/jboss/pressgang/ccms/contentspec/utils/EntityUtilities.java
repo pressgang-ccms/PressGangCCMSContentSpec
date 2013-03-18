@@ -77,7 +77,7 @@ public class EntityUtilities {
 
         if (translatedTopic == null) return null;
 
-        return translatedTopic.getTranslatedStrings();
+        return translatedTopic.getTranslatedTopicStrings();
     }
 
     /**

@@ -49,7 +49,7 @@ public class CSTransformer {
      * @param providerFactory
      * @return The generic Content Spec object that was transformed from the entity.
      */
-    public ContentSpec transform(final ContentSpecWrapper spec, final DataProviderFactory providerFactory) {
+    public static ContentSpec transform(final ContentSpecWrapper spec, final DataProviderFactory providerFactory) {
         // local variables that are used to map transformed content
         Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         Map<String, List<SpecTopic>> specTopicMap = new HashMap<String, List<SpecTopic>>();
@@ -139,7 +139,7 @@ public class CSTransformer {
      * @param node The CSNode to be transformed.
      * @return The transformed KeyValuePair object.
      */
-    protected KeyValueNode<?> transformMetaData(final CSNodeWrapper node) {
+    protected static KeyValueNode<?> transformMetaData(final CSNodeWrapper node) {
         if (node.getTitle().equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE)) {
             return new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
         } else if (node.getTitle().equalsIgnoreCase(CSConstants.INLINE_INJECTION_TITLE)) {
@@ -159,7 +159,7 @@ public class CSTransformer {
      * @param relationshipFromNodes A list of CSNode entities that have relationships.
      * @return The transformed level entity.
      */
-    protected Level transformLevel(final CSNodeWrapper node, final Map<Integer, Node> nodes,
+    protected static Level transformLevel(final CSNodeWrapper node, final Map<Integer, Node> nodes,
             final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
             final List<CSNodeWrapper> relationshipFromNodes) {
         final Level level;
@@ -227,7 +227,7 @@ public class CSTransformer {
      * @param relationshipFromNodes A list of CSNode entities that have relationships.
      * @return The transformed SpecTopic entity.
      */
-    protected SpecTopic transformSpecTopic(final CSNodeWrapper node, final Map<Integer, Node> nodes,
+    protected static SpecTopic transformSpecTopic(final CSNodeWrapper node, final Map<Integer, Node> nodes,
             final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
             final List<CSNodeWrapper> relationshipFromNodes) {
         final SpecTopic specTopic;
@@ -269,7 +269,7 @@ public class CSTransformer {
      * @param node The CSNode to be transformed.
      * @return The transformed Comment object.
      */
-    protected Comment transformComment(CSNodeWrapper node) {
+    protected static Comment transformComment(CSNodeWrapper node) {
         final Comment comment;
         if (node.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
             comment = new Comment(node.getAdditionalText());
@@ -284,7 +284,7 @@ public class CSTransformer {
      * Apply the relationships to all of the nodes in the content spec. This should be the last step since all nodes have to be converted
      * to levels and topics before this method can work.
      */
-    protected void applyRelationships(final ContentSpec contentSpec, final Map<Integer, Node> nodes,
+    protected static void applyRelationships(final ContentSpec contentSpec, final Map<Integer, Node> nodes,
             final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
             final List<CSNodeWrapper> relationshipFromNodes, final List<Process> processes, final DataProviderFactory providerFactory) {
         // Apply the user defined relationships stored in the database

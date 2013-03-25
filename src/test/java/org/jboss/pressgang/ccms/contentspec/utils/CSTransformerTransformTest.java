@@ -16,7 +16,6 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,11 +44,13 @@ import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PrepareForTest;
 
 /**
  * @author kamiller@redhat.com (Katie Miller)
  */
+@PrepareForTest(CSTransformer.class)
 public class CSTransformerTransformTest extends CSTransformerTest {
 
     @ArbitraryString(type = StringType.ALPHANUMERIC) String title;
@@ -77,7 +78,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(specWrapper.getCondition()).willReturn(condition);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then those values should be set on the resulting spec
         assertThat(result.getId(), is(id));
@@ -99,7 +100,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(levelNode.getId()).willReturn(anotherId);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then a textNode should have been added containing just a newline
         assertThat(result.getNodes().size(), is(3)); // (the id, title plus the new node)
@@ -117,7 +118,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(tagWrapper.getItems()).willReturn(tags);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the tags should be set on the resulting spec
         assertThat(result.getTags(), Matchers.contains(tagName, tagName2));
@@ -133,7 +134,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(topicNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed topic should be a child node on the resulting spec
         assertThat(result.getChildNodes().size(), is(1));
@@ -150,7 +151,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(commentNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed comment should be a child node on the resulting spec
         assertThat(result.getNodes().size(), is(2));
@@ -167,7 +168,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(metaDataNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed metadata should be a node on the resulting spec
         assertThat(result.getChildNodes().size(), is(0));
@@ -186,7 +187,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(metaDataNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed metadata should not be a node on the resulting spec
         assertThat(result.getChildNodes().size(), is(0));
@@ -206,7 +207,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(levelNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed level should be a child node on the resulting spec
         assertThat(result.getChildNodes().size(), is(1));
@@ -229,7 +230,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(topicNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the nodes should have been added as children of the resulting spec
         // And be in the order expected
@@ -253,7 +254,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(commentNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the level and comment nodes are transformed and added as children
         // And a textnode is added between them, containing a newline character
@@ -279,7 +280,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(topicNode.getNextNodeId()).willReturn(null);
 
         // When the spec is transformed
-        ContentSpec result = transformer.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the relationship should be processed
         assertThat(result.getRelationships().size(), is(1));
@@ -295,17 +296,18 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(levelNode.getPreviousNodeId()).willReturn(null);
         given(levelNode.getNextNodeId()).willReturn(null);
         // And we are spying on our class under test (as there isn't another good way to check this)
-        CSTransformer transformerSpy = Mockito.spy(transformer);
+        PowerMockito.spy(CSTransformer.class);
 
         // When the spec is transformed
-        ContentSpec result = transformerSpy.transform(specWrapper, providerFactory);
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the transformed level should be a child node on the resulting spec
         assertThat(result.getChildNodes().size(), is(1));
         // And the level should have been added to the spec's processes
         ArgumentCaptor<List> processesCaptor = ArgumentCaptor.forClass(List.class);
-        verify(transformerSpy, times(1)).applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyMap(), anyList(),
-                processesCaptor.capture(), any(DataProviderFactory.class));
+        PowerMockito.verifyStatic(times(1));
+        CSTransformer.applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyMap(), anyList(), processesCaptor.capture(),
+                any(DataProviderFactory.class));
         assertThat(processesCaptor.getValue().size(), is(1));
         Level expectedLevel = (Level) processesCaptor.getValue().get(0);
         assertThat(expectedLevel.getUniqueId(), is(id.toString()));

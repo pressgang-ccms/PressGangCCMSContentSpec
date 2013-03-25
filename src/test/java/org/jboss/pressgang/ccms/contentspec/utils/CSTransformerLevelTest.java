@@ -57,7 +57,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
 
         // When transformLevel is called
         try {
-            transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+            CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
             // Then an exception should be thrown
             fail(ILLEGAL_ARG_EX_MISSING);
@@ -75,7 +75,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(nodeWrapper.getNodeType()).willReturn(levelType);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then a level of that type is created
         assertThat(result.getClass().equals(getLevelTypeMapping().get(levelType)), is(true));
@@ -92,7 +92,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(nodeWrapper.getId()).willReturn(id);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then those values are transformed and set on the level as expected
         assertThat(result.getTitle(), is(title));
@@ -111,7 +111,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         assertThat(nodes.size(), is(0));
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the level should be added to the processed nodes
         assertThat(nodes.get(nodeWrapper.getId()), is((Node) result));
@@ -129,7 +129,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(topicNode.getNextNodeId()).willReturn(null);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the topic is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -148,7 +148,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(commentNode.getNextNodeId()).willReturn(null);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the comment is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -167,7 +167,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(levelNode.getNextNodeId()).willReturn(null);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the level is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -187,7 +187,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(levelNode.getNextNodeId()).willReturn(null);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the level is transformed and added as a level child
         // And a textnode is added containing a newline character
@@ -214,7 +214,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(commentChildNode.getNextNodeId()).willReturn(null);
 
         // When transformLevel is called
-        Level result = transformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the nodes should have been added as children
         // And be in the order expected

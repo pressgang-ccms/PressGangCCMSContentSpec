@@ -28,7 +28,7 @@ public class CSTransformerCommentTest extends CSTransformerTest {
 
         // When tranformComment is called
         try {
-            transformer.transformComment(nodeWrapper);
+            CSTransformer.transformComment(nodeWrapper);
 
             // Then an exception is thrown with an appropriate error
             fail(ILLEGAL_ARG_EX_MISSING);
@@ -45,7 +45,7 @@ public class CSTransformerCommentTest extends CSTransformerTest {
         given(nodeWrapper.getAdditionalText()).willReturn(text);
 
         // When tranformComment is called
-        Comment result = transformer.transformComment(nodeWrapper);
+        Comment result = CSTransformer.transformComment(nodeWrapper);
 
         // Then the comment should be returned with the text
         assertThat(result.getText(), containsString(text));

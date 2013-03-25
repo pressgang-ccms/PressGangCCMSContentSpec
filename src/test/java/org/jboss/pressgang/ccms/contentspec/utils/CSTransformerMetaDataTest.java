@@ -38,7 +38,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         CSNodeWrapper nodeWrapper = createMetaDataMock(CSConstants.BOOK_TYPE_TITLE, bookType.toString());
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>) transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CSConstants.BOOK_TYPE_TITLE));
@@ -53,7 +53,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         CSNodeWrapper nodeWrapper = createMetaDataMock(CSConstants.BOOK_TYPE_TITLE, "foo");
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>) transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CSConstants.BOOK_TYPE_TITLE));
@@ -68,7 +68,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         CSNodeWrapper nodeWrapper = createMetaDataMock(INLINE_INJECTION_TITLE, "[topicType]");
 
         // When the node metadata is transformed
-        KeyValueNode<InjectionOptions> result = (KeyValueNode<InjectionOptions>) transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<InjectionOptions> result = (KeyValueNode<InjectionOptions>) CSTransformer.transformMetaData(nodeWrapper);
 
         // Then the result has an inline injection type key
         assertThat(result.getKey(), is(INLINE_INJECTION_TITLE));
@@ -83,7 +83,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         CSNodeWrapper nodeWrapper = createMetaDataMock(key, value);
 
         // When the node metadata is transformed
-        KeyValueNode<String> result = (KeyValueNode<String>) transformer.transformMetaData(nodeWrapper);
+        KeyValueNode<String> result = (KeyValueNode<String>) CSTransformer.transformMetaData(nodeWrapper);
 
         // Then the result has the key given
         assertThat(result.getKey(), is(key));

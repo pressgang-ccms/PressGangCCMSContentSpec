@@ -49,7 +49,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
 
         // When transformSpecTopic is called
         try {
-            transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+            CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
             // Then an IllegalArgumentException is thrown
             fail(ILLEGAL_ARG_EX_MISSING);
@@ -65,7 +65,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         mockValidSpecTopicWrapper();
 
         // When transformSpecTopic is called
-        SpecTopic result = transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        SpecTopic result = CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then all values are transformed as expected
         assertThat(result.getDBId(), is(nodeWrapper.getEntityId()));
@@ -96,7 +96,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         given(items.isEmpty()).willReturn(false);
 
         // When transformSpecTopic is called
-        transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the node should be added to relationshipFromNodes
         assertThat(relationshipFromNodes.contains(nodeWrapper), is(true));
@@ -111,7 +111,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         given(items.isEmpty()).willReturn(true);
 
         // When transformSpecTopic is called
-        transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the node should not be added to relationshipFromNodes
         assertThat(relationshipFromNodes.contains(nodeWrapper), is(false));
@@ -125,7 +125,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         assertThat(specTopicMap.containsKey(nodeWrapper.getEntityId().toString()), is(false));
 
         // When transformSpecTopic is called
-        SpecTopic result = transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        SpecTopic result = CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then that key should be added to the map
         assertThat(specTopicMap.containsKey(nodeWrapper.getEntityId().toString()), is(true));
@@ -141,7 +141,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         // And an empty targetTopics list
 
         // When transformSpecTopic is called
-        transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then no target should be added
         assertThat(targetTopics.size(), is(0));
@@ -159,7 +159,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         given(nodeWrapper.getId()).willReturn(null);
 
         // When transformSpecTopic is called
-        SpecTopic result = transformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+        SpecTopic result = CSTransformer.transformSpecTopic(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the corresponding values should be null
         assertThat(result.getTitle() == null, is(true));

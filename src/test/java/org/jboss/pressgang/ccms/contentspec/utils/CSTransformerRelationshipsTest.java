@@ -74,7 +74,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         PowerMockito.mockStatic(ContentSpecUtilities.class);
 
         // When relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processes, providerFactory);
 
         // Then a unique id map should be created based on the spec
         PowerMockito.verifyStatic(Mockito.times(1));
@@ -88,7 +88,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         List<Process> processList = asList(process);
 
         // When relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processList, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processList, providerFactory);
 
         // Then the process should have its relationships applied
         verify(process, times(1)).processTopics(anyMap(), anyMap(), any(TopicProvider.class));
@@ -104,7 +104,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         given(nodes.get(any(Integer.class))).willReturn(specTopicFromNode);
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processes, providerFactory);
 
         // Then no relationships are added
         assertThat(specTopicFromNode.getRelationships().size() == 0, is(true));
@@ -119,7 +119,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
 
         // When the relationships are applied
         try {
-            transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+            CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
             // Then an exception is thrown with an appropriate error message
             fail("IllegalStateException expected but not thrown");
@@ -139,7 +139,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         level.setTargetId(targetId);
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the level is added
         verify(fromNodeSpecTopic, times(1)).addRelationshipToTarget(level, RelationshipType.REFER_TO, title);
@@ -155,7 +155,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         Level level = setUpLevelMock(title, LevelType.BASE, relatedNodeWrapperId);
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the level is given the target id expected
         assertThat(level.getTargetId(), is("T00" + relatedNodeWrapperId));
@@ -174,7 +174,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         SpecTopic specTopic = setUpSpecTopicMock();
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the spec topic is added, referenced directly
         verify(fromNodeSpecTopic, times(1)).addRelationshipToTopic(specTopic, RelationshipType.REFER_TO, title);
@@ -192,7 +192,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         makeSpecTopicDuplicated();
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the spec topic is added as a target
         verify(fromNodeSpecTopic, times(1)).addRelationshipToTarget(specTopic, RelationshipType.REFER_TO, title);
@@ -209,7 +209,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         makeSpecTopicDuplicated();
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the spec topic is added as a target
         verify(fromNodeSpecTopic, times(1)).addRelationshipToTarget(specTopic, RelationshipType.REFER_TO, title);
@@ -246,7 +246,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         setUpLevelMock(title, LevelType.APPENDIX, relatedNodeWrapperId3);
 
         // When the relationships are applied
-        transformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, fromNodes, processes, providerFactory);
 
         // Then the nodes are sorted and added as expected
         assertThat(specTopicFromNode.getRelationships().size() == 3, is(true));

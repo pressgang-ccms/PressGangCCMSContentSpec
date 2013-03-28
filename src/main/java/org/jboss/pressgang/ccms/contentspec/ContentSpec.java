@@ -36,6 +36,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> dtd = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
+    private KeyValueNode<String> copyrightYear = null;
     private KeyValueNode<String> description = null;
     private KeyValueNode<InjectionOptions> injectionOptions = null;
     private KeyValueNode<String> bugzillaProduct = null;
@@ -530,6 +531,34 @@ public class ContentSpec extends Node {
             appendChild(this.copyrightHolder, false);
         } else {
             this.copyrightHolder.setValue(copyrightHolder);
+        }
+    }
+
+    /**
+     * Get the Copyright Year(s) of the Content Specification and the book it creates.
+     *
+     * @return The year(s) for the Copyright.
+     */
+    public String getCopyrightYear() {
+        return copyrightYear == null ? null : copyrightYear.getValue();
+    }
+
+    /**
+     * Set the Copyright Year(s) of the Content Specification and the book it creates.
+     *
+     * @param copyrightYear The year(s) for the Copyright.
+     */
+    public void setCopyrightYear(final String copyrightYear) {
+        if (copyrightYear == null && this.copyrightYear == null) {
+            return;
+        } else if (copyrightYear == null) {
+            removeChild(this.copyrightYear);
+            this.copyrightYear = null;
+        } else if (this.copyrightYear == null) {
+            this.copyrightYear = new KeyValueNode<String>(CSConstants.COPYRIGHT_YEAR_TITLE, copyrightYear);
+            appendChild(this.copyrightYear, false);
+        } else {
+            this.copyrightYear.setValue(copyrightYear);
         }
     }
 
@@ -1157,6 +1186,8 @@ public class ContentSpec extends Node {
             setAbstract(node.getValue());
         } else if (uppercaseKey.equals(CSConstants.COPYRIGHT_HOLDER_TITLE.toUpperCase(Locale.ENGLISH))) {
             setCopyrightHolder(node.getValue());
+        } else if (uppercaseKey.equals(CSConstants.COPYRIGHT_YEAR_TITLE.toUpperCase(Locale.ENGLISH))) {
+            setCopyrightYear(node.getValue());
         } else if (uppercaseKey.equals(CSConstants.SUBTITLE_TITLE.toUpperCase(Locale.ENGLISH))) {
             setSubtitle(node.getValue());
         } else {

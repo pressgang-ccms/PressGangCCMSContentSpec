@@ -169,6 +169,7 @@ public class CSConstants {
     public static final String PRODUCT_TITLE = "Product";
     public static final String ABSTRACT_TITLE = "Abstract";
     public static final String COPYRIGHT_HOLDER_TITLE = "Copyright Holder";
+    public static final String COPYRIGHT_YEAR_TITLE = "Copyright Year";
     public static final String VERSION_TITLE = "Version";
     public static final String BRAND_TITLE = "Brand";
     public static final String BUG_LINKS_TITLE = "Bug Links";

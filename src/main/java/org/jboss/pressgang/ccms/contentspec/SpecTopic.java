@@ -20,9 +20,6 @@ import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
-import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
-import org.w3c.dom.Document;
 
 public class SpecTopic extends SpecNode {
     private String id;
@@ -34,9 +31,6 @@ public class SpecTopic extends SpecNode {
     private List<Relationship> relationships = new LinkedList<Relationship>();
     private String targetId = null;
     private String title = null;
-    private String duplicateId = null;
-    private BaseTopicWrapper<?> topic = null;
-    private Document xmlDocument = null;
     private Integer revision = null;
 
     /**
@@ -86,24 +80,6 @@ public class SpecTopic extends SpecNode {
     }
 
     // Start of the basic getter/setter methods for this Topic.
-
-    /**
-     * Get the underlying topic that this Spec Topic represents.
-     *
-     * @return The underlying topic if it has been set otherwise null.
-     */
-    public BaseTopicWrapper<?> getTopic() {
-        return topic;
-    }
-
-    /**
-     * Set the underlying topic that this spec topic represents.
-     *
-     * @param topic The underlying topic.
-     */
-    public void setTopic(final BaseTopicWrapper<?> topic) {
-        this.topic = topic;
-    }
 
     /**
      * Set the ID for the Content Specification Topic.
@@ -838,32 +814,5 @@ public class SpecTopic extends SpecNode {
         if (getParent() != null) return getParent().getClosestTopicByDBId(DBId, checkParentNode);
 
         return null;
-    }
-
-    @Override
-    public String getUniqueLinkId(final boolean useFixedUrls) {
-        final String topicXRefId;
-        if (useFixedUrls) topicXRefId = topic.getXRefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
-        else {
-            topicXRefId = topic.getXRefId();
-        }
-
-        return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
-    }
-
-    public String getDuplicateId() {
-        return duplicateId;
-    }
-
-    public void setDuplicateId(final String duplicateId) {
-        this.duplicateId = duplicateId;
-    }
-
-    public Document getXmlDocument() {
-        return xmlDocument;
-    }
-
-    public void setXmlDocument(final Document xmlDocument) {
-        this.xmlDocument = xmlDocument;
     }
 }

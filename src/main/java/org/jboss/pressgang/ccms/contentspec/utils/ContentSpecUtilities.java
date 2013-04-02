@@ -9,6 +9,9 @@ import java.util.Map;
 import com.google.code.regexp.NamedMatcher;
 import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
+import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
@@ -44,7 +47,7 @@ public class ContentSpecUtilities {
     /**
      * Get the checksum of a Content Specification object.
      *
-     * @param contentSpec The content spec string to calculate the checksum for.
+     * @param contentSpecString The content spec string to calculate the checksum for.
      * @return The MD5 hash representing the content spec contents.
      */
     public static String getContentSpecChecksum(final String contentSpecString) {
@@ -120,8 +123,9 @@ public class ContentSpecUtilities {
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void replaceTranslatedStrings(final ContentSpecWrapper contentSpec, final Map<String, String> translations) {
-        if (contentSpec == null || translations == null || translations.size() == 0) return;
+    public static void replaceTranslatedStrings(final ContentSpecWrapper contentSpecEntity, final ContentSpec contentSpec,
+            final Map<String, String> translations) {
+        if (contentSpecEntity == null || translations == null || translations.size() == 0) return;
 
         /*
          * Get the translation strings and the nodes that the string maps to. We
@@ -130,7 +134,7 @@ public class ContentSpecUtilities {
          * then assume matches the strings supplied as the keys in the
          * translations parameter.
          */
-        final List<StringToCSNodeCollection> stringToNodeCollections = getTranslatableStrings(contentSpec, false);
+        final List<StringToCSNodeCollection> stringToNodeCollections = getTranslatableStrings(contentSpecEntity, false);
 
         if (stringToNodeCollections == null || stringToNodeCollections.size() == 0) return;
 
@@ -158,16 +162,41 @@ public class ContentSpecUtilities {
                         final String fixedTranslation = leftTrimPadding.toString() + translation + rightTrimPadding.toString();
 
                         for (final CSNodeWrapper node : nodeCollections) {
-                            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
-                                node.setAdditionalText(fixedTranslation);
-                            } else if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
-                                node.setTitle(fixedTranslation);
+                            final Node contentSpecNode = findMatchingContentSpecNode(contentSpec, node.getId());
+                            if (contentSpecNode != null) {
+                                if (contentSpecNode instanceof KeyValueNode) {
+                                    ((KeyValueNode) contentSpecNode).setValue(fixedTranslation);
+                                } else if (contentSpecNode instanceof Level) {
+                                    ((Level) contentSpecNode).setTranslatedTitle(fixedTranslation);
+                                }
                             }
                         }
                     }
                 }
             }
         }
+    }
+
+    public static Node findMatchingContentSpecNode(final ContentSpec contentSpec, final Integer csNodeId) {
+        for (final Node node : contentSpec.getNodes()) {
+            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId)) {
+                return node;
+            }
+        }
+
+        return findMatchingContentSpecNode(contentSpec.getBaseLevel(), csNodeId);
+    }
+
+    public static Node findMatchingContentSpecNode(final Level level, final Integer csNodeId) {
+        for (final Node node : level.getChildNodes()) {
+            if (node instanceof Level) {
+                return findMatchingContentSpecNode((Level) node, csNodeId);
+            } else if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId)) {
+                return node;
+            }
+        }
+
+        return null;
     }
 
     private static StringToCSNodeCollection findExistingText(final String text, final List<StringToCSNodeCollection> translationStrings) {

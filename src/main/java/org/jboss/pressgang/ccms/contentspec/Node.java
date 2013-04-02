@@ -11,6 +11,8 @@ public abstract class Node {
     protected final int lineNumber;
     protected String text;
     protected Node parent;
+    protected String uniqueId = null;
+    protected String translationUniqueId = null;
 
     public Node(final int lineNumber, final String text) {
         this.lineNumber = lineNumber;
@@ -92,4 +94,40 @@ public abstract class Node {
      * Removes the node from its parent.
      */
     protected abstract void removeParent();
+
+    /**
+     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
+     *
+     * @param uniqueId The Unique Content Specification Topic ID.
+     */
+    public void setUniqueId(final String uniqueId) {
+        this.uniqueId = uniqueId == null ? null : uniqueId.replaceAll("[^\\w\\d\\-]", "");
+    }
+
+    /**
+     * Gets the Content Specification Unique ID for the topic.
+     *
+     * @return The Unique CS Topic ID.
+     */
+    public String getUniqueId() {
+        return uniqueId;
+    }
+
+    /**
+     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
+     *
+     * @param translationUniqueId The Unique Content Specification Translated Topic ID.
+     */
+    public void setTranslationUniqueId(final String translationUniqueId) {
+        this.translationUniqueId = translationUniqueId == null ? null : translationUniqueId.replaceAll("[^\\w\\d\\-]", "");
+    }
+
+    /**
+     * Gets the Content Specification Translation Unique ID for the topic.
+     *
+     * @return The Unique CS Translated Topic ID.
+     */
+    public String getTranslationUniqueId() {
+        return translationUniqueId;
+    }
 }

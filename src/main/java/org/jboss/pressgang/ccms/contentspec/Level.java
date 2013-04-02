@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
-import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A
@@ -34,7 +33,6 @@ public class Level extends SpecNode {
     private String externalTargetId = null;
     protected String title = null;
     protected String translatedTitle = null;
-    protected String duplicateId = null;
 
     /**
      * Constructor.
@@ -398,30 +396,30 @@ public class Level extends SpecNode {
     public Integer getStep() {
         if (getParent() == null) {
             return null;
-        }
-
-        Integer previousNode = 0;
-
-        // Get the position of the level in its parents nodes
-        Integer nodePos = getParent().nodes.indexOf(this);
-
-        // If the level isn't the first node then get the previous nodes step
-        if (nodePos > 0) {
-            Node node = getParent().nodes.get(nodePos - 1);
-            previousNode = node.getStep();
-            // If the add node is a level then add the number of nodes it contains
-            if (node instanceof Level) {
-                previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
-            }
-            // The node is the first item so use the parent levels step
         } else {
-            previousNode = getParent().getStep();
-        }
-        // Make sure the previous nodes step isn't 0
-        previousNode = previousNode == null ? 0 : previousNode;
+            Integer previousNode = 0;
 
-        // Add one since we got the previous nodes step
-        return previousNode + 1;
+            // Get the position of the level in its parents nodes
+            Integer nodePos = getParent().nodes.indexOf(this);
+
+            // If the level isn't the first node then get the previous nodes step
+            if (nodePos > 0) {
+                Node node = getParent().nodes.get(nodePos - 1);
+                previousNode = node.getStep();
+                // If the add node is a level then add the number of nodes it contains
+                if (node instanceof Level) {
+                    previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
+                }
+                // The node is the first item so use the parent levels step
+            } else {
+                previousNode = getParent().getStep();
+            }
+            // Make sure the previous nodes step isn't 0
+            previousNode = previousNode == null ? 0 : previousNode;
+
+            // Add one since we got the previous nodes step
+            return previousNode + 1;
+        }
     }
 
     @Override
@@ -641,48 +639,5 @@ public class Level extends SpecNode {
         }
 
         return false;
-    }
-
-    @Override
-    public String getUniqueLinkId(final boolean useFixedUrls) {
-        // Get the pre link string
-        final String preFix;
-        switch (this.getType()) {
-            case APPENDIX:
-                preFix = "appe-";
-                break;
-            case SECTION:
-                preFix = "sect-";
-                break;
-            case PROCESS:
-                preFix = "proc-";
-                break;
-            case CHAPTER:
-                preFix = "chap-";
-                break;
-            case PART:
-                preFix = "part-";
-                break;
-            default:
-                preFix = "";
-        }
-
-        // Get the xref id
-        final String levelXRefId;
-        if (useFixedUrls) {
-            levelXRefId = DocBookUtilities.escapeTitle(title);
-        } else {
-            levelXRefId = "ChapterID" + getStep();
-        }
-
-        return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
-    }
-
-    public String getDuplicateId() {
-        return duplicateId;
-    }
-
-    public void setDuplicateId(final String duplicateId) {
-        this.duplicateId = duplicateId;
     }
 }

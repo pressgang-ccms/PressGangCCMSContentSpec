@@ -14,7 +14,6 @@ public abstract class SpecNode extends Node {
     protected List<String> tags = new ArrayList<String>();
     protected List<String> removeTags = new ArrayList<String>();
     protected List<String> sourceUrls = new ArrayList<String>();
-    protected String uniqueId = null;
     protected String condition = null;
     protected String description = null;
     protected String assignedWriter = null;
@@ -28,7 +27,6 @@ public abstract class SpecNode extends Node {
     }
 
     public SpecNode() {
-        super();
     }
 
     /**
@@ -400,24 +398,4 @@ public abstract class SpecNode extends Node {
         }
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
     }
-
-    /**
-     * Set the Unique ID for the Content Specification Topic, as well as cleans the string to be alphanumeric.
-     *
-     * @param uniqueId The Content Specification Topic ID.
-     */
-    public void setUniqueId(final String uniqueId) {
-        this.uniqueId = uniqueId == null ? null : uniqueId.replaceAll("[^\\w\\d\\-]", "");
-    }
-
-    /**
-     * Gets the Content Specification Unique ID for the topic.
-     *
-     * @return The Unique CS Topic ID.
-     */
-    public String getUniqueId() {
-        return uniqueId;
-    }
-
-    public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

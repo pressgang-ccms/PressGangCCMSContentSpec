@@ -33,7 +33,7 @@ public class EntityUtilities {
 
     /**
      * Gets a translated topic based on a topic id, revision and locale. The translated topic that is returned will be less then
-     * or equal to the revision that is passed. If the revision is null then the latest translated topic will be passed.
+     * or equal to the revision that is passed. If the revision is null then the latest translated topic will be returned.
      *
      * @param providerFactory
      * @param id              The TopicID to find the translation for.
@@ -123,6 +123,39 @@ public class EntityUtilities {
         }
 
         return null;
+    }
+
+    /**
+     * Gets a translated content spec based on a id and revision. The translated content spec that is returned will be less then
+     * or equal to the revision that is passed. If the revision is null then the latest translated content spec will be returned.
+     *
+     * @param providerFactory
+     * @param id              The Content Spec ID to find the translation for.
+     * @param rev             The Content Spec Revision to find the translation for.
+     * @return The closest matching translated content spec otherwise null if none exist.
+     */
+    public static TranslatedContentSpecWrapper getClosestTranslatedContentSpecById(final DataProviderFactory providerFactory,
+            final Integer id, final Integer rev) {
+
+        final CollectionWrapper<TranslatedContentSpecWrapper> translatedContentSpecs = providerFactory.getProvider(ContentSpecProvider
+                .class).getContentSpec(id, rev).getTranslatedContentSpecs();
+
+        TranslatedContentSpecWrapper closestTranslation = null;
+        if (translatedContentSpecs != null && translatedContentSpecs.getItems() != null) {
+            final List<TranslatedContentSpecWrapper> entities = translatedContentSpecs.getItems();
+            for (final TranslatedContentSpecWrapper translatedContentSpec : entities) {
+                if (
+                    // Ensure that the translation is the newest translation possible
+                        (closestTranslation == null || closestTranslation.getContentSpecRevision() < translatedContentSpec
+                                .getContentSpecRevision())
+                                // Ensure that the translation revision is less than or equal to the revision specified
+                                && (rev == null || translatedContentSpec.getContentSpecRevision() <= rev)) {
+                    closestTranslation = translatedContentSpec;
+                }
+            }
+        }
+
+        return closestTranslation;
     }
 
     public static TreeMap<NameIDSortMap, ArrayList<TagWrapper>> getCategoriesMappedToTags(final BaseTopicWrapper<?> source) {

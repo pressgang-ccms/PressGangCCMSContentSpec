@@ -140,13 +140,17 @@ public class CSTransformer {
      * @return The transformed KeyValuePair object.
      */
     protected static KeyValueNode<?> transformMetaData(final CSNodeWrapper node) {
+        final KeyValueNode<?> keyValueNode;
         if (node.getTitle().equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE)) {
-            return new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
+            keyValueNode = new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
         } else if (node.getTitle().equalsIgnoreCase(CSConstants.INLINE_INJECTION_TITLE)) {
-            return new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
+            keyValueNode = new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
         } else {
-            return new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
+            keyValueNode =  new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
         }
+        keyValueNode.setUniqueId(node.getId().toString());
+
+        return keyValueNode;
     }
 
     /**

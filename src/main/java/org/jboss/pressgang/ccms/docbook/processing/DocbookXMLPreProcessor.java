@@ -209,7 +209,7 @@ public class DocbookXMLPreProcessor {
             final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate) {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
-        /* SIMPLESECT TO HOLD OTHER LINKS */
+        // SIMPLESECT TO HOLD OTHER LINKS
         final Element bugzillaSection = document.createElement("simplesect");
         document.getDocumentElement().appendChild(bugzillaSection);
 
@@ -217,7 +217,7 @@ public class DocbookXMLPreProcessor {
         bugzillaSectionTitle.setTextContent("");
         bugzillaSection.appendChild(bugzillaSectionTitle);
 
-        /* BUGZILLA LINK */
+        // BUGZILLA LINK
         try {
             final String instanceNameProperty = System.getProperty(CommonConstants.INSTANCE_NAME_PROPERTY);
             final String fixedInstanceNameProperty = instanceNameProperty == null ? "Not Defined" : instanceNameProperty;
@@ -255,7 +255,7 @@ public class DocbookXMLPreProcessor {
                 bugzillaBuildID.append(" [Specified]");
             }
 
-            /* look for the bugzilla options */
+            // look for the bugzilla options
             if (topic.getTags() != null && topic.getTags() != null) {
                 final List<TagWrapper> tags = topic.getTags().getItems();
                 for (final TagWrapper tag : tags) {
@@ -282,7 +282,7 @@ public class DocbookXMLPreProcessor {
                 }
             }
 
-            /* build the bugzilla url options */
+            // build the bugzilla url options
             String bugzillaURLComponents = "";
 
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
@@ -299,7 +299,7 @@ public class DocbookXMLPreProcessor {
                 bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
             }
 
-            /* check the content spec options first */
+            // check the content spec options first
             if (bzOptions != null && bzOptions.getProduct() != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
                 bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), ENCODING);
@@ -314,7 +314,7 @@ public class DocbookXMLPreProcessor {
                     bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), ENCODING);
                 }
             }
-            /* we need at least a product */
+            // we need at least a product
             else if (bugzillaProduct != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
                 bugzillaURLComponents += "product=" + bugzillaProduct;

@@ -398,4 +398,6 @@ public abstract class SpecNode extends Node {
         }
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
     }
+
+    public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

@@ -25,7 +25,7 @@ public class TestUtil {
     public static CSNodeWrapper createValidCommentMock(String text) {
         CSNodeWrapper commentChildNode = mock(CSNodeWrapper.class);
         given(commentChildNode.getNodeType()).willReturn(CommonConstants.CS_NODE_COMMENT);
-        given(commentChildNode.getAdditionalText()).willReturn(text);
+        given(commentChildNode.getTitle()).willReturn(text);
         return commentChildNode;
     }
 

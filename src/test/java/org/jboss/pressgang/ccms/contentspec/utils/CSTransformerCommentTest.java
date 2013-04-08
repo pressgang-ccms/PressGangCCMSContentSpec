@@ -41,8 +41,8 @@ public class CSTransformerCommentTest extends CSTransformerTest {
     public void shouldAddTextToComment() throws Exception {
         // Given a node that is a comment
         given(nodeWrapper.getNodeType()).willReturn(CommonConstants.CS_NODE_COMMENT);
-        // And that has additional text
-        given(nodeWrapper.getAdditionalText()).willReturn(text);
+        // And that has a title
+        given(nodeWrapper.getTitle()).willReturn(text);
 
         // When tranformComment is called
         Comment result = CSTransformer.transformComment(nodeWrapper);

@@ -276,7 +276,7 @@ public class CSTransformer {
     protected static Comment transformComment(CSNodeWrapper node) {
         final Comment comment;
         if (node.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
-            comment = new Comment(node.getAdditionalText());
+            comment = new Comment(node.getTitle());
         } else {
             throw new IllegalArgumentException("The passed node is not a Comment");
         }

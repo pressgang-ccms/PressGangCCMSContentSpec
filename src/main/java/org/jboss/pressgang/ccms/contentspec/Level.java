@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
+import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A
@@ -33,6 +34,7 @@ public class Level extends SpecNode {
     private String externalTargetId = null;
     protected String title = null;
     protected String translatedTitle = null;
+    protected String duplicateId = null;
 
     /**
      * Constructor.
@@ -639,5 +641,48 @@ public class Level extends SpecNode {
         }
 
         return false;
+    }
+
+    @Override
+    public String getUniqueLinkId(final boolean useFixedUrls) {
+        // Get the pre link string
+        final String preFix;
+        switch (this.getType()) {
+            case APPENDIX:
+                preFix = "appe-";
+                break;
+            case SECTION:
+                preFix = "sect-";
+                break;
+            case PROCESS:
+                preFix = "proc-";
+                break;
+            case CHAPTER:
+                preFix = "chap-";
+                break;
+            case PART:
+                preFix = "part-";
+                break;
+            default:
+                preFix = "";
+        }
+
+        // Get the xref id
+        final String levelXRefId;
+        if (useFixedUrls) {
+            levelXRefId = DocBookUtilities.escapeTitle(title);
+        } else {
+            levelXRefId = "ChapterID" + getStep();
+        }
+
+        return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+    }
+
+    public String getDuplicateId() {
+        return duplicateId;
+    }
+
+    public void setDuplicateId(final String duplicateId) {
+        this.duplicateId = duplicateId;
     }
 }

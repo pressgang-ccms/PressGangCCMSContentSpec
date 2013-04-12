@@ -11,9 +11,8 @@ import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 /**
  * A Class that represents a Level inside of a Content Specification. A Level can either be a Chapter, Section or Appendix. A
  * Level can have children Levels and Content Specifications within it.
- * 
+ *
  * @author lnewson
- * 
  */
 public class Level extends SpecNode {
     /**
@@ -39,10 +38,10 @@ public class Level extends SpecNode {
 
     /**
      * Constructor.
-     * 
-     * @param title The title of the Level.
-     * @param type The type that the Level is (Chapter, Section, etc...).
-     * @param specLine The Content Specification Line that is used to create the Level.
+     *
+     * @param title      The title of the Level.
+     * @param type       The type that the Level is (Chapter, Section, etc...).
+     * @param specLine   The Content Specification Line that is used to create the Level.
      * @param lineNumber The Line Number of Level in the Content Specification.
      */
     public Level(final String title, final int lineNumber, final String specLine, final LevelType type) {
@@ -53,9 +52,9 @@ public class Level extends SpecNode {
 
     /**
      * Constructor.
-     * 
+     *
      * @param title The title of the Level.
-     * @param type The type that the Level is (Chapter, Section, etc...).
+     * @param type  The type that the Level is (Chapter, Section, etc...).
      */
     public Level(final String title, final LevelType type) {
         super();
@@ -67,7 +66,7 @@ public class Level extends SpecNode {
 
     /**
      * Gets the title of the Level.
-     * 
+     *
      * @return The title of the Level.
      */
     public String getTitle() {
@@ -76,16 +75,16 @@ public class Level extends SpecNode {
 
     /**
      * Sets the title for the Level.
-     * 
+     *
      * @param title The title for the Level.
      */
     public void setTitle(final String title) {
         this.title = title;
     }
-    
+
     /**
      * Gets the translated title of the Level.
-     * 
+     *
      * @return The translated title of the Level.
      */
     public String getTranslatedTitle() {
@@ -94,7 +93,7 @@ public class Level extends SpecNode {
 
     /**
      * Sets the translated title for the Level.
-     * 
+     *
      * @param title The translated title for the Level.
      */
     public void setTranslatedTitle(final String translatedTitle) {
@@ -103,7 +102,7 @@ public class Level extends SpecNode {
 
     /**
      * Gets the parent of the Level.
-     * 
+     *
      * @return The parent of the level.
      */
     @Override
@@ -113,7 +112,7 @@ public class Level extends SpecNode {
 
     /**
      * Sets the parent for the level.
-     * 
+     *
      * @param parent A Level that will act as the parent to this level.
      */
     protected void setParent(final Level parent) {
@@ -122,9 +121,9 @@ public class Level extends SpecNode {
 
     /**
      * Gets a List of all the Content Specification Topics for the level.
-     * 
+     * <p/>
      * Note: The topics may not be in order.
-     * 
+     *
      * @return A List of Content Specification Topics that exist within the level.
      */
     public List<SpecTopic> getSpecTopics() {
@@ -134,7 +133,7 @@ public class Level extends SpecNode {
     /**
      * Adds a Content Specification Topic to the Level. If the Topic already has a parent, then it is removed from that parent
      * and added to this level.
-     * 
+     *
      * @param specTopic The Content Specification Topic to be added to the level.
      */
     public void appendSpecTopic(final SpecTopic specTopic) {
@@ -148,7 +147,7 @@ public class Level extends SpecNode {
 
     /**
      * Removes a Content Specification Topic from the level and removes the level as the topics parent.
-     * 
+     *
      * @param specTopic The Content Specification Topic to be removed from the level.
      */
     public void removeSpecTopic(final SpecTopic specTopic) {
@@ -159,9 +158,9 @@ public class Level extends SpecNode {
 
     /**
      * Gets a List of all the child levels in this level.
-     * 
+     * <p/>
      * Note: The topics may not be in order.
-     * 
+     *
      * @return A List of child levels.
      */
     public List<Level> getChildLevels() {
@@ -171,40 +170,49 @@ public class Level extends SpecNode {
     /**
      * Adds a Child Element to the Level. If the Child Element already has a parent, then it is removed from that parent and
      * added to this level.
-     * 
+     *
      * @param child A Child element to be added to the Level.
      */
     public void appendChild(final Node child) {
         if (child instanceof Level) {
             levels.add((Level) child);
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         } else if (child instanceof SpecTopic) {
-            topics.add((SpecTopic) child);
+            appendSpecTopic((SpecTopic) child);
+        } else {
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         }
-        nodes.add(child);
-        if (child.getParent() != null) {
-            child.removeParent();
-        }
-        child.setParent(this);
     }
 
     /**
      * Removes a Child element from the level and removes the level as the Child's parent.
-     * 
+     *
      * @param child The Child element to be removed from the level.
      */
     public void removeChild(final Node child) {
         if (child instanceof Level) {
             levels.remove(child);
+            nodes.remove(child);
+            child.setParent(null);
         } else if (child instanceof SpecTopic) {
-            topics.remove(child);
+            removeSpecTopic((SpecTopic) child);
+        } else {
+            nodes.remove(child);
+            child.setParent(null);
         }
-        nodes.remove(child);
-        child.setParent(null);
     }
 
     /**
      * Gets the number of Content Specification Topics in the Level.
-     * 
+     *
      * @return The number of Content Specification Topics.
      */
     public int getNumberOfSpecTopics() {
@@ -213,7 +221,7 @@ public class Level extends SpecNode {
 
     /**
      * Gets the number of Child Levels in the Level.
-     * 
+     *
      * @return The number of Child Levels
      */
     public int getNumberOfChildLevels() {
@@ -222,7 +230,7 @@ public class Level extends SpecNode {
 
     /**
      * Inserts a node before the another node in the level.
-     * 
+     *
      * @param newNode The node to be inserted.
      * @param oldNode The node that the new node should be inserted in front of.
      * @return True if the node was inserted correctly otherwise false.
@@ -259,7 +267,7 @@ public class Level extends SpecNode {
 
     /**
      * Get the type of level.
-     * 
+     *
      * @return A LevelType that represents the type of level.
      */
     public LevelType getType() {
@@ -268,7 +276,7 @@ public class Level extends SpecNode {
 
     /**
      * Get the Target ID for the level if one exists.
-     * 
+     *
      * @return A String that represents a Target ID if one exists otherwise null.
      */
     public String getTargetId() {
@@ -277,7 +285,7 @@ public class Level extends SpecNode {
 
     /**
      * Set the Target ID for the level.
-     * 
+     *
      * @param targetId The Target ID to associate with the level.
      */
     public void setTargetId(final String targetId) {
@@ -286,7 +294,7 @@ public class Level extends SpecNode {
 
     /**
      * Get the External Target ID for the level if one exists.
-     * 
+     *
      * @return A String that represents an External Target ID if one exists otherwise null.
      */
     public String getExternalTargetId() {
@@ -295,7 +303,7 @@ public class Level extends SpecNode {
 
     /**
      * Set the External Target ID for the level.
-     * 
+     *
      * @param externalTargetId The External Target ID to associate with the level.
      */
     public void setExternalTargetId(final String externalTargetId) {
@@ -304,20 +312,16 @@ public class Level extends SpecNode {
 
     /**
      * Appends a Comment node to the Level.
-     * 
+     *
      * @param comment The Comment Node to be appended.
      */
     public void appendComment(final Comment comment) {
-        nodes.add(comment);
-        if (comment.getParent() != null) {
-            comment.removeParent();
-        }
-        comment.setParent(this);
+        appendChild(comment);
     }
 
     /**
      * Creates and appends a Comment node to the Level.
-     * 
+     *
      * @param comment The Comment to be appended to the level.
      */
     public void appendComment(final String comment) {
@@ -326,17 +330,16 @@ public class Level extends SpecNode {
 
     /**
      * Removes a Comment Node from the Level.
-     * 
+     *
      * @param comment The Comment node to be removed.
      */
     public void removeComment(final Comment comment) {
-        nodes.remove(comment);
-        comment.removeParent();
+        removeChild(comment);
     }
 
     /**
      * Gets a ordered linked list of the child nodes within the level.
-     * 
+     *
      * @return The ordered list of child nodes for the level.
      */
     public LinkedList<Node> getChildNodes() {
@@ -345,7 +348,7 @@ public class Level extends SpecNode {
 
     /**
      * Gets the total number of Children nodes for the level and its child levels.
-     * 
+     *
      * @return The total number of child nodes for the level and child levels.
      */
     protected Integer getTotalNumberOfChildren() {
@@ -374,7 +377,7 @@ public class Level extends SpecNode {
 
     /**
      * Checks to see if this level or any of its children contain SpecTopics.
-     * 
+     *
      * @return True if the level or the levels children contain at least one SpecTopic.
      */
     public boolean hasSpecTopics() {
@@ -395,30 +398,30 @@ public class Level extends SpecNode {
     public Integer getStep() {
         if (getParent() == null) {
             return null;
-        }
-
-        Integer previousNode = 0;
-
-        // Get the position of the level in its parents nodes
-        Integer nodePos = getParent().nodes.indexOf(this);
-
-        // If the level isn't the first node then get the previous nodes step
-        if (nodePos > 0) {
-            Node node = getParent().nodes.get(nodePos - 1);
-            previousNode = node.getStep();
-            // If the add node is a level then add the number of nodes it contains
-            if (node instanceof Level) {
-                previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
-            }
-            // The node is the first item so use the parent levels step
         } else {
-            previousNode = getParent().getStep();
-        }
-        // Make sure the previous nodes step isn't 0
-        previousNode = previousNode == null ? 0 : previousNode;
+            Integer previousNode = 0;
 
-        // Add one since we got the previous nodes step
-        return previousNode + 1;
+            // Get the position of the level in its parents nodes
+            Integer nodePos = getParent().nodes.indexOf(this);
+
+            // If the level isn't the first node then get the previous nodes step
+            if (nodePos > 0) {
+                Node node = getParent().nodes.get(nodePos - 1);
+                previousNode = node.getStep();
+                // If the add node is a level then add the number of nodes it contains
+                if (node instanceof Level) {
+                    previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
+                }
+                // The node is the first item so use the parent levels step
+            } else {
+                previousNode = getParent().getStep();
+            }
+            // Make sure the previous nodes step isn't 0
+            previousNode = previousNode == null ? 0 : previousNode;
+
+            // Add one since we got the previous nodes step
+            return previousNode + 1;
+        }
     }
 
     @Override
@@ -426,11 +429,10 @@ public class Level extends SpecNode {
         final String options = getOptionsString();
         final String title = (this.translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
         String output = type != LevelType.BASE ? (type.getTitle() + ": " + title
-        // Add the target id if one exists
+                // Add the target id if one exists
                 + (targetId == null ? "" : (" [" + targetId + "]"))
-        // Add the external target id if one exists
-        + (externalTargetId == null ? "" : (" [" + externalTargetId + "]")))
-                : "";
+                // Add the external target id if one exists
+                + (externalTargetId == null ? "" : (" [" + externalTargetId + "]"))) : "";
         // Add any options
         output += options.equals("") ? "" : (" [" + options + "]");
         setText(output);
@@ -439,7 +441,7 @@ public class Level extends SpecNode {
 
     /**
      * Returns a String Representation of the Level.
-     * 
+     *
      * @return The string representation of the Level.
      */
     @Override
@@ -448,7 +450,7 @@ public class Level extends SpecNode {
         if (type != LevelType.BASE) {
             final int indentationSize = parent != null ? getColumn() : 0;
             for (int i = 1; i < indentationSize; i++) {
-                output.append("  ");
+                output.append(SPACER);
             }
             output.append(getText() + "\n");
         }
@@ -477,8 +479,8 @@ public class Level extends SpecNode {
 
     /**
      * Finds the closest node in the contents of a level.
-     * 
-     * @param topic The node we need to find the closest match for.
+     *
+     * @param topic           The node we need to find the closest match for.
      * @param checkParentNode TODO
      * @return TODO
      */
@@ -488,9 +490,9 @@ public class Level extends SpecNode {
 
     /**
      * Finds the closest node in the contents of a level.
-     * 
-     * @param topic The node we need to find the closest match for.
-     * @param callerNode TODO
+     *
+     * @param topic           The node we need to find the closest match for.
+     * @param callerNode      TODO
      * @param checkParentNode TODO
      * @return TODO
      */
@@ -533,8 +535,8 @@ public class Level extends SpecNode {
 
     /**
      * This function checks the levels nodes and child nodes to see if it can match a spec topic for a topic database id.
-     * 
-     * @param DBId The topic database id
+     *
+     * @param DBId            The topic database id
      * @param checkParentNode If the function should check the levels parents as well
      * @return The closest available SpecTopic that matches the DBId otherwise null.
      */
@@ -544,9 +546,9 @@ public class Level extends SpecNode {
 
     /**
      * This function checks the levels nodes and child nodes to see if it can match a spec topic for a topic database id.
-     * 
-     * @param DBId The topic database id
-     * @param callerNode The node that called this function so that it isn't rechecked
+     *
+     * @param DBId            The topic database id
+     * @param callerNode      The node that called this function so that it isn't rechecked
      * @param checkParentNode If the function should check the levels parents as well
      * @return The closest available SpecTopic that matches the DBId otherwise null.
      */
@@ -556,7 +558,7 @@ public class Level extends SpecNode {
          */
         final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
-            if (childTopic.getDBId() == DBId) {
+            if (childTopic.getDBId().equals(DBId)) {
                 return childTopic;
             }
         }
@@ -589,7 +591,7 @@ public class Level extends SpecNode {
 
     /**
      * Checks to see if a SpecTopic exists within this level or its children.
-     * 
+     *
      * @param topic The topic to see if it exists
      * @return True if the topic exists within this level or its children otherwise false.
      */
@@ -620,7 +622,7 @@ public class Level extends SpecNode {
 
     /**
      * Checks to see if a SpecTopic exists within this level or its children.
-     * 
+     *
      * @param topicId The ID of the topic to see if it exists.
      * @return True if the topic exists within this level or its children otherwise false.
      */
@@ -630,7 +632,7 @@ public class Level extends SpecNode {
          */
         final List<SpecTopic> topics = getSpecTopics();
         for (final SpecTopic childTopic : topics) {
-            if (childTopic.getDBId() == topicId) {
+            if (childTopic.getDBId().equals(topicId)) {
                 return true;
             }
         }

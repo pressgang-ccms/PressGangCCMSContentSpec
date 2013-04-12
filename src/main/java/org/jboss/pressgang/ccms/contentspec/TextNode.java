@@ -12,8 +12,7 @@ public class TextNode extends Node {
     @Override
     public Integer getStep() {
         final Node parent = getParent();
-        if (parent == null)
-            return null;
+        if (parent == null) return null;
         Integer previousNode = 0;
 
         if (parent instanceof Level) {

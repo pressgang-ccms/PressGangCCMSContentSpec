@@ -2,17 +2,16 @@ package org.jboss.pressgang.ccms.contentspec;
 
 /**
  * A class that is used to represent a comment in a Content Specification.
- * 
+ *
  * @author lnewson
- * 
  */
 public class Comment extends Node {
 
     /**
      * Constructor
-     * 
+     *
      * @param lineNumber The Line Number of the Comment in a Content Specification.
-     * @param comment The line of text that represents a comment.
+     * @param comment    The line of text that represents a comment.
      */
     public Comment(final int lineNumber, final String comment) {
         super(lineNumber, comment.trim().startsWith("#") ? comment : ("# " + comment));
@@ -20,7 +19,7 @@ public class Comment extends Node {
 
     /**
      * Constructor
-     * 
+     *
      * @param comment The line of text that represents a comment.
      */
     public Comment(final String comment) {
@@ -30,8 +29,7 @@ public class Comment extends Node {
     @Override
     public Integer getStep() {
         final Node parent = getParent();
-        if (parent == null)
-            return null;
+        if (parent == null) return null;
         Integer previousNode = 0;
 
         if (parent instanceof Level) {
@@ -62,7 +60,7 @@ public class Comment extends Node {
 
     /**
      * Sets the Parent node for the Comment.
-     * 
+     *
      * @param parent The parent node for the comment.
      */
     protected void setParent(final Level parent) {
@@ -71,7 +69,7 @@ public class Comment extends Node {
 
     /**
      * Sets the Parent node for the Comment.
-     * 
+     *
      * @param parent The parent node for the comment.
      */
     protected void setParent(final ContentSpec parent) {
@@ -91,10 +89,8 @@ public class Comment extends Node {
     @Override
     protected void removeParent() {
         final Node parent = getParent();
-        if (parent instanceof Level)
-            ((Level) parent).removeComment(this);
-        else
-            ((ContentSpec) parent).removeComment(this);
+        if (parent instanceof Level) ((Level) parent).removeComment(this);
+        else ((ContentSpec) parent).removeComment(this);
         super.setParent(null);
     }
 

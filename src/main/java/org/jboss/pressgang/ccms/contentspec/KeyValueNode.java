@@ -46,7 +46,7 @@ public class KeyValueNode<T> extends Node {
 
     /**
      * Sets the Parent node for the Comment.
-     * 
+     *
      * @param parent The parent node for the comment.
      */
     protected void setParent(final ContentSpec parent) {

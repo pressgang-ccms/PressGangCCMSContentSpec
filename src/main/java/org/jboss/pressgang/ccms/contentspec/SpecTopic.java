@@ -29,7 +29,7 @@ import org.w3c.dom.Document;
 public class SpecTopic extends SpecNode {
     private String id;
     private String uniqueParserId;
-    private int DBId = 0;
+    private Integer DBId = null;
     private String type;
     private List<TopicRelationship> topicRelationships = new ArrayList<TopicRelationship>();
     private List<TargetRelationship> topicTargetRelationships = new ArrayList<TargetRelationship>();
@@ -49,7 +49,6 @@ public class SpecTopic extends SpecNode {
      * @param title                  The title of the Content Specification Topic.
      * @param lineNumber             The post processed Line Number of the topic.
      * @param specLine               The Content Specification Line that is used to create the Topic.
-     * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
      * @param type                   The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String id, final String title, final int lineNumber, final String specLine, final String type) {
@@ -68,7 +67,6 @@ public class SpecTopic extends SpecNode {
      * @param title                  The title of the Content Specification Topic.
      * @param lineNumber             The post processed Line Number of the topic.
      * @param specLine               The Content Specification Line that is used to create the Topic.
-     * @param preProcessedLineNumber The Line Number of Topic in the Content Specification.
      * @param type                   The Topic Type for this topic (Concept, Task, etc...).
      */
     public SpecTopic(final String title, final int lineNumber, final String specLine, final String type) {
@@ -84,7 +82,6 @@ public class SpecTopic extends SpecNode {
      * @param title The Title of the Content Specification Topic.
      */
     public SpecTopic(int DBId, String title) {
-        super();
         this.id = Integer.toString(DBId);
         this.DBId = DBId;
         this.title = title;
@@ -135,7 +132,7 @@ public class SpecTopic extends SpecNode {
     /**
      * Set the Unique ID for the Content Specification Topic.
      *
-     * @param id The Content Specification Topic ID.
+     * @param uniqueId The Content Specification Topic ID.
      */
     public void setUniqueId(final String uniqueId) {
         this.uniqueParserId = uniqueId;
@@ -151,28 +148,11 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Gets the Content Specification Unique ID for the topic.
-     *
-     * Note: The pre processed line number must be set to get the unique id.
-     *
-     * @return The unique id.
-     */
-    /*public String getUniqueId() {
-        if (id.equals("N") || id.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)
-                || id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || id.matches(CSConstants.CLONED_TOPIC_ID_REGEX)
-                || id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)) {
-            return Integer.toString(getLineNumber()) + "-" + id;
-        } else {
-            return id;
-        }
-    }*/
-
-    /**
      * Sets the Database ID for the Topic.
      *
      * @param id The Database ID for the Topic.
      */
-    public void setDBId(int id) {
+    public void setDBId(Integer id) {
         DBId = id;
     }
 
@@ -181,7 +161,7 @@ public class SpecTopic extends SpecNode {
      *
      * @return The Topics database ID.
      */
-    public int getDBId() {
+    public Integer getDBId() {
         return DBId;
     }
 
@@ -255,6 +235,15 @@ public class SpecTopic extends SpecNode {
      */
     public void setTargetId(final String targetId) {
         this.targetId = targetId;
+    }
+
+    /**
+     * Checks if the target id is only an internally used id, used for processes
+     *
+     * @return True if the target id is an internal id, otherwise false.
+     */
+    public boolean isTargetIdAnInternalId() {
+        return targetId == null ? false : getTargetId().matches("^T-" + getUniqueId() + "0[0-9]+$");
     }
 
     /**
@@ -379,7 +368,7 @@ public class SpecTopic extends SpecNode {
     public List<Relationship> getRelatedRelationships() {
         final List<Relationship> relatedRelationships = new LinkedList<Relationship>();
         for (final Relationship r : relationships) {
-            if (r.getType() == RelationshipType.RELATED) {
+            if (r.getType() == RelationshipType.REFER_TO) {
                 relatedRelationships.add(r);
             }
         }
@@ -459,16 +448,15 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Gets the list of Topic to Topic relationships where the main Topic matches the topic parameter.
+     * Gets the list of Topic to Topic relationships.
      *
-     * @param topicId The topic object of the main topic to be found.
-     * @return An ArrayList of TopicRelationship's where the main topic matches the topic or an empty array if none are found.
+     * @return An ArrayList of TopicRelationship's or an empty array if none are found.
      */
     public List<TopicRelationship> getTopicRelationships() {
         ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>(topicRelationships);
         for (final TargetRelationship relationship : topicTargetRelationships) {
-            relationships.add(
-                    new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(), relationship.getType()));
+            relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
+                    relationship.getType()));
         }
         return relationships;
     }
@@ -491,14 +479,14 @@ public class SpecTopic extends SpecNode {
         final ArrayList<TopicRelationship> relationships = new ArrayList<TopicRelationship>();
         /* Check the topic to topic relationships for related relationships */
         for (final TopicRelationship relationship : topicRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
+            if (relationship.getType() == RelationshipType.REFER_TO) {
                 relationships.add(relationship);
             }
         }
         /* Check the topic to target relationships for related relationships */
         for (final TargetRelationship relationship : topicTargetRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+            if (relationship.getType() == RelationshipType.REFER_TO) {
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -513,7 +501,7 @@ public class SpecTopic extends SpecNode {
     public List<TargetRelationship> getRelatedLevelRelationships() {
         final ArrayList<TargetRelationship> relationships = new ArrayList<TargetRelationship>();
         for (final TargetRelationship relationship : levelRelationships) {
-            if (relationship.getType() == RelationshipType.RELATED) {
+            if (relationship.getType() == RelationshipType.REFER_TO) {
                 relationships.add(relationship);
             }
         }
@@ -534,7 +522,7 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREREQUISITE) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -570,7 +558,7 @@ public class SpecTopic extends SpecNode {
         }
         for (final TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.LINKLIST) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -606,7 +594,7 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.NEXT) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -627,7 +615,7 @@ public class SpecTopic extends SpecNode {
         }
         for (TargetRelationship relationship : topicTargetRelationships) {
             if (relationship.getType() == RelationshipType.PREVIOUS) {
-                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryElement(),
+                relationships.add(new TopicRelationship(relationship.getTopic(), (SpecTopic) relationship.getSecondaryRelationship(),
                         relationship.getType()));
             }
         }
@@ -664,7 +652,7 @@ public class SpecTopic extends SpecNode {
     @Override
     public String getText() {
         final StringBuilder output = new StringBuilder();
-        if (this.isTopicANewTopic()) {
+        if (isTopicANewTopic()) {
             final String options = getOptionsString();
             output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
         } else {
@@ -673,16 +661,16 @@ public class SpecTopic extends SpecNode {
                     "") ? "" : (", " + options)) + "]");
         }
 
-        if (targetId != null && !((parent instanceof Process) && targetId.matches("^T" + this.getLineNumber() + "0[0-9]+$"))) {
+        if (targetId != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
             output.append(" [" + targetId + "]");
         }
 
         final int indentationSize = parent != null ? getColumn() : 0;
         final StringBuilder spacer = new StringBuilder();
         for (int i = 1; i < indentationSize; i++) {
-            spacer.append("  ");
+            spacer.append(SPACER);
         }
-        spacer.append("  ");
+        spacer.append(SPACER);
 
         if (!getPrerequisiteRelationships().isEmpty()) {
             boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
@@ -691,7 +679,7 @@ public class SpecTopic extends SpecNode {
 
         if (!getRelatedRelationships().isEmpty()) {
             boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
-            output.append(generateRelationshipText(RelationshipType.RELATED, !useLongSyntax, spacer.toString()));
+            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer.toString()));
         }
 
         if (!getLinkListRelationships().isEmpty()) {
@@ -731,7 +719,7 @@ public class SpecTopic extends SpecNode {
         final StringBuilder retValue;
         final List<Relationship> relationships;
         // Create the relationship heading
-        if (relationshipType == RelationshipType.RELATED) {
+        if (relationshipType == RelationshipType.REFER_TO) {
             if (shortSyntax) {
                 retValue = new StringBuilder(" [R: ");
             } else {
@@ -774,7 +762,7 @@ public class SpecTopic extends SpecNode {
                     retValue.append(",\n");
                 }
                 retValue.append(spacer);
-                retValue.append("  ");
+                retValue.append(SPACER);
                 if (related.getRelationshipTitle() != null && !related.getRelationshipTitle().trim().isEmpty()) {
                     retValue.append(related.getRelationshipTitle()).append(" ");
                 }
@@ -793,7 +781,7 @@ public class SpecTopic extends SpecNode {
         final StringBuilder spacer = new StringBuilder();
         final int indentationSize = parent != null ? getColumn() : 0;
         for (int i = 1; i < indentationSize; i++) {
-            spacer.append("  ");
+            spacer.append(SPACER);
         }
         return spacer + getText() + "\n";
     }

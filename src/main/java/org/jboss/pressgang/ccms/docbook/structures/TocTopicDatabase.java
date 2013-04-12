@@ -19,8 +19,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     private Set<T> topics = new HashSet<T>();
 
     public void addTopic(final T topic) {
-        if (!containsTopic(topic))
-            topics.add(topic);
+        if (!containsTopic(topic)) topics.add(topic);
     }
 
     public boolean containsTopic(final T topic) {
@@ -34,11 +33,9 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     public T getTopic(final Integer topicId) {
         for (final T topic : topics)
             if (topic instanceof RESTTranslatedTopicV1) {
-                if (((RESTTranslatedTopicV1) topic).getTopicId().equals(topicId))
-                    return topic;
+                if (((RESTTranslatedTopicV1) topic).getTopicId().equals(topicId)) return topic;
             } else {
-                if (topic.getId().equals(topicId))
-                    return topic;
+                if (topic.getId().equals(topicId)) return topic;
             }
 
         return null;
@@ -72,12 +69,10 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
 
         for (final T topic : topics) {
             /* landing pages ahev negative topic ids */
-            if (landingPagesOnly && topic.getId() >= 0)
-                continue;
+            if (landingPagesOnly && topic.getId() >= 0) continue;
 
             /* check to see if the topic has only the matching tags */
-            if (haveOnlyMatchingTags && topic.getTags().returnItems().size() != matchingTags.size())
-                continue;
+            if (haveOnlyMatchingTags && topic.getTags().returnItems().size() != matchingTags.size()) continue;
 
             /* check for matching tags */
             boolean foundMatchingTag = true;
@@ -87,8 +82,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
                     break;
                 }
             }
-            if (!foundMatchingTag)
-                continue;
+            if (!foundMatchingTag) continue;
 
             /* check for excluded tags */
             boolean foundExclusionTag = false;
@@ -98,8 +92,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
                     break;
                 }
             }
-            if (foundExclusionTag)
-                continue;
+            if (foundExclusionTag) continue;
 
             topicList.add(topic);
         }
@@ -113,19 +106,16 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
 
     public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final List<Integer> excludeTags,
             final boolean haveOnlyMatchingTags) {
-        return getMatchingTopicsFromInteger(CollectionUtilities.toArrayList(matchingTag), excludeTags, haveOnlyMatchingTags,
-                false);
+        return getMatchingTopicsFromInteger(CollectionUtilities.toArrayList(matchingTag), excludeTags, haveOnlyMatchingTags, false);
     }
 
-    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final Integer excludeTag,
-            final boolean haveOnlyMatchingTags) {
+    public List<T> getMatchingTopicsFromInteger(final Integer matchingTag, final Integer excludeTag, final boolean haveOnlyMatchingTags) {
         return getMatchingTopicsFromInteger(matchingTag, CollectionUtilities.toArrayList(excludeTag), haveOnlyMatchingTags);
     }
 
     public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final Integer excludeTag,
             final boolean haveOnlyMatchingTags) {
-        return getMatchingTopicsFromInteger(matchingTags, CollectionUtilities.toArrayList(excludeTag), haveOnlyMatchingTags,
-                false);
+        return getMatchingTopicsFromInteger(matchingTags, CollectionUtilities.toArrayList(excludeTag), haveOnlyMatchingTags, false);
     }
 
     public List<T> getMatchingTopicsFromInteger(final List<Integer> matchingTags, final List<Integer> excludeTags) {
@@ -159,47 +149,41 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     public List<T> getNonLandingPageTopics() {
         final List<T> retValue = new ArrayList<T>();
         for (final T topic : topics)
-            if (topic.getId() >= 0)
-                retValue.add(topic);
+            if (topic.getId() >= 0) retValue.add(topic);
         return retValue;
     }
 
     public void setTopics(final List<T> topics) {
-        if (topics == null)
-            return;
+        if (topics == null) return;
 
         this.topics = new HashSet<T>(topics);
     }
 
     public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags, final List<RESTTagV1> excludeTags) {
-        return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags),
-                convertTagArrayToIntegerArray(excludeTags), false, false);
+        return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags), convertTagArrayToIntegerArray(excludeTags), false,
+                false);
     }
 
     public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag, final List<RESTTagV1> excludeTags) {
-        if (matchingTag == null)
-            return null;
+        if (matchingTag == null) return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), convertTagArrayToIntegerArray(excludeTags), false);
     }
 
     public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag, final RESTTagV1 excludeTag) {
-        if (matchingTag == null || excludeTag == null)
-            return null;
+        if (matchingTag == null || excludeTag == null) return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), excludeTag.getId(), false);
     }
 
     public List<T> getMatchingTopicsFromTag(final List<RESTTagV1> matchingTags, final RESTTagV1 excludeTag) {
-        if (excludeTag == null)
-            return null;
+        if (excludeTag == null) return null;
 
         return getMatchingTopicsFromInteger(convertTagArrayToIntegerArray(matchingTags), excludeTag.getId(), false);
     }
 
     public List<T> getMatchingTopicsFromTag(final RESTTagV1 matchingTag) {
-        if (matchingTag == null)
-            return null;
+        if (matchingTag == null) return null;
 
         return getMatchingTopicsFromInteger(matchingTag.getId(), new ArrayList<Integer>(), false);
     }
@@ -211,8 +195,7 @@ public class TocTopicDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
     private List<Integer> convertTagArrayToIntegerArray(final List<RESTTagV1> tags) {
         final List<Integer> retValue = new ArrayList<Integer>();
         for (final RESTTagV1 tag : tags)
-            if (tag != null)
-                retValue.add(tag.getId());
+            if (tag != null) retValue.add(tag.getId());
         return retValue;
     }
 }

@@ -20,9 +20,8 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 
 /**
  * A class that is used to represent and process a "Process" within a Content Specification.
- * 
+ *
  * @author lnewson
- * 
  */
 public class Process extends Level {
 
@@ -34,10 +33,10 @@ public class Process extends Level {
 
     /**
      * Constructor
-     * 
-     * @param title The Title of the Process.
+     *
+     * @param title      The Title of the Process.
      * @param lineNumber The Line Number of Level in the Content Specification.
-     * @param specLine The Content Specification Line that is used to create the Process.
+     * @param specLine   The Content Specification Line that is used to create the Process.
      */
     public Process(final String title, final int lineNumber, final String specLine) {
         super(title, lineNumber, specLine, LevelType.PROCESS);
@@ -45,7 +44,7 @@ public class Process extends Level {
 
     /**
      * Constructor
-     * 
+     *
      * @param title The Title of the Process.
      */
     public Process(final String title) {
@@ -55,9 +54,9 @@ public class Process extends Level {
     @Override
     public void appendSpecTopic(final SpecTopic specTopic) {
         String topicId = specTopic.getId();
-        if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)
-                || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)
-                || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)) {
+        if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(
+                CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(
+                CSConstants.EXISTING_TOPIC_ID_REGEX)) {
             topicId = Integer.toString(specTopic.getLineNumber()) + "-" + topicId;
         }
         topics.put(topicId, specTopic);
@@ -68,9 +67,9 @@ public class Process extends Level {
     @Override
     public void removeSpecTopic(final SpecTopic specTopic) {
         String topicId = specTopic.getId();
-        if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)
-                || topicId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)
-                || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)) {
+        if (topicId.equals("N") || topicId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(
+                CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX) || topicId.matches(CSConstants.CLONED_TOPIC_ID_REGEX) || topicId.matches(
+                CSConstants.EXISTING_TOPIC_ID_REGEX)) {
             topicId = Integer.toString(specTopic.getLineNumber()) + "-" + topicId;
         }
         topics.remove(topicId);
@@ -80,8 +79,8 @@ public class Process extends Level {
 
     /**
      * Adds a list of branches for a Unique Content Specification Topic ID.
-     * 
-     * @param topicId The unique Content Specification Topic ID.
+     *
+     * @param topicId   The unique Content Specification Topic ID.
      * @param branchIds The List of branch IDs to add for the topic
      */
     public void addBranches(final String topicId, final List<String> branchIds) {
@@ -98,8 +97,8 @@ public class Process extends Level {
 
     /**
      * Adds a branch for a Unique Content Specification Topic ID.
-     * 
-     * @param topicId The unique Content Specification Topic ID.
+     *
+     * @param topicId  The unique Content Specification Topic ID.
      * @param branchId The ID of the Branch to be added
      */
     public void addBranch(final String topicId, final String branchId) {
@@ -113,18 +112,16 @@ public class Process extends Level {
 
     /**
      * Get the branch root nodes ID's for a for specific Topic and that Topics Target ID
-     * 
-     * @param topicId The ID of the topic to search on.
+     *
+     * @param topicId       The ID of the topic to search on.
      * @param topicTargetId The Target ID for the topic to search on.
-     * 
      * @return A list of all the branch root node ID's for the specified Topic/Target ID.
      */
     private List<String> getBranchRootIdsForTopicId(final String topicId, final String topicTargetId) {
         final List<String> branchRootIds = new ArrayList<String>();
         for (final String branchRootId : branches.keySet()) {
             for (final String branchId : branches.get(branchRootId)) {
-                if (topicId.matches("((^[0-9]*-)|(^))" + branchId + "$") || branchId.equals(topicTargetId))
-                    branchRootIds.add(branchRootId);
+                if (topicId.matches("((^[0-9]*-)|(^))" + branchId + "$") || branchId.equals(topicTargetId)) branchRootIds.add(branchRootId);
             }
         }
         return branchRootIds.isEmpty() ? null : branchRootIds;
@@ -132,7 +129,7 @@ public class Process extends Level {
 
     /**
      * Check if the topics in the Process have already been processed.
-     * 
+     *
      * @return True if the topics have been processed otherwise false.
      */
     public boolean isTopicsProcessed() {
@@ -142,7 +139,7 @@ public class Process extends Level {
     /**
      * Get the relationships that lie within the Process. This will return an empty list until after the topics have been
      * processed.
-     * 
+     *
      * @return A list of relatioships within the Process.
      */
     public HashMap<String, ArrayList<Relationship>> getProcessRelationships() {
@@ -152,7 +149,7 @@ public class Process extends Level {
     /**
      * Get a mapping of the Process targets for each Target within the process. This will return an empty list until after the
      * topics have been processed.
-     * 
+     *
      * @return A mapping of Target IDs to Content Specification Topics that exist within the process.
      */
     public HashMap<String, SpecTopic> getProcessTargets() {
@@ -161,7 +158,7 @@ public class Process extends Level {
 
     /**
      * Gets all of the Content Specification Unique Topic ID's that are used in the process.
-     * 
+     *
      * @return A List of Unique Topic ID's.
      */
     protected List<String> getTopicIds() {
@@ -185,10 +182,10 @@ public class Process extends Level {
 
     /**
      * Processes a processes topics and creates the targets and relationships
-     * 
-     * @param specTopics A mapping of all the topics in a content specification to their unique ids
+     *
+     * @param specTopics   A mapping of all the topics in a content specification to their unique ids
      * @param topicTargets The topic targets that already exist in a content specification
-     * @param reader A DBReader object that is used to access database objects via the REST Interface
+     * @param reader       A DBReader object that is used to access database objects via the REST Interface
      * @return True if everything loaded successfully otherwise false
      */
     public boolean processTopics(final HashMap<String, SpecTopic> specTopics, final HashMap<String, SpecTopic> topicTargets,
@@ -203,9 +200,8 @@ public class Process extends Level {
             final SpecTopic specTopic = topics.get(topicId);
 
             // If the topic is an existing or cloned topic then use the database information
-            if (nonUniqueId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX)
-                    || nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)
-                    || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
+            if (nonUniqueId.matches(CSConstants.EXISTING_TOPIC_ID_REGEX) || nonUniqueId.matches(
+                    CSConstants.CLONED_TOPIC_ID_REGEX) || nonUniqueId.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX)) {
                 // Get the topic information from the database
                 final RESTTopicV1 topic;
                 if (nonUniqueId.matches(CSConstants.CLONED_TOPIC_ID_REGEX)) {
@@ -248,8 +244,7 @@ public class Process extends Level {
                 // The Topic is a duplicated topic so get the type from the original topic
                 String type = specTopic.getType();
                 if (nonUniqueId.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX)) {
-                    if (specTopics.get("N" + nonUniqueId.substring(1)) == null)
-                        continue;
+                    if (specTopics.get("N" + nonUniqueId.substring(1)) == null) continue;
                     type = specTopics.get("N" + nonUniqueId.substring(1)).getType();
                 }
                 // Add relationships if the topic is a task
@@ -284,11 +279,11 @@ public class Process extends Level {
 
     /**
      * Creates the relationships between topics for the process
-     * 
-     * @param prevTopic The previous topic in the process.
-     * @param topicId The Unique ID of the topic.
+     *
+     * @param prevTopic         The previous topic in the process.
+     * @param topicId           The Unique ID of the topic.
      * @param prevTopicTargetID The Target ID of the previous topic.
-     * @param topicTargetId The Target ID of the topic.
+     * @param topicTargetId     The Target ID of the topic.
      * @return True if the relationship was created successfully otherwise false.
      */
     private boolean createProcessRelationships(final SpecTopic prevTopic, final String topicId, final String prevTopicTargetId,
@@ -322,10 +317,8 @@ public class Process extends Level {
                     }
 
                     // Create the ArrayList for the topic if one doesn't exist
-                    if (!relationships.containsKey(topicId))
-                        relationships.put(topicId, new ArrayList<Relationship>());
-                    if (!relationships.containsKey(branchRootId))
-                        relationships.put(branchRootId, new ArrayList<Relationship>());
+                    if (!relationships.containsKey(topicId)) relationships.put(topicId, new ArrayList<Relationship>());
+                    if (!relationships.containsKey(branchRootId)) relationships.put(branchRootId, new ArrayList<Relationship>());
 
                     // Create the relationship and add it to the parent topic
                     final Relationship nextRelationship = new Relationship(branchRootId, topicTargetId, RelationshipType.NEXT);
@@ -345,8 +338,7 @@ public class Process extends Level {
                             relationships.put(uniquePrevTopicId, new ArrayList<Relationship>());
 
                         // Add the previous relationship for this topic
-                        final Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId,
-                                RelationshipType.PREVIOUS);
+                        final Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
                         relationships.get(topicId).add(prevRelationship);
                     }
                 }
@@ -359,10 +351,8 @@ public class Process extends Level {
                     uniquePrevTopicId = prevTopic.getLineNumber() + "-" + prevTopic.getId();
                 }
                 // Create the ArrayList for the topic if one doesn't exist
-                if (!relationships.containsKey(topicId))
-                    relationships.put(topicId, new ArrayList<Relationship>());
-                if (!relationships.containsKey(uniquePrevTopicId))
-                    relationships.put(uniquePrevTopicId, new ArrayList<Relationship>());
+                if (!relationships.containsKey(topicId)) relationships.put(topicId, new ArrayList<Relationship>());
+                if (!relationships.containsKey(uniquePrevTopicId)) relationships.put(uniquePrevTopicId, new ArrayList<Relationship>());
 
                 // Add the previous relationship for this topic
                 final Relationship prevRelationship = new Relationship(topicId, prevTopicTargetId, RelationshipType.PREVIOUS);
@@ -381,7 +371,7 @@ public class Process extends Level {
             final StringBuilder output = new StringBuilder();
             final int indentationSize = parent != null ? getColumn() : 0;
             for (int i = 1; i < indentationSize; i++) {
-                output.append("  ");
+                output.append(SPACER);
             }
             output.append(getText() + "\n");
 

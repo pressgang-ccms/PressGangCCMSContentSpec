@@ -2,11 +2,12 @@ package org.jboss.pressgang.ccms.contentspec;
 
 /**
  * A very basic class that represents the lowest form of a Node in a Content Specification.
- * 
+ *
  * @author lnewson
- * 
  */
 public abstract class Node {
+    protected static final String SPACER = "  ";
+
     protected final int lineNumber;
     protected String text;
     protected Node parent;
@@ -28,7 +29,7 @@ public abstract class Node {
 
     /**
      * Gets the line number that the node is on in a Content Specification.
-     * 
+     *
      * @return The Line Number for the node.
      */
     public int getLineNumber() {
@@ -37,7 +38,7 @@ public abstract class Node {
 
     /**
      * Gets the text for the node's line.
-     * 
+     *
      * @return The line of text for the node.
      */
     public String getText() {
@@ -46,7 +47,7 @@ public abstract class Node {
 
     /**
      * Sets the text for the node.
-     * 
+     *
      * @param text The nodes text.
      */
     protected void setText(final String text) {
@@ -55,14 +56,14 @@ public abstract class Node {
 
     /**
      * Gets the step of the node in the Content Specification.
-     * 
+     *
      * @return The Step of the node.
      */
     public abstract Integer getStep();
 
     /**
      * Get the parent of the node.
-     * 
+     *
      * @return The nodes parent.
      */
     public Node getParent() {
@@ -71,7 +72,7 @@ public abstract class Node {
 
     /**
      * Sets the nodes parent.
-     * 
+     *
      * @param parent The parent node.
      */
     protected void setParent(final Node parent) {
@@ -80,7 +81,7 @@ public abstract class Node {
 
     /**
      * Gets the column the node starts at.
-     * 
+     *
      * @return The column the node starts at.
      */
     public Integer getColumn() {

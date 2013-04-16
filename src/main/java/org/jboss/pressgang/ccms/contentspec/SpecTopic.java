@@ -19,6 +19,11 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgang.ccms.rest.v1.components.ComponentTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.components.ComponentTranslatedTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -79,7 +84,6 @@ public class SpecTopic extends SpecNode {
      * @param title The Title of the Content Specification Topic.
      */
     public SpecTopic(int DBId, String title) {
-        super();
         this.id = Integer.toString(DBId);
         this.DBId = DBId;
         this.title = title;
@@ -830,7 +834,7 @@ public class SpecTopic extends SpecNode {
         /*
          * Check this topic to see if it is the topic we are looking for
          */
-        if (this.DBId == DBId) return this;
+        if (this.DBId.equals(DBId)) return this;
 
         /*
          * If we still haven't found the closest node then check this nodes parents.

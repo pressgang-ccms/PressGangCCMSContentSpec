@@ -1205,8 +1205,7 @@ public class ContentSpec extends Node {
         for (final Node node : nodes) {
             if (node instanceof KeyValueNode) {
                 final KeyValueNode keyValueNode = (KeyValueNode) node;
-                if (!keyValueNode.getKey().equals(CSConstants.CHECKSUM_TITLE) && !keyValueNode.getKey().equals(CSConstants.ID_TITLE) &&
-                        !keyValueNode.getKey().equals(CSConstants.PUBSNUMBER_TITLE)) {
+                if (!keyValueNode.getKey().equals(CSConstants.CHECKSUM_TITLE) && !keyValueNode.getKey().equals(CSConstants.ID_TITLE)) {
                     output.append(node.toString());
                 }
             } else {

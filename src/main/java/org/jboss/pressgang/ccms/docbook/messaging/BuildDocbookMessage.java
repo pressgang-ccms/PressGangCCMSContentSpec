@@ -3,48 +3,41 @@ package org.jboss.pressgang.ccms.docbook.messaging;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 
-public class BuildDocbookMessage
-{
-	private String query;
-	private DocbookBuildingOptions docbookOptions;
-	private int entityType;
-	private ZanataDetails zanataDetails;
+public class BuildDocbookMessage {
+    private String query;
+    private DocbookBuildingOptions docbookOptions;
+    private int entityType;
+    private ZanataDetails zanataDetails;
 
-	public String getQuery()
-	{
-		return query;
-	}
+    public String getQuery() {
+        return query;
+    }
 
-	public void setQuery(final String query)
-	{
-		this.query = query;
-	}
+    public void setQuery(final String query) {
+        this.query = query;
+    }
 
-	public DocbookBuildingOptions getDocbookOptions()
-	{
-		return docbookOptions;
-	}
+    public DocbookBuildingOptions getDocbookOptions() {
+        return docbookOptions;
+    }
 
-	public void setDocbookOptions(final DocbookBuildingOptions docbookOptions)
-	{
-		this.docbookOptions = docbookOptions;
-	}
+    public void setDocbookOptions(final DocbookBuildingOptions docbookOptions) {
+        this.docbookOptions = docbookOptions;
+    }
 
-	public int getEntityType() {
-		return entityType;
-	}
+    public int getEntityType() {
+        return entityType;
+    }
 
-	public void setEntityType(int entityType) {
-		this.entityType = entityType;
-	}
+    public void setEntityType(int entityType) {
+        this.entityType = entityType;
+    }
 
-	public ZanataDetails getZanataDetails()
-	{
-		return zanataDetails;
-	}
+    public ZanataDetails getZanataDetails() {
+        return zanataDetails;
+    }
 
-	public void setZanataDetails(final ZanataDetails zanataDetails)
-	{
-		this.zanataDetails = zanataDetails;
-	}
+    public void setZanataDetails(final ZanataDetails zanataDetails) {
+        this.zanataDetails = zanataDetails;
+    }
 }

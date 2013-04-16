@@ -15,8 +15,6 @@ import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 public class TopicErrorDatabase {
     public static enum ErrorLevel {ERROR, WARNING}
 
-    ;
-
     public static enum ErrorType {
         NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED,
         NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION

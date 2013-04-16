@@ -88,7 +88,8 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
         List<Process> processList = asList(process);
 
         // When relationships are applied
-        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processList, providerFactory);
+        CSTransformer.applyRelationships(contentSpec, nodes, specTopicMap, targetTopics, relationshipFromNodes, processList,
+                providerFactory);
 
         // Then the process should have its relationships applied
         verify(process, times(1)).processTopics(anyMap(), anyMap(), any(TopicProvider.class));

@@ -146,7 +146,7 @@ public class CSTransformer {
         } else if (node.getTitle().equalsIgnoreCase(CSConstants.INLINE_INJECTION_TITLE)) {
             keyValueNode = new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
         } else {
-            keyValueNode =  new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
+            keyValueNode = new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
         }
         keyValueNode.setUniqueId(node.getId().toString());
 

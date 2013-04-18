@@ -108,7 +108,7 @@ public class CSTransformer {
             boolean addToBaseLevel = false;
             for (final Map.Entry<CSNodeWrapper, Node> entry : sortedMap.entrySet()) {
                 // If a level or spec topic is found then start adding to the base level instead of the content spec
-                if (entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) {
+                if ((entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) && !addToBaseLevel) {
                     addToBaseLevel = true;
                     // Add a space between the base metadata and optional metadata
                     contentSpec.appendChild(new TextNode("\n"));

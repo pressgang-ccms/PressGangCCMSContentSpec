@@ -92,11 +92,9 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper levelNode = createValidLevelMock(CommonConstants.CS_NODE_SECTION);
         setChildren(asList(metaDataNode, levelNode));
         // And appropriate values for sorting
-        given(metaDataNode.getPreviousNodeId()).willReturn(null);
-        given(metaDataNode.getNextNodeId()).willReturn(anotherId);
+        given(metaDataNode.getNextNode()).willReturn(levelNode);
         given(metaDataNode.getId()).willReturn(id);
-        given(levelNode.getPreviousNodeId()).willReturn(id);
-        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(null);
         given(levelNode.getId()).willReturn(anotherId);
 
         // When the spec is transformed
@@ -130,8 +128,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper topicNode = createValidTopicMock();
         setChildren(asList(topicNode));
         // And appropriate values for sorting
-        given(topicNode.getPreviousNodeId()).willReturn(null);
-        given(topicNode.getNextNodeId()).willReturn(null);
+        given(topicNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -147,8 +144,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper commentNode = createValidCommentMock(text);
         setChildren(asList(commentNode));
         // And appropriate values for sorting
-        given(commentNode.getPreviousNodeId()).willReturn(null);
-        given(commentNode.getNextNodeId()).willReturn(null);
+        given(commentNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -164,8 +160,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper metaDataNode = createMetaDataMock(title, text);
         setChildren(asList(metaDataNode));
         // And appropriate values for sorting
-        given(metaDataNode.getPreviousNodeId()).willReturn(null);
-        given(metaDataNode.getNextNodeId()).willReturn(null);
+        given(metaDataNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -183,8 +178,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper metaDataNode = createMetaDataMock("ID", text);
         setChildren(asList(metaDataNode));
         // And appropriate values for sorting
-        given(metaDataNode.getPreviousNodeId()).willReturn(null);
-        given(metaDataNode.getNextNodeId()).willReturn(null);
+        given(metaDataNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -203,8 +197,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper levelNode = createValidLevelMock(CommonConstants.CS_NODE_SECTION);
         setChildren(asList(levelNode));
         // And appropriate values for sorting
-        given(levelNode.getPreviousNodeId()).willReturn(null);
-        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -222,12 +215,11 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper commentNode = createValidCommentMock(text);
         setChildren(asList(commentNode, levelNode, topicNode));
         // And that appropriate sorting values have been set
-        given(commentNode.getPreviousNodeId()).willReturn(null);
         given(levelNode.getId()).willReturn(id);
-        given(commentNode.getNextNodeId()).willReturn(id);
+        given(commentNode.getNextNode()).willReturn(levelNode);
         given(topicNode.getId()).willReturn(anotherId);
-        given(levelNode.getNextNodeId()).willReturn(anotherId);
-        given(topicNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(topicNode);
+        given(topicNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -248,10 +240,9 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         CSNodeWrapper commentNode = createValidCommentMock(text);
         setChildren(asList(levelNode, commentNode));
         // And appropriate values for sorting
-        given(levelNode.getPreviousNodeId()).willReturn(null);
-        given(levelNode.getNextNodeId()).willReturn(id);
+        given(levelNode.getNextNode()).willReturn(commentNode);
         given(commentNode.getId()).willReturn(id);
-        given(commentNode.getNextNodeId()).willReturn(null);
+        given(commentNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -276,8 +267,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(relatedNodeWrapper.getId()).willReturn(id);
         given(relatedNodeWrapper.getRelationshipType()).willReturn(CS_RELATIONSHIP_REFER_TO);
         // And appropriate values for sorting
-        given(topicNode.getPreviousNodeId()).willReturn(null);
-        given(topicNode.getNextNodeId()).willReturn(null);
+        given(topicNode.getNextNode()).willReturn(null);
 
         // When the spec is transformed
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
@@ -293,8 +283,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         given(levelNode.getId()).willReturn(id);
         setChildren(asList(levelNode));
         // And appropriate values for sorting
-        given(levelNode.getPreviousNodeId()).willReturn(null);
-        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(null);
         // And we are spying on our class under test (as there isn't another good way to check this)
         PowerMockito.spy(CSTransformer.class);
 

@@ -28,7 +28,7 @@ import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
-import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
+import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -44,7 +44,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
     @Arbitrary Integer id;
     @Arbitrary Integer anotherId;
     @Mock CSNodeWrapper nodeWrapper;
-    @Mock CollectionWrapper<CSNodeWrapper> nodeChildren;
+    @Mock UpdateableCollectionWrapper<CSNodeWrapper> nodeChildren;
     List<CSNodeWrapper> relationshipFromNodes = new ArrayList<CSNodeWrapper>();
     Map<Integer, Node> nodes = newHashMap();
     Map<String, SpecTopic> targetTopics = newHashMap();
@@ -125,8 +125,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         CSNodeWrapper topicNode = createValidTopicMock();
         setChildNodes(asList(topicNode));
         // And appropriate values for sorting
-        given(topicNode.getPreviousNodeId()).willReturn(null);
-        given(topicNode.getNextNodeId()).willReturn(null);
+        given(topicNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
@@ -144,8 +143,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         CSNodeWrapper commentNode = createValidCommentMock(text);
         setChildNodes(asList(commentNode));
         // And appropriate values for sorting
-        given(commentNode.getPreviousNodeId()).willReturn(null);
-        given(commentNode.getNextNodeId()).willReturn(null);
+        given(commentNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
@@ -163,8 +161,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         CSNodeWrapper levelNode = createValidLevelMock(CommonConstants.CS_NODE_APPENDIX);
         setChildNodes(asList(levelNode));
         // And appropriate values for sorting
-        given(levelNode.getPreviousNodeId()).willReturn(null);
-        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
@@ -183,8 +180,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         CSNodeWrapper levelNode = createValidLevelMock(childLevelType);
         setChildNodes(asList(levelNode));
         // And appropriate values for sorting
-        given(levelNode.getPreviousNodeId()).willReturn(null);
-        given(levelNode.getNextNodeId()).willReturn(null);
+        given(levelNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
@@ -206,12 +202,11 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         CSNodeWrapper commentChildNode = createValidCommentMock(text);
         setChildNodes(asList(commentChildNode, levelChildNode, topicChildNode));
         // And that appropriate sorting values have been set
-        given(topicChildNode.getPreviousNodeId()).willReturn(null);
         given(levelChildNode.getId()).willReturn(id);
-        given(topicChildNode.getNextNodeId()).willReturn(id);
+        given(topicChildNode.getNextNode()).willReturn(levelChildNode);
         given(commentChildNode.getId()).willReturn(anotherId);
-        given(levelChildNode.getNextNodeId()).willReturn(anotherId);
-        given(commentChildNode.getNextNodeId()).willReturn(null);
+        given(levelChildNode.getNextNode()).willReturn(commentChildNode);
+        given(commentChildNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);

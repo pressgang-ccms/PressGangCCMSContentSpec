@@ -99,17 +99,31 @@ public class ErrorLoggerManager {
      *
      * @return A string containing the contents of the logs
      */
-    public String generateLogs() {
-        String output = "";
+    public String generateLogs(boolean includeLevel) {
+        final StringBuilder output = new StringBuilder();
         final ArrayList<LogMessage> messages = new ArrayList<LogMessage>();
         for (final String logName : logs.keySet()) {
             messages.addAll(logs.get(logName).getLogMessages());
         }
         Collections.sort(messages, new LogMessageComparator());
         for (final LogMessage msg : messages) {
-            output += msg.getMessage() + "\n";
+            if (includeLevel) {
+                output.append(msg.getMessage());
+            } else {
+                output.append(msg.getOriginalMessage());
+            }
+            output.append("\n");
         }
-        return output;
+        return output.toString();
+    }
+
+    /**
+     * Generates a custom log for all of the error/info/warn/debug messages sent.
+     *
+     * @return A string containing the contents of the logs
+     */
+    public String generateLogs() {
+        return generateLogs(true);
     }
 
     /**

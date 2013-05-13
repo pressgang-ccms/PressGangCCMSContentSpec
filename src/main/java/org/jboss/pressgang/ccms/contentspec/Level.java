@@ -139,8 +139,8 @@ public class Level extends SpecNode {
     public void appendSpecTopic(final SpecTopic specTopic) {
         topics.add(specTopic);
         nodes.add(specTopic);
-        if (specTopic.getParent() != null) {
-            specTopic.getParent().removeSpecTopic(specTopic);
+        if (specTopic.getParent() != null && specTopic.getParent() instanceof Level) {
+            ((Level) specTopic.getParent()).removeSpecTopic(specTopic);
         }
         specTopic.setParent(this);
     }
@@ -270,7 +270,7 @@ public class Level extends SpecNode {
      *
      * @return A LevelType that represents the type of level.
      */
-    public LevelType getType() {
+    public LevelType getLevelType() {
         return type;
     }
 
@@ -427,7 +427,7 @@ public class Level extends SpecNode {
     @Override
     public String getText() {
         final String options = getOptionsString();
-        final String title = (this.translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
+        final String title = (translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
         String output = type != LevelType.BASE ? (type.getTitle() + ": " + title
                 // Add the target id if one exists
                 + (targetId == null ? "" : (" [" + targetId + "]"))
@@ -461,7 +461,7 @@ public class Level extends SpecNode {
                 output.append(nodeOutput);
                 if (node instanceof Level) {
                     /*
-                     * if (((Level) node).getType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) &&
+                     * if (((Level) node).getLevelType() == LevelType.CHAPTER && !node.equals(nodes.getLast()) &&
                      * !nodeOutput.isEmpty()) { output.append("\n"); }
                      */
                 }
@@ -655,7 +655,7 @@ public class Level extends SpecNode {
     public String getUniqueLinkId(final boolean useFixedUrls) {
         // Get the pre link string
         final String preFix;
-        switch (this.getType()) {
+        switch (getLevelType()) {
             case APPENDIX:
                 preFix = "appe-";
                 break;
@@ -670,6 +670,9 @@ public class Level extends SpecNode {
                 break;
             case PART:
                 preFix = "part-";
+                break;
+            case PREFACE:
+                preFix = "pref-";
                 break;
             default:
                 preFix = "";

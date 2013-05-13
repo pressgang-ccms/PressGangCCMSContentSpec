@@ -22,10 +22,10 @@ import org.jboss.pressgang.ccms.rest.v1.collections.join.RESTCategoryInTagCollec
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTLogDetailsV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryInTagV1;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
-import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 
 public class RESTWriter {
 
@@ -58,8 +58,7 @@ public class RESTWriter {
             insertId = category.getId();
             collectionsCache.expire(RESTCategoryV1.class);
         } catch (Exception e) {
-            log.debug(e.getMessage());
-            e.printStackTrace();
+            log.debug(e);
         }
         return insertId;
     }
@@ -84,7 +83,7 @@ public class RESTWriter {
             insertId = tag.getId();
             collectionsCache.expire(RESTTagV1.class);
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return insertId;
     }
@@ -103,6 +102,17 @@ public class RESTWriter {
             final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships,
             final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
             final RESTAssignedPropertyTagCollectionV1 properties) {
+        return createTopic(title, text, description, timestamp, sourceUrls, incomingRelationships, outgoingRelationships, tags, properties,
+                null);
+    }
+
+    /**
+     * Writes a Topic tuple to the database using the data provided.
+     */
+    public Integer createTopic(final String title, final String text, final String description, final Date timestamp,
+            final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships,
+            final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
+            final RESTAssignedPropertyTagCollectionV1 properties, final RESTLogDetailsV1 logDetails) {
         Integer insertId = null;
         try {
             RESTTopicV1 topic = new RESTTopicV1();
@@ -146,11 +156,17 @@ public class RESTWriter {
                 topic.explicitSetSourceUrls_OTM(sourceUrls);
             }
 
-            topic = client.createJSONTopic(null, topic);
+            if (logDetails == null) {
+                topic = client.createJSONTopic(null, topic);
+            } else {
+                final Integer userId = logDetails.getUser() == null || logDetails.getUser().getId() == null ? CSConstants.UNKNOWN_USER_ID
+                        : logDetails.getUser().getId();
+                topic = client.createJSONTopic(null, topic, logDetails.getMessage(), logDetails.getFlag(), userId.toString());
+            }
             insertId = topic.getId();
             collectionsCache.expire(RESTTopicV1.class);
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return insertId;
     }
@@ -170,6 +186,17 @@ public class RESTWriter {
             final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships,
             final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
             final RESTAssignedPropertyTagCollectionV1 properties) {
+        return updateTopic(topicId, title, text, description, timestamp, sourceUrls, incomingRelationships, outgoingRelationships, tags,
+                properties, null);
+    }
+
+    /**
+     * Updates a Topic tuple in the database using the data provided.
+     */
+    public Integer updateTopic(final Integer topicId, final String title, final String text, final String description, final Date timestamp,
+            final RESTTopicSourceUrlCollectionV1 sourceUrls, final RESTTopicCollectionV1 incomingRelationships,
+            final RESTTopicCollectionV1 outgoingRelationships, final RESTTagCollectionV1 tags,
+            final RESTAssignedPropertyTagCollectionV1 properties, final RESTLogDetailsV1 logDetails) {
         Integer insertId = null;
         try {
 
@@ -218,12 +245,18 @@ public class RESTWriter {
                 topic.explicitSetSourceUrls_OTM(sourceUrls);
             }
 
-            topic = client.createJSONTopic(null, topic);
+            if (logDetails == null) {
+                topic = client.updateJSONTopic(null, topic);
+            } else {
+                final Integer userId = logDetails.getUser() == null || logDetails.getUser().getId() == null ? CSConstants.UNKNOWN_USER_ID
+                        : logDetails.getUser().getId();
+                topic = client.updateJSONTopic(null, topic, logDetails.getMessage(), logDetails.getFlag(), userId.toString());
+            }
             insertId = topic.getId();
             entityCache.expire(RESTTopicV1.class, insertId);
             collectionsCache.expire(RESTTopicV1.class);
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return insertId;
     }
@@ -232,6 +265,14 @@ public class RESTWriter {
      * Writes a ContentSpecs tuple to the database using the data provided.
      */
     public Integer createContentSpec(final String title, final String preContentSpec, final String dtd, final String createdBy) {
+        return createContentSpec(title, preContentSpec, dtd, createdBy, null);
+    }
+
+    /**
+     * Writes a ContentSpecs tuple to the database using the data provided.
+     */
+    public Integer createContentSpec(final String title, final String preContentSpec, final String dtd, final String createdBy,
+            final RESTLogDetailsV1 logDetails) {
         try {
             RESTTopicV1 contentSpec = new RESTTopicV1();
             contentSpec.explicitSetTitle(title);
@@ -264,11 +305,17 @@ public class RESTWriter {
 
             contentSpec.explicitSetTags(tags);
 
-            contentSpec = client.createJSONTopic("", contentSpec);
+            if (logDetails == null) {
+                contentSpec = client.createJSONTopic("", contentSpec);
+            } else {
+                final Integer userId = logDetails.getUser() == null || logDetails.getUser().getId() == null ? CSConstants.UNKNOWN_USER_ID
+                        : logDetails.getUser().getId();
+                contentSpec = client.createJSONTopic("", contentSpec, logDetails.getMessage(), logDetails.getFlag(), userId.toString());
+            }
             if (contentSpec != null) return contentSpec.getId();
             collectionsCache.expire(RESTTopicV1.class);
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return null;
     }
@@ -277,6 +324,14 @@ public class RESTWriter {
      * Updates a ContentSpecs tuple from the database using the data provided.
      */
     public boolean updateContentSpec(final Integer id, final String title, final String preContentSpec, final String dtd) {
+        return updateContentSpec(id, title, preContentSpec, dtd, null);
+    }
+
+    /**
+     * Updates a ContentSpecs tuple from the database using the data provided.
+     */
+    public boolean updateContentSpec(final Integer id, final String title, final String preContentSpec, final String dtd,
+            final RESTLogDetailsV1 logDetails) {
         try {
             RESTTopicV1 contentSpec = reader.getContentSpecById(id, null);
 
@@ -329,14 +384,20 @@ public class RESTWriter {
 
             contentSpec.explicitSetProperties(properties);
 
-            contentSpec = client.updateJSONTopic("", contentSpec);
+            if (logDetails == null) {
+                contentSpec = client.updateJSONTopic("", contentSpec);
+            } else {
+                final Integer userId = logDetails.getUser() == null || logDetails.getUser().getId() == null ? CSConstants.UNKNOWN_USER_ID
+                        : logDetails.getUser().getId();
+                contentSpec = client.updateJSONTopic("", contentSpec, logDetails.getMessage(), logDetails.getFlag(), userId.toString());
+            }
             if (contentSpec != null) {
                 entityCache.expire(RESTTopicV1.class, id);
                 collectionsCache.expire(RESTTopicV1.class);
                 return true;
             }
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return false;
     }
@@ -345,6 +406,13 @@ public class RESTWriter {
      * Writes a ContentSpecs tuple to the database using the data provided.
      */
     public boolean updatePostContentSpec(final Integer id, final String postContentSpec) {
+        return updatePostContentSpec(id, postContentSpec, null);
+    }
+
+    /**
+     * Writes a ContentSpecs tuple to the database using the data provided.
+     */
+    public boolean updatePostContentSpec(final Integer id, final String postContentSpec, final RESTLogDetailsV1 logDetails) {
         try {
             RESTTopicV1 contentSpec = reader.getContentSpecById(id, null);
             if (contentSpec == null) return false;
@@ -372,14 +440,20 @@ public class RESTWriter {
                 contentSpec.explicitSetProperties(properties);
             }
 
-            contentSpec = client.updateJSONTopic("", contentSpec);
+            if (logDetails == null) {
+                contentSpec = client.updateJSONTopic("", contentSpec);
+            } else {
+                final Integer userId = logDetails.getUser() == null || logDetails.getUser().getId() == null ? CSConstants.UNKNOWN_USER_ID
+                        : logDetails.getUser().getId();
+                contentSpec = client.updateJSONTopic("", contentSpec, logDetails.getMessage(), logDetails.getFlag(), userId.toString());
+            }
             if (contentSpec != null) {
                 entityCache.expire(RESTTopicV1.class, id);
                 collectionsCache.expire(RESTTopicV1.class);
                 return true;
             }
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return false;
     }
@@ -394,7 +468,7 @@ public class RESTWriter {
             collectionsCache.expire(RESTTopicV1.class);
             return true;
         } catch (Exception e) {
-            log.error(ExceptionUtilities.getStackTrace(e));
+            log.error(e);
         }
         return false;
     }

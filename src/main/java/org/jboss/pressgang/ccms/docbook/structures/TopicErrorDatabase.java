@@ -15,9 +15,7 @@ import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
  * generated while compiling to docbook.
  */
 public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
-    public static enum ErrorLevel {ERROR, WARNING}
-
-    ;
+    public static enum ErrorLevel {ERROR, WARNING, INFO}
 
     public static enum ErrorType {
         NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED,
@@ -73,6 +71,21 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         /* don't add duplicates */
         if (!(topicErrorData.getErrors().containsKey(errorLevel) && topicErrorData.getErrors().get(errorLevel).contains(item)))
             topicErrorData.addError(item, errorLevel, errorType);
+    }
+
+    public boolean hasErrorData(final T topic) {
+        for (final String locale : errors.keySet())
+            for (final TopicErrorData<T> topicErrorData : errors.get(locale)) {
+                if (ComponentBaseTopicV1.returnIsDummyTopic(topic)) {
+                    if (topic.getClass() == RESTTranslatedTopicV1.class && topicErrorData.getTopic() instanceof RESTTranslatedTopicV1) {
+                        if (((RESTTranslatedTopicV1) topicErrorData.getTopic()).getTopicId().equals(
+                                ((RESTTranslatedTopicV1) topic).getTopicId())) return true;
+                    }
+                } else {
+                    if (topicErrorData.getTopic().getId().equals(topic.getId())) return true;
+                }
+            }
+        return false;
     }
 
     private TopicErrorData<T> getErrorData(final T topic) {

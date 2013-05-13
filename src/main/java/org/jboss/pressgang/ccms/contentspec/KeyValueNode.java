@@ -8,8 +8,12 @@ public class KeyValueNode<T> extends Node {
     public KeyValueNode(final String key, final T value, final char separator) {
         super(key + " " + separator + " " + value);
         this.key = key;
-        this.setValue(value);
+        this.value = value;
         this.separator = separator;
+
+        if (value instanceof Node) {
+            ((Node) value).setParent(this);
+        }
     }
 
     public KeyValueNode(final String key, final T value) {
@@ -18,8 +22,10 @@ public class KeyValueNode<T> extends Node {
 
     @Override
     public Integer getStep() {
-        // TODO Auto-generated method stub
-        return null;
+        if (getParent() == null) return null;
+
+        // Get the position of the metadata in the content spec nodes and add one
+        return getParent().getNodes().indexOf(this) + 1;
     }
 
     @Override
@@ -37,6 +43,10 @@ public class KeyValueNode<T> extends Node {
 
     public void setValue(final T value) {
         this.value = value;
+
+        if (value instanceof Node) {
+            ((Node) value).setParent(this);
+        }
     }
 
     @Override
@@ -58,6 +68,8 @@ public class KeyValueNode<T> extends Node {
             return key + " " + separator + " [" + (value == null ? "" : value.toString()) + "]";
         } else if (value instanceof Boolean) {
             return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));
+        } else if (value instanceof SpecTopic) {
+            return key + " " + separator + " " + (value == null ? "" : ("[" + ((SpecTopic) value).getIdAndOptionsString()) + "]");
         } else {
             return key + " " + separator + " " + (value == null ? "" : value.toString());
         }

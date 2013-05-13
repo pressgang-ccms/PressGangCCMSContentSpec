@@ -16,10 +16,12 @@ import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
+import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
@@ -215,21 +217,10 @@ public class DocbookXMLPreProcessor {
             final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate) {
         final RESTBaseTopicV1<?, ?, ?> topic = specTopic.getTopic();
 
-        // SIMPLESECT TO HOLD OTHER LINKS
-        final Element bugzillaSection = document.createElement("simplesect");
-        document.getDocumentElement().appendChild(bugzillaSection);
-
-        final Element bugzillaSectionTitle = document.createElement("title");
-        bugzillaSectionTitle.setTextContent("");
-        bugzillaSection.appendChild(bugzillaSectionTitle);
-
         // BUGZILLA LINK
         try {
-            final String instanceNameProperty = System.getProperty(CommonConstants.INSTANCE_NAME_PROPERTY);
-            final String fixedInstanceNameProperty = instanceNameProperty == null ? "Not Defined" : instanceNameProperty;
-
-            final Element bugzillaPara = document.createElement("para");
-            bugzillaPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
+            final Element bugzillaSection = document.createElement("para");
+            bugzillaSection.setAttribute("role", ROLE_CREATE_BUG_PARA);
 
             final Element bugzillaULink = document.createElement("ulink");
 
@@ -248,10 +239,10 @@ public class DocbookXMLPreProcessor {
             String bugzillaVersion = null;
             String bugzillaKeywords = null;
             String bugzillaAssignedTo = null;
-            final String bugzillaEnvironment = URLEncoder.encode(
-                    "Instance Name: " + fixedInstanceNameProperty + "\n" + "Build: " + buildName + "\n" + "Build Name: " +
-                            specifiedBuildName + "\n" + "Build Date: " + formatter.format(buildDate), ENCODING);
             final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
+            final StringBuilder bugzillaEnvironment = new StringBuilder("Build: ").append(buildName).append("\nBuild Name: ").append(
+                    specifiedBuildName).append("\nBuild Date: ").append(formatter.format(buildDate)).append("\nTopic ID: ").append(topic.getId
+                    ()).append("-").append(topic.getRevision());
             final StringBuilder bugzillaBuildID = new StringBuilder();
             if (topic instanceof RESTTranslatedTopicV1) {
                 bugzillaBuildID.append(ComponentTranslatedTopicV1.returnBugzillaBuildId((RESTTranslatedTopicV1) topic));
@@ -260,10 +251,12 @@ public class DocbookXMLPreProcessor {
             }
             if (specTopic.getRevision() == null) {
                 bugzillaBuildID.append(" [Latest]");
+                bugzillaEnvironment.append(" [Latest]");
             } else {
                 bugzillaBuildID.append(" [Specified]");
+                bugzillaEnvironment.append(" [Specified]");
             }
-                    
+            final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
 
             /* look for the bugzilla options */
             if (topic.getTags() != null && topic.getTags().getItems() != null) {
@@ -301,7 +294,7 @@ public class DocbookXMLPreProcessor {
             String bugzillaURLComponents = "";
 
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "cf_environment=" + bugzillaEnvironment;
+            bugzillaURLComponents += "cf_environment=" + encodedBugzillaEnvironment;
 
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
             bugzillaURLComponents += "cf_build_id=" + URLEncoder.encode(bugzillaBuildID.toString(), ENCODING);
@@ -358,8 +351,8 @@ public class DocbookXMLPreProcessor {
             /*
              * only add the elements to the XML DOM if there was no exception (not that there should be one
              */
-            bugzillaSection.appendChild(bugzillaPara);
-            bugzillaPara.appendChild(bugzillaULink);
+            bugzillaSection.appendChild(bugzillaULink);
+            document.getDocumentElement().appendChild(bugzillaSection);
         } catch (final Exception ex) {
             ExceptionUtilities.handleException(ex);
         }
@@ -375,19 +368,12 @@ public class DocbookXMLPreProcessor {
 
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
                 .getInsertEditorLinks()))) {
-            /* SIMPLESECT TO HOLD OTHER LINKS */
-            final Element bugzillaSection = document.createElement("simplesect");
-            document.getDocumentElement().appendChild(bugzillaSection);
-
-            final Element bugzillaSectionTitle = document.createElement("title");
-            bugzillaSectionTitle.setTextContent("");
-            bugzillaSection.appendChild(bugzillaSectionTitle);
 
             // SURVEY LINK
             if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertSurveyLink()) {
                 final Element surveyPara = document.createElement("para");
                 surveyPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
-                bugzillaSection.appendChild(surveyPara);
+                document.getDocumentElement().appendChild(surveyPara);
 
                 final Text startSurveyText = document.createTextNode(
                         "Thank you for evaluating the new documentation format for JBoss Enterprise Application Platform. Let us know " +
@@ -410,7 +396,7 @@ public class DocbookXMLPreProcessor {
 
                 final Element editorLinkPara = document.createElement("para");
                 editorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
-                bugzillaSection.appendChild(editorLinkPara);
+                document.getDocumentElement().appendChild(editorLinkPara);
 
                 if (editorUrl != null) {
                     final Element surveyULink = document.createElement("ulink");
@@ -427,9 +413,12 @@ public class DocbookXMLPreProcessor {
             }
         }
 
-        // BUGZILLA LINK
-        if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
-            processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, buildDate);
+        // Only include a bugzilla link for normal topics
+        if (specTopic.getTopicType() == TopicType.NORMAL) {
+            // BUGZILLA LINK
+            if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
+                processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, buildDate);
+            }
         }
     }
 
@@ -826,8 +815,8 @@ public class DocbookXMLPreProcessor {
 
             // Create the title link
             final Element titleXrefItem = doc.createElement("link");
-            titleXrefItem.setTextContent(topic.getParent().getTitle());
-            titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+            titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+            titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
             titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_PREVIOUS_TITLE_LINK);
             linkTitleEle.appendChild(titleXrefItem);
 
@@ -906,8 +895,8 @@ public class DocbookXMLPreProcessor {
 
         // Create the title link
         final Element titleXrefItem = doc.createElement("link");
-        titleXrefItem.setTextContent(topic.getParent().getTitle());
-        titleXrefItem.setAttribute("linkend", topic.getParent().getUniqueLinkId(useFixedUrls));
+        titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+        titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
         titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_NEXT_TITLE_LINK);
         linkTitleEle.appendChild(titleXrefItem);
 

@@ -652,6 +652,8 @@ public class SpecTopic extends SpecNode {
                     previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
                 }
                 // The node is the first item so use the parent levels step
+            } else if (nodePos == -1) {
+                previousNode = parent.getStep() - 1;
             } else {
                 previousNode = parent.getStep();
             }

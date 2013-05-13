@@ -35,6 +35,7 @@ public class Level extends SpecNode {
     protected String title = null;
     protected String translatedTitle = null;
     protected String duplicateId = null;
+    protected SpecTopic innerTopic = null;
 
     /**
      * Constructor.
@@ -119,6 +120,18 @@ public class Level extends SpecNode {
         super.setParent(parent);
     }
 
+    public SpecTopic getInnerTopic() {
+        return innerTopic;
+    }
+
+    public void setInnerTopic(SpecTopic innerTopic) {
+        this.innerTopic = innerTopic;
+        if (innerTopic != null) {
+            innerTopic.removeParent();
+            innerTopic.setParent(this);
+        }
+    }
+
     /**
      * Gets a List of all the Content Specification Topics for the level.
      * <p/>
@@ -127,7 +140,12 @@ public class Level extends SpecNode {
      * @return A List of Content Specification Topics that exist within the level.
      */
     public List<SpecTopic> getSpecTopics() {
-        return topics;
+        final List<SpecTopic> retValue = new ArrayList<SpecTopic>(topics);
+        if (innerTopic != null) {
+            retValue.add(innerTopic);
+        }
+
+        return retValue;
     }
 
     /**
@@ -428,15 +446,26 @@ public class Level extends SpecNode {
     public String getText() {
         final String options = getOptionsString();
         final String title = (translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
-        String output = type != LevelType.BASE ? (type.getTitle() + ": " + title
-                // Add the target id if one exists
-                + (targetId == null ? "" : (" [" + targetId + "]"))
-                // Add the external target id if one exists
-                + (externalTargetId == null ? "" : (" [" + externalTargetId + "]"))) : "";
+        final StringBuilder output = new StringBuilder();
+        if (type != LevelType.BASE) {
+            output.append(type.getTitle()).append(": ");
+            output.append(title);
+            if (innerTopic != null) {
+                output.append(" [").append(innerTopic.getIdAndOptionsString()).append("]");
+            }
+            if (targetId != null) {
+                output.append(" [").append(targetId).append("]");
+            }
+            if (externalTargetId != null) {
+                output.append(" [").append(externalTargetId).append("]");
+            }
+        }
         // Add any options
-        output += options.equals("") ? "" : (" [" + options + "]");
-        setText(output);
-        return output;
+        if (!options.equals("")) {
+            output.append(" [").append(options).append("]");
+        }
+        setText(output.toString());
+        return text;
     }
 
     /**

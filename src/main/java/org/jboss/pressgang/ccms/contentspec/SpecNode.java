@@ -78,31 +78,12 @@ public abstract class SpecNode extends Node {
     }
 
     /**
-     * Get the parent of the node.
-     *
-     * @return The nodes parent.
-     */
-    @Override
-    public SpecNode getParent() {
-        return (SpecNode) parent;
-    }
-
-    /**
-     * Sets the nodes parent.
-     *
-     * @param parent The parent node.
-     */
-    protected void setParent(final SpecNode parent) {
-        super.setParent(parent);
-    }
-
-    /**
      * Sets the description for a node.
      *
      * @param desc The description.
      */
     public void setDescription(final String desc) {
-        this.description = desc;
+        description = desc;
     }
 
     /**
@@ -112,8 +93,17 @@ public abstract class SpecNode extends Node {
      * @return The description as a String
      */
     public String getDescription(final boolean useInherited) {
-        if (description == null && parent != null && useInherited) return getParent().getDescription(true);
-        return description;
+        if (description == null && parent != null && useInherited) {
+            if (parent instanceof ContentSpec) {
+                return ((ContentSpec) parent).getBaseLevel().getDescription(true);
+            } else if (parent instanceof KeyValueNode) {
+                return ((KeyValueNode) parent).getParent().getBaseLevel().getDescription(true);
+            } else {
+                return ((SpecNode) parent).getDescription(true);
+            }
+        } else {
+            return description;
+        }
     }
 
     /**
@@ -122,7 +112,7 @@ public abstract class SpecNode extends Node {
      * @param writer The writers name that matches to the assigned writer tag in the database
      */
     public void setAssignedWriter(final String writer) {
-        this.assignedWriter = writer;
+        assignedWriter = writer;
     }
 
     /**
@@ -132,7 +122,15 @@ public abstract class SpecNode extends Node {
      * @return The Assigned Writers name as a String
      */
     public String getAssignedWriter(final boolean useInherited) {
-        if (assignedWriter == null && parent != null && useInherited) return getParent().getAssignedWriter(true);
+        if (assignedWriter == null && parent != null && useInherited) {
+            if (parent instanceof ContentSpec) {
+                return ((ContentSpec) parent).getBaseLevel().getAssignedWriter(true);
+            } else if (parent instanceof KeyValueNode) {
+                return ((KeyValueNode) parent).getParent().getBaseLevel().getAssignedWriter(true);
+            } else {
+                return ((SpecNode) parent).getAssignedWriter(true);
+            }
+        }
         return assignedWriter;
     }
 
@@ -154,41 +152,41 @@ public abstract class SpecNode extends Node {
      * @param useInherited If the function should check for inherited tags
      */
     public List<String> getTags(final boolean useInherited) {
-        List<String> temp = new ArrayList<String>(tags);
+        List<String> temp = new ArrayList<String>();
         // Get the inherited tags
-        if (useInherited) {
-            if (tags == null && parent != null) {
-                return getParent().getTags(true);
-            } else if (parent != null) {
-                for (final String tagName : getParent().getTags(true)) {
-                    boolean found = false;
-                    for (final String tempTagName : temp) {
-                        if (tagName.equals(tempTagName)) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        temp.add(tagName);
-                    }
-                }
+        if (useInherited && parent != null) {
+            if (parent instanceof ContentSpec) {
+                temp = ((ContentSpec) super.getParent()).getBaseLevel().getTags(true);
+            } else if (parent instanceof KeyValueNode) {
+                temp = ((KeyValueNode) super.getParent()).getParent().getBaseLevel().getTags(true);
+            } else {
+                temp = ((SpecNode) getParent()).getTags(true);
             }
         }
-        // Remove the tags that are set to be removed
-        final List<String> newTags = new ArrayList<String>();
-        for (final String tagName : temp) {
-            final List<String> temptags = getRemoveTags(useInherited);
-            boolean found = false;
-            for (final String removeTagName : temptags) {
-                if (removeTagName.equals(tagName)) {
-                    found = true;
+
+        // If the local tags are null then just return the temp collection
+        if (tags == null) {
+            return temp;
+        } else {
+            temp.addAll(tags);
+
+            // Remove the tags that are set to be removed
+            final List<String> newTags = new ArrayList<String>();
+            for (final String tagName : temp) {
+                final List<String> tempTags = getRemoveTags(useInherited);
+                boolean found = false;
+                for (final String removeTagName : tempTags) {
+                    if (removeTagName.equals(tagName)) {
+                        found = true;
+                    }
+                }
+                if (!found) {
+                    newTags.add(tagName);
                 }
             }
-            if (!found) {
-                newTags.add(tagName);
-            }
+            temp = newTags;
+            return temp;
         }
-        temp = newTags;
-        return temp;
     }
 
     /**
@@ -197,7 +195,7 @@ public abstract class SpecNode extends Node {
      * @param tags An ArrayList of tags to be removed
      */
     public void setRemoveTags(final List<String> tags) {
-        this.removeTags = tags;
+        removeTags = tags;
     }
 
     /**
@@ -208,26 +206,23 @@ public abstract class SpecNode extends Node {
      * @return An ArrayList of tags
      */
     public List<String> getRemoveTags(final boolean useInherited) {
-        List<String> temp = new ArrayList<String>(removeTags);
-        if (useInherited) {
-            if (removeTags == null && parent != null) {
-                return getParent().getRemoveTags(true);
-            } else if (parent != null) {
-                // Add all of the inherited tags that don't already exist
-                final List<String> inheritedTags = getParent().getRemoveTags(true);
-                for (final String tagName : inheritedTags) {
-                    boolean found = false;
-                    for (final String tempTagName : temp) {
-                        if (tagName.equals(tempTagName)) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        temp.add(tagName);
-                    }
-                }
+        List<String> temp = new ArrayList<String>();
+        // Get the parent remove tags if requested
+        if (useInherited && parent != null) {
+            if (parent instanceof ContentSpec) {
+                temp = ((ContentSpec) parent).getBaseLevel().getRemoveTags(true);
+            } else if (parent instanceof KeyValueNode) {
+                temp = ((KeyValueNode) parent).getParent().getBaseLevel().getRemoveTags(true);
+            } else {
+                temp = ((SpecNode) parent).getRemoveTags(true);
             }
         }
+
+        // Add any local remove tags
+        if (removeTags != null) {
+            temp.addAll(removeTags);
+        }
+
         return temp;
     }
 
@@ -247,18 +242,23 @@ public abstract class SpecNode extends Node {
      * @return A List of Strings that represent the source urls
      */
     public List<String> getSourceUrls(boolean useInherited) {
-        final List<String> temp = new ArrayList<String>(sourceUrls);
-        if (useInherited) {
-            if (sourceUrls == null && parent != null) {
-                return getParent().getSourceUrls(true);
-            } else if (parent != null) {
-                for (final String url : getParent().getSourceUrls(true)) {
-                    if (!temp.contains(url)) {
-                        temp.add(url);
-                    }
-                }
+        List<String> temp = new ArrayList<String>();
+        // Get the parent source urls if requested
+        if (useInherited && parent != null) {
+            if (parent instanceof ContentSpec) {
+                temp = ((ContentSpec) parent).getBaseLevel().getSourceUrls(true);
+            } else if (parent instanceof KeyValueNode) {
+                temp = ((KeyValueNode) parent).getParent().getBaseLevel().getSourceUrls(true);
+            } else {
+                temp = ((SpecNode) parent).getSourceUrls(true);
             }
         }
+
+        // Add any local source urls
+        if (sourceUrls != null) {
+            temp.addAll(sourceUrls);
+        }
+
         return temp;
     }
 
@@ -353,12 +353,21 @@ public abstract class SpecNode extends Node {
      * @return The conditional statement for this node and it's sub nodes.
      */
     public String getConditionStatement(final boolean useInherited) {
-        if (condition != null) {
-            return condition;
-        } else if (useInherited && getParent() != null) {
-            return getParent().getConditionStatement(useInherited);
+        if (condition == null && useInherited && parent != null) {
+            if (parent instanceof ContentSpec) {
+                return ((ContentSpec) parent).getBaseLevel().getConditionStatement(true);
+            } else if (parent instanceof KeyValueNode) {
+                final KeyValueNode<?> keyValueNode = ((KeyValueNode) parent);
+                if (keyValueNode.getParent() != null) {
+                    return keyValueNode.getParent().getBaseLevel().getConditionStatement(true);
+                } else {
+                    return null;
+                }
+            } else {
+                return ((SpecNode) parent).getConditionStatement(true);
+            }
         } else {
-            return null;
+            return condition;
         }
     }
 

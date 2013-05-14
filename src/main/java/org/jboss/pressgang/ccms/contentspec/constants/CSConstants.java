@@ -32,6 +32,8 @@ public class CSConstants {
 
     public static final Integer RH_INTERNAL_TAG_ID = 315;
 
+    public static final Integer UNKNOWN_USER_ID = 89;
+
     public static final String NEW_TOPIC_ID_REGEX = "^N[0-9]*$";
     public static final String EXISTING_TOPIC_ID_REGEX = "^[0-9]+$";
     public static final String CLONED_TOPIC_ID_REGEX = "^C[0-9]+$";
@@ -44,6 +46,7 @@ public class CSConstants {
     public static final String SECTION = "Section";
     public static final String PROCESS = "Process";
     public static final String PART = "Part";
+    public static final String PREFACE = "Preface";
 
     public static final String BOOK_TYPE_BOOK = "Book";
     public static final String BOOK_TYPE_ARTICLE = "Article";
@@ -139,6 +142,15 @@ public class CSConstants {
      * The Content Specification Read-Only Property Tag ID
      */
     public static final Integer CSP_READ_ONLY_PROPERTY_TAG_ID = 25;
+    /**
+     * The Revision History tag ID
+     */
+    public static final Integer REVISION_HISTORY_TAG_ID = 598;
+    /**
+     * The Legal Notice tag ID
+     */
+    public static final Integer LEGAL_NOTICE_TAG_ID = 599;
+
 
     /**
      * The initial name for a snapshot revision
@@ -182,6 +194,9 @@ public class CSConstants {
     public static final String PUBLICAN_CFG_TITLE = "publican.cfg";
     public static final String INLINE_INJECTION_TITLE = "Inline Injection";
     public static final String DTD_TITLE = "DTD";
+    public static final String REV_HISTORY_TITLE = "Revision History";
+    public static final String FEEDBACK_TITLE = "Feedback";
+    public static final String LEGAL_NOTICE = "Legal Notice";
 
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";

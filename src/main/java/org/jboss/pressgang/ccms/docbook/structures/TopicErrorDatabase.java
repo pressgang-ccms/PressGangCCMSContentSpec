@@ -70,6 +70,14 @@ public class TopicErrorDatabase {
             topicErrorData.addError(item, errorLevel, errorType);
     }
 
+    public boolean hasErrorData(final BaseTopicWrapper<?> topic) {
+        for (final String locale : errors.keySet())
+            for (final TopicErrorData topicErrorData : errors.get(locale)) {
+                if (topicErrorData.getTopic().getTopicId().equals(topic.getTopicId())) return true;
+            }
+        return false;
+    }
+
     private TopicErrorData getErrorData(final BaseTopicWrapper<?> topic) {
         for (final String locale : errors.keySet())
             for (final TopicErrorData topicErrorData : errors.get(locale)) {

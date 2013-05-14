@@ -19,6 +19,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -38,6 +39,7 @@ public class SpecTopic extends SpecNode {
     private BaseTopicWrapper<?> topic = null;
     private Document xmlDocument = null;
     private Integer revision = null;
+    private TopicType topicType = TopicType.NORMAL;
 
     /**
      * Constructor
@@ -79,7 +81,7 @@ public class SpecTopic extends SpecNode {
      * @param title The Title of the Content Specification Topic.
      */
     public SpecTopic(int DBId, String title) {
-        this.id = Integer.toString(DBId);
+        id = Integer.toString(DBId);
         this.DBId = DBId;
         this.title = title;
     }
@@ -178,6 +180,14 @@ public class SpecTopic extends SpecNode {
      */
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public TopicType getTopicType() {
+        return topicType;
+    }
+
+    public void setTopicType(TopicType topicType) {
+        this.topicType = topicType;
     }
 
     /**
@@ -397,11 +407,6 @@ public class SpecTopic extends SpecNode {
             }
         }
         return linkListRelationships;
-    }
-
-    @Override
-    public Level getParent() {
-        return (Level) parent;
     }
 
     /**
@@ -637,42 +642,46 @@ public class SpecTopic extends SpecNode {
 
     @Override
     public Integer getStep() {
-        if (getParent() == null) return null;
-        Integer previousNode = 0;
-
-        // Get the position of the level in its parents nodes
-        Integer nodePos = getParent().nodes.indexOf(this);
-
-        // If the level isn't the first node then get the previous nodes step
-        if (nodePos > 0) {
-            Node node = getParent().nodes.get(nodePos - 1);
-            previousNode = node.getStep();
-            // If the add node is a level then add the number of nodes it contains
-            if (node instanceof Level) {
-                previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
+        if (getParent() == null) {
+            return null;
+        } else if (getParent() instanceof Level) {
+            final Level parent = (Level) getParent();
+            Integer previousNode = 0;
+    
+            // Get the position of the level in its parents nodes
+            Integer nodePos = parent.nodes.indexOf(this);
+    
+            // If the level isn't the first node then get the previous nodes step
+            if (nodePos > 0) {
+                Node node = parent.nodes.get(nodePos - 1);
+                previousNode = node.getStep();
+                // If the add node is a level then add the number of nodes it contains
+                if (node instanceof Level) {
+                    previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
+                }
+                // The node is the first item so use the parent levels step
+            } else if (nodePos == -1) {
+                previousNode = parent.getStep() - 1;
+            } else {
+                previousNode = getParent().getStep();
             }
-            // The node is the first item so use the parent levels step
+            // Make sure the previous nodes step isn't 0
+            previousNode = previousNode == null ? 0 : previousNode;
+    
+            // Add one since we got the previous nodes step
+            return previousNode + 1;
+        } else if (getParent() instanceof KeyValueNode) {
+            return getParent().getStep();
         } else {
-            previousNode = getParent().getStep();
+            return null;
         }
-        // Make sure the previous nodes step isn't 0
-        previousNode = previousNode == null ? 0 : previousNode;
-
-        // Add one since we got the previous nodes step
-        return previousNode + 1;
     }
 
     @Override
     public String getText() {
         final StringBuilder output = new StringBuilder();
-        if (isTopicANewTopic()) {
-            final String options = getOptionsString();
-            output.append((title == null ? "" : title) + " [" + id + ", " + type + (options.equals("") ? "" : (", " + options)) + "]");
-        } else {
-            final String options = getOptionsString();
-            output.append((title == null ? "" : title) + " [" + id + (revision == null ? "" : (", rev: " + revision)) + (options.equals(
-                    "") ? "" : (", " + options)) + "]");
-        }
+        final String idAndOptions = getIdAndOptionsString();
+        output.append((title == null ? "" : title) + " [" + idAndOptions + "]");
 
         if (targetId != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
             output.append(" [" + targetId + "]");
@@ -702,6 +711,20 @@ public class SpecTopic extends SpecNode {
 
         setText(output.toString());
         return text;
+    }
+
+    /**
+     * Get the ID and Options string for the topic.
+     *
+     * @return
+     */
+    protected String getIdAndOptionsString() {
+        final String options = getOptionsString();
+        if (isTopicANewTopic()) {
+            return id + ", " + type + (options.equals("") ? "" : (", " + options));
+        } else {
+            return id + (revision == null ? "" : (", rev: " + revision)) + (options.equals("") ? "" : (", " + options));
+        }
     }
 
     /**
@@ -801,7 +824,9 @@ public class SpecTopic extends SpecNode {
 
     @Override
     protected void removeParent() {
-        getParent().removeChild(this);
+        if (getParent() instanceof Level) {
+            ((Level) getParent()).removeChild(this);
+        }
         setParent(null);
     }
 
@@ -815,12 +840,14 @@ public class SpecTopic extends SpecNode {
         /*
          * Check this topic to see if it is the topic we are looking for
          */
-        if (this == topic || this.getId().equals(topic.getId())) return this;
+        if (this == topic || getId().equals(topic.getId())) return this;
 
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null) return getParent().getClosestTopic(topic, checkParentNode);
+        if (getParent() != null && getParent() instanceof Level) {
+            return ((Level) getParent()).getClosestTopic(topic, checkParentNode);
+        }
 
         return null;
     }
@@ -834,7 +861,9 @@ public class SpecTopic extends SpecNode {
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null) return getParent().getClosestTopicByDBId(DBId, checkParentNode);
+        if (getParent() != null && getParent() instanceof Level) {
+            return ((Level) getParent()).getClosestTopicByDBId(DBId, checkParentNode);
+        }
 
         return null;
     }

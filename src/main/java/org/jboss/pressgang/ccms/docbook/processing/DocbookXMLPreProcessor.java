@@ -414,7 +414,7 @@ public class DocbookXMLPreProcessor {
         }
 
         // Only include a bugzilla link for normal topics
-        if (specTopic.getTopicType() == TopicType.NORMAL) {
+        if (specTopic.getTopicType() == TopicType.NORMAL || specTopic.getTopicType() == TopicType.LEVEL) {
             // BUGZILLA LINK
             if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
                 processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, buildDate);

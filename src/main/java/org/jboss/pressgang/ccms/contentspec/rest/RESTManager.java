@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.rest;
 
+import java.util.List;
+
 import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTCollectionCache;
 import org.jboss.pressgang.ccms.contentspec.rest.utils.RESTEntityCache;
 import org.jboss.pressgang.ccms.rest.v1.client.PressGangCCMSProxyFactoryV1;
@@ -18,7 +20,11 @@ public class RESTManager {
     private final RESTCollectionCache collectionCache = new RESTCollectionCache(entityCache);
 
     public RESTManager(final String serverUrl) {
-        proxyFactory = PressGangCCMSProxyFactoryV1.create(serverUrl);
+        this(serverUrl, null);
+    }
+
+    public RESTManager(final String serverUrl, final List<Class<?>> providers) {
+        proxyFactory = PressGangCCMSProxyFactoryV1.create(serverUrl, providers);
         client = proxyFactory.getRESTClient();
         reader = new RESTReader(client, entityCache, collectionCache);
         writer = new RESTWriter(reader, client, entityCache, collectionCache);

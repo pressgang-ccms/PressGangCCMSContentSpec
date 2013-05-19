@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
+import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 
 /**
@@ -127,6 +128,7 @@ public class Level extends SpecNode {
     public void setInnerTopic(SpecTopic innerTopic) {
         this.innerTopic = innerTopic;
         if (innerTopic != null) {
+            innerTopic.setTopicType(TopicType.LEVEL);
             innerTopic.removeParent();
             innerTopic.setParent(this);
         }
@@ -182,7 +184,7 @@ public class Level extends SpecNode {
      * @return A List of child levels.
      */
     public List<Level> getChildLevels() {
-        return levels;
+        return new ArrayList<Level>(levels);
     }
 
     /**

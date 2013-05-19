@@ -186,7 +186,7 @@ public class SpecTopic extends SpecNode {
         return topicType;
     }
 
-    public void setTopicType(TopicType topicType) {
+    protected void setTopicType(TopicType topicType) {
         this.topicType = topicType;
     }
 

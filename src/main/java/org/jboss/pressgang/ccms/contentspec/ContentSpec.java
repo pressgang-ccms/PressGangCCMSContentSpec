@@ -19,6 +19,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
+import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.HashUtilities;
 
@@ -1106,9 +1107,11 @@ public class ContentSpec extends Node {
             removeChild(this.revisionHistory);
             this.revisionHistory = null;
         } else if (this.revisionHistory == null) {
+            revisionHistory.setTopicType(TopicType.REVISION_HISTORY);
             this.revisionHistory = new KeyValueNode<SpecTopic>(CSConstants.REV_HISTORY_TITLE, revisionHistory);
             appendChild(this.revisionHistory, false);
         } else {
+            revisionHistory.setTopicType(TopicType.REVISION_HISTORY);
             this.revisionHistory.setValue(revisionHistory);
         }
     }
@@ -1134,9 +1137,11 @@ public class ContentSpec extends Node {
             removeChild(this.feedback);
             this.feedback = null;
         } else if (this.feedback == null) {
+            feedback.setTopicType(TopicType.FEEDBACK);
             this.feedback = new KeyValueNode<SpecTopic>(CSConstants.FEEDBACK_TITLE, feedback);
             appendChild(this.feedback, false);
         } else {
+            feedback.setTopicType(TopicType.FEEDBACK);
             this.feedback.setValue(feedback);
         }
     }
@@ -1162,9 +1167,11 @@ public class ContentSpec extends Node {
             removeChild(this.legalNotice);
             this.legalNotice = null;
         } else if (this.legalNotice == null) {
-            this.legalNotice = new KeyValueNode<SpecTopic>(CSConstants.LEGAL_NOTICE, legalNotice);
+            legalNotice.setTopicType(TopicType.LEGAL_NOTICE);
+            this.legalNotice = new KeyValueNode<SpecTopic>(CSConstants.LEGAL_NOTICE_TITLE, legalNotice);
             appendChild(this.legalNotice, false);
         } else {
+            legalNotice.setTopicType(TopicType.LEGAL_NOTICE);
             this.legalNotice.setValue(legalNotice);
         }
     }
@@ -1221,7 +1228,7 @@ public class ContentSpec extends Node {
      */
     public void appendKeyValueNode(final KeyValueNode<?> node) throws NumberFormatException {
         final String uppercaseKey = node.getKey().toUpperCase(Locale.ENGLISH);
-        Object value = node.getValue();
+        final Object value = node.getValue();
         if (uppercaseKey.equals(CSConstants.TITLE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
             setTitle((String) value);
         } else if (uppercaseKey.equals(CSConstants.ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
@@ -1295,6 +1302,10 @@ public class ContentSpec extends Node {
             setSubtitle((String) value);
         } else if (uppercaseKey.equals(CSConstants.REV_HISTORY_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
             setRevisionHistory((SpecTopic) value);
+        } else if (uppercaseKey.equals(CSConstants.FEEDBACK_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
+            setFeedback((SpecTopic) value);
+        } else if (uppercaseKey.equals(CSConstants.LEGAL_NOTICE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
+            setLegalNotice((SpecTopic) value);
         } else {
             appendChild(node, false);
         }

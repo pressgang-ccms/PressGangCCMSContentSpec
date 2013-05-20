@@ -28,10 +28,13 @@ import org.jboss.pressgang.ccms.rest.v1.expansion.ExpandDataTrunk;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCollectionV1<T, U, V>,
         V extends RESTBaseCollectionItemV1<T, U, V>> {
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSpecGenerator.class);
     /**
      * The REST client
      */
@@ -351,7 +354,7 @@ public class ContentSpecGenerator<T extends RESTBaseTopicV1<T, U, V>, U extends 
 
             return retValue;
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to generate a Content Specification from a collection of Topics", ex);
             return null;
         }
     }

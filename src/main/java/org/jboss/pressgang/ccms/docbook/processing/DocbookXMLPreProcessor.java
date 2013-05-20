@@ -16,7 +16,6 @@ import com.google.code.regexp.NamedPattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
@@ -48,6 +47,8 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
 import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -58,6 +59,7 @@ import org.w3c.dom.Text;
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
 public class DocbookXMLPreProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(DocbookXMLPreProcessor.class);
     /**
      * Used to identify that an <orderedlist> should be generated for the injection point
      */
@@ -354,7 +356,7 @@ public class DocbookXMLPreProcessor {
             bugzillaSection.appendChild(bugzillaULink);
             document.getDocumentElement().appendChild(bugzillaSection);
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Unable to inject Bugzilla links into the DOM Document", ex);
         }
     }
 
@@ -444,7 +446,7 @@ public class DocbookXMLPreProcessor {
                 /*
                  * these lists are discovered by a regular expression so we shouldn't have any trouble here with Integer.parse
                  */
-                ExceptionUtilities.handleException(ex);
+                LOG.debug("Unable to convert Injection Point ID into a Number", ex);
                 retValue.add(new InjectionTopicData(-1, false));
             }
         }

@@ -1027,7 +1027,24 @@ public class ContentSpec extends Node {
     }
 
     public List<SpecTopic> getSpecTopics() {
-        return getLevelSpecTopics(level);
+        final List<SpecTopic> specTopics = getLevelSpecTopics(level);
+
+        // Add the Revision History Spec Topic
+        if (getRevisionHistory() != null) {
+            specTopics.add(getRevisionHistory());
+        }
+
+        // Add the Feedback Spec Topic
+        if (getFeedback() != null) {
+            specTopics.add(getFeedback());
+        }
+
+        // Add the Legal Notice Spec Topic
+        if (getLegalNotice() != null) {
+            specTopics.add(getLegalNotice());
+        }
+
+        return specTopics;
     }
 
     private List<SpecTopic> getLevelSpecTopics(final Level level) {

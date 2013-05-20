@@ -430,7 +430,7 @@ public class DocbookXMLPreProcessor {
                 /*
                  * these lists are discovered by a regular expression so we shouldn't have any trouble here with Integer.parse
                  */
-                LOG.debug("Unable to parse number from Injection", ex);
+                LOG.debug("Unable to convert Injection Point ID into a Number", ex);
                 retValue.add(new InjectionTopicData(-1, false));
             }
         }

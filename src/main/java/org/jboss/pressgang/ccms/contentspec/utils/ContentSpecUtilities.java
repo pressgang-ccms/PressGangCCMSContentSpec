@@ -261,6 +261,17 @@ public class ContentSpecUtilities {
         }
         return specTopicMap;
     }
+
+    /**
+     * Check to see if a Meta Data line is a Spec Topic Meta Data, based on the key value.
+     *
+     * @param key The Meta Data key.
+     * @return True if the Meta Data is a Spec Topic Meta Data, otherwise false.
+     */
+    public static boolean isSpecTopicMetaData(final String key) {
+        return key.equalsIgnoreCase(CSConstants.LEGAL_NOTICE_TITLE) || key.equalsIgnoreCase(
+                CSConstants.REV_HISTORY_TITLE) || key.equalsIgnoreCase(CSConstants.FEEDBACK_TITLE);
+    }
 }
 
 /**

@@ -15,15 +15,17 @@ import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
 import org.jboss.pressgang.ccms.provider.CategoryProvider;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TagProvider;
-import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.CategoryWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagInCategoryWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTagWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ContentSpecGenerator {
+    private static final Logger LOG = LoggerFactory.getLogger(ContentSpecGenerator.class);
     private final DataProviderFactory providerFactory;
 
     public ContentSpecGenerator(final DataProviderFactory providerFactory) {
@@ -299,7 +301,7 @@ public class ContentSpecGenerator {
 
             return retValue;
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Failed to create a Content Specification from topics", ex);
             return null;
         }
     }

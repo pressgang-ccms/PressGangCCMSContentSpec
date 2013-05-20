@@ -32,7 +32,6 @@ import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
-import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
@@ -41,6 +40,8 @@ import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,6 +52,7 @@ import org.w3c.dom.Text;
  * This class takes the XML from a topic and modifies it to include and injected content.
  */
 public class DocbookXMLPreProcessor {
+    private static final Logger LOG = LoggerFactory.getLogger(DocbookXMLPreProcessor.class);
     /**
      * Used to identify that an <orderedlist> should be generated for the injection point
      */
@@ -226,7 +228,7 @@ public class DocbookXMLPreProcessor {
             if (docbookBuildingOptions != null && docbookBuildingOptions.getBuildName() != null)
                 specifiedBuildName = docbookBuildingOptions.getBuildName();
 
-            /* build up the elements that go into the bugzilla URL */
+            // build up the elements that go into the bugzilla URL
             String bugzillaProduct = null;
             String bugzillaComponent = null;
             String bugzillaVersion = null;
@@ -328,7 +330,7 @@ public class DocbookXMLPreProcessor {
                 }
             }
 
-            /* build the bugzilla url with the base components */
+            // build the bugzilla url with the base components
             String bugzillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
 
             bugzillaULink.setAttribute("url", bugzillaUrl);
@@ -339,7 +341,7 @@ public class DocbookXMLPreProcessor {
             bugzillaSection.appendChild(bugzillaULink);
             document.getDocumentElement().appendChild(bugzillaSection);
         } catch (final Exception ex) {
-            ExceptionUtilities.handleException(ex);
+            LOG.error("Failed to insert Bugzilla Links into the DOM Document", ex);
         }
     }
 
@@ -424,11 +426,11 @@ public class DocbookXMLPreProcessor {
             try {
                 final InjectionTopicData topicData = new InjectionTopicData(Integer.parseInt(topicId), optional);
                 retValue.add(topicData);
-            } catch (final Exception ex) {
+            } catch (final NumberFormatException ex) {
                 /*
                  * these lists are discovered by a regular expression so we shouldn't have any trouble here with Integer.parse
                  */
-                ExceptionUtilities.handleException(ex);
+                LOG.debug("Unable to parse number from Injection", ex);
                 retValue.add(new InjectionTopicData(-1, false));
             }
         }

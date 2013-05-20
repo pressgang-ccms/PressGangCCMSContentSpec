@@ -87,7 +87,8 @@ public class CSTransformer {
                     levelNodes.put(childNode, comment);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
-                        final KeyValueNode<?> metaDataNode = transformMetaData(childNode);
+                        final KeyValueNode<?> metaDataNode = transformMetaData(childNode, nodes, specTopicMap, topicTargets,
+                                relationshipFromNodes);
                         levelNodes.put(childNode, metaDataNode);
                     }
                 } else {
@@ -136,15 +137,24 @@ public class CSTransformer {
     /**
      * Transforms a MetaData CSNode into a KeyValuePair that can be added to a ContentSpec object.
      *
-     * @param node The CSNode to be transformed.
+     * @param node                  The CSNode to be transformed.
+     * @param nodes                 A mapping of node entity ids to their transformed counterparts.
+     * @param specTopicMap          A mapping of Topic Entity ids to their transformed SpecTopics.
+     * @param targetTopics          A mapping of target ids to SpecTopics.
+     * @param relationshipFromNodes A list of CSNode entities that have relationships.
      * @return The transformed KeyValuePair object.
      */
-    protected static KeyValueNode<?> transformMetaData(final CSNodeWrapper node) {
+    protected static KeyValueNode<?> transformMetaData(final CSNodeWrapper node, final Map<Integer, Node> nodes,
+            final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
+            final List<CSNodeWrapper> relationshipFromNodes) {
         final KeyValueNode<?> keyValueNode;
         if (node.getTitle().equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE)) {
             keyValueNode = new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
         } else if (node.getTitle().equalsIgnoreCase(CSConstants.INLINE_INJECTION_TITLE)) {
             keyValueNode = new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
+        } else if (ContentSpecUtilities.isSpecTopicMetaData(node.getTitle())) {
+            final SpecTopic specTopic = transformSpecTopicWithoutTypeCheck(node, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+            keyValueNode = new KeyValueNode<SpecTopic>(node.getTitle(), specTopic);
         } else {
             keyValueNode = new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
         }
@@ -234,12 +244,27 @@ public class CSTransformer {
     protected static SpecTopic transformSpecTopic(final CSNodeWrapper node, final Map<Integer, Node> nodes,
             final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
             final List<CSNodeWrapper> relationshipFromNodes) {
-        final SpecTopic specTopic;
-        if (node.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
-            specTopic = new SpecTopic(node.getEntityId(), node.getTitle());
-        } else {
+        if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
             throw new IllegalArgumentException("The passed node is not a Spec Topic");
         }
+
+        return transformSpecTopicWithoutTypeCheck(node, nodes, specTopicMap, targetTopics, relationshipFromNodes);
+    }
+
+    /**
+     * Transform a Topic CSNode entity object into a SpecTopic Object that can be added to a Content Specification.
+     *
+     * @param node                  The CSNode entity object to be transformed.
+     * @param nodes                 A mapping of node entity ids to their transformed counterparts.
+     * @param specTopicMap          A mapping of Topic Entity ids to their transformed SpecTopics.
+     * @param targetTopics          A mapping of target ids to SpecTopics.
+     * @param relationshipFromNodes A list of CSNode entities that have relationships.
+     * @return The transformed SpecTopic entity.
+     */
+    private static SpecTopic transformSpecTopicWithoutTypeCheck(final CSNodeWrapper node, final Map<Integer, Node> nodes,
+            final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
+            final List<CSNodeWrapper> relationshipFromNodes) {
+        final SpecTopic specTopic = new SpecTopic(node.getEntityId(), node.getTitle());
 
         // Basic data
         specTopic.setRevision(node.getEntityRevision());

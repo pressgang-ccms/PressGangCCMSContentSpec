@@ -104,7 +104,7 @@ public class EntityUtilities {
     }
 
     /**
-     * Gets a translated content spec based on a topic id, revision and locale.
+     * Gets a translated content spec based on a content spec id and revision
      */
     public static TranslatedContentSpecWrapper getTranslatedContentSpecById(final DataProviderFactory providerFactory, final Integer id,
             final Integer rev) {
@@ -245,16 +245,14 @@ public class EntityUtilities {
         return null;
     }
 
-    public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TranslatedTopicWrapper source) {
-        if (!isDummyTopic(source)) return source;
-
-        /* Check that a translation exists that is the same locale as the base topic */
+    public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TopicWrapper source) {
+        // Check that a translation exists that is the same locale as the base topic
         TranslatedTopicWrapper pushedTranslatedTopic = null;
-        if (source.getTopic().getTranslatedTopics() != null && source.getTopic().getTranslatedTopics().getItems() != null) {
+        if (source.getTranslatedTopics() != null && source.getTranslatedTopics().getItems() != null) {
             final Integer topicRev = source.getTopicRevision();
-            final List<TranslatedTopicWrapper> topics = source.getTopic().getTranslatedTopics().getItems();
+            final List<TranslatedTopicWrapper> topics = source.getTranslatedTopics().getItems();
             for (final TranslatedTopicWrapper translatedTopic : topics) {
-                if (translatedTopic.getLocale().equals(source.getTopic().getLocale()) &&
+                if (translatedTopic.getLocale().equals(source.getLocale()) &&
                         // Ensure that the topic revision is less than or equal to the source revision
                         (topicRev == null || translatedTopic.getTopicRevision() <= topicRev) &&
                         // Check if this translated topic is a higher revision then the current stored translation
@@ -264,6 +262,16 @@ public class EntityUtilities {
         }
 
         return pushedTranslatedTopic;
+    }
+
+    public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TranslatedTopicWrapper source) {
+        if (!isDummyTopic(source)) return source;
+
+        if (source.getTopic() != null) {
+            return returnPushedTranslatedTopic(source.getTopic());
+        } else  {
+            return null;
+        }
     }
 
     public static boolean hasBeenPushedForTranslation(final TranslatedTopicWrapper source) {

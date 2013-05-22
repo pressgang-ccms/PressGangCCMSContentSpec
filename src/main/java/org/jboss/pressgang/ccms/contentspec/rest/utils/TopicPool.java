@@ -2,6 +2,8 @@ package org.jboss.pressgang.ccms.contentspec.rest.utils;
 
 import javax.ws.rs.core.PathSegment;
 
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -127,6 +129,8 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCol
                         if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(
                                 Integer.toString(specTopic.getLineNumber()))) {
                             specTopic.setDBId(topic.getId());
+                            specTopic.setId(Integer.toString(topic.getId()));
+                            cleanSpecTopicWhenCreatedOrUpdated(specTopic);
                             return specTopic;
                         }
                     }
@@ -138,6 +142,8 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCol
                         if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(topic, CSConstants.CSP_PROPERTY_ID).getValue().equals(
                                 Integer.toString(specTopic.getLineNumber()))) {
                             specTopic.setDBId(topic.getId());
+                            specTopic.setId(Integer.toString(topic.getId()));
+                            cleanSpecTopicWhenCreatedOrUpdated(specTopic);
                             return specTopic;
                         }
                     }
@@ -145,6 +151,20 @@ public class TopicPool<T extends RESTBaseTopicV1<T, U, V>, U extends RESTBaseCol
             }
         }
         return specTopic;
+    }
+
+    /**
+     * Cleans a SpecTopic to reset any content that should be removed in a post processed content spec.
+     *
+     * @param specTopic
+     */
+    private void cleanSpecTopicWhenCreatedOrUpdated(final SpecTopic specTopic) {
+        specTopic.setSourceUrls(new ArrayList<String>());
+        specTopic.setDescription(null);
+        specTopic.setTags(new ArrayList<String>());
+        specTopic.setRemoveTags(new ArrayList<String>());
+        specTopic.setAssignedWriter(null);
+        specTopic.setType(null);
     }
 
     /**

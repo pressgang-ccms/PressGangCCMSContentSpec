@@ -49,6 +49,8 @@ public enum LevelType {
                 return CSConstants.PART;
             case CommonConstants.CS_NODE_PREFACE:
                 return CSConstants.PREFACE;
+            case CSConstants.LEVEL_BASE:
+                return "Content Specification";
             default:
                 return null;
         }

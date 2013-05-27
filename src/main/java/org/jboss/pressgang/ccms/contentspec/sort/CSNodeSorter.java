@@ -1,6 +1,5 @@
 package org.jboss.pressgang.ccms.contentspec.sort;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.Map;
@@ -9,12 +8,6 @@ import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 public class CSNodeSorter {
-    private final HashMap<CSNodeWrapper, Node> nodes;
-
-    public CSNodeSorter(final HashMap<CSNodeWrapper, Node> nodes) {
-        this.nodes = nodes;
-    }
-
     public static LinkedHashMap<CSNodeWrapper, Node> sortMap(Map<CSNodeWrapper, Node> map) {
         // If the map is empty then just return an empty map
         if (map.isEmpty()) return new LinkedHashMap<CSNodeWrapper, Node>(map);

@@ -9,7 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
+import java.util.ResourceBundle;
 
 import com.google.code.regexp.NamedMatcher;
 import com.google.code.regexp.NamedPattern;
@@ -198,13 +198,9 @@ public class DocbookXMLPreProcessor {
     protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
-    protected final Properties translations;
+    protected final ResourceBundle translations;
 
-    public DocbookXMLPreProcessor() {
-        this.translations = new Properties();
-    }
-
-    public DocbookXMLPreProcessor(final Properties translationStrings) {
+    public DocbookXMLPreProcessor(final ResourceBundle translationStrings) {
         this.translations = translationStrings;
     }
 
@@ -219,7 +215,7 @@ public class DocbookXMLPreProcessor {
 
             final Element bugzillaULink = document.createElement("ulink");
 
-            final String reportBugTranslation = translations.getProperty(REPORT_A_BUG_PROPERTY);
+            final String reportBugTranslation = translations.getString(REPORT_A_BUG_PROPERTY);
             bugzillaULink.setTextContent(reportBugTranslation == null ? DEFAULT_REPORT_A_BUG : reportBugTranslation);
 
             final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -767,10 +763,10 @@ public class DocbookXMLPreProcessor {
             linkTitleEle.setAttribute("role", ROLE_PROCESS_PREVIOUS_TITLE);
             final String translatedString;
             if (prevList.size() > 1) {
-                final String previousStepsTranslation = translations.getProperty(PREVIOUS_STEPS_PROPERTY);
+                final String previousStepsTranslation = translations.getString(PREVIOUS_STEPS_PROPERTY);
                 translatedString = previousStepsTranslation == null ? DEFAULT_PREVIOUS_STEPS : previousStepsTranslation;
             } else {
-                final String previousStepTranslation = translations.getProperty(PREVIOUS_STEP_PROPERTY);
+                final String previousStepTranslation = translations.getString(PREVIOUS_STEP_PROPERTY);
                 translatedString = previousStepTranslation == null ? DEFAULT_PREVIOUS_STEP : previousStepTranslation;
             }
 
@@ -847,10 +843,10 @@ public class DocbookXMLPreProcessor {
         linkTitleEle.setAttribute("role", ROLE_PROCESS_NEXT_TITLE);
         final String translatedString;
         if (nextList.size() > 1) {
-            final String nextStepsTranslation = translations.getProperty(NEXT_STEPS_PROPERTY);
+            final String nextStepsTranslation = translations.getString(NEXT_STEPS_PROPERTY);
             translatedString = nextStepsTranslation == null ? DEFAULT_NEXT_STEPS : nextStepsTranslation;
         } else {
-            final String nextStepTranslation = translations.getProperty(NEXT_STEP_PROPERTY);
+            final String nextStepTranslation = translations.getString(NEXT_STEP_PROPERTY);
             translatedString = nextStepTranslation == null ? DEFAULT_NEXT_STEP : nextStepTranslation;
         }
 
@@ -927,7 +923,7 @@ public class DocbookXMLPreProcessor {
             formalParaEle.setAttribute("role", ROLE_PREREQUISITE_LIST);
             final Element formalParaTitleEle = doc.createElement("title");
 
-            final String prerequisiteTranslation = translations.getProperty(PREREQUISITE_PROPERTY);
+            final String prerequisiteTranslation = translations.getString(PREREQUISITE_PROPERTY);
             formalParaTitleEle.setTextContent(prerequisiteTranslation == null ? DEFAULT_PREREQUISITE : prerequisiteTranslation);
 
             formalParaEle.appendChild(formalParaTitleEle);
@@ -977,7 +973,7 @@ public class DocbookXMLPreProcessor {
         formalParaEle.setAttribute("role", ROLE_SEE_ALSO_LIST);
         final Element formalParaTitleEle = doc.createElement("title");
 
-        final String seeAlsoTranslation = translations.getProperty(SEE_ALSO_PROPERTY);
+        final String seeAlsoTranslation = translations.getString(SEE_ALSO_PROPERTY);
         formalParaTitleEle.setTextContent(seeAlsoTranslation == null ? DEFAULT_SEE_ALSO : seeAlsoTranslation);
 
         formalParaEle.appendChild(formalParaTitleEle);

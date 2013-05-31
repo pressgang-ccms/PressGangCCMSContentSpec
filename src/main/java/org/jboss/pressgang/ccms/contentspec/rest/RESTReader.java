@@ -1008,9 +1008,9 @@ public class RESTReader {
             Integer specRev = sortedSpecRevisions.last();
             while (specRev != null) {
                 final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev);
-                if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev,
-                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(
-                        contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
+                final RESTAssignedPropertyTagV1 cspType = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev,
+                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID);
+                if (cspType != null && cspType.getValue() != null && cspType.getValue().equals(CSConstants.CSP_PRE_PROCESSED_STRING)) {
                     preContentSpec = contentSpecRev;
                     break;
                 }
@@ -1067,9 +1067,9 @@ public class RESTReader {
             Integer specRev = sortedSpecRevisions.last();
             while (specRev != null) {
                 final RESTTopicV1 contentSpecRev = getContentSpecById(id, specRev, expandTranslations);
-                if (ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev,
-                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID) != null && ComponentBaseRESTEntityWithPropertiesV1.returnProperty(
-                        contentSpecRev, CSConstants.CSP_TYPE_PROPERTY_TAG_ID).getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
+                final RESTAssignedPropertyTagV1 cspType = ComponentBaseRESTEntityWithPropertiesV1.returnProperty(contentSpecRev,
+                        CSConstants.CSP_TYPE_PROPERTY_TAG_ID);
+                if (cspType != null && cspType.getValue() != null && cspType.getValue().equals(CSConstants.CSP_POST_PROCESSED_STRING)) {
                     postContentSpec = contentSpecRev;
                     break;
                 }

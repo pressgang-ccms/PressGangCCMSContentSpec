@@ -862,22 +862,27 @@ public class SpecTopic extends SpecNode {
 
     @Override
     public String getUniqueLinkId(final boolean useFixedUrls) {
-        final String topicXRefId;
-        if (topic instanceof RESTTranslatedTopicV1) {
-            if (useFixedUrls) topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic,
-                    CommonConstants.FIXED_URL_PROP_TAG_ID);
-            else {
-                topicXRefId = ComponentTranslatedTopicV1.returnXRefID((RESTTranslatedTopicV1) topic);
-            }
+        // If this is an inner topic then get the parents id
+        if (getTopicType() == TopicType.LEVEL) {
+            return ((Level) getParent()).getUniqueLinkId(useFixedUrls);
         } else {
-            if (useFixedUrls)
-                topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
-            else {
-                topicXRefId = ComponentTopicV1.returnXRefID((RESTTopicV1) topic);
+            final String topicXRefId;
+            if (topic instanceof RESTTranslatedTopicV1) {
+                if (useFixedUrls) topicXRefId = ComponentTranslatedTopicV1.returnXrefPropertyOrId((RESTTranslatedTopicV1) topic,
+                        CommonConstants.FIXED_URL_PROP_TAG_ID);
+                else {
+                    topicXRefId = ComponentTranslatedTopicV1.returnXRefID((RESTTranslatedTopicV1) topic);
+                }
+            } else {
+                if (useFixedUrls)
+                    topicXRefId = ComponentTopicV1.returnXrefPropertyOrId((RESTTopicV1) topic, CommonConstants.FIXED_URL_PROP_TAG_ID);
+                else {
+                    topicXRefId = ComponentTopicV1.returnXRefID((RESTTopicV1) topic);
+                }
             }
-        }
 
-        return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+            return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+        }
     }
 
     public String getDuplicateId() {

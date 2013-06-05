@@ -1,6 +1,8 @@
 package org.jboss.pressgang.ccms.contentspec.constants;
 
 public class CSConstants {
+    private CSConstants() {
+    }
 
     public static final String BUGZILLA_URL_PROPERTY = "contentSpec.bugzillaUrl";
 
@@ -13,7 +15,6 @@ public class CSConstants {
     public static final String CSP_POST_PROCESSED_STRING = "Post Processed";
 
     // Output format constants
-    public static final String PRESSGANG_OUTPUT_FORMAT = "Cloud";
     public static final String CSP_OUTPUT_FORMAT = "Narrative";
 
     public static final Integer TYPE_CATEGORY_ID = 4;
@@ -21,9 +22,7 @@ public class CSConstants {
     public static final Integer RELEASE_CATEGORY_ID = 15;
     public static final Integer WRITER_CATEGORY_ID = 12;
     public static final Integer COMMON_NAME_CATEGORY_ID = 17;
-    public static final String TECHNOLOGY_CATEGORY_NAME = "Technologies";
     public static final Integer CONCERN_CATEGORY_ID = 2;
-    public static final String CONCERN_CATEGORY_NAME = "Concerns";
     public static final Integer LIFECYCLE_CATEGORY_ID = 5;
     public static final Integer INFORMATION_SENSITIVITY_CATEGORY_ID = 19;
     public static final Integer SEO_METADATA_CATEGORY_ID = 24;
@@ -52,52 +51,14 @@ public class CSConstants {
     public static final String BOOK_TYPE_ARTICLE = "Article";
     public static final String BOOK_TYPE_BOOK_DRAFT = "Book-Draft";
     public static final String BOOK_TYPE_ARTICLE_DRAFT = "Article-Draft";
-
-    /**
-     * The Concept tag ID
-     */
-    public static final Integer CONCEPT_TAG_ID = 5;
-    /**
-     * The Concept tag name
-     */
-    public static final String CONCEPT_TAG_NAME = "Concept";
-    /**
-     * The Conceptual Overview tag ID
-     */
-    public static final Integer CONCEPTUALOVERVIEW_TAG_ID = 93;
-    /**
-     * The Conceptual Overview tag name
-     */
-    public static final String CONCEPTUALOVERVIEW_TAG_NAME = "Overview";
-    /**
-     * The Reference tag ID
-     */
-    public static final Integer REFERENCE_TAG_ID = 6;
-    /**
-     * The Reference tag name
-     */
-    public static final String REFERENCE_TAG_NAME = "Reference";
     /**
      * The Task tag ID
      */
     public static final Integer TASK_TAG_ID = 4;
     /**
-     * The Task tag name
-     */
-    public static final String TASK_TAG_NAME = "Task";
-    /**
-     * The Written tag ID
-     */
-    public static final Integer WRITTEN_TAG_ID = 19;
-    /**
      * The Content Specification tag ID
      */
     public static final Integer CONTENT_SPEC_TAG_ID = 268;
-    /**
-     * The Content Specification tag name
-     */
-    public static final String CONTENT_SPEC_TAG_NAME = "Content Specification";
-
     /**
      * The Added By Property Tag ID
      */
@@ -123,10 +84,6 @@ public class CSConstants {
      */
     public static final Integer ORG_DIVISION_PROPERTY_TAG_ID = 19;
     /**
-     * The DTD Property Tag ID
-     */
-    public static final Integer DTD_PROPERTY_TAG_ID = 16;
-    /**
      * The Content Specification Type Property Tag ID
      */
     public static final Integer CSP_TYPE_PROPERTY_TAG_ID = 17;
@@ -142,12 +99,6 @@ public class CSConstants {
      * The Legal Notice tag ID
      */
     public static final Integer LEGAL_NOTICE_TAG_ID = 599;
-
-
-    /**
-     * The initial name for a snapshot revision
-     */
-    public static final String INITIAL_SNAPSHOT_REVISION_NAME = "Initial Untranslated Revision";
 
     // Override keys
     public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";

@@ -23,6 +23,7 @@ import org.jboss.pressgang.ccms.rest.v1.entities.RESTCategoryV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTLogDetailsV1;
+import org.jboss.pressgang.ccms.rest.v1.entities.enums.RESTXMLDoctype;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTCategoryInTagV1;
 import org.jboss.pressgang.ccms.rest.v1.jaxrsinterfaces.RESTInterfaceV1;
@@ -277,6 +278,7 @@ public class RESTWriter {
             RESTTopicV1 contentSpec = new RESTTopicV1();
             contentSpec.explicitSetTitle(title);
             contentSpec.explicitSetXml(preContentSpec);
+            contentSpec.explicitSetXmlDoctype(RESTXMLDoctype.DOCBOOK_45);
 
             // Create the Added By, Content Spec Type and DTD property tags
             final RESTAssignedPropertyTagCollectionV1 properties = new RESTAssignedPropertyTagCollectionV1();
@@ -288,12 +290,7 @@ public class RESTWriter {
                     client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null));
             typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
 
-            final RESTAssignedPropertyTagV1 dtdPropertyTag = new RESTAssignedPropertyTagV1(
-                    client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null));
-            dtdPropertyTag.explicitSetValue(dtd);
-
             properties.addNewItem(addedBy);
-            properties.addNewItem(dtdPropertyTag);
             properties.addNewItem(typePropertyTag);
 
             contentSpec.explicitSetProperties(properties);
@@ -342,44 +339,18 @@ public class RESTWriter {
                 contentSpec.explicitSetTitle(title);
             }
 
+            contentSpec.explicitSetXmlDoctype(RESTXMLDoctype.DOCBOOK_45);
             contentSpec.explicitSetXml(preContentSpec);
 
             // Update the Content Spec Type and DTD property tags
             final RESTAssignedPropertyTagCollectionV1 properties = contentSpec.getProperties();
             if (properties.getItems() != null && !properties.getItems().isEmpty()) {
-
-                boolean newDTD = false;
-
-                // Loop through and remove any Type or DTD tags if they don't
-                // match
-                for (final RESTAssignedPropertyTagCollectionItemV1 propertyItem : properties.getItems()) {
-                    final RESTAssignedPropertyTagV1 property = propertyItem.getItem();
-
-                    if (property.getId().equals(CSConstants.CSP_TYPE_PROPERTY_TAG_ID)) {
-                        propertyItem.setState(REMOVE_STATE);
-                    } else if (property.getId().equals(CSConstants.DTD_PROPERTY_TAG_ID)) {
-                        if (!property.getValue().equals(dtd)) {
-                            propertyItem.setState(REMOVE_STATE);
-                            newDTD = true;
-                        }
-                    }
-                }
-
                 // The property tag should never match a pre tag
                 final RESTAssignedPropertyTagV1 typePropertyTag = new RESTAssignedPropertyTagV1(
                         client.getJSONPropertyTag(CSConstants.CSP_TYPE_PROPERTY_TAG_ID, null));
                 typePropertyTag.explicitSetValue(CSConstants.CSP_PRE_PROCESSED_STRING);
 
                 properties.addNewItem(typePropertyTag);
-
-                // If the DTD has changed then it needs to be re-added
-                if (newDTD) {
-                    final RESTAssignedPropertyTagV1 dtdPropertyTag = new RESTAssignedPropertyTagV1(
-                            client.getJSONPropertyTag(CSConstants.DTD_PROPERTY_TAG_ID, null));
-                    dtdPropertyTag.explicitSetValue(dtd);
-
-                    properties.addNewItem(dtdPropertyTag);
-                }
             }
 
             contentSpec.explicitSetProperties(properties);

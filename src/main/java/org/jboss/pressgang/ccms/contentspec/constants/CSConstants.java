@@ -90,14 +90,6 @@ public class CSConstants {
      */
     public static final Integer WRITTEN_TAG_ID = 19;
     /**
-     * The Tag Description tag ID
-     */
-    public static final Integer TAG_DESCRIPTION_TAG_ID = 215;
-    /**
-     * The Home tag ID
-     */
-    public static final Integer HOME_TAG_ID = 216;
-    /**
      * The Content Specification tag ID
      */
     public static final Integer CONTENT_SPEC_TAG_ID = 268;

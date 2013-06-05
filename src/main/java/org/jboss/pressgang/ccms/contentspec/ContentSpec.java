@@ -44,6 +44,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaVersion = null;
     private KeyValueNode<String> bugzillaURL = null;
     private KeyValueNode<Boolean> injectBugLinks = null;
+    private KeyValueNode<Boolean> injectBugzillaAssignee = null;
     private KeyValueNode<Boolean> injectSurveyLinks = null;
     private KeyValueNode<String> locale = null;
     private KeyValueNode<String> outputStyle = null;
@@ -1187,6 +1188,24 @@ public class ContentSpec extends Node {
         }
     }
 
+    public boolean isInjectBugzillaAssignee() {
+        return (Boolean) (injectBugzillaAssignee == null ? true : injectBugzillaAssignee.getValue());
+    }
+
+    public void setInjectBugzillaAssignee(final Boolean injectBugzillaAssignee) {
+        if (injectBugzillaAssignee == null && this.injectBugzillaAssignee == null) {
+            return;
+        } else if (injectBugzillaAssignee == null) {
+            removeChild(this.injectBugzillaAssignee);
+            this.injectBugzillaAssignee = null;
+        } else if (this.injectBugzillaAssignee == null) {
+            this.injectBugzillaAssignee = new KeyValueNode<Boolean>(CSConstants.BUGZILLA_ASSIGNEE_TITLE, injectBugzillaAssignee);
+            appendChild(this.injectBugzillaAssignee, false);
+        } else {
+            this.injectBugzillaAssignee.setValue(injectBugzillaAssignee);
+        }
+    }
+
     public BugzillaOptions getBugzillaOptions() {
         final BugzillaOptions bzOption = new BugzillaOptions();
         bzOption.setProduct(getBugzillaProduct());
@@ -1194,6 +1213,7 @@ public class ContentSpec extends Node {
         bzOption.setVersion(getBugzillaVersion());
         bzOption.setUrlComponent(getBugzillaURL());
         bzOption.setBugzillaLinksEnabled(isInjectBugLinks());
+        bzOption.setInjectAssignee(isInjectBugzillaAssignee());
         return bzOption;
     }
 
@@ -1369,6 +1389,17 @@ public class ContentSpec extends Node {
             setBugzillaVersion((String) value);
         } else if (uppercaseKey.equals(CSConstants.BUGZILLA_URL_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
             setBugzillaURL((String) value);
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_ASSIGNEE_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
+                instanceof Boolean)) {
+            if (value instanceof Boolean) {
+                setInjectBugzillaAssignee((Boolean) value);
+            } else {
+                if (((String) value).toUpperCase(Locale.ENGLISH).equals("ON")) {
+                    setInjectBugzillaAssignee(true);
+                } else {
+                    setInjectBugzillaAssignee(Boolean.parseBoolean((String) value));
+                }
+            }
         } else if (uppercaseKey.equals(CSConstants.INLINE_INJECTION_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
                 instanceof InjectionOptions)) {
             if (value instanceof String) {

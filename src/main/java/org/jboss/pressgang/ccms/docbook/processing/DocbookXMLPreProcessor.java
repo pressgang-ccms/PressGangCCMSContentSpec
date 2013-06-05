@@ -304,7 +304,7 @@ public class DocbookXMLPreProcessor {
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
             bugzillaURLComponents += "comment=" + bugzillaDescription;
 
-            if (bugzillaAssignedTo != null) {
+            if (bzOptions.isInjectAssignee() && bugzillaAssignedTo != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
                 bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
             }

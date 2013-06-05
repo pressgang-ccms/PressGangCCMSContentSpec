@@ -197,6 +197,7 @@ public class CSConstants {
     public static final String REV_HISTORY_TITLE = "Revision History";
     public static final String FEEDBACK_TITLE = "Feedback";
     public static final String LEGAL_NOTICE = "Legal Notice";
+    public static final String BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
 
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";

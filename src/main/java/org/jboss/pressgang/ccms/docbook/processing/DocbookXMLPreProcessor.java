@@ -4,15 +4,14 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -23,13 +22,10 @@ import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
-import org.jboss.pressgang.ccms.docbook.structures.GenericInjectionPoint;
-import org.jboss.pressgang.ccms.docbook.structures.GenericInjectionPointDatabase;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseRESTEntityWithPropertiesV1;
-import org.jboss.pressgang.ccms.rest.v1.components.ComponentBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.components.ComponentTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTagV1;
@@ -37,14 +33,10 @@ import org.jboss.pressgang.ccms.rest.v1.entities.RESTTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.RESTTranslatedTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.base.RESTBaseTopicV1;
 import org.jboss.pressgang.ccms.rest.v1.entities.join.RESTAssignedPropertyTagV1;
-import org.jboss.pressgang.ccms.rest.v1.sort.BaseTopicV1TitleComparator;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
-import org.jboss.pressgang.ccms.utils.common.ExceptionUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
-import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -544,9 +536,9 @@ public class DocbookXMLPreProcessor {
             final String commentContent = comment.getNodeValue();
 
             /* compile the regular expression */
-            final NamedPattern injectionSequencePattern = NamedPattern.compile(regularExpression);
+            final Pattern injectionSequencePattern = Pattern.compile(regularExpression);
             /* find any matches */
-            final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
+            final Matcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
 
             /* loop over the regular expression matches */
             while (injectionSequencematcher.find()) {

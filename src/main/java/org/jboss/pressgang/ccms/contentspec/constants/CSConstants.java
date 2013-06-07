@@ -141,6 +141,8 @@ public class CSConstants {
     public static final String FEEDBACK_TITLE = "Feedback";
     public static final String LEGAL_NOTICE = "Legal Notice";
     public static final String BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
+    public static final String MAVEN_GROUP_ID_TITLE = "GroupId";
+    public static final String MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";
 
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";

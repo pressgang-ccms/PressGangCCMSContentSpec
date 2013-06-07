@@ -54,6 +54,8 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> revisionHistory = null;
     private KeyValueNode<SpecTopic> feedback = null;
     private KeyValueNode<SpecTopic> legalNotice = null;
+    private KeyValueNode<String> groupId = null;
+    private KeyValueNode<String> artifactId = null;
     private Integer revision = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
@@ -1302,6 +1304,62 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Get the Maven groupId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @return The Maven groupId for the content specification.
+     */
+    public String getGroupId() {
+        return groupId == null ? null : groupId.getValue().toString();
+    }
+
+    /**
+     * Set the Maven groupId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @param groupId The Maven groupId to be used when building.
+     */
+    public void setGroupId(final String groupId) {
+        if (groupId == null && this.groupId == null) {
+            return;
+        } else if (groupId == null) {
+            removeChild(this.groupId);
+            this.groupId = null;
+        } else if (this.groupId == null) {
+            this.groupId = new KeyValueNode<String>(CSConstants.MAVEN_GROUP_ID_TITLE, groupId);
+            appendChild(this.groupId, false);
+        } else {
+            this.groupId.setValue(groupId);
+        }
+    }
+
+    /**
+     * Get the Maven artifactId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @return The Maven artifactId for the content specification.
+     */
+    public String getArtifactId() {
+        return artifactId == null ? null : artifactId.getValue().toString();
+    }
+
+    /**
+     * Set the Maven artifactId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @param artifactId The Maven artifactId to be used when building.
+     */
+    public void setArtifactId(final String artifactId) {
+        if (artifactId == null && this.artifactId == null) {
+            return;
+        } else if (artifactId == null) {
+            removeChild(this.artifactId);
+            this.artifactId = null;
+        } else if (this.artifactId == null) {
+            this.artifactId = new KeyValueNode<String>(CSConstants.MAVEN_ARTIFACT_ID_TITLE, artifactId);
+            appendChild(this.artifactId, false);
+        } else {
+            this.artifactId.setValue(artifactId);
+        }
+    }
+
+    /**
      * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
      * to this content spec.
      *
@@ -1438,6 +1496,10 @@ public class ContentSpec extends Node {
             setSubtitle((String) value);
         } else if (uppercaseKey.equals(CSConstants.REV_HISTORY_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
             setRevisionHistory((SpecTopic) value);
+        } else if (uppercaseKey.equals(CSConstants.MAVEN_ARTIFACT_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+            setArtifactId((String) value);
+        } else if (uppercaseKey.equals(CSConstants.MAVEN_GROUP_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+            setGroupId((String) value);
         } else {
             appendChild(node, false);
         }

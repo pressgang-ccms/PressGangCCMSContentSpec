@@ -1,7 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.rest.utils;
 
 import javax.ws.rs.core.PathSegment;
-
 import java.util.ArrayList;
 
 import org.apache.log4j.Logger;

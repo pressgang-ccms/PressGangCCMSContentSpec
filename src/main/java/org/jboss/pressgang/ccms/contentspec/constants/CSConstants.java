@@ -107,6 +107,8 @@ public class CSConstants {
 
     public static final String FEEDBACK_OVERRIDE = "Feedback.xml";
 
+    public static final String POM_OVERRIDE = "pom.xml";
+
     public static final String PUBSNUMBER_OVERRIDE = "pubsnumber";
 
     public static final String REVNUMBER_OVERRIDE = "revnumber";

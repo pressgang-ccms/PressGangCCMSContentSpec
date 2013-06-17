@@ -424,7 +424,7 @@ public class SpecTopic extends SpecNode {
      * @return True if the topic is a new Topic otherwise false.
      */
     public boolean isTopicANewTopic() {
-        return id.matches(CSConstants.NEW_TOPIC_ID_REGEX);
+        return CSConstants.NEW_TOPIC_ID_PATTERN.matcher(id).matches();
     }
 
     /**

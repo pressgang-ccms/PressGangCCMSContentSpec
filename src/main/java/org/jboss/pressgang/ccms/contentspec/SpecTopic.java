@@ -848,7 +848,7 @@ public class SpecTopic extends SpecNode {
         /*
          * Check this topic to see if it is the topic we are looking for
          */
-        if (this.DBId == DBId) return this;
+        if (this.DBId.equals(DBId)) return this;
 
         /*
          * If we still haven't found the closest node then check this nodes parents.

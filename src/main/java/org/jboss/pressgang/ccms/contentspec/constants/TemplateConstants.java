@@ -208,4 +208,7 @@ public class TemplateConstants {
             "# Output Style =\n" +
             "\n" +
             "# Indentation is meaningful. Use 2 spaces.\n";
+
+    private TemplateConstants() {
+    }
 }

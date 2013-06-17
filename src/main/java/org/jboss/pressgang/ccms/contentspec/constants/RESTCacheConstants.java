@@ -22,4 +22,7 @@ public class RESTCacheConstants {
     // Users
     public static String ALL_USERS = "Users";
     public static String USER_ID = "UserID-";
+
+    private RESTCacheConstants() {
+    }
 }

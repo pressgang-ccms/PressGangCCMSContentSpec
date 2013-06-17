@@ -23,7 +23,7 @@ public class LogMessage {
         this.debugLevel = debugLevel;
         timeStamp = System.nanoTime();
         this.type = type;
-        this.originalMessage = msg;
+        originalMessage = msg;
         message = String.format("%-7s%s", getTypeString(type) + ":", msg);
     }
 
@@ -33,13 +33,13 @@ public class LogMessage {
     public LogMessage(final String msg, final Type type) {
         timeStamp = System.nanoTime();
         this.type = type;
-        this.originalMessage = msg;
+        originalMessage = msg;
         message = String.format("%-7s%s", getTypeString(type) + ":", msg);
     }
 
     public LogMessage(final String msg) {
         timeStamp = System.nanoTime();
-        this.originalMessage = msg;
+        originalMessage = msg;
         message = msg;
     }
 
@@ -91,7 +91,7 @@ public class LogMessage {
     }
 
     public void setOriginalMessage(final String message) {
-        this.originalMessage = message;
+        originalMessage = message;
     }
 
     public long getTimestamp() {
@@ -99,7 +99,7 @@ public class LogMessage {
     }
 
     public void setTimestamp(final long timestamp) {
-        this.timeStamp = timestamp;
+        timeStamp = timestamp;
     }
 
     public String getTypeAsString() {

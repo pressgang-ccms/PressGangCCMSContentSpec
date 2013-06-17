@@ -138,7 +138,7 @@ public class SpecTopic extends SpecNode {
      * @param uniqueId The Content Specification Topic ID.
      */
     public void setUniqueId(final String uniqueId) {
-        this.uniqueParserId = uniqueId;
+        uniqueParserId = uniqueId;
     }
 
     /**

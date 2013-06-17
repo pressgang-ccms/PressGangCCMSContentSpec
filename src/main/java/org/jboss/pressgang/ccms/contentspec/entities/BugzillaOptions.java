@@ -59,7 +59,7 @@ public class BugzillaOptions {
      * @param enabled Whether bug links should be injected
      */
     public void setBugzillaLinksEnabled(final boolean enabled) {
-        this.injectLinks = enabled;
+        injectLinks = enabled;
     }
 
     /**

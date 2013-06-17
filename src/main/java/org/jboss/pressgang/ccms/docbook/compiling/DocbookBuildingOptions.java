@@ -273,58 +273,58 @@ public class DocbookBuildingOptions {
         final String fixedFieldName = fieldName.trim();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NARRATIVE))
-            return this.getBuildNarrative() == null ? null : this.getBuildNarrative().toString();
+            return getBuildNarrative() == null ? null : getBuildNarrative().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_ENABLE_DYNAMIC_TOC))
-            return this.getEnableDynamicTreeToc() == null ? null : this.getEnableDynamicTreeToc().toString();
+            return getEnableDynamicTreeToc() == null ? null : getEnableDynamicTreeToc().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_IGNORE_MISSING_CUSTOM_INJECTIONS))
-            return this.getIgnoreMissingCustomInjections() == null ? null : this.getIgnoreMissingCustomInjections().toString();
+            return getIgnoreMissingCustomInjections() == null ? null : getIgnoreMissingCustomInjections().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_SURVEY_LINK))
-            return this.getInsertSurveyLink() == null ? null : this.getInsertSurveyLink().toString();
+            return getInsertSurveyLink() == null ? null : getInsertSurveyLink().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_PROCESS_RELATED_TOPICS))
-            return this.getProcessRelatedTopics() == null ? null : this.getProcessRelatedTopics().toString();
+            return getProcessRelatedTopics() == null ? null : getProcessRelatedTopics().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SHOW_REMARKS))
-            return this.getPublicanShowRemarks() == null ? null : this.getPublicanShowRemarks().toString();
+            return getPublicanShowRemarks() == null ? null : getPublicanShowRemarks().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_ERROR_PAGE))
-            return this.getSuppressErrorsPage() == null ? null : this.getSuppressErrorsPage().toString();
+            return getSuppressErrorsPage() == null ? null : getSuppressErrorsPage().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_TASK_AND_OVERVIEW_ONLY))
-            return this.getTaskAndOverviewOnly() == null ? null : this.getTaskAndOverviewOnly().toString();
+            return getTaskAndOverviewOnly() == null ? null : getTaskAndOverviewOnly().toString();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG)) return this.getCvsPkgOption();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG)) return getCvsPkgOption();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO)) return this.getEmailTo();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO)) return getEmailTo();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME)) return this.getBuildName();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME)) return getBuildName();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
-            return this.getIncludeUntranslatedTopics() == null ? null : this.getIncludeUntranslatedTopics().toString();
+            return getIncludeUntranslatedTopics() == null ? null : getIncludeUntranslatedTopics().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
-            return this.getInsertBugzillaLinks() == null ? null : this.getInsertBugzillaLinks().toString();
+            return getInsertBugzillaLinks() == null ? null : getInsertBugzillaLinks().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
-            return this.getSuppressContentSpecPage() == null ? null : this.getSuppressContentSpecPage().toString();
+            return getSuppressContentSpecPage() == null ? null : getSuppressContentSpecPage().toString();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE)) return this.getBookTitle();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE)) return getBookTitle();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT)) return this.getBookProduct();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT)) return getBookProduct();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION)) return this.getBookProductVersion();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION)) return getBookProductVersion();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION)) return this.getBookEdition();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION)) return getBookEdition();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER)) return this.getBookPubsnumber();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER)) return getBookPubsnumber();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE)) return this.getBookSubtitle();
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE)) return getBookSubtitle();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
-            return this.getInsertEditorLinks() == null ? null : this.insertEditorLinks.toString();
+            return getInsertEditorLinks() == null ? null : insertEditorLinks.toString();
 
         return null;
     }
@@ -334,61 +334,49 @@ public class DocbookBuildingOptions {
 
         final String fixedFieldName = fieldName.trim();
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NARRATIVE))
-            this.setBuildNarrative(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NARRATIVE)) setBuildNarrative(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_ENABLE_DYNAMIC_TOC))
-            this.setEnableDynamicTreeToc(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_ENABLE_DYNAMIC_TOC)) setEnableDynamicTreeToc(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_IGNORE_MISSING_CUSTOM_INJECTIONS))
-            this.setIgnoreMissingCustomInjections(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_IGNORE_MISSING_CUSTOM_INJECTIONS)) setIgnoreMissingCustomInjections(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_SURVEY_LINK))
-            this.setInsertSurveyLink(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_SURVEY_LINK)) setInsertSurveyLink(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_PROCESS_RELATED_TOPICS))
-            this.setProcessRelatedTopics(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_PROCESS_RELATED_TOPICS)) setProcessRelatedTopics(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SHOW_REMARKS))
-            this.setPublicanShowRemarks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SHOW_REMARKS)) setPublicanShowRemarks(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_ERROR_PAGE))
-            this.setSuppressErrorsPage(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_ERROR_PAGE)) setSuppressErrorsPage(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_TASK_AND_OVERVIEW_ONLY))
-            this.setTaskAndOverviewOnly(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_TASK_AND_OVERVIEW_ONLY)) setTaskAndOverviewOnly(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG)) this.setCvsPkgOption(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_CVS_PKG)) setCvsPkgOption(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO)) this.setEmailTo(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SEND_TO)) setEmailTo(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME)) this.setBuildName(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BUILD_NAME)) setBuildName(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS))
-            this.setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS)) setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
-            this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS)) setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
-            this.setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE)) setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE)) this.setBookTitle(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE)) setBookTitle(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT)) this.setBookProduct(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT)) setBookProduct(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION)) this.setBookProductVersion(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PRODUCT_VERSION)) setBookProductVersion(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION)) this.setBookEdition(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_EDITION)) setBookEdition(fieldValue);
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS))
-            this.setInsertEditorLinks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS)) setInsertEditorLinks(Boolean.parseBoolean(fieldValue));
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_PUBSNUMBER)) {
-            this.setBookPubsnumber(fieldValue);
+            setBookPubsnumber(fieldValue);
         }
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE)) this.setBookSubtitle(fieldValue);
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_SUBTITLE)) setBookSubtitle(fieldValue);
     }
 
     public String getCvsPkgOption() {

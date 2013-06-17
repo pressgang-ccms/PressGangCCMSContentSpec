@@ -13,14 +13,14 @@ public class TopicRelationship extends Relationship {
 
     public TopicRelationship(final SpecTopic mainTopic, final SpecTopic secondaryTopic, final RelationshipType type) {
         super(mainTopic.getId(), secondaryTopic.getId(), type);
-        this.mainRelationship = mainTopic;
-        this.secondaryRelationship = secondaryTopic;
+        mainRelationship = mainTopic;
+        secondaryRelationship = secondaryTopic;
     }
 
     public TopicRelationship(final SpecTopic mainTopic, final SpecTopic secondaryTopic, final RelationshipType type, final String title) {
         super(mainTopic.getId(), secondaryTopic.getId(), type, title);
-        this.mainRelationship = mainTopic;
-        this.secondaryRelationship = secondaryTopic;
+        mainRelationship = mainTopic;
+        secondaryRelationship = secondaryTopic;
     }
 
     public SpecTopic getSecondaryRelationship() {

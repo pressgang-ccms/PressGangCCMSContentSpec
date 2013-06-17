@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec.interfaces;
 
 public interface ShutdownAbleApp {
 
-    public void shutdown();
+    void shutdown();
 
-    public boolean isShutdown();
+    boolean isShutdown();
 }

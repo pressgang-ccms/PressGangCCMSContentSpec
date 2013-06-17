@@ -488,7 +488,7 @@ public class ContentSpec extends Node {
      * @param username The Username of the User who created/uploaded the Content Specification or null if one doesn't exist.
      */
     public void setCreatedBy(final String username) {
-        this.createdBy = username;
+        createdBy = username;
     }
 
     /**
@@ -1014,7 +1014,7 @@ public class ContentSpec extends Node {
      * @param line The Line to be added.
      */
     public void appendPreProcessedLine(final String line) {
-        this.text.add(line);
+        text.add(line);
     }
 
     /**

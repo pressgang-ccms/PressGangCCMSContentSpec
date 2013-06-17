@@ -128,7 +128,8 @@ public class InjectionOptions {
     public String toString() {
         String output = "";
         if (getContentSpecType() == InjectionOptions.UserType.STRICT) {
-            output += "on [" + StringUtilities.buildString(getStrictTopicTypes().toArray(new String[0]), ", ") + "]";
+            output += "on [" + StringUtilities.buildString(getStrictTopicTypes().toArray(new String[getStrictTopicTypes().size()]),
+                    ", ") + "]";
         } else if (getContentSpecType() == InjectionOptions.UserType.ON) {
             output += "on";
         } else if (getContentSpecType() == InjectionOptions.UserType.OFF) {

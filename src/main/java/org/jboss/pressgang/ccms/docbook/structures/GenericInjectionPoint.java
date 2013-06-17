@@ -54,10 +54,10 @@ public class GenericInjectionPoint<T extends RESTBaseTopicV1<T, ?, ?>> {
 
     public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName) {
         this.categoryIDAndName = categoryIDAndName;
-        this.topics = new ArrayList<T>();
+        topics = new ArrayList<T>();
     }
 
     public void addTopic(final T topic) {
-        this.topics.add(topic);
+        topics.add(topic);
     }
 }

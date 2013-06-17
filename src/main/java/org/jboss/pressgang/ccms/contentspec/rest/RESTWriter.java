@@ -41,7 +41,7 @@ public class RESTWriter {
             final RESTCollectionCache collectionsCache) {
         this.reader = reader;
         this.client = client;
-        this.entityCache = cache;
+        entityCache = cache;
         this.collectionsCache = collectionsCache;
     }
 

@@ -54,14 +54,14 @@ public class StringToCSNodeCollection {
     }
 
     public StringToCSNodeCollection addNodeCollection(final ArrayList<Node> nodes) {
-        if (this.nodeCollections == null) this.nodeCollections = new ArrayList<ArrayList<Node>>();
-        this.nodeCollections.add(nodes);
+        if (nodeCollections == null) nodeCollections = new ArrayList<ArrayList<Node>>();
+        nodeCollections.add(nodes);
         return this;
     }
 
     public StringToCSNodeCollection addNode(final Node node) {
-        if (this.nodeCollections == null) this.nodeCollections = new ArrayList<ArrayList<Node>>();
-        this.nodeCollections.add(CollectionUtilities.toArrayList(new Node[]{node}));
+        if (nodeCollections == null) nodeCollections = new ArrayList<ArrayList<Node>>();
+        nodeCollections.add(CollectionUtilities.toArrayList(new Node[]{node}));
         return this;
     }
 }

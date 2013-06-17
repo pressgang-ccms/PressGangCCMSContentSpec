@@ -12,19 +12,19 @@ public abstract class Node {
     protected String text;
     protected Node parent;
 
-    public Node(final int lineNumber, final String text) {
+    protected Node(final int lineNumber, final String text) {
         this.lineNumber = lineNumber;
         this.text = text;
     }
 
-    public Node(final String text) {
-        this.lineNumber = -1;
+    protected Node(final String text) {
+        lineNumber = -1;
         this.text = text;
     }
 
-    public Node() {
-        this.lineNumber = -1;
-        this.text = null;
+    protected Node() {
+        lineNumber = -1;
+        text = null;
     }
 
     /**

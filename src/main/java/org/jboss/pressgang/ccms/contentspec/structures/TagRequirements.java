@@ -69,12 +69,12 @@ public class TagRequirements {
      */
     public void merge(final TagRequirements other) {
         if (other != null) {
-            this.matchAllOf.addAll(other.matchAllOf);
-            this.matchOneOf.addAll(other.matchOneOf);
+            matchAllOf.addAll(other.matchAllOf);
+            matchOneOf.addAll(other.matchOneOf);
         }
     }
 
     public boolean hasRequirements() {
-        return this.matchAllOf.size() != 0 || this.matchOneOf.size() != 0;
+        return matchAllOf.size() != 0 || matchOneOf.size() != 0;
     }
 }

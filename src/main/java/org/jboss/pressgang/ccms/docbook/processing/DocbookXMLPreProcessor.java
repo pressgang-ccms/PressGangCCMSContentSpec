@@ -199,11 +199,11 @@ public class DocbookXMLPreProcessor {
     protected final Properties translations;
 
     public DocbookXMLPreProcessor() {
-        this.translations = new Properties();
+        translations = new Properties();
     }
 
     public DocbookXMLPreProcessor(final Properties translationStrings) {
-        this.translations = translationStrings;
+        translations = translationStrings;
     }
 
     public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions,
@@ -426,9 +426,9 @@ public class DocbookXMLPreProcessor {
         List<InjectionTopicData> retValue = new ArrayList<InjectionTopicData>(topicIDs.length);
 
         /* clean the topic ids */
-        for (int i = 0; i < topicIDs.length; ++i) {
-            final String topicId = topicIDs[i].replaceAll(OPTIONAL_MARKER, "").trim();
-            final boolean optional = topicIDs[i].indexOf(OPTIONAL_MARKER) != -1;
+        for (final String topicID : topicIDs) {
+            final String topicId = topicID.replaceAll(OPTIONAL_MARKER, "").trim();
+            final boolean optional = topicID.contains(OPTIONAL_MARKER);
 
             try {
                 final InjectionTopicData topicData = new InjectionTopicData(Integer.parseInt(topicId), optional);
@@ -681,7 +681,7 @@ public class DocbookXMLPreProcessor {
              * The translated String will have a format marker to specify where the link should be placed. So we need to split
              * the translated string on that marker and add content where it should be.
              */
-            String[] split = translatedString.split("\\%s");
+            String[] split = translatedString.split("%s");
 
             // Add the first part of the translated string if any exists
             if (!split[0].trim().isEmpty()) {
@@ -761,7 +761,7 @@ public class DocbookXMLPreProcessor {
          * The translated String will have a format marker to specify where the link should be placed. So we need to split
          * the translated string on that marker and add content where it should be.
          */
-        String[] split = translatedString.split("\\%s");
+        String[] split = translatedString.split("%s");
 
         // Add the first part of the translated string if any exists
         if (!split[0].trim().isEmpty()) {

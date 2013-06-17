@@ -18,15 +18,15 @@ public abstract class SpecNode extends Node {
     protected String description = null;
     protected String assignedWriter = null;
 
-    public SpecNode(final int lineNumber, final String text) {
+    protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
     }
 
-    public SpecNode(final String text) {
+    protected SpecNode(final String text) {
         super(text);
     }
 
-    public SpecNode() {
+    protected SpecNode() {
     }
 
     /**

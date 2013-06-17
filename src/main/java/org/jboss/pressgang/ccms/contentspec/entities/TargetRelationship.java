@@ -15,25 +15,25 @@ public class TargetRelationship extends Relationship {
     public TargetRelationship(final SpecTopic topic, final Level level, final RelationshipType type) {
         super(topic.getId(), level.getTargetId(), type);
         this.topic = topic;
-        this.secondaryNode = level;
+        secondaryNode = level;
     }
 
     public TargetRelationship(final SpecTopic topic, final Level level, final RelationshipType type, final String title) {
         super(topic.getId(), level.getTargetId(), type, title);
         this.topic = topic;
-        this.secondaryNode = level;
+        secondaryNode = level;
     }
 
     public TargetRelationship(final SpecTopic topic, final SpecTopic secondaryTopic, final RelationshipType type) {
         super(topic.getId(), secondaryTopic.getTargetId(), type);
         this.topic = topic;
-        this.secondaryNode = secondaryTopic;
+        secondaryNode = secondaryTopic;
     }
 
     public TargetRelationship(final SpecTopic topic, final SpecTopic secondaryTopic, final RelationshipType type, final String title) {
         super(topic.getId(), secondaryTopic.getTargetId(), type, title);
         this.topic = topic;
-        this.secondaryNode = secondaryTopic;
+        secondaryNode = secondaryTopic;
     }
 
     public SpecTopic getTopic() {

@@ -278,7 +278,7 @@ public class RESTReader {
 
         try {
             final RESTTopicCollectionV1 topics = new RESTTopicCollectionV1();
-            final StringBuffer urlVars = new StringBuffer("query;topicIds=");
+            final StringBuilder urlVars = new StringBuilder("query;topicIds=");
             //final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
             for (Integer id : ids) {
@@ -421,7 +421,7 @@ public class RESTReader {
 
         try {
             final RESTTranslatedTopicCollectionV1 topics = new RESTTranslatedTopicCollectionV1();
-            final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;topicIds=");
+            final StringBuilder urlVars = new StringBuilder("query;latestTranslations=true;topicIds=");
             //final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
             for (final Integer id : ids) {
@@ -504,7 +504,7 @@ public class RESTReader {
 
         try {
             final RESTTranslatedTopicCollectionV1 topics = new RESTTranslatedTopicCollectionV1();
-            final StringBuffer urlVars = new StringBuffer("query;latestTranslations=true;zanataIds=");
+            final StringBuilder urlVars = new StringBuilder("query;latestTranslations=true;zanataIds=");
             final String encodedComma = URLEncoder.encode(",", "UTF-8");
 
             for (final Integer id : ids) {
@@ -1025,7 +1025,7 @@ public class RESTReader {
             final Integer start = startLimit == null ? increment : startLimit + increment;
             final Integer end = endLimit == null ? null : endLimit + increment;
 
-            return this.getPreContentSpecById(id, revision, start, end, recursive, increment);
+            return getPreContentSpecById(id, revision, start, end, recursive, increment);
         }
         return preContentSpec;
     }
@@ -1086,7 +1086,7 @@ public class RESTReader {
             final Integer start = startLimit == null ? increment : startLimit + increment;
             final Integer end = endLimit == null ? null : endLimit + increment;
 
-            return this.getPostContentSpecById(id, revision, start, end, recursive, increment, expandTranslations);
+            return getPostContentSpecById(id, revision, start, end, recursive, increment, expandTranslations);
         }
         return postContentSpec;
     }
@@ -1130,7 +1130,7 @@ public class RESTReader {
      */
     public RESTTagV1 getAuthorForTopic(final int topicId, final Integer rev) {
         if (rev == null) {
-            final List<RESTTagV1> tags = this.getTagsByTopicId(topicId);
+            final List<RESTTagV1> tags = getTagsByTopicId(topicId);
 
             if (tags != null) {
                 for (RESTTagV1 tag : tags) {
@@ -1138,7 +1138,7 @@ public class RESTReader {
                 }
             }
         } else {
-            final RESTTopicV1 topic = this.getTopicById(topicId, rev);
+            final RESTTopicV1 topic = getTopicById(topicId, rev);
             if (topic != null) {
                 final List<RESTTopicV1> topicRevisions = topic.getRevisions().returnItems();
                 for (final RESTTopicV1 topicRevision : topicRevisions) {

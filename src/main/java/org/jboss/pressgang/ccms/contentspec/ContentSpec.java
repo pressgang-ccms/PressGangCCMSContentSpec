@@ -45,6 +45,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaVersion = null;
     private KeyValueNode<String> bugzillaURL = null;
     private KeyValueNode<Boolean> injectBugLinks = null;
+    private KeyValueNode<Boolean> injectBugzillaAssignee = null;
     private KeyValueNode<Boolean> injectSurveyLinks = null;
     private KeyValueNode<String> outputStyle = null;
     private KeyValueNode<Boolean> allowDuplicateTopics = null;
@@ -53,6 +54,8 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> revisionHistory = null;
     private KeyValueNode<SpecTopic> feedback = null;
     private KeyValueNode<SpecTopic> legalNotice = null;
+    private KeyValueNode<String> groupId = null;
+    private KeyValueNode<String> artifactId = null;
     private Integer revision = null;
     private String locale = null;
 
@@ -922,7 +925,6 @@ public class ContentSpec extends Node {
 
     // End of the basic getter/setter methods for this ContentSpec.
 
-
     public List<SpecTopic> getSpecTopics() {
         final List<SpecTopic> specTopics = getLevelSpecTopics(level);
 
@@ -1093,6 +1095,24 @@ public class ContentSpec extends Node {
         }
     }
 
+    public boolean isInjectBugzillaAssignee() {
+        return (Boolean) (injectBugzillaAssignee == null ? true : injectBugzillaAssignee.getValue());
+    }
+
+    public void setInjectBugzillaAssignee(final Boolean injectBugzillaAssignee) {
+        if (injectBugzillaAssignee == null && this.injectBugzillaAssignee == null) {
+            return;
+        } else if (injectBugzillaAssignee == null) {
+            removeChild(this.injectBugzillaAssignee);
+            this.injectBugzillaAssignee = null;
+        } else if (this.injectBugzillaAssignee == null) {
+            this.injectBugzillaAssignee = new KeyValueNode<Boolean>(CSConstants.BUGZILLA_ASSIGNEE_TITLE, injectBugzillaAssignee);
+            appendChild(this.injectBugzillaAssignee, false);
+        } else {
+            this.injectBugzillaAssignee.setValue(injectBugzillaAssignee);
+        }
+    }
+
     public BugzillaOptions getBugzillaOptions() {
         final BugzillaOptions bzOption = new BugzillaOptions();
         bzOption.setProduct(getBugzillaProduct());
@@ -1100,6 +1120,7 @@ public class ContentSpec extends Node {
         bzOption.setVersion(getBugzillaVersion());
         bzOption.setUrlComponent(getBugzillaURL());
         bzOption.setBugzillaLinksEnabled(isInjectBugLinks());
+        bzOption.setInjectAssignee(isInjectBugzillaAssignee());
         return bzOption;
     }
 
@@ -1194,6 +1215,62 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Get the Maven groupId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @return The Maven groupId for the content specification.
+     */
+    public String getGroupId() {
+        return groupId == null ? null : groupId.getValue().toString();
+    }
+
+    /**
+     * Set the Maven groupId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @param groupId The Maven groupId to be used when building.
+     */
+    public void setGroupId(final String groupId) {
+        if (groupId == null && this.groupId == null) {
+            return;
+        } else if (groupId == null) {
+            removeChild(this.groupId);
+            this.groupId = null;
+        } else if (this.groupId == null) {
+            this.groupId = new KeyValueNode<String>(CSConstants.MAVEN_GROUP_ID_TITLE, groupId);
+            appendChild(this.groupId, false);
+        } else {
+            this.groupId.setValue(groupId);
+        }
+    }
+
+    /**
+     * Get the Maven artifactId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @return The Maven artifactId for the content specification.
+     */
+    public String getArtifactId() {
+        return artifactId == null ? null : artifactId.getValue().toString();
+    }
+
+    /**
+     * Set the Maven artifactId that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @param artifactId The Maven artifactId to be used when building.
+     */
+    public void setArtifactId(final String artifactId) {
+        if (artifactId == null && this.artifactId == null) {
+            return;
+        } else if (artifactId == null) {
+            removeChild(this.artifactId);
+            this.artifactId = null;
+        } else if (this.artifactId == null) {
+            this.artifactId = new KeyValueNode<String>(CSConstants.MAVEN_ARTIFACT_ID_TITLE, artifactId);
+            appendChild(this.artifactId, false);
+        } else {
+            this.artifactId.setValue(artifactId);
+        }
+    }
+
+    /**
      * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
      * to this content spec.
      *
@@ -1281,6 +1358,17 @@ public class ContentSpec extends Node {
             setBugzillaVersion((String) value);
         } else if (uppercaseKey.equals(CSConstants.BUGZILLA_URL_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
             setBugzillaURL((String) value);
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_ASSIGNEE_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
+                instanceof Boolean)) {
+            if (value instanceof Boolean) {
+                setInjectBugzillaAssignee((Boolean) value);
+            } else {
+                if (((String) value).toUpperCase(Locale.ENGLISH).equals("ON")) {
+                    setInjectBugzillaAssignee(true);
+                } else {
+                    setInjectBugzillaAssignee(Boolean.parseBoolean((String) value));
+                }
+            }
         } else if (uppercaseKey.equals(CSConstants.INLINE_INJECTION_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
                 instanceof InjectionOptions)) {
             if (value instanceof String) {
@@ -1323,6 +1411,10 @@ public class ContentSpec extends Node {
             setFeedback((SpecTopic) value);
         } else if (uppercaseKey.equals(CSConstants.LEGAL_NOTICE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
             setLegalNotice((SpecTopic) value);
+        } else if (uppercaseKey.equals(CSConstants.MAVEN_ARTIFACT_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+            setArtifactId((String) value);
+        } else if (uppercaseKey.equals(CSConstants.MAVEN_GROUP_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+            setGroupId((String) value);
         } else {
             appendChild(node, false);
         }

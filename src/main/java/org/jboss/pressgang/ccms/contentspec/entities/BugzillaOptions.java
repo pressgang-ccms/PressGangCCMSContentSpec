@@ -1,8 +1,5 @@
 package org.jboss.pressgang.ccms.contentspec.entities;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class BugzillaOptions {
 
     private String product = null;
@@ -10,6 +7,7 @@ public class BugzillaOptions {
     private String version = null;
     private String urlComponent = null;
     private boolean injectLinks = true;
+    private boolean injectAssignee = true;
 
     /**
      * @return the product
@@ -64,17 +62,6 @@ public class BugzillaOptions {
         this.injectLinks = enabled;
     }
 
-    public String createBugzillUrl(final String bugzillaUrl) {
-        try {
-            return bugzillaUrl + (bugzillaUrl.endsWith("/") ? "" : "/") + "enter_bug.cgi?product=" + URLEncoder.encode(product,
-                    "UTF-8") + "&amp;component=" + URLEncoder.encode(component,
-                    "UTF-8") + (version == null ? "" : ("&amp;version=" + URLEncoder.encode(version, "UTF-8")));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
     /**
      * Get the URL component that is used in the .ent file when
      * building the Docbook files.
@@ -93,5 +80,13 @@ public class BugzillaOptions {
      */
     public void setUrlComponent(final String urlComponent) {
         this.urlComponent = urlComponent;
+    }
+
+    public boolean isInjectAssignee() {
+        return injectAssignee;
+    }
+
+    public void setInjectAssignee(boolean injectAssignee) {
+        this.injectAssignee = injectAssignee;
     }
 }

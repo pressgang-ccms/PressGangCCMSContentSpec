@@ -2,8 +2,8 @@ package org.jboss.pressgang.ccms.contentspec.entities;
 
 import java.util.ArrayList;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 
@@ -20,8 +20,8 @@ public class InjectionOptions {
     public InjectionOptions(final String options) {
         String[] types = null;
         if (StringUtilities.indexOf(options, '[') != -1 && StringUtilities.indexOf(options, ']') != -1) {
-            final NamedPattern bracketPattern = NamedPattern.compile(String.format(CSConstants.BRACKET_NAMED_PATTERN, '[', ']'));
-            final NamedMatcher matcher = bracketPattern.matcher(options);
+            final Pattern bracketPattern = Pattern.compile(String.format(CSConstants.BRACKET_NAMED_PATTERN, '[', ']'));
+            final Matcher matcher = bracketPattern.matcher(options);
 
             // Find all of the variables inside of the brackets defined by the regex
             while (matcher.find()) {

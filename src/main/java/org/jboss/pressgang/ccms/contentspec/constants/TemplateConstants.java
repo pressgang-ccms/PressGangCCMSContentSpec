@@ -29,6 +29,7 @@ public class TemplateConstants {
             "# BZComponent =\n" +
             "# BZVersion =\n" +
             "# BZURL =\n" +
+            "# BZ Assignee = On\n" +
             "\n" +
             "# Output Style =\n" +
             "\n" +
@@ -202,6 +203,7 @@ public class TemplateConstants {
             "# BZComponent =\n" +
             "# BZVersion =\n" +
             "# BZURL =\n" +
+            "# BZ Assignee = On\n" +
             "\n" +
             "# Output Style =\n" +
             "\n" +

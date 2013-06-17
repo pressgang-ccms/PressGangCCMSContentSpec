@@ -4,15 +4,14 @@ import java.net.URLEncoder;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -22,11 +21,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
-import org.jboss.pressgang.ccms.docbook.constants.DocbookBuilderConstants;
-import org.jboss.pressgang.ccms.docbook.sort.TopicTitleComparator;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
-import org.jboss.pressgang.ccms.docbook.structures.GenericInjectionPoint;
-import org.jboss.pressgang.ccms.docbook.structures.GenericInjectionPointDatabase;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
@@ -285,7 +280,7 @@ public class DocbookXMLPreProcessor {
             bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
             bugzillaURLComponents += "comment=" + bugzillaDescription;
 
-            if (bugzillaAssignedTo != null) {
+            if (bzOptions.isInjectAssignee() && bugzillaAssignedTo != null) {
                 bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
                 bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
             }
@@ -526,9 +521,9 @@ public class DocbookXMLPreProcessor {
             final String commentContent = comment.getNodeValue();
 
             /* compile the regular expression */
-            final NamedPattern injectionSequencePattern = NamedPattern.compile(regularExpression);
+            final Pattern injectionSequencePattern = Pattern.compile(regularExpression);
             /* find any matches */
-            final NamedMatcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
+            final Matcher injectionSequencematcher = injectionSequencePattern.matcher(commentContent);
 
             /* loop over the regular expression matches */
             while (injectionSequencematcher.find()) {
@@ -618,116 +613,6 @@ public class DocbookXMLPreProcessor {
         }
 
         return retValue;
-    }
-
-    @SuppressWarnings("unchecked")
-    public List<Integer> processGenericInjections(final Level level, final SpecTopic specTopic, final Document xmlDocument,
-            final ArrayList<Integer> customInjectionIds, final List<Pair<Integer, String>> topicTypeTagIDs,
-            final DocbookBuildingOptions docbookBuildingOptions, final boolean usedFixedUrls) {
-        final List<Integer> errors = new ArrayList<Integer>();
-
-        if (xmlDocument == null) return errors;
-
-        /*
-         * this collection will hold the lists of related topics
-         */
-        final GenericInjectionPointDatabase relatedLists = new GenericInjectionPointDatabase();
-
-        // Get the topic instance
-        final BaseTopicWrapper<?> topic = specTopic.getTopic();
-
-        /* wrap each related topic in a listitem tag */
-        if (topic.getOutgoingRelationships() != null && topic.getOutgoingRelationships() != null) {
-            final List<BaseTopicWrapper<?>> relatedTopics = (List<BaseTopicWrapper<?>>) topic.getOutgoingRelationships();
-            for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
-                final Integer topicId = relatedTopic.getTopicId();
-
-                /*
-                 * don't process those topics that were injected into custom injection points
-                 */
-                if (!customInjectionIds.contains(topicId)) {
-                    /* make sure the topic is available to be linked to */
-                    if (level != null && !level.isSpecTopicInLevelByTopicID(topicId)) {
-                        if ((docbookBuildingOptions != null && !docbookBuildingOptions.getIgnoreMissingCustomInjections()))
-                            errors.add(relatedTopic.getTopicId());
-                    } else {
-                        // loop through the topic type tags
-                        for (final Pair<Integer, String> primaryTopicTypeTag : topicTypeTagIDs) {
-                            /*
-                             * see if we have processed a related topic with one of the topic type tags this may never be true
-                             * if not processing all related topics
-                             */
-                            if (relatedTopic.hasTag(primaryTopicTypeTag.getFirst())) {
-                                relatedLists.addInjectionTopic(primaryTopicTypeTag, relatedTopic);
-
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        insertGenericInjectionLinks(level, specTopic, xmlDocument, relatedLists, docbookBuildingOptions, usedFixedUrls);
-
-        return errors;
-    }
-
-    /**
-     * The generic injection points are placed in well defined locations within a topics xml structure. This function takes the
-     * list of related topics and the topic type tags that are associated with them and injects them into the xml document.
-     */
-    private void insertGenericInjectionLinks(final Level level, final SpecTopic topic, final Document xmlDoc,
-            final GenericInjectionPointDatabase relatedLists, final DocbookBuildingOptions docbookBuildingOptions,
-            final boolean usedFixedUrls) {
-        /* all related topics are placed before the first simplesect */
-        final NodeList nodes = xmlDoc.getDocumentElement().getChildNodes();
-        Node simplesectNode = null;
-        for (int i = 0; i < nodes.getLength(); ++i) {
-            final Node node = nodes.item(i);
-            if (node.getNodeType() == 1 && node.getNodeName().equals("simplesect")) {
-                simplesectNode = node;
-                break;
-            }
-        }
-
-        /*
-         * place the topics at the end of the topic. They will appear in the reverse order as the call to toArrayList()
-         */
-        for (final Integer topTag : CollectionUtilities.toArrayList(DocbookBuilderConstants.REFERENCE_TAG_ID,
-                DocbookBuilderConstants.TASK_TAG_ID, DocbookBuilderConstants.CONCEPT_TAG_ID,
-                DocbookBuilderConstants.CONCEPTUALOVERVIEW_TAG_ID)) {
-            for (final GenericInjectionPoint genericInjectionPoint : relatedLists.getInjectionPoints()) {
-                if (genericInjectionPoint.getCategoryIDAndName().getFirst() == topTag) {
-                    final List<BaseTopicWrapper<?>> relatedTopics = genericInjectionPoint.getTopics();
-
-                    /* don't add an empty list */
-                    if (relatedTopics.size() != 0) {
-                        final Node itemizedlist = DocBookUtilities.createRelatedTopicItemizedList(xmlDoc,
-                                "Related " + genericInjectionPoint.getCategoryIDAndName().getSecond() + "s");
-
-                        Collections.sort(relatedTopics, new TopicTitleComparator());
-
-                        for (final BaseTopicWrapper<?> relatedTopic : relatedTopics) {
-                            if (level == null) {
-                                final String internalURL = relatedTopic.getInternalURL();
-                                DocBookUtilities.createRelatedTopicULink(xmlDoc, internalURL, relatedTopic.getTitle(), itemizedlist);
-                            } else {
-                                final Integer topicId = relatedTopic.getTopicId();
-
-                                final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
-                                DocBookUtilities.createRelatedTopicXRef(xmlDoc, closestSpecTopic.getUniqueLinkId(usedFixedUrls),
-                                        itemizedlist);
-                            }
-
-                        }
-
-                        if (simplesectNode != null) xmlDoc.getDocumentElement().insertBefore(itemizedlist, simplesectNode);
-                        else xmlDoc.getDocumentElement().appendChild(itemizedlist);
-                    }
-                }
-            }
-        }
     }
 
     /**

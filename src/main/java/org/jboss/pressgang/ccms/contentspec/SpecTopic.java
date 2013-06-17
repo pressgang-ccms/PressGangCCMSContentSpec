@@ -647,10 +647,10 @@ public class SpecTopic extends SpecNode {
         } else if (getParent() instanceof Level) {
             final Level parent = (Level) getParent();
             Integer previousNode = 0;
-    
+
             // Get the position of the level in its parents nodes
             Integer nodePos = parent.nodes.indexOf(this);
-    
+
             // If the level isn't the first node then get the previous nodes step
             if (nodePos > 0) {
                 Node node = parent.nodes.get(nodePos - 1);
@@ -667,7 +667,7 @@ public class SpecTopic extends SpecNode {
             }
             // Make sure the previous nodes step isn't 0
             previousNode = previousNode == null ? 0 : previousNode;
-    
+
             // Add one since we got the previous nodes step
             return previousNode + 1;
         } else if (getParent() instanceof KeyValueNode) {
@@ -870,13 +870,19 @@ public class SpecTopic extends SpecNode {
 
     @Override
     public String getUniqueLinkId(final boolean useFixedUrls) {
-        final String topicXRefId;
-        if (useFixedUrls) topicXRefId = topic.getXRefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
-        else {
-            topicXRefId = topic.getXRefId();
-        }
+        // If this is an inner topic then get the parents id
+        if (getTopicType() == TopicType.LEVEL) {
+            return ((Level) getParent()).getUniqueLinkId(useFixedUrls);
+        } else {
+            final String topicXRefId;
+            if (useFixedUrls) {
+                topicXRefId = topic.getXRefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
+            } else {
+                topicXRefId = topic.getXRefId();
+            }
 
-        return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+            return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+        }
     }
 
     public String getDuplicateId() {

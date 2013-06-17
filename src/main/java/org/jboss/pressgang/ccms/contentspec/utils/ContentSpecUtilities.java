@@ -6,8 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.google.code.regexp.NamedMatcher;
-import com.google.code.regexp.NamedPattern;
+import com.google.code.regexp.Matcher;
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
@@ -28,7 +28,7 @@ import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 
 public class ContentSpecUtilities {
-    public static NamedPattern CS_CHECKSUM_PATTERN = NamedPattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)");
+    public static Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)");
     private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(
             new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
                     CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
@@ -51,7 +51,7 @@ public class ContentSpecUtilities {
      * @return The MD5 hash representing the content spec contents.
      */
     public static String getContentSpecChecksum(final String contentSpecString) {
-        final NamedMatcher matcher = CS_CHECKSUM_PATTERN.matcher(contentSpecString);
+        final Matcher matcher = CS_CHECKSUM_PATTERN.matcher(contentSpecString);
         if (matcher.find()) {
             return matcher.group("Checksum");
         }

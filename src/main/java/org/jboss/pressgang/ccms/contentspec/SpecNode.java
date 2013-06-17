@@ -18,15 +18,15 @@ public abstract class SpecNode extends Node {
     protected String description = null;
     protected String assignedWriter = null;
 
-    public SpecNode(final int lineNumber, final String text) {
+    protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
     }
 
-    public SpecNode(final String text) {
+    protected SpecNode(final String text) {
         super(text);
     }
 
-    public SpecNode() {
+    protected SpecNode() {
     }
 
     /**
@@ -270,7 +270,7 @@ public abstract class SpecNode extends Node {
      * @return True if the tag was added successfully otherwise false.
      */
     public boolean addTag(final String tagName) {
-        String name = StringUtilities.replaceEscapeChars(tagName);
+        String name = tagName;
         // Remove the + or - from the tag temporarily to get the tag from the database
         if (tagName.startsWith("-") || tagName.startsWith("+")) {
             name = name.substring(1).trim();
@@ -301,8 +301,8 @@ public abstract class SpecNode extends Node {
      */
     public boolean addTags(final List<String> tagArray) {
         boolean error = false;
-        for (final String t : tagArray) {
-            if (!addTag(StringUtilities.replaceEscapeChars(t))) {
+        for (final String tag : tagArray) {
+            if (!addTag(tag)) {
                 error = true;
             }
         }

@@ -33,6 +33,9 @@ public class ContentSpecUtilities {
             new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
                     CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
 
+    private ContentSpecUtilities() {
+    }
+
     /**
      * Get the checksum of a Content Specification object.
      *
@@ -307,25 +310,25 @@ class ZanataStringDetails {
 
         /* remember the details of the trimming, so we can add the padding back */
         if (containsExactMacth) {
-            this.leftTrimCount = 0;
-            this.rightTrimCount = 0;
-            this.fixedString = originalString;
+            leftTrimCount = 0;
+            rightTrimCount = 0;
+            fixedString = originalString;
         } else if (lTrimMatch) {
-            this.leftTrimCount = originalString.length() - lTrimtString.length();
-            this.rightTrimCount = 0;
-            this.fixedString = lTrimtString;
+            leftTrimCount = originalString.length() - lTrimtString.length();
+            rightTrimCount = 0;
+            fixedString = lTrimtString;
         } else if (rTrimMatch) {
-            this.leftTrimCount = 0;
-            this.rightTrimCount = originalString.length() - rTrimString.length();
-            this.fixedString = rTrimString;
+            leftTrimCount = 0;
+            rightTrimCount = originalString.length() - rTrimString.length();
+            fixedString = rTrimString;
         } else if (trimMatch) {
-            this.leftTrimCount = StringUtilities.ltrimCount(originalString);
-            this.rightTrimCount = StringUtilities.rtrimCount(originalString);
-            this.fixedString = trimString;
+            leftTrimCount = StringUtilities.ltrimCount(originalString);
+            rightTrimCount = StringUtilities.rtrimCount(originalString);
+            fixedString = trimString;
         } else {
-            this.leftTrimCount = 0;
-            this.rightTrimCount = 0;
-            this.fixedString = null;
+            leftTrimCount = 0;
+            rightTrimCount = 0;
+            fixedString = null;
         }
     }
 

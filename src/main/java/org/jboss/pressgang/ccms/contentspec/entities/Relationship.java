@@ -17,10 +17,10 @@ public class Relationship {
     }
 
     public Relationship(final String mainId, final String secondaryId, final RelationshipType type, final String title) {
-        this.mainRelationshipTopicId = mainId;
-        this.secondaryRelationshipTopicId = secondaryId;
+        mainRelationshipTopicId = mainId;
+        secondaryRelationshipTopicId = secondaryId;
         this.type = type;
-        this.relationshipTitle = title;
+        relationshipTitle = title;
     }
 
     public String getSecondaryRelationshipTopicId() {

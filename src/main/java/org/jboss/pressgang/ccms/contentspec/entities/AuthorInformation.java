@@ -13,22 +13,22 @@ public class AuthorInformation {
     }
 
     public AuthorInformation(final Integer authorId, final String firstName, final String lastName, final String email) {
-        this.authorTagId = authorId;
+        authorTagId = authorId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
     }
 
     public int getAuthorId() {
-        return this.authorTagId;
+        return authorTagId;
     }
 
     public void setAuthorId(final int authorId) {
-        this.authorTagId = authorId;
+        authorTagId = authorId;
     }
 
     public String getFirstName() {
-        return this.firstName;
+        return firstName;
     }
 
     public void setFirstName(final String firstName) {
@@ -36,7 +36,7 @@ public class AuthorInformation {
     }
 
     public String getLastName() {
-        return this.lastName;
+        return lastName;
     }
 
     public void setLastName(final String lastName) {
@@ -44,7 +44,7 @@ public class AuthorInformation {
     }
 
     public String getEmail() {
-        return this.email;
+        return email;
     }
 
     public void setEmail(final String email) {

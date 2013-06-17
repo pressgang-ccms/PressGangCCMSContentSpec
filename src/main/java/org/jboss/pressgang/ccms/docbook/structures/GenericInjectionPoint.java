@@ -50,10 +50,10 @@ public class GenericInjectionPoint {
 
     public GenericInjectionPoint(final Pair<Integer, String> categoryIDAndName) {
         this.categoryIDAndName = categoryIDAndName;
-        this.topics = new ArrayList<BaseTopicWrapper<?>>();
+        topics = new ArrayList<BaseTopicWrapper<?>>();
     }
 
     public void addTopic(final BaseTopicWrapper<?> topic) {
-        this.topics.add(topic);
+        topics.add(topic);
     }
 }

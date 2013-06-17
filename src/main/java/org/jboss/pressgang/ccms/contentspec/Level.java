@@ -3,7 +3,6 @@ package org.jboss.pressgang.ccms.contentspec;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
@@ -59,7 +58,6 @@ public class Level extends SpecNode {
      * @param type  The type that the Level is (Chapter, Section, etc...).
      */
     public Level(final String title, final LevelType type) {
-        super();
         this.type = type;
         this.title = title;
     }
@@ -384,9 +382,7 @@ public class Level extends SpecNode {
             return null;
         }
 
-        final ListIterator<Node> it = nodes.listIterator();
-        while (it.hasNext()) {
-            final Node node = it.next();
+        for (final Node node : nodes) {
             if (node instanceof SpecNode) {
                 return (SpecNode) node;
             }

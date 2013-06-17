@@ -18,7 +18,7 @@ public enum LevelType {
     private final int type;
 
     LevelType(final int id) {
-        this.type = id;
+        type = id;
     }
 
     /**
@@ -36,7 +36,7 @@ public enum LevelType {
      * @return The title for the Enumerator.
      */
     public String getTitle() {
-        switch (this.getId()) {
+        switch (getId()) {
             case CommonConstants.CS_NODE_CHAPTER:
                 return CSConstants.CHAPTER;
             case CommonConstants.CS_NODE_SECTION:

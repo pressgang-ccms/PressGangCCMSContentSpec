@@ -48,7 +48,7 @@ public class TextNode extends Node {
         } else if (parent instanceof Level) {
             ((Level) parent).removeChild(this);
         }
-        this.parent = null;
+        parent = null;
     }
 
     @Override

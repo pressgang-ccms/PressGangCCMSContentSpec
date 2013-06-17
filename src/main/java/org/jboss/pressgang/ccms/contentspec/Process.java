@@ -2,7 +2,6 @@ package org.jboss.pressgang.ccms.contentspec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,9 +80,8 @@ public class Process extends Level {
      */
     protected List<String> getTopicIds() {
         LinkedList<String> topicIds = new LinkedList<String>();
-        Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
-        while (i.hasNext()) {
-            topicIds.add(i.next().getKey());
+        for (final Entry<String, SpecTopic> specTopicEntry : topics.entrySet()) {
+            topicIds.add(specTopicEntry.getKey());
         }
         return topicIds;
     }
@@ -91,9 +89,8 @@ public class Process extends Level {
     @Override
     public LinkedList<SpecTopic> getSpecTopics() {
         final LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
-        final Iterator<Entry<String, SpecTopic>> i = topics.entrySet().iterator();
-        while (i.hasNext()) {
-            topicList.add(i.next().getValue());
+        for (final Entry<String, SpecTopic> specTopicEntry : topics.entrySet()) {
+            topicList.add(specTopicEntry.getValue());
         }
         return topicList;
     }

@@ -53,14 +53,14 @@ public class StringToCSNodeCollection {
     }
 
     public StringToCSNodeCollection addNodeCollection(final ArrayList<CSNodeWrapper> nodes) {
-        if (this.nodeCollections == null) this.nodeCollections = new ArrayList<CSNodeWrapper>();
-        this.nodeCollections.addAll(nodes);
+        if (nodeCollections == null) nodeCollections = new ArrayList<CSNodeWrapper>();
+        nodeCollections.addAll(nodes);
         return this;
     }
 
     public StringToCSNodeCollection addNode(final CSNodeWrapper node) {
-        if (this.nodeCollections == null) this.nodeCollections = new ArrayList<CSNodeWrapper>();
-        this.nodeCollections.add(node);
+        if (nodeCollections == null) nodeCollections = new ArrayList<CSNodeWrapper>();
+        nodeCollections.add(node);
         return this;
     }
 }

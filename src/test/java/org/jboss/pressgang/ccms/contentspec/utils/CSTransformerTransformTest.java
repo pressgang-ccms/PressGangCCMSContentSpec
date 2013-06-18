@@ -23,7 +23,6 @@ import java.util.List;
 import net.sf.ipsedixit.annotation.Arbitrary;
 import net.sf.ipsedixit.annotation.ArbitraryString;
 import net.sf.ipsedixit.core.StringType;
-import org.hamcrest.Matchers;
 import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
@@ -106,21 +105,21 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         assertThat(result.getNodes().get(2).getText().equals(("\n")), is(true));
     }
 
-    @Test
-    public void shouldAddTagsFromGivenSpec() throws Exception {
-        // Given a spec that has some tags
-        given(specWrapper.getTags()).willReturn(tagWrapper);
-        given(tag.getName()).willReturn(tagName);
-        given(tag2.getName()).willReturn(tagName2);
-        List<TagWrapper> tags = asList(tag, tag2);
-        given(tagWrapper.getItems()).willReturn(tags);
-
-        // When the spec is transformed
-        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
-
-        // Then the tags should be set on the resulting spec
-        assertThat(result.getTags(), Matchers.contains(tagName, tagName2));
-    }
+//    @Test
+//    public void shouldAddTagsFromGivenSpec() throws Exception {
+//        // Given a spec that has some tags
+//        given(specWrapper.getTags()).willReturn(tagWrapper);
+//        given(tag.getName()).willReturn(tagName);
+//        given(tag2.getName()).willReturn(tagName2);
+//        List<TagWrapper> tags = asList(tag, tag2);
+//        given(tagWrapper.getItems()).willReturn(tags);
+//
+//        // When the spec is transformed
+//        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
+//
+//        // Then the tags should be set on the resulting spec
+//        assertThat(result.getTags(), Matchers.contains(tagName, tagName2));
+//    }
 
     @Test
     public void shouldAddTransformedChildTopic() throws Exception {

@@ -49,6 +49,10 @@ public class KeyValueNode<T> extends Node {
         }
     }
 
+    protected char getSeparator() {
+        return separator;
+    }
+
     @Override
     public ContentSpec getParent() {
         return (ContentSpec) parent;

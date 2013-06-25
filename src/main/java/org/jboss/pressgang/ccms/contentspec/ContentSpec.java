@@ -56,6 +56,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> legalNotice = null;
     private KeyValueNode<String> groupId = null;
     private KeyValueNode<String> artifactId = null;
+    private FileList files = null;
     private Integer revision = null;
     private String locale = null;
 
@@ -1271,6 +1272,34 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the list of additional files needed by the book.
+     *
+     * @return The list of additional Files.
+     */
+    public List<File> getFiles() {
+        return files == null ? null : files.getValue();
+    }
+
+    /**
+     * Sets the list of additional files needed by the book.
+     *
+     * @param files The list of additional Files.
+     */
+    public void setFiles(final List<File> files) {
+        if (files == null && this.files == null) {
+            return;
+        } else if (files == null) {
+            removeChild(this.files);
+            this.files = null;
+        } else if (this.files == null) {
+            this.files = new FileList(CSConstants.FILE_TITLE, files);
+            appendChild(this.files, false);
+        } else {
+            this.files.setValue(files);
+        }
+    }
+
+    /**
      * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
      * to this content spec.
      *
@@ -1321,26 +1350,26 @@ public class ContentSpec extends Node {
      * @throws NumberFormatException Throw if the node needs an Integer but the value is not a valid Number string.
      */
     public void appendKeyValueNode(final KeyValueNode<?> node) throws NumberFormatException {
-        final String uppercaseKey = node.getKey().toUpperCase(Locale.ENGLISH);
+        final String key = node.getKey();
         final Object value = node.getValue();
-        if (uppercaseKey.equals(CSConstants.TITLE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        if (key.equalsIgnoreCase(CSConstants.TITLE_TITLE) && value instanceof String) {
             setTitle((String) value);
-        } else if (uppercaseKey.equals(CSConstants.ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.ID_TITLE) && value instanceof String) {
             setId(Integer.parseInt((String) value));
-        } else if (uppercaseKey.equals(CSConstants.CHECKSUM_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.CHECKSUM_TITLE) && value instanceof String) {
             setChecksum((String) value);
-        } else if (uppercaseKey.equals(CSConstants.PRODUCT_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.PRODUCT_TITLE) && value instanceof String) {
             setProduct((String) value);
-        } else if (uppercaseKey.equals(CSConstants.VERSION_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.VERSION_TITLE) && value instanceof String) {
             setVersion((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BOOK_TYPE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE) && value instanceof String) {
             setBookType(BookType.getBookType((String) value));
-        } else if (uppercaseKey.equals(CSConstants.EDITION_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.EDITION_TITLE) && value instanceof String) {
             setEdition((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BOOK_VERSION_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BOOK_VERSION_TITLE) && value instanceof String) {
             setBookVersion((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
-                instanceof Boolean)) {
+        } else if (key.equalsIgnoreCase(
+                CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value instanceof Boolean)) {
             if (value instanceof Boolean) {
                 setInjectBugLinks((Boolean) value);
             } else {
@@ -1350,16 +1379,15 @@ public class ContentSpec extends Node {
                     setInjectBugLinks(Boolean.parseBoolean((String) value));
                 }
             }
-        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_COMPONENT_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
             setBugzillaComponent((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_PRODUCT_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_PRODUCT_TITLE) && value instanceof String) {
             setBugzillaProduct((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_VERSION_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_VERSION_TITLE) && value instanceof String) {
             setBugzillaVersion((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_URL_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_URL_TITLE) && value instanceof String) {
             setBugzillaURL((String) value);
-        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_ASSIGNEE_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
-                instanceof Boolean)) {
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
             if (value instanceof Boolean) {
                 setInjectBugzillaAssignee((Boolean) value);
             } else {
@@ -1369,23 +1397,22 @@ public class ContentSpec extends Node {
                     setInjectBugzillaAssignee(Boolean.parseBoolean((String) value));
                 }
             }
-        } else if (uppercaseKey.equals(CSConstants.INLINE_INJECTION_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
-                instanceof InjectionOptions)) {
+        } else if (key.equalsIgnoreCase(
+                CSConstants.INLINE_INJECTION_TITLE) && (value instanceof String || value instanceof InjectionOptions)) {
             if (value instanceof String) {
                 setInjectionOptions(new InjectionOptions((String) value));
             } else {
                 setInjectionOptions((InjectionOptions) value);
             }
-        } else if (uppercaseKey.equals(CSConstants.DTD_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.DTD_TITLE) && value instanceof String) {
             setDtd((String) value);
-        } else if (uppercaseKey.equals(CSConstants.OUTPUT_STYLE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
             setOutputStyle((String) value);
-        } else if (uppercaseKey.equals(CSConstants.PUBSNUMBER_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.PUBSNUMBER_TITLE) && value instanceof String) {
             setPubsNumber(Integer.parseInt((String) value));
-        } else if (uppercaseKey.equals(CSConstants.PUBLICAN_CFG_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.PUBLICAN_CFG_TITLE) && value instanceof String) {
             setPublicanCfg((String) value);
-        } else if (uppercaseKey.equals(CSConstants.SURVEY_LINK_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value
-                instanceof Boolean)) {
+        } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
             if (value instanceof Boolean) {
                 setInjectSurveyLinks((Boolean) value);
             } else {
@@ -1395,26 +1422,29 @@ public class ContentSpec extends Node {
                     setInjectSurveyLinks(Boolean.parseBoolean((String) value));
                 }
             }
-        } else if (uppercaseKey.equals(CSConstants.BRAND_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.BRAND_TITLE) && value instanceof String) {
             setBrand((String) value);
-        } else if (uppercaseKey.equals(CSConstants.ABSTRACT_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) && value instanceof String) {
             setAbstract((String) value);
-        } else if (uppercaseKey.equals(CSConstants.COPYRIGHT_HOLDER_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
             setCopyrightHolder((String) value);
-        } else if (uppercaseKey.equals(CSConstants.COPYRIGHT_YEAR_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_YEAR_TITLE) && value instanceof String) {
             setCopyrightYear((String) value);
-        } else if (uppercaseKey.equals(CSConstants.SUBTITLE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.SUBTITLE_TITLE) && value instanceof String) {
             setSubtitle((String) value);
-        } else if (uppercaseKey.equals(CSConstants.REV_HISTORY_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CSConstants.REV_HISTORY_TITLE) && value instanceof SpecTopic) {
             setRevisionHistory((SpecTopic) value);
-        } else if (uppercaseKey.equals(CSConstants.FEEDBACK_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CSConstants.FEEDBACK_TITLE) && value instanceof SpecTopic) {
             setFeedback((SpecTopic) value);
-        } else if (uppercaseKey.equals(CSConstants.LEGAL_NOTICE_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CSConstants.LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
             setLegalNotice((SpecTopic) value);
-        } else if (uppercaseKey.equals(CSConstants.MAVEN_ARTIFACT_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
             setArtifactId((String) value);
-        } else if (uppercaseKey.equals(CSConstants.MAVEN_GROUP_ID_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CSConstants.MAVEN_GROUP_ID_TITLE) && value instanceof String) {
             setGroupId((String) value);
+        } else if ((key.equalsIgnoreCase(CSConstants.FILE_TITLE) || key.equalsIgnoreCase(
+                CSConstants.FILE_SHORT_TITLE)) && node instanceof FileList) {
+            setFiles((List<File>) value);
         } else {
             appendChild(node, false);
         }

@@ -148,6 +148,8 @@ public class CSConstants {
     public static final String BUGZILLA_ASSIGNEE_TITLE = "BZ Assignee";
     public static final String MAVEN_GROUP_ID_TITLE = "GroupId";
     public static final String MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";
+    public static final String FILE_TITLE = "Additional Files";
+    public static final String FILE_SHORT_TITLE = "Files";
 
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";

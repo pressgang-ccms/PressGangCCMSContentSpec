@@ -145,7 +145,7 @@ public class ContentSpec extends Node {
      * @return The version of the product or an empty string if the version is null.
      */
     public String getVersion() {
-        return version == null ? "" : version.getValue();
+        return version == null ? null : version.getValue();
     }
 
     /**

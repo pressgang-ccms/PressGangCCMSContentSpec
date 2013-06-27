@@ -42,6 +42,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaProduct = null;
     private KeyValueNode<String> bugzillaComponent = null;
     private KeyValueNode<String> bugzillaVersion = null;
+    private KeyValueNode<String> bugzillaKeywords = null;
     private KeyValueNode<String> bugzillaURL = null;
     private KeyValueNode<Boolean> injectBugLinks = null;
     private KeyValueNode<Boolean> injectBugzillaAssignee = null;
@@ -1127,6 +1128,34 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Get the Bugzilla Keywords to be applied during building.
+     *
+     * @return The keywords to be set in bugzilla.
+     */
+    public String getBugzillaKeywords() {
+        return bugzillaKeywords == null ? null : bugzillaKeywords.getValue().toString();
+    }
+
+    /**
+     * Set the Bugzilla Keywords to be applied during building.
+     *
+     * @param bugzillaKeywords The keywords to be set in bugzilla.
+     */
+    public void setBugzillaKeywords(final String bugzillaKeywords) {
+        if (bugzillaKeywords == null && this.bugzillaKeywords == null) {
+            return;
+        } else if (bugzillaKeywords == null) {
+            removeChild(this.bugzillaKeywords);
+            this.bugzillaKeywords = null;
+        } else if (this.bugzillaKeywords == null) {
+            this.bugzillaKeywords = new KeyValueNode<String>(CSConstants.BUGZILLA_KEYWORDS_TITLE, bugzillaKeywords);
+            appendChild(this.bugzillaKeywords, false);
+        } else {
+            this.bugzillaVersion.setValue(bugzillaKeywords);
+        }
+    }
+
+    /**
      * Get the URL component that is used in the .ent file when building the Docbook files.
      *
      * @return The BZURL component for the content specification.
@@ -1216,6 +1245,7 @@ public class ContentSpec extends Node {
         bzOption.setUrlComponent(getBugzillaURL());
         bzOption.setBugzillaLinksEnabled(isInjectBugLinks());
         bzOption.setInjectAssignee(isInjectBugzillaAssignee());
+        bzOption.setKeywords(getBugzillaKeywords());
         return bzOption;
     }
 
@@ -1445,6 +1475,8 @@ public class ContentSpec extends Node {
             setBugzillaProduct((String) value);
         } else if (uppercaseKey.equals(CSConstants.BUGZILLA_VERSION_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
             setBugzillaVersion((String) value);
+        } else if (uppercaseKey.equals(CSConstants.BUGZILLA_KEYWORDS_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
+            setBugzillaKeywords((String) value);
         } else if (uppercaseKey.equals(CSConstants.BUGZILLA_URL_TITLE.toUpperCase(Locale.ENGLISH)) && value instanceof String) {
             setBugzillaURL((String) value);
         } else if (uppercaseKey.equals(CSConstants.BUGZILLA_ASSIGNEE_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value

@@ -314,6 +314,11 @@ public class DocbookXMLPreProcessor {
                     bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
                     bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), ENCODING);
                 }
+
+                if (bzOptions.getKeywords() != null) {
+                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
+                    bugzillaURLComponents += "keywords=" + URLEncoder.encode(bzOptions.getKeywords(), ENCODING);
+                }
             }
             // we need at least a product
             else if (bugzillaProduct != null) {

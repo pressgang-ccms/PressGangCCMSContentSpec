@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.docbook.structures;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,12 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         NO_CONTENT, INVALID_INJECTION, INVALID_CONTENT, UNTRANSLATED,
         NOT_PUSHED_FOR_TRANSLATION, INCOMPLETE_TRANSLATION, INVALID_IMAGES, OLD_TRANSLATION, OLD_UNTRANSLATED, FUZZY_TRANSLATION
     }
+
+    public static final List<ErrorType> TRANSLATION_ERROR_TYPES = Arrays.asList(ErrorType.OLD_TRANSLATION, ErrorType.OLD_UNTRANSLATED,
+            ErrorType.INCOMPLETE_TRANSLATION, ErrorType.NOT_PUSHED_FOR_TRANSLATION, ErrorType.FUZZY_TRANSLATION, ErrorType.UNTRANSLATED);
+
+    public static final List<ErrorType> BASIC_ERROR_TYPES = Arrays.asList(ErrorType.NO_CONTENT, ErrorType.INVALID_IMAGES,
+            ErrorType.INVALID_INJECTION, ErrorType.INVALID_CONTENT);
 
     private Map<String, List<TopicErrorData<T>>> errors = new HashMap<String, List<TopicErrorData<T>>>();
 
@@ -88,7 +95,7 @@ public class TopicErrorDatabase<T extends RESTBaseTopicV1<T, ?, ?>> {
         return false;
     }
 
-    private TopicErrorData<T> getErrorData(final T topic) {
+    public TopicErrorData<T> getErrorData(final T topic) {
         for (final String locale : errors.keySet())
             for (final TopicErrorData<T> topicErrorData : errors.get(locale)) {
                 if (ComponentBaseTopicV1.returnIsDummyTopic(topic)) {

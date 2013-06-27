@@ -56,4 +56,34 @@ public class TopicErrorData<T extends RESTBaseTopicV1<T, ?, ?>> {
     public boolean hasErrorType(final ErrorType errorType) {
         return errorTypes.contains(errorType);
     }
+
+    /**
+     * Checks to see if the Topic has any translation based errors set against it.
+     *
+     * @return True if there are any errors for the Topic, that are of a translation type.
+     */
+    public boolean hasTranslationErrors() {
+        for (final ErrorType type : errorTypes) {
+            if (TopicErrorDatabase.TRANSLATION_ERROR_TYPES.contains(type)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks to see if the Topic has any regular errors set against it.
+     *
+     * @return True if there are any errors for the Topic, that are of a basic/normal type.
+     */
+    public boolean hasNormalErrors() {
+        for (final ErrorType type : errorTypes) {
+            if (TopicErrorDatabase.BASIC_ERROR_TYPES.contains(type)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

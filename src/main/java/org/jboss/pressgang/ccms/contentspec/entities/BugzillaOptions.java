@@ -5,6 +5,7 @@ public class BugzillaOptions {
     private String product = null;
     private String component = null;
     private String version = null;
+    private String keywords = null;
     private String urlComponent = null;
     private boolean injectLinks = true;
     private boolean injectAssignee = true;
@@ -88,5 +89,13 @@ public class BugzillaOptions {
 
     public void setInjectAssignee(boolean injectAssignee) {
         this.injectAssignee = injectAssignee;
+    }
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
     }
 }

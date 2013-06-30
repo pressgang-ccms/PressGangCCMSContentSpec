@@ -136,6 +136,7 @@ public class CSConstants {
     public static final String BUGZILLA_PRODUCT_TITLE = "BZProduct";
     public static final String BUGZILLA_COMPONENT_TITLE = "BZComponent";
     public static final String BUGZILLA_VERSION_TITLE = "BZVersion";
+    public static final String BUGZILLA_KEYWORDS_TITLE = "BZKeywords";
     public static final String BUGZILLA_URL_TITLE = "BZURL";
     public static final String SURVEY_LINK_TITLE = "Survey Links";
     public static final String BOOK_TYPE_TITLE = "Type";

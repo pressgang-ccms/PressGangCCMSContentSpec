@@ -85,7 +85,7 @@ public class TopicErrorDatabase {
         return false;
     }
 
-    private TopicErrorData getErrorData(final BaseTopicWrapper<?> topic) {
+    public TopicErrorData getErrorData(final BaseTopicWrapper<?> topic) {
         for (final String locale : errors.keySet())
             for (final TopicErrorData topicErrorData : errors.get(locale)) {
                 if (topicErrorData.getTopic().getTopicId().equals(topic.getTopicId())) return topicErrorData;

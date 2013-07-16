@@ -394,15 +394,15 @@ public abstract class SpecNode extends Node {
             }
         }
 
-        if (assignedWriter != null) {
+        if (assignedWriter != null && !assignedWriter.trim().isEmpty()) {
             vars.add("Writer = " + assignedWriter);
         }
 
-        if (description != null) {
+        if (description != null && !description.trim().isEmpty()) {
             vars.add("Description = " + description);
         }
 
-        if (condition != null) {
+        if (condition != null && !condition.trim().isEmpty()) {
             vars.add("condition = " + condition);
         }
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");

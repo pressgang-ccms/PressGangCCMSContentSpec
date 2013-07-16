@@ -1,7 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -35,8 +34,6 @@ public class TranslationUtilities {
         translatedTopic.setTopicId(topic.getId());
         translatedTopic.setTopicRevision(topic.getRevision());
         translatedTopic.setXml(topic.getXml());
-        translatedTopic.setHtml(topic.getHtml());
-        translatedTopic.setHtmlUpdated(new Date());
         if (translatedCSNode != null) {
             translatedTopic.setTranslatedCSNode(translatedCSNode);
         }

@@ -24,8 +24,8 @@ public class TopicErrorDatabase {
     public static final List<ErrorType> TRANSLATION_ERROR_TYPES = Arrays.asList(ErrorType.OLD_TRANSLATION, ErrorType.OLD_UNTRANSLATED,
             ErrorType.INCOMPLETE_TRANSLATION, ErrorType.NOT_PUSHED_FOR_TRANSLATION, ErrorType.FUZZY_TRANSLATION, ErrorType.UNTRANSLATED);
 
-    public static final List<ErrorType> BASIC_ERROR_TYPES = Arrays.asList(ErrorType.NO_CONTENT, ErrorType.INVALID_IMAGES,
-            ErrorType.INVALID_INJECTION, ErrorType.INVALID_CONTENT);
+    public static final List<ErrorType> FATAL_ERROR_TYPES = Arrays.asList(ErrorType.NO_CONTENT, ErrorType.INVALID_INJECTION,
+            ErrorType.INVALID_CONTENT);
 
     private Map<String, List<TopicErrorData>> errors = new HashMap<String, List<TopicErrorData>>();
 

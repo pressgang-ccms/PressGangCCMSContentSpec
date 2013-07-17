@@ -77,9 +77,9 @@ public class TopicErrorData<T extends RESTBaseTopicV1<T, ?, ?>> {
      *
      * @return True if there are any errors for the Topic, that are of a basic/normal type.
      */
-    public boolean hasNormalErrors() {
+    public boolean hasFatalErrors() {
         for (final ErrorType type : errorTypes) {
-            if (TopicErrorDatabase.BASIC_ERROR_TYPES.contains(type)) {
+            if (TopicErrorDatabase.FATAL_ERROR_TYPES.contains(type)) {
                 return true;
             }
         }

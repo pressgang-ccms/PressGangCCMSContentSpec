@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,10 @@ public class CSTransformer {
 
             // Add the child nodes to the content spec now that they are in the right order.
             boolean addToBaseLevel = false;
-            for (final Map.Entry<CSNodeWrapper, Node> entry : sortedMap.entrySet()) {
+            final Iterator<Map.Entry<CSNodeWrapper, Node>> iter = sortedMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                final Map.Entry<CSNodeWrapper, Node> entry = iter.next();
+
                 // If a level or spec topic is found then start adding to the base level instead of the content spec
                 if ((entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) && !addToBaseLevel) {
                     addToBaseLevel = true;
@@ -120,7 +124,7 @@ public class CSTransformer {
                 if (addToBaseLevel) {
                     contentSpec.getBaseLevel().appendChild(entry.getValue());
                     // Add a new line to separate chapters/parts
-                    if (entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) {
+                    if ((entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) && iter.hasNext()) {
                         contentSpec.getBaseLevel().appendChild(new TextNode("\n"));
                     }
                 } else {

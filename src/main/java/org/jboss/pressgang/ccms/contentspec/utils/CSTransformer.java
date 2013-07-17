@@ -16,6 +16,7 @@ import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.Part;
+import org.jboss.pressgang.ccms.contentspec.Preface;
 import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -187,6 +188,8 @@ public class CSTransformer {
             level = new Process(node.getTitle());
         } else if (node.getNodeType() == CommonConstants.CS_NODE_SECTION) {
             level = new Section(node.getTitle());
+        } else if (node.getNodeType() == CommonConstants.CS_NODE_PREFACE) {
+            level = new Preface(node.getTitle());
         } else {
             throw new IllegalArgumentException("The passed node is not a Level");
         }
@@ -206,6 +209,10 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC) {
+                    final SpecTopic innerTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, specTopicMap, targetTopics,
+                            relationshipFromNodes);
+                    level.setInnerTopic(innerTopic);
                 } else {
                     final Level childLevel = transformLevel(childNode, nodes, specTopicMap, targetTopics, relationshipFromNodes);
                     levelNodes.put(childNode, childLevel);

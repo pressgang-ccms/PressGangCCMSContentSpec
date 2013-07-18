@@ -55,6 +55,7 @@ public class TestUtil {
         levelTypeMapping.put(CommonConstants.CS_NODE_CHAPTER, Chapter.class);
         levelTypeMapping.put(CommonConstants.CS_NODE_PART, Part.class);
         levelTypeMapping.put(CommonConstants.CS_NODE_PROCESS, Process.class);
+        levelTypeMapping.put(CommonConstants.CS_NODE_PREFACE, Preface.class);
         levelTypeMapping.put(CommonConstants.CS_NODE_SECTION, Section.class);
         return levelTypeMapping;
     }

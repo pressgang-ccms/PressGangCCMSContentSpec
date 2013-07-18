@@ -26,6 +26,7 @@ import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
@@ -176,7 +177,8 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         // Given a node with a valid level type
         given(nodeWrapper.getNodeType()).willReturn(getRandomLevelType());
         // And a child level that is a Chapter or Part
-        Integer childLevelType = selectRandomListItem(asList(CommonConstants.CS_NODE_PART, CommonConstants.CS_NODE_CHAPTER));
+        Integer childLevelType = selectRandomListItem(asList(CommonConstants.CS_NODE_PART, CommonConstants.CS_NODE_CHAPTER,
+                CommonConstants.CS_NODE_APPENDIX, CommonConstants.CS_NODE_PREFACE));
         CSNodeWrapper levelNode = createValidLevelMock(childLevelType);
         setChildNodes(asList(levelNode));
         // And appropriate values for sorting
@@ -186,10 +188,8 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         Level result = CSTransformer.transformLevel(nodeWrapper, nodes, specTopicMap, targetTopics, relationshipFromNodes);
 
         // Then the level is transformed and added as a level child
-        // And a textnode is added containing a newline character
-        assertThat(result.getChildNodes().size(), is(2));
+        assertThat(result.getChildNodes().size(), is(1));
         assertThat(result.getChildNodes().get(0).getClass().equals(getLevelTypeMapping().get(childLevelType)), is(true));
-        assertThat(result.getChildNodes().get(1).getText(), is("\n"));
     }
 
     @Test
@@ -215,7 +215,8 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         // And be in the order expected
         assertThat(result.getChildNodes().get(0).getClass().equals(SpecTopic.class), is(true));
         assertThat(result.getChildNodes().get(1).getClass().equals(Appendix.class), is(true));
-        assertThat(result.getChildNodes().get(2).getClass().equals(Comment.class), is(true));
+        assertThat(result.getChildNodes().get(2).getClass().equals(TextNode.class), is(true));
+        assertThat(result.getChildNodes().get(3).getClass().equals(Comment.class), is(true));
     }
 
     void setChildNodes(List<CSNodeWrapper> childItems) {

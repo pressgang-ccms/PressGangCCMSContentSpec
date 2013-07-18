@@ -227,7 +227,8 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         // And be in the order expected
         assertThat(result.getNodes().get(1).getClass().equals(Comment.class), is(true));
         assertThat(result.getChildNodes().get(0).getClass().equals(Appendix.class), is(true));
-        assertThat(result.getChildNodes().get(1).getClass().equals(SpecTopic.class), is(true));
+        assertThat(result.getChildNodes().get(1).getClass().equals(TextNode.class), is(true));
+        assertThat(result.getChildNodes().get(2).getClass().equals(SpecTopic.class), is(true));
     }
 
     @Test

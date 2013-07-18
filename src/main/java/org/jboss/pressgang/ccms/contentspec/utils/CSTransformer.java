@@ -124,7 +124,7 @@ public class CSTransformer {
                 if (addToBaseLevel) {
                     contentSpec.getBaseLevel().appendChild(entry.getValue());
                     // Add a new line to separate chapters/parts
-                    if ((entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) && iter.hasNext()) {
+                    if (isNodeASeparatorLevel(entry.getValue()) && iter.hasNext()) {
                         contentSpec.getBaseLevel().appendChild(new TextNode("\n"));
                     }
                 } else {
@@ -227,10 +227,13 @@ public class CSTransformer {
             final LinkedHashMap<CSNodeWrapper, Node> sortedMap = CSNodeSorter.sortMap(levelNodes);
 
             // Add the child nodes to the level now that they are in the right order.
-            for (final Map.Entry<CSNodeWrapper, Node> entry : sortedMap.entrySet()) {
+            final Iterator<Map.Entry<CSNodeWrapper, Node>> iter = sortedMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                final Map.Entry<CSNodeWrapper, Node> entry = iter.next();
+
                 level.appendChild(entry.getValue());
                 // Add a new line to separate chapters/parts
-                if (entry.getValue() instanceof Chapter || entry.getValue() instanceof Part) {
+                if (isNodeASeparatorLevel(entry.getValue()) && iter.hasNext()) {
                     level.appendChild(new TextNode("\n"));
                 }
             }
@@ -384,5 +387,9 @@ public class CSTransformer {
         for (final Process process : processes) {
             process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class));
         }
+    }
+
+    protected static boolean isNodeASeparatorLevel(final Node node) {
+        return node instanceof Chapter || node instanceof Part || node instanceof Appendix || node instanceof Preface;
     }
 }

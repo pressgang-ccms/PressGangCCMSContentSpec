@@ -28,7 +28,8 @@ import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 
 public class ContentSpecUtilities {
-    public static final Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)");
+    public static final Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)(\r)?\n");
+    public static final Pattern CS_ID_PATTERN = Pattern.compile("ID[ ]*=[ ]*[0-9]+(\r)?\n");
     private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(
             new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
                     CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
@@ -60,6 +61,38 @@ public class ContentSpecUtilities {
         }
 
         return null;
+    }
+
+    public static String removeChecksumAndId(final String contentSpecString) {
+        String retValue = contentSpecString;
+
+        Matcher matcher = CS_CHECKSUM_PATTERN.matcher(retValue);
+        if (matcher.find()) {
+            retValue = matcher.replaceFirst("");
+        }
+
+        matcher = CS_ID_PATTERN.matcher(retValue);
+        if (matcher.find()) {
+            retValue = matcher.replaceFirst("");
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Replaces the checksum of a Content Spec with a new checksum value
+     *
+     * @param contentSpecString The content spec to replace the checksum for.
+     * @param checksum The new checksum to be set in the Content Spec.
+     * @return The fixed content spec string.
+     */
+    public static String replaceChecksum(final String contentSpecString, final String checksum) {
+        Matcher matcher = CS_CHECKSUM_PATTERN.matcher(contentSpecString);
+        if (matcher.find()) {
+            return matcher.replaceFirst("CHECKSUM=" + checksum + "\n");
+        }
+
+        return contentSpecString;
     }
 
     /**

@@ -137,6 +137,7 @@ public class CSConstants {
     public static final String BUGZILLA_URL_TITLE = "BZURL";
     public static final String SURVEY_LINK_TITLE = "Survey Links";
     public static final String BOOK_TYPE_TITLE = "Type";
+    public static final String BRAND_LOGO_TITLE = "Brand Logo";
     public static final String PUBLICAN_CFG_TITLE = "publican.cfg";
     public static final String INLINE_INJECTION_TITLE = "Inline Injection";
     public static final String DTD_TITLE = "DTD";

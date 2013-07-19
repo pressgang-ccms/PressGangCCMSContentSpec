@@ -25,12 +25,10 @@ import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
-import org.jboss.pressgang.ccms.utils.structures.Pair;
 import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -673,7 +671,12 @@ public class DocbookXMLPreProcessor {
 
             // Create the title link
             final Element titleXrefItem = doc.createElement("link");
-            titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+            final Level level = (Level) topic.getParent();
+            if (level.getTranslatedTitle() != null && !level.getTranslatedTitle().isEmpty()) {
+                titleXrefItem.setTextContent(level.getTranslatedTitle());
+            } else {
+                titleXrefItem.setTextContent(level.getTitle());
+            }
             titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
             titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_PREVIOUS_TITLE_LINK);
             linkTitleEle.appendChild(titleXrefItem);
@@ -753,7 +756,12 @@ public class DocbookXMLPreProcessor {
 
         // Create the title link
         final Element titleXrefItem = doc.createElement("link");
-        titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+        final Level level = (Level) topic.getParent();
+        if (level.getTranslatedTitle() != null && !level.getTranslatedTitle().isEmpty()) {
+            titleXrefItem.setTextContent(level.getTranslatedTitle());
+        } else {
+            titleXrefItem.setTextContent(level.getTitle());
+        }
         titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
         titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_NEXT_TITLE_LINK);
         linkTitleEle.appendChild(titleXrefItem);

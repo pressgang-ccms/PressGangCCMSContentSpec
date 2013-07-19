@@ -52,6 +52,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<Boolean> allowDuplicateTopics = null;
     private KeyValueNode<Boolean> allowEmptyLevels = null;
     private KeyValueNode<BookType> bookType = null;
+    private KeyValueNode<String> brandLogo = null;
     private KeyValueNode<SpecTopic> revisionHistory = null;
     private KeyValueNode<SpecTopic> feedback = null;
     private KeyValueNode<SpecTopic> legalNotice = null;
@@ -598,6 +599,34 @@ public class ContentSpec extends Node {
             appendChild(this.bookType, false);
         } else {
             this.bookType.setValue(bookType);
+        }
+    }
+
+    /**
+     * Gets the path of the Brand Logo for the Content Specification.
+     *
+     * @return The path to the Brand Logo.
+     */
+    public String getBrandLogo() {
+        return brandLogo == null ? "" : brandLogo.getValue();
+    }
+
+    /**
+     * Sets the path of the Brand Logo for the Content Specification.
+     *
+     * @param brandLogo The path to the Brand Logo.
+     */
+    public void setBrandLogo(final String brandLogo) {
+        if (brandLogo == null && this.brandLogo == null) {
+            return;
+        } else if (brandLogo == null) {
+            removeChild(this.brandLogo);
+            this.brandLogo = null;
+        } else if (this.brandLogo == null) {
+            this.brandLogo = new KeyValueNode<String>(CSConstants.BRAND_LOGO_TITLE, brandLogo);
+            appendChild(this.brandLogo, false);
+        } else {
+            this.brandLogo.setValue(brandLogo);
         }
     }
 
@@ -1474,6 +1503,8 @@ public class ContentSpec extends Node {
             setArtifactId((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.MAVEN_GROUP_ID_TITLE) && value instanceof String) {
             setGroupId((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.BRAND_LOGO_TITLE) && value instanceof String) {
+            setBrandLogo((String) value);
         } else if ((key.equalsIgnoreCase(CSConstants.FILE_TITLE) || key.equalsIgnoreCase(
                 CSConstants.FILE_SHORT_TITLE)) && node instanceof FileList) {
             setFiles((List<File>) value);

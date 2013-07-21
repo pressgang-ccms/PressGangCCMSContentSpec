@@ -695,7 +695,12 @@ public class DocbookXMLPreProcessor {
 
             // Create the title link
             final Element titleXrefItem = doc.createElement("link");
-            titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+            final Level level = (Level) topic.getParent();
+            if (level.getTranslatedTitle() != null && !level.getTranslatedTitle().isEmpty()) {
+                titleXrefItem.setTextContent(level.getTranslatedTitle());
+            } else {
+                titleXrefItem.setTextContent(level.getTitle());
+            }
             titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
             titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_PREVIOUS_TITLE_LINK);
             linkTitleEle.appendChild(titleXrefItem);
@@ -775,7 +780,12 @@ public class DocbookXMLPreProcessor {
 
         // Create the title link
         final Element titleXrefItem = doc.createElement("link");
-        titleXrefItem.setTextContent(((Level) topic.getParent()).getTitle());
+        final Level level = (Level) topic.getParent();
+        if (level.getTranslatedTitle() != null && !level.getTranslatedTitle().isEmpty()) {
+            titleXrefItem.setTextContent(level.getTranslatedTitle());
+        } else {
+            titleXrefItem.setTextContent(level.getTitle());
+        }
         titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
         titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_NEXT_TITLE_LINK);
         linkTitleEle.appendChild(titleXrefItem);

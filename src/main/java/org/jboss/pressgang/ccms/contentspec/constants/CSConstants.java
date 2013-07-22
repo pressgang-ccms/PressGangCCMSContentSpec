@@ -128,6 +128,7 @@ public class CSConstants {
     public static final String PUBSNUMBER_TITLE = "Pubsnumber";
     public static final String PRODUCT_TITLE = "Product";
     public static final String ABSTRACT_TITLE = "Abstract";
+    public static final String ABSTRACT_ALTERNATE_TITLE = "Description";
     public static final String COPYRIGHT_HOLDER_TITLE = "Copyright Holder";
     public static final String COPYRIGHT_YEAR_TITLE = "Copyright Year";
     public static final String VERSION_TITLE = "Version";

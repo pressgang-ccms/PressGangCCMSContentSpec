@@ -1485,7 +1485,8 @@ public class ContentSpec extends Node {
             }
         } else if (key.equalsIgnoreCase(CSConstants.BRAND_TITLE) && value instanceof String) {
             setBrand((String) value);
-        } else if (key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) && value instanceof String) {
+        } else if ((key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) || key.equalsIgnoreCase(CSConstants.ABSTRACT_ALTERNATE_TITLE)) && value instanceof
+                String) {
             setAbstract((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
             setCopyrightHolder((String) value);

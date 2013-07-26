@@ -12,26 +12,34 @@ public class TemplateConstants {
             "Abstract=\n" +
             "Product =\n" +
             "Version =\n" +
-            "Edition =\n" +
             "DTD = Docbook 4.5\n" +
             "Copyright Holder=\n" +
             "\n" +
             "# The commented fields below are optional\n" +
             "\n" +
+            "# Edition =\n" +
             "# Brand =\n" +
+            "# Type = \n" +
             "# publican.cfg = [ custom content to append to publican.cfg can be\n" +
             "multiline ]\n" +
             "# pubsnumber =\n" +
-            "# Debug = [0|1|2]\n" +
             "\n" +
-            "# Bug Links = On\n" +
-            "# BZProduct =\n" +
-            "# BZComponent =\n" +
-            "# BZVersion =\n" +
-            "# BZURL =\n" +
-            "# BZ Assignee = On\n" +
+            "# Bug Links = Off\n" +
+            "# BZProduct = \n" +
+            "# BZComponent = \n" +
+            "# BZVersion = \n" +
+            "# BZURL = \n" +
+            "# Uncomment this to disable automatic assignment of bugs to the\n" +
+            "# topic's assigned author\n" +
+            "# BZ Assignee = Off\n" +
             "\n" +
-            "# Output Style =\n" +
+            "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
+            "# a custom Revision History, Feedback, or Legal Notice.\n" +
+            "# Feedback = [XXXX]\n" +
+            "# Legal Notice = [XXXX]\n" +
+            "# Revision History = [XXXX]\n" +
+            "# (or this format, to create a new one, this works for all types)\n" +
+            "# Revision History = [N, Revision History]\n" +
             "\n" +
             "# Indentation is meaningful. Use 2 spaces.\n" +
             "\n" +
@@ -181,31 +189,39 @@ public class TemplateConstants {
             "# Lines that commence with the # symbol are comments\n" +
             "\n" +
             "# The fields below are mandatory\n" +
-            "Title =\n" +
-            "Subtitle =\n" +
-            "Abstract=\n" +
-            "Product =\n" +
-            "Version =\n" +
-            "Edition =\n" +
+            "Title = \n" +
+            "Subtitle = \n" +
+            "Abstract= \n" +
+            "Product = \n" +
+            "Version = \n" +
             "DTD = Docbook 4.5\n" +
-            "Copyright Holder=\n" +
+            "Copyright Holder= \n" +
             "\n" +
             "# The commented fields below are optional\n" +
             "\n" +
-            "# Brand =\n" +
+            "# Edition = \n" +
+            "# Brand = \n" +
+            "# Type = \n" +
             "# publican.cfg = [ custom content to append to publican.cfg can be\n" +
             "multiline ]\n" +
-            "# pubsnumber =\n" +
-            "# Debug = [0|1|2]\n" +
+            "# pubsnumber = \n" +
             "\n" +
-            "# Bug Links = On\n" +
-            "# BZProduct =\n" +
-            "# BZComponent =\n" +
-            "# BZVersion =\n" +
-            "# BZURL =\n" +
-            "# BZ Assignee = On\n" +
+            "# Bug Links = Off\n" +
+            "# BZProduct = \n" +
+            "# BZComponent = \n" +
+            "# BZVersion = \n" +
+            "# BZURL = \n" +
+            "# Uncomment this to disable automatic assignment of bugs to the\n" +
+            "# topic's assigned author\n" +
+            "# BZ Assignee = Off\n" +
             "\n" +
-            "# Output Style =\n" +
+            "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
+            "# a custom Revision History, Feedback, or Legal Notice.\n" +
+            "# Feedback = [XXXX]\n" +
+            "# Legal Notice = [XXXX]\n" +
+            "# Revision History = [XXXX]\n" +
+            "# (or this format, to create a new one, this works for all types)\n" +
+            "# Revision History = [N, Revision History]\n" +
             "\n" +
             "# Indentation is meaningful. Use 2 spaces.\n";
 

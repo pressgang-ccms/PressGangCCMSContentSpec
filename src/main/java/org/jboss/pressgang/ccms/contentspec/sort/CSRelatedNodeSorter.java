@@ -13,6 +13,8 @@ public class CSRelatedNodeSorter implements Comparator<CSRelatedNodeWrapper> {
         } else if (relatedNode2.getRelationshipSort() == null) {
             return 0;
         } else if (relatedNode.getRelationshipSort() > relatedNode2.getRelationshipSort()) {
+            return 1;
+        } else if (relatedNode.getRelationshipSort() < relatedNode2.getRelationshipSort()) {
             return -1;
         } else {
             return 0;

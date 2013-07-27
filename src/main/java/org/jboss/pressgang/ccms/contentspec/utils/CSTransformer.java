@@ -320,6 +320,8 @@ public class CSTransformer {
             throw new IllegalArgumentException("The passed node is not a Comment");
         }
 
+        comment.setUniqueId(node.getId().toString());
+
         return comment;
     }
 

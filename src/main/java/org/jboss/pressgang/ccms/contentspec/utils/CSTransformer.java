@@ -34,6 +34,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 
 public class CSTransformer {
 
@@ -66,15 +67,14 @@ public class CSTransformer {
             contentSpec.getBaseLevel().setConditionStatement(spec.getCondition());
         }
 
-        // NOTE: Tags that are applied to a Content Spec have no representation yet, so add this later
-        // Add all of the tags
-//        if (spec.getTags() != null && spec.getTags().getItems() != null) {
-//            final List<String> tags = new ArrayList<String>();
-//            for (final TagWrapper tag : spec.getTags().getItems()) {
-//                tags.add(tag.getName());
-//            }
-//            contentSpec.setTags(tags);
-//        }
+        // Add all of the book tags
+        if (spec.getBookTags() != null && spec.getBookTags().getItems() != null) {
+            final List<String> tags = new ArrayList<String>();
+            for (final TagWrapper tag : spec.getBookTags().getItems()) {
+                tags.add(tag.getName());
+            }
+            contentSpec.setTags(tags);
+        }
 
         // Add all the levels/topics
         if (spec.getChildren() != null) {

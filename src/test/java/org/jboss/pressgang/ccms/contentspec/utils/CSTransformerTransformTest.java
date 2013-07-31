@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
@@ -105,21 +106,21 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         assertThat(result.getNodes().get(2).getText().equals(("\n")), is(true));
     }
 
-//    @Test
-//    public void shouldAddTagsFromGivenSpec() throws Exception {
-//        // Given a spec that has some tags
-//        given(specWrapper.getTags()).willReturn(tagWrapper);
-//        given(tag.getName()).willReturn(tagName);
-//        given(tag2.getName()).willReturn(tagName2);
-//        List<TagWrapper> tags = asList(tag, tag2);
-//        given(tagWrapper.getItems()).willReturn(tags);
-//
-//        // When the spec is transformed
-//        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
-//
-//        // Then the tags should be set on the resulting spec
-//        assertThat(result.getTags(), Matchers.contains(tagName, tagName2));
-//    }
+    @Test
+    public void shouldAddTagsFromGivenSpec() throws Exception {
+        // Given a spec that has some tags
+        given(specWrapper.getBookTags()).willReturn(tagWrapper);
+        given(tag.getName()).willReturn(tagName);
+        given(tag2.getName()).willReturn(tagName2);
+        List<TagWrapper> tags = asList(tag, tag2);
+        given(tagWrapper.getItems()).willReturn(tags);
+
+        // When the spec is transformed
+        ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
+
+        // Then the tags should be set on the resulting spec
+        assertThat(result.getTags(), contains(tagName, tagName2));
+    }
 
     @Test
     public void shouldAddTransformedChildTopic() throws Exception {

@@ -1,5 +1,8 @@
 package org.jboss.pressgang.ccms.contentspec.constants;
 
+import java.util.Arrays;
+import java.util.List;
+
 public class CSConstants {
     private CSConstants() {
     }
@@ -158,4 +161,60 @@ public class CSConstants {
     public static final String BRACKET_CONTENTS = "Brackets";
     public static final String BRACKET_NAMED_PATTERN = "(?<!\\\\)\\%c(?<" + BRACKET_CONTENTS + ">(.|\n)*?)(?<!\\\\)\\%c";
     public static final String BRACKET_PATTERN = "(?<!\\\\)\\%c((.|\n)*?)(?<!\\\\)\\%c";
+
+    public static final List<String> PUBLICAN_CFG_PARAMETERS = Arrays.asList(
+            "docname",
+            "version",
+            "xml_lang",
+            "edition",
+            "type",
+            "brand",
+            "product",
+            "arch",
+            "books",
+            "brew_dist",
+            "chunk_first",
+            "chunk_section_depth",
+            "classpath",
+            "common_config",
+            "common_content",
+            "condition",
+            "confidential",
+            "confidential_text",
+            "cvs_branch",
+            "cvs_pkg",
+            "cvs_root",
+            "debug",
+            "def_lang",
+            "doc_url",
+            "dt_obsoletes",
+            "dtdver",
+            "ec_id",
+            "ec_name",
+            "ec_provider",
+            "generate_section_toc_level",
+            "git_branch",
+            "ignored_translations",
+            "license",
+            "max_image_width",
+            "os_ver",
+            "prod_url",
+            "release",
+            "repo",
+            "scm",
+            "show_remarks",
+            "show_unknown",
+            "src_url",
+            "strict",
+            "tmp_dir",
+            "toc_section_depth",
+            "web_brew_dist",
+            "web_home",
+            "web_host",
+            "web_name_label",
+            "web_obsoletes",
+            "web_product_label",
+            "web_search",
+            "web_version_label"
+    );
 }

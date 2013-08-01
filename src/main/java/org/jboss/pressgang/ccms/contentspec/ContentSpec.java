@@ -1413,8 +1413,12 @@ public class ContentSpec extends Node {
         final Object value = node.getValue();
         if (key.equalsIgnoreCase(CSConstants.TITLE_TITLE) && value instanceof String) {
             setTitle((String) value);
-        } else if (key.equalsIgnoreCase(CSConstants.ID_TITLE) && value instanceof String) {
-            setId(Integer.parseInt((String) value));
+        } else if (key.equalsIgnoreCase(CSConstants.ID_TITLE) && (value instanceof String || value instanceof Integer)) {
+            if (value instanceof Integer) {
+                setId((Integer) value);
+            } else {
+                setId(Integer.parseInt((String) value));
+            }
         } else if (key.equalsIgnoreCase(CSConstants.CHECKSUM_TITLE) && value instanceof String) {
             setChecksum((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.PRODUCT_TITLE) && value instanceof String) {
@@ -1469,8 +1473,12 @@ public class ContentSpec extends Node {
             setDtd((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
             setOutputStyle((String) value);
-        } else if (key.equalsIgnoreCase(CSConstants.PUBSNUMBER_TITLE) && value instanceof String) {
-            setPubsNumber(Integer.parseInt((String) value));
+        } else if (key.equalsIgnoreCase(CSConstants.PUBSNUMBER_TITLE) && (value instanceof String || value instanceof Integer)) {
+            if (value instanceof Integer) {
+                setPubsNumber((Integer) value);
+            } else {
+                setPubsNumber(Integer.parseInt((String) value));
+            }
         } else if (key.equalsIgnoreCase(CSConstants.PUBLICAN_CFG_TITLE) && value instanceof String) {
             setPublicanCfg((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {

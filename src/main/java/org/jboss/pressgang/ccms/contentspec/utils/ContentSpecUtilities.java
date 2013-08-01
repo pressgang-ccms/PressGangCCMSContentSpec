@@ -34,7 +34,7 @@ public class ContentSpecUtilities {
             new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
                     CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
 
-    private ContentSpecUtilities() {
+    protected ContentSpecUtilities() {
     }
 
     /**

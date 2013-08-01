@@ -90,59 +90,59 @@ public class DocbookXMLPreProcessor {
     /*
      * start xml comment and 'InjectSequence:' surrounded by optional white space
      */
-            "\\s*InjectSequence:\\s*" +
+            "^\\s*InjectSequence:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
                     "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-                    "\\s*";
+                    "\\s*$";
 
     /**
      * A regular expression that matches an InjectList custom injection point
      */
     public static final String CUSTOM_INJECTION_LIST_RE =
     /* start xml comment and 'InjectList:' surrounded by optional white space */
-            "\\s*InjectList:\\s*" +
+            "^\\s*InjectList:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
                     "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-                    "\\s*";
+                    "\\s*$";
 
     public static final String CUSTOM_INJECTION_LISTITEMS_RE =
     /* start xml comment and 'InjectList:' surrounded by optional white space */
-            "\\s*InjectListItems:\\s*" +
+            "^\\s*InjectListItems:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
                     "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-                    "\\s*";
+                    "\\s*$";
 
     public static final String CUSTOM_ALPHA_SORT_INJECTION_LIST_RE =
     /*
      * start xml comment and 'InjectListAlphaSort:' surrounded by optional white space
      */
-            "\\s*InjectListAlphaSort:\\s*" +
+            "^\\s*InjectListAlphaSort:\\s*" +
     /*
      * an optional comma separated list of digit blocks, and at least one digit block with an optional comma
      */
                     "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(\\s*" + OPTIONAL_TOPIC_ID_RE + "\\s*,)*(\\s*" + OPTIONAL_TOPIC_ID_RE + ",?))" +
     /* xml comment end */
-                    "\\s*";
+                    "\\s*$";
 
     /**
      * A regular expression that matches an Inject custom injection point
      */
     public static final String CUSTOM_INJECTION_SINGLE_RE =
     /* start xml comment and 'Inject:' surrounded by optional white space */
-            "\\s*Inject:\\s*" +
+            "^\\s*Inject:\\s*" +
     /* one digit block */
                     "(?<" + TOPICIDS_RE_NAMED_GROUP + ">(" + OPTIONAL_TOPIC_ID_RE + "))" +
     /* xml comment end */
-                    "\\s*";
+                    "\\s*$";
 
     /**
      * The noinject value for the role attribute indicates that an element should not be included in the Topic Fragment

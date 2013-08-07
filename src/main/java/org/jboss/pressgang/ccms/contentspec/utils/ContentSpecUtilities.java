@@ -137,7 +137,7 @@ public class ContentSpecUtilities {
 
         // Find the level nodes translations
         for (final CSNodeWrapper childNode : contentSpec.getChildren().getItems()) {
-            if (childNode.getNodeType() != CommonConstants.CS_NODE_META_DATA && childNode.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
+            if (isNodeALevel(childNode)) {
                 getTranslatableStringsFromLevel(childNode, retValue, allowDuplicates);
             }
         }
@@ -151,9 +151,11 @@ public class ContentSpecUtilities {
 
         addTranslationToNodeDetailsToCollection(level.getTitle(), level, allowDuplicates, translationStrings);
 
-        for (final CSNodeWrapper childNode : level.getChildren().getItems()) {
-            if (childNode.getNodeType() != CommonConstants.CS_NODE_META_DATA && childNode.getNodeType() != CommonConstants.CS_NODE_TOPIC) {
-                getTranslatableStringsFromLevel(childNode, translationStrings, allowDuplicates);
+        if (level.getChildren() != null) {
+            for (final CSNodeWrapper childNode : level.getChildren().getItems()) {
+                if (isNodeALevel(childNode)) {
+                    getTranslatableStringsFromLevel(childNode, translationStrings, allowDuplicates);
+                }
             }
         }
     }
@@ -307,6 +309,26 @@ public class ContentSpecUtilities {
     public static boolean isSpecTopicMetaData(final String key) {
         return key.equalsIgnoreCase(CSConstants.LEGAL_NOTICE_TITLE) || key.equalsIgnoreCase(
                 CSConstants.REV_HISTORY_TITLE) || key.equalsIgnoreCase(CSConstants.FEEDBACK_TITLE);
+    }
+
+    /**
+     * Checks to see if an entity node is a level representation.
+     *
+     * @param node
+     * @return
+     */
+    public static boolean isNodeALevel(final CSNodeWrapper node) {
+        switch (node.getNodeType()) {
+            case CommonConstants.CS_NODE_APPENDIX:
+            case CommonConstants.CS_NODE_CHAPTER:
+            case CommonConstants.CS_NODE_PART:
+            case CommonConstants.CS_NODE_PREFACE:
+            case CommonConstants.CS_NODE_PROCESS:
+            case CommonConstants.CS_NODE_SECTION:
+                return true;
+            default:
+                return false;
+        }
     }
 }
 

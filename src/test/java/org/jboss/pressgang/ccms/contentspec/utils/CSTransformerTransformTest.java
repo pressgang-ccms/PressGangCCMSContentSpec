@@ -1,7 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
 import static java.util.Arrays.asList;
-import static org.hamcrest.Matchers.contains;
+import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.createMetaDataMock;
@@ -119,7 +119,8 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         ContentSpec result = CSTransformer.transform(specWrapper, providerFactory);
 
         // Then the tags should be set on the resulting spec
-        assertThat(result.getTags(), contains(tagName, tagName2));
+        assertTrue(result.getTags().contains(tagName));
+        assertTrue(result.getTags().contains(tagName2));
     }
 
     @Test

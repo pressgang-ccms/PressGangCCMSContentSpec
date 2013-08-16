@@ -28,6 +28,7 @@ import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
+import org.jboss.pressgang.ccms.contentspec.sort.EntityWrapperIDComparator;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
@@ -70,7 +71,13 @@ public class CSTransformer {
         // Add all of the book tags
         if (spec.getBookTags() != null && spec.getBookTags().getItems() != null) {
             final List<String> tags = new ArrayList<String>();
-            for (final TagWrapper tag : spec.getBookTags().getItems()) {
+            final List<TagWrapper> tagItems = spec.getBookTags().getItems();
+
+            // Sort the tags to make sure they always appear the same
+            Collections.sort(tagItems, new EntityWrapperIDComparator());
+
+            // Add the tags
+            for (final TagWrapper tag : tagItems) {
                 tags.add(tag.getName());
             }
             contentSpec.setTags(tags);

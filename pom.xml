@@ -26,6 +26,8 @@
         <pressgang.ccms.version>1.1-SNAPSHOT</pressgang.ccms.version>
         <jackson.version>1.9.8</jackson.version>
         <resteasy.version>2.3.4.Final</resteasy.version>
+        <j2bugzilla.version>1.1-SNAPSHOT</j2bugzilla.version>
+        <jira.rest.client.version>1.0-SNAPSHOT</jira.rest.client.version>
         <slf4j.version>1.6.4</slf4j.version>
         <ipsedixit.version>1.0.2</ipsedixit.version>
         <!-- Can't move to Mockito 1.9.5 and PowerMock 1.5 yet due to bug -->
@@ -52,6 +54,18 @@
             <groupId>org.jboss.pressgang.ccms</groupId>
             <artifactId>provider-commons</artifactId>
             <version>${pressgang.ccms.version}</version>
+        </dependency>
+
+        <!-- Bug API Libraries -->
+        <dependency>
+            <groupId>org.jboss.pressgang.ccms</groupId>
+            <artifactId>j2bugzilla-pressgang</artifactId>
+            <version>${j2bugzilla.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.pressgang.ccms</groupId>
+            <artifactId>jira-rest-client</artifactId>
+            <version>${jira.rest.client.version}</version>
         </dependency>
 
         <!-- Testing Libraries -->

@@ -1,13 +1,11 @@
 package org.jboss.pressgang.ccms.contentspec.entities;
 
-public class BugzillaOptions {
+public class BugzillaBugLinkOptions extends BaseBugLinkOptions {
 
     private String product = null;
     private String component = null;
     private String version = null;
     private String keywords = null;
-    private String urlComponent = null;
-    private boolean injectLinks = true;
     private boolean injectAssignee = true;
 
     /**
@@ -50,37 +48,6 @@ public class BugzillaOptions {
      */
     public void setVersion(final String version) {
         this.version = version;
-    }
-
-    public boolean isBugzillaLinksEnabled() {
-        return injectLinks;
-    }
-
-    /**
-     * @param enabled Whether bug links should be injected
-     */
-    public void setBugzillaLinksEnabled(final boolean enabled) {
-        injectLinks = enabled;
-    }
-
-    /**
-     * Get the URL component that is used in the .ent file when
-     * building the Docbook files.
-     *
-     * @return The BZURL component for the content specification.
-     */
-    public String getUrlComponent() {
-        return urlComponent;
-    }
-
-    /**
-     * Set the URL component that is used in the .ent file when
-     * building the Docbook files.
-     *
-     * @param urlComponent The BZURL component to be used when building.
-     */
-    public void setUrlComponent(final String urlComponent) {
-        this.urlComponent = urlComponent;
     }
 
     public boolean isInjectAssignee() {

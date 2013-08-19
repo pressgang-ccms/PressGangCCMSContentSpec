@@ -1,10 +1,6 @@
 package org.jboss.pressgang.ccms.docbook.processing;
 
-import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,11 +11,12 @@ import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
+import org.jboss.pressgang.ccms.contentspec.entities.BaseBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
+import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
@@ -27,10 +24,7 @@ import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
 import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
-import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
-import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 import org.slf4j.Logger;
@@ -188,20 +182,18 @@ public class DocbookXMLPreProcessor {
     protected static final String ROLE_PROCESS_PREVIOUS_LISTITEM = "process-previous-listitem";
 
     protected static final String ENCODING = "UTF-8";
-    protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
-            "improvement:\n\n\nAdditional information:";
 
     protected final ResourceBundle translations;
+    protected final BugLinkStrategy bugLinkStrategy;
 
-    public DocbookXMLPreProcessor(final ResourceBundle translationStrings) {
+    public DocbookXMLPreProcessor(final ResourceBundle translationStrings, final BugLinkStrategy bugLinkStrategy) {
         translations = translationStrings;
+        this.bugLinkStrategy = bugLinkStrategy;
     }
 
-    public void processTopicBugzillaLink(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions,
-            final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate) {
-        final BaseTopicWrapper<?> topic = specTopic.getTopic();
-
-        // BUGZILLA LINK
+    public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
+            final DocbookBuildingOptions docbookBuildingOptions) {
+        // BUG LINK
         try {
             final Element bugzillaSection = document.createElement("para");
             bugzillaSection.setAttribute("role", ROLE_CREATE_BUG_PARA);
@@ -211,121 +203,12 @@ public class DocbookXMLPreProcessor {
             final String reportBugTranslation = translations.getString(REPORT_A_BUG_PROPERTY);
             bugzillaULink.setTextContent(reportBugTranslation == null ? DEFAULT_REPORT_A_BUG : reportBugTranslation);
 
-            final DateFormat formatter = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-
             String specifiedBuildName = "";
             if (docbookBuildingOptions != null && docbookBuildingOptions.getBuildName() != null)
                 specifiedBuildName = docbookBuildingOptions.getBuildName();
 
-            // build up the elements that go into the bugzilla URL
-            String bugzillaProduct = null;
-            String bugzillaComponent = null;
-            String bugzillaVersion = null;
-            String bugzillaKeywords = null;
-            String bugzillaAssignedTo = null;
-            final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-            final StringBuilder bugzillaEnvironment = new StringBuilder("Build: ").append(buildName).append("\nBuild Name: ").append(
-                    specifiedBuildName).append("\nBuild Date: ").append(formatter.format(buildDate)).append("\nTopic ID: ").append(topic.getId
-                    ()).append("-").append(topic.getRevision());
-            final StringBuilder bugzillaBuildID = new StringBuilder();
-            bugzillaBuildID.append(topic.getBugzillaBuildId());
-
-            if (specTopic.getRevision() == null) {
-                bugzillaBuildID.append(" [Latest]");
-                bugzillaEnvironment.append(" [Latest]");
-            } else {
-                bugzillaBuildID.append(" [Specified]");
-                bugzillaEnvironment.append(" [Specified]");
-            }
-            final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
-
-            // look for the bugzilla options
-            if (topic.getTags() != null && topic.getTags() != null) {
-                final List<TagWrapper> tags = topic.getTags().getItems();
-                for (final TagWrapper tag : tags) {
-                    final PropertyTagInTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
-                    final PropertyTagInTagWrapper bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
-                    final PropertyTagInTagWrapper bugzillaKeywordsTag = tag.getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
-                    final PropertyTagInTagWrapper bugzillaVersionTag = tag.getProperty(CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
-                    final PropertyTagInTagWrapper bugzillaAssignedToTag = tag.getProperty(CommonConstants.BUGZILLA_PROFILE_PROPERTY);
-
-                    if (bugzillaProduct == null && bugzillaProductTag != null)
-                        bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), ENCODING);
-
-                    if (bugzillaComponent == null && bugzillaComponentTag != null)
-                        bugzillaComponent = URLEncoder.encode(bugzillaComponentTag.getValue(), ENCODING);
-
-                    if (bugzillaKeywords == null && bugzillaKeywordsTag != null)
-                        bugzillaKeywords = URLEncoder.encode(bugzillaKeywordsTag.getValue(), ENCODING);
-
-                    if (bugzillaVersion == null && bugzillaVersionTag != null)
-                        bugzillaVersion = URLEncoder.encode(bugzillaVersionTag.getValue(), ENCODING);
-
-                    if (bugzillaAssignedTo == null && bugzillaAssignedToTag != null)
-                        bugzillaAssignedTo = URLEncoder.encode(bugzillaAssignedToTag.getValue(), ENCODING);
-                }
-            }
-
-            // build the bugzilla url options
-            String bugzillaURLComponents = "";
-
-            bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "cf_environment=" + encodedBugzillaEnvironment;
-
-            bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "cf_build_id=" + URLEncoder.encode(bugzillaBuildID.toString(), ENCODING);
-
-            bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-            bugzillaURLComponents += "comment=" + bugzillaDescription;
-
-            if (bzOptions.isInjectAssignee() && bugzillaAssignedTo != null) {
-                bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                bugzillaURLComponents += "assigned_to=" + bugzillaAssignedTo;
-            }
-
-            // check the content spec options first
-            if (bzOptions != null && bzOptions.getProduct() != null) {
-                bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                bugzillaURLComponents += "product=" + URLEncoder.encode(bzOptions.getProduct(), ENCODING);
-
-                if (bzOptions.getComponent() != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "component=" + URLEncoder.encode(bzOptions.getComponent(), ENCODING);
-                }
-
-                if (bzOptions.getVersion() != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "version=" + URLEncoder.encode(bzOptions.getVersion(), ENCODING);
-                }
-
-                if (bzOptions.getKeywords() != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "keywords=" + URLEncoder.encode(bzOptions.getKeywords(), ENCODING);
-                }
-            }
-            // we need at least a product
-            else if (bugzillaProduct != null) {
-                bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                bugzillaURLComponents += "product=" + bugzillaProduct;
-
-                if (bugzillaComponent != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "component=" + bugzillaComponent;
-                }
-
-                if (bugzillaVersion != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "version=" + bugzillaVersion;
-                }
-
-                if (bugzillaKeywords != null) {
-                    bugzillaURLComponents += bugzillaURLComponents.isEmpty() ? "?" : "&amp;";
-                    bugzillaURLComponents += "keywords=" + bugzillaKeywords;
-                }
-            }
-
-            // build the bugzilla url with the base components
-            String bugzillaUrl = "https://bugzilla.redhat.com/enter_bug.cgi" + bugzillaURLComponents;
+            // build the bug link url with the base components
+            String bugzillaUrl = bugLinkStrategy.generateUrl(bugOptions, specTopic, specifiedBuildName);
 
             bugzillaULink.setAttribute("url", bugzillaUrl);
 
@@ -335,16 +218,15 @@ public class DocbookXMLPreProcessor {
             bugzillaSection.appendChild(bugzillaULink);
             document.getDocumentElement().appendChild(bugzillaSection);
         } catch (final Exception ex) {
-            LOG.error("Failed to insert Bugzilla Links into the DOM Document", ex);
+            LOG.error("Failed to insert Bug Links into the DOM Document", ex);
         }
     }
 
     /**
      * Adds some debug information and links to the end of the topic
      */
-    public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugzillaOptions bzOptions,
-            final DocbookBuildingOptions docbookBuildingOptions, final String buildName, final Date buildDate,
-            final ZanataDetails zanataDetails) {
+    public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
+            final DocbookBuildingOptions docbookBuildingOptions, final ZanataDetails zanataDetails) {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
@@ -396,8 +278,8 @@ public class DocbookXMLPreProcessor {
         // Only include a bugzilla link for normal topics
         if (specTopic.getTopicType() == TopicType.NORMAL || specTopic.getTopicType() == TopicType.LEVEL) {
             // BUGZILLA LINK
-            if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugzillaLinks()) {
-                processTopicBugzillaLink(specTopic, document, bzOptions, docbookBuildingOptions, buildName, buildDate);
+            if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugLinks()) {
+                processTopicBugLink(specTopic, document, bugOptions, docbookBuildingOptions);
             }
         }
     }

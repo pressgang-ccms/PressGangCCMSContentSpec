@@ -107,7 +107,7 @@ public class DocbookBuildingOptions {
     public static String DOCBOOK_BUILDING_OPTION_INSERT_EDITOR_LINKS = "Insert editor links";
 
     private Boolean suppressContentSpecPage = false;
-    private Boolean insertBugzillaLinks = true;
+    private Boolean insertBugLinks = true;
     private Boolean includeUntranslatedTopics = true;
     private Boolean processRelatedTopics = false;
     private Boolean publicanShowRemarks = false;
@@ -306,7 +306,7 @@ public class DocbookBuildingOptions {
             return getIncludeUntranslatedTopics() == null ? null : getIncludeUntranslatedTopics().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS))
-            return getInsertBugzillaLinks() == null ? null : getInsertBugzillaLinks().toString();
+            return getInsertBugLinks() == null ? null : getInsertBugLinks().toString();
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE))
             return getSuppressContentSpecPage() == null ? null : getSuppressContentSpecPage().toString();
@@ -358,9 +358,11 @@ public class DocbookBuildingOptions {
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INCLUDE_UNTRANSLATED_TOPICS)) setIncludeUntranslatedTopics(Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS)) setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_INSERT_BUGZILLA_LINKS)) setInsertBugLinks(
+                Boolean.parseBoolean(fieldValue));
 
-        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE)) setInsertBugzillaLinks(Boolean.parseBoolean(fieldValue));
+        if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_SUPPRESS_CONTENT_SPEC_PAGE)) setInsertBugLinks(
+                Boolean.parseBoolean(fieldValue));
 
         if (fixedFieldName.equalsIgnoreCase(DOCBOOK_BUILDING_OPTION_BOOK_TITLE)) setBookTitle(fieldValue);
 
@@ -403,12 +405,12 @@ public class DocbookBuildingOptions {
         this.buildName = buildName;
     }
 
-    public Boolean getInsertBugzillaLinks() {
-        return insertBugzillaLinks;
+    public Boolean getInsertBugLinks() {
+        return insertBugLinks;
     }
 
-    public void setInsertBugzillaLinks(Boolean insertBugzillaLinks) {
-        this.insertBugzillaLinks = insertBugzillaLinks;
+    public void setInsertBugLinks(Boolean insertBugLinks) {
+        this.insertBugLinks = insertBugLinks;
     }
 
     public Boolean getSuppressContentSpecPage() {

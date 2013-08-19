@@ -14,10 +14,12 @@ import java.util.Locale;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
-import org.jboss.pressgang.ccms.contentspec.entities.BugzillaOptions;
+import org.jboss.pressgang.ccms.contentspec.entities.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
+import org.jboss.pressgang.ccms.contentspec.entities.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
+import org.jboss.pressgang.ccms.contentspec.enums.BugLinkType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
@@ -44,8 +46,9 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaComponent = null;
     private KeyValueNode<String> bugzillaVersion = null;
     private KeyValueNode<String> bugzillaKeywords = null;
+    private KeyValueNode<String> bugzillaServer = null;
     private KeyValueNode<String> bugzillaURL = null;
-    private KeyValueNode<Boolean> injectBugLinks = null;
+    private KeyValueNode<BugLinkType> bugLinks = null;
     private KeyValueNode<Boolean> injectBugzillaAssignee = null;
     private KeyValueNode<Boolean> injectSurveyLinks = null;
     private KeyValueNode<String> outputStyle = null;
@@ -58,6 +61,11 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> legalNotice = null;
     private KeyValueNode<String> groupId = null;
     private KeyValueNode<String> artifactId = null;
+    private KeyValueNode<String> jiraProject = null;
+    private KeyValueNode<String> jiraComponent = null;
+    private KeyValueNode<String> jiraVersion = null;
+    private KeyValueNode<String> jiraLabels = null;
+    private KeyValueNode<String> jiraServer = null;
     private FileList files = null;
     private Integer revision = null;
     private String locale = null;
@@ -1091,6 +1099,30 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * @return
+     */
+    public String getBugzillaServer() {
+        return bugzillaServer == null ? "https://bugzilla.redhat.com/" : bugzillaServer.getValue().toString();
+    }
+
+    /**
+     * @param bugzillaServer
+     */
+    public void setBugzillaServer(final String bugzillaServer) {
+        if (bugzillaServer == null && this.bugzillaServer == null) {
+            return;
+        } else if (bugzillaServer == null) {
+            removeChild(this.bugzillaServer);
+            this.bugzillaServer = null;
+        } else if (this.bugzillaServer == null) {
+            this.bugzillaServer = new KeyValueNode<String>(CSConstants.BUGZILLA_SERVER_TITLE, bugzillaServer);
+            appendChild(this.bugzillaServer, false);
+        } else {
+            this.bugzillaServer.setValue(bugzillaServer);
+        }
+    }
+
+    /**
      * Get the URL component that is used in the .ent file when building the Docbook files.
      *
      * @return The BZURL component for the content specification.
@@ -1119,20 +1151,24 @@ public class ContentSpec extends Node {
     }
 
     public boolean isInjectBugLinks() {
-        return (Boolean) (injectBugLinks == null ? true : injectBugLinks.getValue());
+        return !bugLinks.getValue().equals(BugLinkType.NONE);
     }
 
-    public void setInjectBugLinks(final Boolean injectBugLinks) {
-        if (injectBugLinks == null && this.injectBugLinks == null) {
+    public BugLinkType getBugLinks() {
+        return bugLinks.getValue() == null ? BugLinkType.BUGZILLA : bugLinks.getValue();
+    }
+
+    public void setBugLinks(final BugLinkType bugLinks) {
+        if (bugLinks == null && this.bugLinks == null) {
             return;
-        } else if (injectBugLinks == null) {
-            removeChild(this.injectBugLinks);
-            this.injectBugLinks = null;
-        } else if (this.injectBugLinks == null) {
-            this.injectBugLinks = new KeyValueNode<Boolean>(CSConstants.BUG_LINKS_TITLE, injectBugLinks);
-            appendChild(this.injectBugLinks, false);
+        } else if (bugLinks == null) {
+            removeChild(this.bugLinks);
+            this.bugLinks = null;
+        } else if (this.bugLinks == null) {
+            this.bugLinks = new KeyValueNode<BugLinkType>(CSConstants.BUG_LINKS_TITLE, bugLinks);
+            appendChild(this.bugLinks, false);
         } else {
-            this.injectBugLinks.setValue(injectBugLinks);
+            this.bugLinks.setValue(bugLinks);
         }
     }
 
@@ -1172,15 +1208,142 @@ public class ContentSpec extends Node {
         }
     }
 
-    public BugzillaOptions getBugzillaOptions() {
-        final BugzillaOptions bzOption = new BugzillaOptions();
+    public BugzillaBugLinkOptions getBugzillaBugLinkOptions() {
+        final BugzillaBugLinkOptions bzOption = new BugzillaBugLinkOptions();
         bzOption.setProduct(getBugzillaProduct());
         bzOption.setComponent(getBugzillaComponent());
         bzOption.setVersion(getBugzillaVersion());
-        bzOption.setUrlComponent(getBugzillaURL());
-        bzOption.setBugzillaLinksEnabled(isInjectBugLinks());
+        bzOption.setBaseUrl(getBugzillaServer());
+        bzOption.setBugLinksEnabled(isInjectBugLinks());
         bzOption.setInjectAssignee(isInjectBugzillaAssignee());
         bzOption.setKeywords(getBugzillaKeywords());
+        return bzOption;
+    }
+
+    public String getJIRAProject() {
+        return jiraProject == null ? null : jiraProject.getValue().toString();
+    }
+
+    public void setJIRAProject(final String jiraProject) {
+        if (jiraProject == null && this.jiraProject == null) {
+            return;
+        } else if (jiraProject == null) {
+            removeChild(this.jiraProject);
+            this.jiraProject = null;
+        } else if (this.jiraProject == null) {
+            this.jiraProject = new KeyValueNode<String>(CSConstants.JIRA_PROJECT_TITLE, jiraProject);
+            appendChild(this.jiraProject, false);
+        } else {
+            this.jiraProject.setValue(jiraProject);
+        }
+    }
+
+    public String getJIRAComponent() {
+        return jiraComponent == null ? null : jiraComponent.getValue().toString();
+    }
+
+    public void setJIRAComponent(final String jiraComponent) {
+        if (jiraComponent == null && this.jiraComponent == null) {
+            return;
+        } else if (jiraComponent == null) {
+            removeChild(this.jiraComponent);
+            this.jiraComponent = null;
+        } else if (this.jiraComponent == null) {
+            this.jiraComponent = new KeyValueNode<String>(CSConstants.JIRA_COMPONENT_TITLE, jiraComponent);
+            appendChild(this.jiraComponent, false);
+        } else {
+            this.jiraComponent.setValue(jiraComponent);
+        }
+    }
+
+    /**
+     * Get the JIRA Version to be applied during building.
+     *
+     * @return The version of the project in jira.
+     */
+    public String getJIRAVersion() {
+        return jiraVersion == null ? null : jiraVersion.getValue().toString();
+    }
+
+    /**
+     * Set the JIRA Version to be applied during building.
+     *
+     * @param jiraVersion The version of the project in jira.
+     */
+    public void setJIRAVersion(final String jiraVersion) {
+        if (jiraVersion == null && this.jiraVersion == null) {
+            return;
+        } else if (jiraVersion == null) {
+            removeChild(this.jiraVersion);
+            this.jiraVersion = null;
+        } else if (this.jiraVersion == null) {
+            this.jiraVersion = new KeyValueNode<String>(CSConstants.JIRA_VERSION_TITLE, jiraVersion);
+            appendChild(this.jiraVersion, false);
+        } else {
+            this.jiraVersion.setValue(jiraVersion);
+        }
+    }
+
+    /**
+     * Get the JIRA Labels to be applied during building.
+     *
+     * @return The labels to be set in jira.
+     */
+    public String getJIRALabels() {
+        return jiraLabels == null ? null : jiraLabels.getValue().toString();
+    }
+
+    /**
+     * Set the JIRA Labels to be applied during building.
+     *
+     * @param jiraLabels The keywords to be set in jira.
+     */
+    public void setJIRALabels(final String jiraLabels) {
+        if (jiraLabels == null && this.jiraLabels == null) {
+            return;
+        } else if (jiraLabels == null) {
+            removeChild(this.jiraLabels);
+            this.jiraLabels = null;
+        } else if (this.jiraLabels == null) {
+            this.jiraLabels = new KeyValueNode<String>(CSConstants.JIRA_LABELS_TITLE, jiraLabels);
+            appendChild(this.jiraLabels, false);
+        } else {
+            this.jiraVersion.setValue(jiraLabels);
+        }
+    }
+
+    /**
+     * @return
+     */
+    public String getJIRAServer() {
+        return jiraServer == null ? "https://jira.redhat.com/" : jiraServer.getValue().toString();
+    }
+
+    /**
+     * @param jiraServer
+     */
+    public void setJIRAServer(final String jiraServer) {
+        if (jiraServer == null && this.jiraServer == null) {
+            return;
+        } else if (jiraServer == null) {
+            removeChild(this.jiraServer);
+            this.jiraServer = null;
+        } else if (this.jiraServer == null) {
+            this.jiraServer = new KeyValueNode<String>(CSConstants.JIRA_SERVER_TITLE, jiraServer);
+            appendChild(this.jiraServer, false);
+        } else {
+            this.jiraServer.setValue(jiraServer);
+        }
+    }
+
+    public JIRABugLinkOptions getJIRABugLinkOptions() {
+        final JIRABugLinkOptions bzOption = new JIRABugLinkOptions();
+        bzOption.setProject(getJIRAProject());
+        bzOption.setComponent(getJIRAComponent());
+        bzOption.setVersion(getJIRAVersion());
+        bzOption.setBaseUrl(getJIRAServer());
+        bzOption.setBugLinksEnabled(isInjectBugLinks());
+        bzOption.setLabels(getJIRALabels());
         return bzOption;
     }
 
@@ -1432,15 +1595,11 @@ public class ContentSpec extends Node {
         } else if (key.equalsIgnoreCase(CSConstants.BOOK_VERSION_TITLE) && value instanceof String) {
             setBookVersion((String) value);
         } else if (key.equalsIgnoreCase(
-                CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value instanceof Boolean)) {
-            if (value instanceof Boolean) {
-                setInjectBugLinks((Boolean) value);
+                CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value instanceof BugLinkType)) {
+            if (value instanceof BugLinkType) {
+                setBugLinks((BugLinkType) value);
             } else {
-                if (((String) value).toUpperCase(Locale.ENGLISH).equals("ON")) {
-                    setInjectBugLinks(true);
-                } else {
-                    setInjectBugLinks(Boolean.parseBoolean((String) value));
-                }
+                setBugLinks(BugLinkType.getType((String) value));
             }
         } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
             setBugzillaComponent((String) value);
@@ -1450,6 +1609,8 @@ public class ContentSpec extends Node {
             setBugzillaVersion((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_KEYWORDS_TITLE) && value instanceof String) {
             setBugzillaKeywords((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_SERVER_TITLE) && value instanceof String) {
+            setBugzillaServer((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_URL_TITLE) && value instanceof String) {
             setBugzillaURL((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
@@ -1493,8 +1654,8 @@ public class ContentSpec extends Node {
             }
         } else if (key.equalsIgnoreCase(CSConstants.BRAND_TITLE) && value instanceof String) {
             setBrand((String) value);
-        } else if ((key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) || key.equalsIgnoreCase(CSConstants.ABSTRACT_ALTERNATE_TITLE)) && value instanceof
-                String) {
+        } else if ((key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                CSConstants.ABSTRACT_ALTERNATE_TITLE)) && value instanceof String) {
             setAbstract((String) value);
         } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
             setCopyrightHolder((String) value);
@@ -1515,8 +1676,18 @@ public class ContentSpec extends Node {
         } else if (key.equalsIgnoreCase(CSConstants.BRAND_LOGO_TITLE) && value instanceof String) {
             setBrandLogo((String) value);
         } else if ((key.equalsIgnoreCase(CSConstants.FILE_TITLE) || key.equalsIgnoreCase(
-                CSConstants.FILE_SHORT_TITLE)) && node instanceof FileList) {
+                CSConstants.FILE_SHORT_TITLE)) && node instanceof List) {
             setFiles((List<File>) value);
+        } else if (key.equalsIgnoreCase(CSConstants.JIRA_COMPONENT_TITLE) && value instanceof String) {
+            setJIRAComponent((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.JIRA_PROJECT_TITLE) && value instanceof String) {
+            setJIRAProject((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.JIRA_VERSION_TITLE) && value instanceof String) {
+            setJIRAVersion((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.JIRA_LABELS_TITLE) && value instanceof String) {
+            setJIRALabels((String) value);
+        } else if (key.equalsIgnoreCase(CSConstants.JIRA_SERVER_TITLE) && value instanceof String) {
+            setJIRAServer((String) value);
         } else {
             appendChild(node, false);
         }

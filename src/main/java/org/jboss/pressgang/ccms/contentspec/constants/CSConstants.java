@@ -140,6 +140,7 @@ public class CSConstants {
     public static final String BUGZILLA_COMPONENT_TITLE = "BZComponent";
     public static final String BUGZILLA_VERSION_TITLE = "BZVersion";
     public static final String BUGZILLA_KEYWORDS_TITLE = "BZKeywords";
+    public static final String BUGZILLA_SERVER_TITLE = "BZServer";
     public static final String BUGZILLA_URL_TITLE = "BZURL";
     public static final String SURVEY_LINK_TITLE = "Survey Links";
     public static final String BOOK_TYPE_TITLE = "Type";
@@ -155,6 +156,11 @@ public class CSConstants {
     public static final String MAVEN_ARTIFACT_ID_TITLE = "ArtifactId";
     public static final String FILE_TITLE = "Additional Files";
     public static final String FILE_SHORT_TITLE = "Files";
+    public static final String JIRA_PROJECT_TITLE = "JIRAProject";
+    public static final String JIRA_COMPONENT_TITLE = "JIRAComponent";
+    public static final String JIRA_VERSION_TITLE = "JIRAVersion";
+    public static final String JIRA_LABELS_TITLE = "JIRALabels";
+    public static final String JIRA_SERVER_TITLE = "JIRAServer";
 
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";

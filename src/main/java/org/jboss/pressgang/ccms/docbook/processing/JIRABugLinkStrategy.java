@@ -37,7 +37,6 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
     public JIRABugLinkStrategy(final String jiraUrl) {
         client = JIRAProxyFactory.create(jiraUrl).getRESTClient();
         this.jiraUrl = jiraUrl.endsWith("/") ? jiraUrl : (jiraUrl + "/");
-        ;
     }
 
     @Override
@@ -48,6 +47,11 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
         final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
                 DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        if (specTopic.getRevision() == null) {
+            jiraEnvironment.append(" [Latest]");
+        } else {
+            jiraEnvironment.append(" [Specified]");
+        }
         final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
 
         // build the bugzilla url options

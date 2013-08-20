@@ -49,8 +49,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
         String bugzillaKeywords = null;
         String bugzillaAssignedTo = null;
         final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append(
-                "\nBuild Date: &BUILD_DATE;").append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        final StringBuilder bugzillaEnvironment = new StringBuilder("\nBuild Name: ").append(buildName).append("\nTopic ID: ").append
+                (topic.getId()).append("-").append(topic.getRevision());
         final StringBuilder bugzillaBuildID = new StringBuilder();
         bugzillaBuildID.append(topic.getBugzillaBuildId());
 
@@ -61,7 +61,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
             bugzillaBuildID.append(" [Specified]");
             bugzillaEnvironment.append(" [Specified]");
         }
-        final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
+        final String encodedBugzillaEnvironment = URLEncoder.encode("Build Date: ", ENCODING) + "&BUILDDATE;" + URLEncoder.encode
+                (bugzillaEnvironment.toString(), ENCODING);
 
         // look for the bugzilla options
         if (topic.getTags() != null && topic.getTags() != null) {

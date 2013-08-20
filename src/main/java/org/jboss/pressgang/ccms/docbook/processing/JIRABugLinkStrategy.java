@@ -40,10 +40,10 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder JIRAEnvironment = new StringBuilder("Build Name: ").append(buildName).append(
-                "\nBuild Date: &BUILD_DATE;").append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
-
-        final String encodedJIRAEnvironment = URLEncoder.encode(JIRAEnvironment.toString(), ENCODING);
+        final StringBuilder jiraEnvironment = new StringBuilder("\nBuild Name: ").append(buildName).append("\nTopic ID: ").append
+                (topic.getId()).append("-").append(topic.getRevision());
+        final String encodedJIRAEnvironment = URLEncoder.encode("Build Date: ", ENCODING) + "&BUILDDATE;" + URLEncoder.encode
+                (jiraEnvironment.toString(), ENCODING);
 
         // build the bugzilla url options
         final StringBuilder JIRAURLComponents = new StringBuilder("?issuetype=1");

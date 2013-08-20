@@ -1151,11 +1151,11 @@ public class ContentSpec extends Node {
     }
 
     public boolean isInjectBugLinks() {
-        return !bugLinks.getValue().equals(BugLinkType.NONE);
+        return !getBugLinks().equals(BugLinkType.NONE);
     }
 
     public BugLinkType getBugLinks() {
-        return bugLinks.getValue() == null ? BugLinkType.BUGZILLA : bugLinks.getValue();
+        return (bugLinks == null || bugLinks.getValue() == null) ? BugLinkType.BUGZILLA : bugLinks.getValue();
     }
 
     public void setBugLinks(final BugLinkType bugLinks) {

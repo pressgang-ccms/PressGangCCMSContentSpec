@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.docbook.processing;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -192,7 +193,7 @@ public class DocbookXMLPreProcessor {
     }
 
     public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
-            final DocbookBuildingOptions docbookBuildingOptions) {
+            final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate) {
         // BUG LINK
         try {
             final Element bugzillaSection = document.createElement("para");
@@ -208,7 +209,7 @@ public class DocbookXMLPreProcessor {
                 specifiedBuildName = docbookBuildingOptions.getBuildName();
 
             // build the bug link url with the base components
-            String bugzillaUrl = bugLinkStrategy.generateUrl(bugOptions, specTopic, specifiedBuildName);
+            String bugzillaUrl = bugLinkStrategy.generateUrl(bugOptions, specTopic, specifiedBuildName, buildDate);
 
             bugzillaULink.setAttribute("url", bugzillaUrl);
 
@@ -226,7 +227,7 @@ public class DocbookXMLPreProcessor {
      * Adds some debug information and links to the end of the topic
      */
     public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
-            final DocbookBuildingOptions docbookBuildingOptions, final ZanataDetails zanataDetails) {
+            final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate, final ZanataDetails zanataDetails) {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
@@ -279,7 +280,7 @@ public class DocbookXMLPreProcessor {
         if (specTopic.getTopicType() == TopicType.NORMAL || specTopic.getTopicType() == TopicType.LEVEL) {
             // BUGZILLA LINK
             if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertBugLinks()) {
-                processTopicBugLink(specTopic, document, bugOptions, docbookBuildingOptions);
+                processTopicBugLink(specTopic, document, bugOptions, docbookBuildingOptions, buildDate);
             }
         }
     }

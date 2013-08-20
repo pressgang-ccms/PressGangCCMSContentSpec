@@ -2,6 +2,9 @@ package org.jboss.pressgang.ccms.docbook.processing;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,6 +25,7 @@ import org.jboss.resteasy.client.ClientResponseFailure;
 public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> {
     protected static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
     protected static final String ENCODING = "UTF-8";
+    protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
@@ -32,18 +36,19 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
 
     public JIRABugLinkStrategy(final String jiraUrl) {
         client = JIRAProxyFactory.create(jiraUrl).getRESTClient();
-        this.jiraUrl = jiraUrl.endsWith("/") ? jiraUrl : (jiraUrl + "/");;
+        this.jiraUrl = jiraUrl.endsWith("/") ? jiraUrl : (jiraUrl + "/");
+        ;
     }
 
     @Override
-    public String generateUrl(JIRABugLinkOptions bugOptions, SpecTopic specTopic, String buildName) throws UnsupportedEncodingException {
+    public String generateUrl(JIRABugLinkOptions bugOptions, SpecTopic specTopic, String buildName,
+            Date buildDate) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder jiraEnvironment = new StringBuilder("\nBuild Name: ").append(buildName).append("\nTopic ID: ").append
-                (topic.getId()).append("-").append(topic.getRevision());
-        final String encodedJIRAEnvironment = URLEncoder.encode("Build Date: ", ENCODING) + "&BUILDDATE;" + URLEncoder.encode
-                (jiraEnvironment.toString(), ENCODING);
+        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
+                DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
 
         // build the bugzilla url options
         final StringBuilder JIRAURLComponents = new StringBuilder("?issuetype=1");
@@ -91,7 +96,7 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
             if (jiraOptions.getComponent() != null) {
                 final JIRAComponent component = getJIRAComponent(jiraOptions.getComponent(), project);
                 if (component == null) {
-                   throw new ValidationException("No JIRA Component exists for component \"" + jiraOptions.getComponent() + "\".");
+                    throw new ValidationException("No JIRA Component exists for component \"" + jiraOptions.getComponent() + "\".");
                 }
             }
 

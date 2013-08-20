@@ -4,6 +4,9 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 import com.j2bugzilla.base.BugField;
@@ -26,6 +29,7 @@ import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkOptions> {
     protected static final String ENCODING = "UTF-8";
+    protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
@@ -39,8 +43,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
     }
 
     @Override
-    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final SpecTopic specTopic,
-            String buildName) throws UnsupportedEncodingException {
+    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final SpecTopic specTopic, String buildName,
+            Date buildDate) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         String bugzillaProduct = null;
@@ -49,8 +53,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
         String bugzillaKeywords = null;
         String bugzillaAssignedTo = null;
         final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder bugzillaEnvironment = new StringBuilder("\nBuild Name: ").append(buildName).append("\nTopic ID: ").append
-                (topic.getId()).append("-").append(topic.getRevision());
+        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
+                DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
         final StringBuilder bugzillaBuildID = new StringBuilder();
         bugzillaBuildID.append(topic.getBugzillaBuildId());
 
@@ -61,8 +65,7 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
             bugzillaBuildID.append(" [Specified]");
             bugzillaEnvironment.append(" [Specified]");
         }
-        final String encodedBugzillaEnvironment = URLEncoder.encode("Build Date: ", ENCODING) + "&BUILDDATE;" + URLEncoder.encode
-                (bugzillaEnvironment.toString(), ENCODING);
+        final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
 
         // look for the bugzilla options
         if (topic.getTags() != null && topic.getTags() != null) {
@@ -163,7 +166,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
                 if (bugzillaOptions.getComponent() != null) {
                     final ProductComponent component = getBugzillaComponent(bugzillaOptions.getComponent(), product);
                     if (component == null) {
-                        throw new ValidationException("No Bugzilla Component exists for component \"" + bugzillaOptions.getComponent() + "\".");
+                        throw new ValidationException(
+                                "No Bugzilla Component exists for component \"" + bugzillaOptions.getComponent() + "\".");
                     } else if (!component.getIsActive()) {
                         throw new ValidationException("The Bugzilla Component \"" + bugzillaOptions.getComponent() + "\" is not active.");
                     }

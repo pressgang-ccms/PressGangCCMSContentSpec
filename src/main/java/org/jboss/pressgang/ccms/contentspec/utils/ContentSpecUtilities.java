@@ -118,7 +118,7 @@ public class ContentSpecUtilities {
 
     public static Node findMatchingContentSpecNode(final ContentSpec contentSpec, final Integer csNodeId) {
         for (final Node node : contentSpec.getNodes()) {
-            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId)) {
+            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
                 return node;
             }
         }
@@ -130,7 +130,7 @@ public class ContentSpecUtilities {
         for (final Node node : level.getChildNodes()) {
             if (node instanceof Level) {
                 return findMatchingContentSpecNode((Level) node, csNodeId);
-            } else if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId)) {
+            } else if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
                 return node;
             }
         }

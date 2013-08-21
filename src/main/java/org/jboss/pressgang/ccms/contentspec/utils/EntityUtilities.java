@@ -269,7 +269,7 @@ public class EntityUtilities {
 
         if (source.getTopic() != null) {
             return returnPushedTranslatedTopic(source.getTopic());
-        } else  {
+        } else {
             return null;
         }
     }

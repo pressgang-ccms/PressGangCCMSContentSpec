@@ -51,7 +51,7 @@ public class TranslationUtilities {
         translatedContentSpec.setContentSpecRevision(contentSpecEntity.getRevision());
 
         // Get all the nodes to be translated
-        final Set<CSNodeWrapper> nodes = getAllContentSpecNodes(contentSpecEntity);
+        final Set<CSNodeWrapper> nodes = getAllTranslatableContentSpecNodes(contentSpecEntity);
 
         final UpdateableCollectionWrapper<TranslatedCSNodeWrapper> translatedNodes = createCSTranslatedNodes(providerFactory, nodes);
         translatedContentSpec.setTranslatedNodes(translatedNodes);
@@ -59,22 +59,26 @@ public class TranslationUtilities {
         return translatedContentSpec;
     }
 
-    protected static Set<CSNodeWrapper> getAllContentSpecNodes(final ContentSpecWrapper contentSpec) {
+    protected static Set<CSNodeWrapper> getAllTranslatableContentSpecNodes(final ContentSpecWrapper contentSpec) {
         final Set<CSNodeWrapper> nodes = new HashSet<CSNodeWrapper>();
         final List<CSNodeWrapper> childrenNodes = contentSpec.getChildren().getItems();
         for (CSNodeWrapper childNode : childrenNodes) {
-            nodes.add(childNode);
-            addAllCSNodeChildren(childNode, nodes);
+            if (ContentSpecUtilities.isNodeALevel(childNode)) {
+                nodes.add(childNode);
+            }
+            addAllTranslatableCSNodeChildren(childNode, nodes);
         }
         return nodes;
     }
 
-    protected static void addAllCSNodeChildren(final CSNodeWrapper csNode, final Set<CSNodeWrapper> nodes) {
+    protected static void addAllTranslatableCSNodeChildren(final CSNodeWrapper csNode, final Set<CSNodeWrapper> nodes) {
         if (csNode.getChildren() != null) {
             final List<CSNodeWrapper> childrenNodes = csNode.getChildren().getItems();
             for (CSNodeWrapper childNode : childrenNodes) {
-                nodes.add(childNode);
-                addAllCSNodeChildren(childNode, nodes);
+                if (ContentSpecUtilities.isNodeALevel(childNode)) {
+                    nodes.add(childNode);
+                }
+                addAllTranslatableCSNodeChildren(childNode, nodes);
             }
         }
     }
@@ -108,7 +112,8 @@ public class TranslationUtilities {
         final String sourceString;
         if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
             sourceString = node.getAdditionalText();
-        } else if (node.getNodeType() == CommonConstants.CS_NODE_COMMENT || node.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
+        } else if (node.getNodeType() == CommonConstants.CS_NODE_COMMENT || node.getNodeType() == CommonConstants.CS_NODE_TOPIC || node
+                .getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC) {
             sourceString = null;
         } else {
             sourceString = node.getTitle();

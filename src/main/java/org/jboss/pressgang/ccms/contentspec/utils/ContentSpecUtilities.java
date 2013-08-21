@@ -142,7 +142,7 @@ public class ContentSpecUtilities {
             }
         }
 
-        return CollectionUtilities.toArrayList(retValue);
+        return retValue;
     }
 
     private static void getTranslatableStringsFromLevel(final CSNodeWrapper level, final List<StringToCSNodeCollection> translationStrings,

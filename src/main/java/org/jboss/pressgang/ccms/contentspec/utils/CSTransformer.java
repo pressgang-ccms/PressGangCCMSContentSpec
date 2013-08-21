@@ -170,7 +170,7 @@ public class CSTransformer {
         } else {
             keyValueNode = new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
         }
-        keyValueNode.setUniqueId(node.getId().toString());
+        keyValueNode.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         return keyValueNode;
     }
@@ -207,7 +207,7 @@ public class CSTransformer {
 
         level.setConditionStatement(node.getCondition());
         level.setTargetId(node.getTargetId());
-        level.setUniqueId(node.getId().toString());
+        level.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         // Add all the levels/topics
         if (node.getChildren() != null && node.getChildren().getItems() != null) {
@@ -291,7 +291,7 @@ public class CSTransformer {
         specTopic.setRevision(node.getEntityRevision());
         specTopic.setConditionStatement(node.getCondition());
         specTopic.setTargetId(node.getTargetId());
-        specTopic.setUniqueId(node.getId().toString());
+        specTopic.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {
@@ -327,7 +327,7 @@ public class CSTransformer {
             throw new IllegalArgumentException("The passed node is not a Comment");
         }
 
-        comment.setUniqueId(node.getId().toString());
+        comment.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         return comment;
     }

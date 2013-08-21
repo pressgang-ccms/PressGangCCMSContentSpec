@@ -73,7 +73,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         assertThat(result.getRevision(), is(nodeWrapper.getEntityRevision()));
         assertThat(result.getConditionStatement(), is(nodeWrapper.getCondition()));
         assertThat(result.getTargetId(), is(nodeWrapper.getTargetId()));
-        assertThat(result.getUniqueId(), is(nodeWrapper.getId() + "-" + nodeWrapper.getEntityId()));
+        assertThat(result.getUniqueId(), is(nodeWrapper.getId().toString()));
 
         // And the node should be added to the list of processed nodes
         assertThat(specTopicMap.containsKey(result.getId()), is(true));
@@ -165,7 +165,7 @@ public class CSTransformerSpecTopicTest extends CSTransformerTest {
         assertThat(result.getTitle() == null, is(true));
         assertThat(result.getRevision() == null, is(true));
         assertThat(result.getConditionStatement() == null, is(true));
-        assertThat(result.getUniqueId(), is("null" + "-" + nodeWrapper.getEntityId()));
+        assertThat(result.getUniqueId() == null, is(true));
     }
 
     public void mockValidSpecTopicWrapper() {

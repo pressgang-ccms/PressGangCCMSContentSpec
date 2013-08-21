@@ -291,7 +291,7 @@ public class CSTransformer {
         specTopic.setRevision(node.getEntityRevision());
         specTopic.setConditionStatement(node.getCondition());
         specTopic.setTargetId(node.getTargetId());
-        specTopic.setUniqueId(node.getId() + "-" + node.getEntityId());
+        specTopic.setUniqueId(node.getId().toString());
 
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {

@@ -3,13 +3,13 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
-import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -17,9 +17,7 @@ import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
-import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
 import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -30,9 +28,7 @@ import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 public class ContentSpecUtilities {
     public static final Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)(\r)?\n");
     public static final Pattern CS_ID_PATTERN = Pattern.compile("ID[ ]*=[ ]*[0-9]+(\r)?\n");
-    private static final List<String> translatableMetaData = CollectionUtilities.toArrayList(
-            new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
-                    CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
+
 
     protected ContentSpecUtilities() {
     }
@@ -83,7 +79,7 @@ public class ContentSpecUtilities {
      * Replaces the checksum of a Content Spec with a new checksum value
      *
      * @param contentSpecString The content spec to replace the checksum for.
-     * @param checksum The new checksum to be set in the Content Spec.
+     * @param checksum          The new checksum to be set in the Content Spec.
      * @return The fixed content spec string.
      */
     public static String replaceChecksum(final String contentSpecString, final String checksum) {
@@ -120,101 +116,6 @@ public class ContentSpecUtilities {
         return "T-" + uniqueId + "0" + randomNum;
     }
 
-    public static List<StringToCSNodeCollection> getTranslatableStrings(final ContentSpecWrapper contentSpec,
-            final boolean allowDuplicates) {
-        if (contentSpec == null) return null;
-
-        final List<StringToCSNodeCollection> retValue = new ArrayList<StringToCSNodeCollection>();
-
-        final CollectionWrapper<CSNodeWrapper> contentSpecNodes = contentSpec.getChildren();
-        for (final CSNodeWrapper node : contentSpecNodes.getItems()) {
-            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
-                if (translatableMetaData.contains(node.getTitle())) {
-                    addTranslationToNodeDetailsToCollection(node.getAdditionalText().toString(), node, allowDuplicates, retValue);
-                }
-            }
-        }
-
-        // Find the level nodes translations
-        for (final CSNodeWrapper childNode : contentSpec.getChildren().getItems()) {
-            if (isNodeALevel(childNode)) {
-                getTranslatableStringsFromLevel(childNode, retValue, allowDuplicates);
-            }
-        }
-
-        return retValue;
-    }
-
-    private static void getTranslatableStringsFromLevel(final CSNodeWrapper level, final List<StringToCSNodeCollection> translationStrings,
-            final boolean allowDuplicates) {
-        if (level == null || translationStrings == null) return;
-
-        addTranslationToNodeDetailsToCollection(level.getTitle(), level, allowDuplicates, translationStrings);
-
-        if (level.getChildren() != null) {
-            for (final CSNodeWrapper childNode : level.getChildren().getItems()) {
-                if (isNodeALevel(childNode)) {
-                    getTranslatableStringsFromLevel(childNode, translationStrings, allowDuplicates);
-                }
-            }
-        }
-    }
-
-    @SuppressWarnings({"unchecked", "rawtypes"})
-    public static void replaceTranslatedStrings(final ContentSpecWrapper contentSpecEntity, final ContentSpec contentSpec,
-            final Map<String, String> translations) {
-        if (contentSpecEntity == null || translations == null || translations.size() == 0) return;
-
-        /*
-         * Get the translation strings and the nodes that the string maps to. We
-         * assume that the text being provided here is an exact match for the
-         * text that was supplied to getTranslatableStrings originally, which we
-         * then assume matches the strings supplied as the keys in the
-         * translations parameter.
-         */
-        final List<StringToCSNodeCollection> stringToNodeCollections = getTranslatableStrings(contentSpecEntity, false);
-
-        if (stringToNodeCollections == null || stringToNodeCollections.size() == 0) return;
-
-        for (final StringToCSNodeCollection stringToNodeCollection : stringToNodeCollections) {
-            final String originalString = stringToNodeCollection.getTranslationString();
-            final ArrayList<CSNodeWrapper> nodeCollections = stringToNodeCollection.getNodeCollections();
-
-            if (nodeCollections != null && nodeCollections.size() != 0) {
-                // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
-                final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
-                if (fixedStringDetails.getFixedString() != null) {
-                    final String translation = translations.get(fixedStringDetails.getFixedString());
-
-                    if (translation != null && !translation.isEmpty()) {
-                        // Build up the padding that Zanata removed
-                        final StringBuilder leftTrimPadding = new StringBuilder();
-                        final StringBuilder rightTrimPadding = new StringBuilder();
-
-                        for (int i = 0; i < fixedStringDetails.getLeftTrimCount(); ++i)
-                            leftTrimPadding.append(" ");
-
-                        for (int i = 0; i < fixedStringDetails.getRightTrimCount(); ++i)
-                            rightTrimPadding.append(" ");
-
-                        final String fixedTranslation = leftTrimPadding.toString() + translation + rightTrimPadding.toString();
-
-                        for (final CSNodeWrapper node : nodeCollections) {
-                            final Node contentSpecNode = findMatchingContentSpecNode(contentSpec, node.getId());
-                            if (contentSpecNode != null) {
-                                if (contentSpecNode instanceof KeyValueNode) {
-                                    ((KeyValueNode) contentSpecNode).setValue(fixedTranslation);
-                                } else if (contentSpecNode instanceof Level) {
-                                    ((Level) contentSpecNode).setTranslatedTitle(fixedTranslation);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
     public static Node findMatchingContentSpecNode(final ContentSpec contentSpec, final Integer csNodeId) {
         for (final Node node : contentSpec.getNodes()) {
             if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId)) {
@@ -237,32 +138,42 @@ public class ContentSpecUtilities {
         return null;
     }
 
-    private static StringToCSNodeCollection findExistingText(final String text, final List<StringToCSNodeCollection> translationStrings) {
-        for (final StringToCSNodeCollection stringToNodeCollection : translationStrings) {
-            if (stringToNodeCollection.getTranslationString().equals(text)) return stringToNodeCollection;
+    /**
+     * Recursively find all of a Content Specs child nodes.
+     *
+     * @param contentSpec The content spec to get all the children nodes from.
+     * @return A list of children nodes that exist for the content spec.
+     */
+    public static List<CSNodeWrapper> getAllNodes(final ContentSpecWrapper contentSpec) {
+        final List<CSNodeWrapper> nodes = new LinkedList<CSNodeWrapper>();
+        if (contentSpec.getChildren() != null) {
+            final List<CSNodeWrapper> childrenNodes = contentSpec.getChildren().getItems();
+            for (final CSNodeWrapper childNode : childrenNodes) {
+                nodes.add(childNode);
+                nodes.addAll(getAllChildrenNodes(childNode));
+            }
         }
 
-        return null;
+        return nodes;
     }
 
-    private static void addTranslationToNodeDetailsToCollection(final String text, final CSNodeWrapper node, final boolean allowDuplicates,
-            final List<StringToCSNodeCollection> translationStrings) {
-        final ArrayList<CSNodeWrapper> nodes = new ArrayList<CSNodeWrapper>();
-        nodes.add(node);
-        addTranslationToNodeDetailsToCollection(text, nodes, allowDuplicates, translationStrings);
-    }
-
-    private static void addTranslationToNodeDetailsToCollection(final String text, final ArrayList<CSNodeWrapper> nodes,
-            final boolean allowDuplicates, final List<StringToCSNodeCollection> translationStrings) {
-
-        if (allowDuplicates) {
-            translationStrings.add(new StringToCSNodeCollection(text).addNodeCollection(nodes));
-        } else {
-            final StringToCSNodeCollection stringToNodeCollection = findExistingText(text, translationStrings);
-
-            if (stringToNodeCollection == null) translationStrings.add(new StringToCSNodeCollection(text).addNodeCollection(nodes));
-            else stringToNodeCollection.addNodeCollection(nodes);
+    /**
+     * Recursively find all of a Content Spec Nodes children.
+     *
+     * @param csNode The node to get all the children nodes from.
+     * @return A list of children nodes that exist for the node.
+     */
+    public static List<CSNodeWrapper> getAllChildrenNodes(final CSNodeWrapper csNode) {
+        final List<CSNodeWrapper> nodes = new LinkedList<CSNodeWrapper>();
+        if (csNode.getChildren() != null) {
+            final List<CSNodeWrapper> childrenNodes = csNode.getChildren().getItems();
+            for (final CSNodeWrapper childNode : childrenNodes) {
+                nodes.add(childNode);
+                nodes.addAll(getAllChildrenNodes(childNode));
+            }
         }
+
+        return nodes;
     }
 
     /*

@@ -217,6 +217,33 @@ public class ContentSpecUtilities {
         return specTopicMap;
     }
 
+    public static Map<String, SpecTopic> getTargetIdSpecTopicMap(ContentSpec contentSpec) {
+        // Create the map of unique ids to spec topics
+        final Map<String, SpecTopic> specTopicMap = new HashMap<String, SpecTopic>();
+        final List<SpecTopic> specTopics = contentSpec.getSpecTopics();
+        for (final SpecTopic specTopic : specTopics) {
+            if (specTopic.getTargetId() != null) {
+                specTopicMap.put(specTopic.getTargetId(), specTopic);
+            }
+        }
+        return specTopicMap;
+    }
+
+    public static Map<String, List<SpecTopic>> getIdSpecTopicMap(ContentSpec contentSpec) {
+        // Create the map of unique ids to spec topics
+        final Map<String, List<SpecTopic>> specTopicMap = new HashMap<String, List<SpecTopic>>();
+        final List<SpecTopic> specTopics = contentSpec.getSpecTopics();
+        for (final SpecTopic specTopic : specTopics) {
+            if (specTopic.getId() != null) {
+                if (!specTopicMap.containsKey(specTopic.getId())) {
+                    specTopicMap.put(specTopic.getId(), new ArrayList<SpecTopic>());
+                }
+                specTopicMap.get(specTopic.getId()).add(specTopic);
+            }
+        }
+        return specTopicMap;
+    }
+
     /**
      * Check to see if a Meta Data line is a Spec Topic Meta Data, based on the key value.
      *

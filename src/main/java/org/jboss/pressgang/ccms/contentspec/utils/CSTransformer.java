@@ -64,24 +64,7 @@ public class CSTransformer {
         final ContentSpec contentSpec = new ContentSpec();
 
         contentSpec.setId(spec.getId());
-        if (spec.getCondition() != null) {
-            contentSpec.getBaseLevel().setConditionStatement(spec.getCondition());
-        }
-
-        // Add all of the book tags
-        if (spec.getBookTags() != null && spec.getBookTags().getItems() != null) {
-            final List<String> tags = new ArrayList<String>();
-            final List<TagWrapper> tagItems = spec.getBookTags().getItems();
-
-            // Sort the tags to make sure they always appear the same
-            Collections.sort(tagItems, new EntityWrapperIDComparator());
-
-            // Add the tags
-            for (final TagWrapper tag : tagItems) {
-                tags.add(tag.getName());
-            }
-            contentSpec.setTags(tags);
-        }
+        transformGlobalOptions(spec, contentSpec);
 
         // Add all the levels/topics
         if (spec.getChildren() != null) {
@@ -144,6 +127,27 @@ public class CSTransformer {
         applyRelationships(contentSpec, nodes, specTopicMap, topicTargets, relationshipFromNodes, processes, providerFactory);
 
         return contentSpec;
+    }
+
+    private static void transformGlobalOptions(final ContentSpecWrapper spec, final ContentSpec contentSpec) {
+        if (spec.getCondition() != null) {
+            contentSpec.getBaseLevel().setConditionStatement(spec.getCondition());
+        }
+
+        // Add all of the book tags
+        if (spec.getBookTags() != null && spec.getBookTags().getItems() != null) {
+            final List<String> tags = new ArrayList<String>();
+            final List<TagWrapper> tagItems = spec.getBookTags().getItems();
+
+            // Sort the tags to make sure they always appear the same
+            Collections.sort(tagItems, new EntityWrapperIDComparator());
+
+            // Add the tags
+            for (final TagWrapper tag : tagItems) {
+                tags.add(tag.getName());
+            }
+            contentSpec.setTags(tags);
+        }
     }
 
     /**

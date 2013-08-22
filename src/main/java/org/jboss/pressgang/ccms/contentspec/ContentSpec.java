@@ -1704,10 +1704,19 @@ public class ContentSpec extends Node {
             subtitle = (KeyValueNode<String>) node;
         } else if (key.equalsIgnoreCase(CSConstants.REV_HISTORY_TITLE) && value instanceof SpecTopic) {
             revisionHistory = (KeyValueNode<SpecTopic>) node;
+            if (value != null) {
+                revisionHistory.getValue().setTopicType(TopicType.REVISION_HISTORY);
+            }
         } else if (key.equalsIgnoreCase(CSConstants.FEEDBACK_TITLE) && value instanceof SpecTopic) {
             feedback = (KeyValueNode<SpecTopic>) node;
+            if (value != null) {
+                feedback.getValue().setTopicType(TopicType.FEEDBACK);
+            }
         } else if (key.equalsIgnoreCase(CSConstants.LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
             legalNotice = (KeyValueNode<SpecTopic>) node;
+            if (value != null) {
+                legalNotice.getValue().setTopicType(TopicType.LEGAL_NOTICE);
+            }
         } else if (key.equalsIgnoreCase(CSConstants.MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
             artifactId = (KeyValueNode<String>) node;
         } else if (key.equalsIgnoreCase(CSConstants.MAVEN_GROUP_ID_TITLE) && value instanceof String) {

@@ -128,10 +128,16 @@ public class ContentSpecUtilities {
 
     public static Node findMatchingContentSpecNode(final Level level, final Integer csNodeId) {
         for (final Node node : level.getChildNodes()) {
-            if (node instanceof Level) {
-                return findMatchingContentSpecNode((Level) node, csNodeId);
-            } else if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
+            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
                 return node;
+            }
+
+            // Check the children of the node if it is a level
+            if (node instanceof Level) {
+                final Node foundNode = findMatchingContentSpecNode((Level) node, csNodeId);
+                if (foundNode != null) {
+                    return foundNode;
+                }
             }
         }
 

@@ -31,7 +31,7 @@ public class TocTopicDatabase {
 
     public BaseTopicWrapper<?> getTopic(final Integer topicId) {
         for (final BaseTopicWrapper<?> topic : topics) {
-            if (topic.getId().equals(topicId)) {
+            if (topic.getTopicId().equals(topicId)) {
                 return topic;
             }
         }

@@ -19,10 +19,13 @@ import com.j2bugzilla.base.ProductVersion;
 import com.j2bugzilla.rpc.GetBugField;
 import com.j2bugzilla.rpc.GetProduct;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
+import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -35,11 +38,16 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
 
     private final BugzillaConnector connector;
     private final String bugzillaUrl;
+    private boolean connected = false;
 
-    public BugzillaBugLinkStrategy(final String bugzillaUrl) throws ConnectionException {
+    public BugzillaBugLinkStrategy(final String bugzillaUrl) {
         connector = new BugzillaConnector();
         this.bugzillaUrl = bugzillaUrl.endsWith("/") ? bugzillaUrl : (bugzillaUrl + "/");
-        connector.connectTo(this.bugzillaUrl);
+    }
+
+    protected void connect() throws ConnectionException {
+        connected = true;
+        connector.connectTo(bugzillaUrl);
     }
 
     @Override
@@ -154,6 +162,13 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
 
     @Override
     public void validate(final BugzillaBugLinkOptions bugzillaOptions) throws ValidationException {
+        if (!connected) {
+            try {
+                connect();
+            } catch (ConnectionException e) {
+                throw new RuntimeException(e);
+            }
+        }
         final GetProduct getProduct = new GetProduct(bugzillaOptions.getProduct());
         final GetBugField getBugField = new GetBugField("keywords");
         try {
@@ -205,9 +220,44 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
                     }
                 }
             }
+        } catch (ValidationException e) {
+            throw e;
         } catch (Exception e) {
             throw new ValidationException(e);
         }
+    }
+
+    @Override
+    public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, BugzillaBugLinkOptions bugOptions) {
+        boolean changed = false;
+        // Server
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_SERVER_TITLE, bugzillaUrl, contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Product
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_PRODUCT_TITLE, bugOptions.getProduct(), contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Version
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_VERSION_TITLE, bugOptions.getVersion(), contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Component
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_COMPONENT_TITLE, bugOptions.getComponent(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Keywords
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_KEYWORDS_TITLE, bugOptions.getKeywords(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        return changed;
     }
 
     protected ProductComponent getBugzillaComponent(final String component, final Product product) {

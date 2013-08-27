@@ -21,6 +21,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
+import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedContentSpecWrapper;
@@ -346,5 +347,27 @@ public class EntityUtilities {
         if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) return null;
 
         return topicProvider.getTopic(node.getEntityId(), node.getEntityRevision());
+    }
+
+    /**
+     * Checks to see if a Content Spec Meta Data element has changed.
+     *
+     * @param metaDataName The Content Spec Meta Data name.
+     * @param currentValue The expected current value of the Meta Data node.
+     * @param contentSpecEntity The Content Spec Entity to check against.
+     * @return True if the meta data node has changed, otherwise false.
+     */
+    public static boolean hasContentSpecMetaDataChanged(final String metaDataName, final String currentValue,
+            final ContentSpecWrapper contentSpecEntity) {
+        final CSNodeWrapper metaData = contentSpecEntity.getMetaData(metaDataName);
+        if (metaData != null && metaData.getAdditionalText() != null && !metaData.getAdditionalText().equals(currentValue)) {
+            // The values no longer match
+            return true;
+        } else if (currentValue != null) {
+            // The meta data node doesn't exist but it exists now
+            return true;
+        } else {
+            return false;
+        }
     }
 }

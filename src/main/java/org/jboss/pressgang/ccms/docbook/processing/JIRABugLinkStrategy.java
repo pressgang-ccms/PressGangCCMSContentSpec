@@ -11,14 +11,17 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
+import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.jira.rest.JIRAProxyFactory;
 import org.jboss.pressgang.ccms.jira.rest.JIRARESTInterface;
 import org.jboss.pressgang.ccms.jira.rest.entities.component.JIRAComponent;
 import org.jboss.pressgang.ccms.jira.rest.entities.project.JIRAProject;
 import org.jboss.pressgang.ccms.jira.rest.entities.version.JIRAVersion;
+import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.resteasy.client.ClientResponseFailure;
 
@@ -112,6 +115,42 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
                 }
             }
         }
+    }
+
+    @Override
+    public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, JIRABugLinkOptions bugOptions) {
+        boolean changed = false;
+        // Server
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.JIRA_SERVER_TITLE, jiraUrl,
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Project
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.JIRA_PROJECT_TITLE, bugOptions.getProject(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Version
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.JIRA_VERSION_TITLE, bugOptions.getVersion(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Component
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.JIRA_COMPONENT_TITLE, bugOptions.getComponent(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        // Labels
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.JIRA_LABELS_TITLE, bugOptions.getLabels(),
+                contentSpecEntity)) {
+            changed = true;
+        }
+
+        return changed;
     }
 
     protected JIRAProject getJIRAProject(final JIRARESTInterface client, final String project) {

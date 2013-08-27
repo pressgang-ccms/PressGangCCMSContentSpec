@@ -21,6 +21,7 @@ import org.jboss.pressgang.ccms.jira.rest.JIRARESTInterface;
 import org.jboss.pressgang.ccms.jira.rest.entities.component.JIRAComponent;
 import org.jboss.pressgang.ccms.jira.rest.entities.project.JIRAProject;
 import org.jboss.pressgang.ccms.jira.rest.entities.version.JIRAVersion;
+import org.jboss.pressgang.ccms.provider.exception.ProviderException;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.resteasy.client.ClientResponseFailure;
@@ -154,38 +155,39 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
     }
 
     protected JIRAProject getJIRAProject(final JIRARESTInterface client, final String project) {
-        if (projects == null) {
-            // Check our key map first
-            if (projectKeyMap.containsKey(project)) {
-                return projectKeyMap.get(project);
+        try {
+            if (projects == null) {
+                // Check our key map first
+                if (projectKeyMap.containsKey(project)) {
+                    return projectKeyMap.get(project);
+                }
+
+                // Try and get the project first if the project entered is the project key
+                JIRAProject projectEntity = client.getProject(project);
+
+                // If the project isn't null then we found a matching one, otherwise load all the projects
+                if (projectEntity != null) {
+                    projectKeyMap.put(project, projectEntity);
+                    return projectEntity;
+                } else {
+                    projects = client.getProjects();
+                }
             }
 
-            // Try and get the project first if the project entered is the project key
-            JIRAProject projectEntity = null;
-            try {
-                projectEntity = client.getProject(project);
-            } catch (ClientResponseFailure e) {
-
+            // Check all the projects to find one that matches
+            for (final JIRAProject projectEntity : projects) {
+                if (projectEntity.getKey() != null && projectEntity.getKey().equals(project)) {
+                    return projectEntity;
+                } else if (projectEntity.getName() != null && projectEntity.getName().equals(project)) {
+                    return projectEntity;
+                } else if (NUMBER_PATTERN.matcher(project).matches() && projectEntity.getId().equals(Long.parseLong(project))) {
+                    return projectEntity;
+                }
             }
-
-            // If the project isn't null then we found a matching one, otherwise load all the projects
-            if (projectEntity != null) {
-                projectKeyMap.put(project, projectEntity);
-                return projectEntity;
-            } else {
-                projects = client.getProjects();
-            }
-        }
-
-        // Check all the projects to find one that matches
-        for (final JIRAProject projectEntity : projects) {
-            if (projectEntity.getKey() != null && projectEntity.getKey().equals(project)) {
-                return projectEntity;
-            } else if (projectEntity.getName() != null && projectEntity.getName().equals(project)) {
-                return projectEntity;
-            } else if (NUMBER_PATTERN.matcher(project).matches() && projectEntity.getId().equals(Long.parseLong(project))) {
-                return projectEntity;
-            }
+        } catch (ProviderException e) {
+            // We have to catch this because of the Error Interceptor
+        } catch (ClientResponseFailure e) {
+            // Do nothing, as if an error occurs than it likely means the project doesn't exist
         }
 
         return null;

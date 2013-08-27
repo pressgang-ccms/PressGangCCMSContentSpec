@@ -27,7 +27,7 @@ import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 public class ContentSpecUtilities {
     public static final Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)(\r)?\n");
-    public static final Pattern CS_ID_PATTERN = Pattern.compile("ID[ ]*=[ ]*[0-9]+(\r)?\n");
+    public static final Pattern CS_ID_PATTERN = Pattern.compile("ID[ ]*=[ ]*(?<ID>[0-9]+)(\r)?\n");
 
 
     protected ContentSpecUtilities() {
@@ -54,6 +54,21 @@ public class ContentSpecUtilities {
         final Matcher matcher = CS_CHECKSUM_PATTERN.matcher(contentSpecString);
         if (matcher.find()) {
             return matcher.group("Checksum");
+        }
+
+        return null;
+    }
+
+    /**
+     * Get the ID of a Content Specification object.
+     *
+     * @param contentSpecString The content spec string to calculate the checksum for.
+     * @return The ID of the Content Spec, or null if it isn't set.
+     */
+    public static Integer getContentSpecID(final String contentSpecString) {
+        final Matcher matcher = CS_ID_PATTERN.matcher(contentSpecString);
+        if (matcher.find()) {
+            return Integer.parseInt(matcher.group("ID"));
         }
 
         return null;

@@ -20,6 +20,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
+import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
@@ -681,7 +682,7 @@ public class SpecTopic extends SpecNode {
     public String getText() {
         final StringBuilder output = new StringBuilder();
         final String idAndOptions = getIdAndOptionsString();
-        output.append((title == null ? "" : title) + " [" + idAndOptions + "]");
+        output.append((title == null ? "" : ContentSpecUtilities.escapeTitle(title)) + " [" + idAndOptions + "]");
 
         if (targetId != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
             output.append(" [" + targetId + "]");
@@ -800,7 +801,7 @@ public class SpecTopic extends SpecNode {
                 retValue.append(spacer);
                 retValue.append(SPACER);
                 if (related.getRelationshipTitle() != null && !related.getRelationshipTitle().trim().isEmpty()) {
-                    retValue.append(related.getRelationshipTitle()).append(" ");
+                    retValue.append(ContentSpecUtilities.escapeTitle(related.getRelationshipTitle())).append(" ");
                 }
                 retValue.append("[");
                 retValue.append(related.getSecondaryRelationshipTopicId());

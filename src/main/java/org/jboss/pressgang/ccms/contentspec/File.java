@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
+import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
+
 public class File {
     private String title;
     private Integer id;
@@ -19,7 +21,7 @@ public class File {
         if (title == null) {
             output.append(getIdAndRevisionText());
         } else {
-            output.append(title).append(" ").append("[").append(getIdAndRevisionText()).append("]");
+            output.append(ContentSpecUtilities.escapeTitle(title)).append(" ").append("[").append(getIdAndRevisionText()).append("]");
         }
         return output.toString();
     }

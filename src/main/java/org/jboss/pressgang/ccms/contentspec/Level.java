@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
+import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 
 /**
@@ -447,7 +448,7 @@ public class Level extends SpecNode {
         final StringBuilder output = new StringBuilder();
         if (type != LevelType.BASE) {
             output.append(type.getTitle()).append(": ");
-            output.append(title);
+            output.append(ContentSpecUtilities.escapeTitle(title));
             if (innerTopic != null) {
                 output.append(" [").append(innerTopic.getIdAndOptionsString()).append("]");
             }

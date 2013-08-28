@@ -288,6 +288,20 @@ public class ContentSpecUtilities {
                 return false;
         }
     }
+
+    /**
+     * Escapes a title so that it can be used in a Content Specification.
+     *
+     * @param title
+     * @return
+     */
+    public static String escapeTitle(final String title) {
+        if (title == null) {
+            return null;
+        } else {
+            return title.replace(",", "\\,").replace("[", "\\[");
+        }
+    }
 }
 
 /**

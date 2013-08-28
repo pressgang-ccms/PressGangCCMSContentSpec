@@ -1783,7 +1783,7 @@ public class ContentSpec extends Node {
 
         // If the id isn't null then add the id and checksum
         if (getId() != null) {
-            output.insert(0, CommonConstants.CS_CHECKSUM_TITLE + "=" + HashUtilities.generateMD5(
+            output.insert(0, CommonConstants.CS_CHECKSUM_TITLE + " = " + HashUtilities.generateMD5(
                     CommonConstants.CS_ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CommonConstants.CS_ID_TITLE + " = " + id.getValue() +
                     "\n");
         }

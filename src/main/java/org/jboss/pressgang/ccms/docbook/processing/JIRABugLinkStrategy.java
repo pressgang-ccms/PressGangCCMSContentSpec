@@ -112,7 +112,7 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
             if (jiraOptions.getVersion() != null) {
                 final JIRAVersion version = getJIRAVersion(jiraOptions.getVersion(), project);
                 if (version == null) {
-                    throw new ValidationException("No JIRA Version exists for version \"" + jiraOptions.getComponent() + "\".");
+                    throw new ValidationException("No JIRA Version exists for version \"" + jiraOptions.getVersion() + "\".");
                 }
             }
         }

@@ -700,14 +700,14 @@ public class DocbookXMLPreProcessor {
 
         if (titleEle != null) {
             // Create the paragraph and list of prerequisites.
-            final Element formalParaEle = doc.createElement("formalpara");
-            formalParaEle.setAttribute("role", ROLE_PREREQUISITE_LIST);
-            final Element formalParaTitleEle = doc.createElement("title");
+            final Element itemisedListEle = doc.createElement("itemizedlist");
+            itemisedListEle.setAttribute("role", ROLE_PREREQUISITE_LIST);
+            final Element itemisedListTitleEle = doc.createElement("title");
 
             final String prerequisiteTranslation = translations.getString(PREREQUISITE_PROPERTY);
-            formalParaTitleEle.setTextContent(prerequisiteTranslation == null ? DEFAULT_PREREQUISITE : prerequisiteTranslation);
+            itemisedListTitleEle.setTextContent(prerequisiteTranslation == null ? DEFAULT_PREREQUISITE : prerequisiteTranslation);
 
-            formalParaEle.appendChild(formalParaTitleEle);
+            itemisedListEle.appendChild(itemisedListTitleEle);
             final List<List<Element>> list = new LinkedList<List<Element>>();
 
             // Add the Relationships
@@ -724,9 +724,9 @@ public class DocbookXMLPreProcessor {
             }
 
             // Wrap the items into an itemized list
-            final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
+            final List<Element> items = DocBookUtilities.wrapItemsInListItems(doc, list);
             for (final Element ele : items) {
-                formalParaEle.appendChild(ele);
+                itemisedListEle.appendChild(ele);
             }
 
             // Add the paragraph and list after the title node
@@ -735,7 +735,7 @@ public class DocbookXMLPreProcessor {
                 nextNode = nextNode.getNextSibling();
             }
 
-            doc.getDocumentElement().insertBefore(formalParaEle, nextNode);
+            doc.getDocumentElement().insertBefore(itemisedListEle, nextNode);
         }
     }
 
@@ -750,14 +750,14 @@ public class DocbookXMLPreProcessor {
     public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
         // Create the paragraph and list of prerequisites.
         if (topic.getRelatedRelationships().isEmpty()) return;
-        final Element formalParaEle = doc.createElement("formalpara");
-        formalParaEle.setAttribute("role", ROLE_SEE_ALSO_LIST);
-        final Element formalParaTitleEle = doc.createElement("title");
+        final Element itemisedListEle = doc.createElement("itemizedlist");
+        itemisedListEle.setAttribute("role", ROLE_SEE_ALSO_LIST);
+        final Element itemisedListTitleEle = doc.createElement("title");
 
         final String seeAlsoTranslation = translations.getString(SEE_ALSO_PROPERTY);
-        formalParaTitleEle.setTextContent(seeAlsoTranslation == null ? DEFAULT_SEE_ALSO : seeAlsoTranslation);
+        itemisedListTitleEle.setTextContent(seeAlsoTranslation == null ? DEFAULT_SEE_ALSO : seeAlsoTranslation);
 
-        formalParaEle.appendChild(formalParaTitleEle);
+        itemisedListEle.appendChild(itemisedListTitleEle);
         final List<List<Element>> list = new LinkedList<List<Element>>();
 
         // Add the Relationships
@@ -774,13 +774,13 @@ public class DocbookXMLPreProcessor {
         }
 
         // Wrap the items into an itemized list
-        final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
+        final List<Element> items = DocBookUtilities.wrapItemsInListItems(doc, list);
         for (final Element ele : items) {
-            formalParaEle.appendChild(ele);
+            itemisedListEle.appendChild(ele);
         }
 
         // Add the paragraph and list after at the end of the xml data
-        doc.getDocumentElement().appendChild(formalParaEle);
+        doc.getDocumentElement().appendChild(itemisedListEle);
     }
 
     /**
@@ -793,11 +793,11 @@ public class DocbookXMLPreProcessor {
     public void processLinkListRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
         // Create the paragraph and list of prerequisites.
         if (topic.getLinkListRelationships().isEmpty()) return;
-        final Element formalParaEle = doc.createElement("formalpara");
-        formalParaEle.setAttribute("role", ROLE_LINK_LIST_LIST);
-        final Element formalParaTitleEle = doc.createElement("title");
-        formalParaTitleEle.setTextContent("");
-        formalParaEle.appendChild(formalParaTitleEle);
+        final Element itemisedListEle = doc.createElement("itemizedlist");
+        itemisedListEle.setAttribute("role", ROLE_LINK_LIST_LIST);
+        final Element itemisedListTitleEle = doc.createElement("title");
+        itemisedListTitleEle.setTextContent("");
+        itemisedListEle.appendChild(itemisedListTitleEle);
         final List<List<Element>> list = new LinkedList<List<Element>>();
 
         // Add the Relationships
@@ -814,13 +814,13 @@ public class DocbookXMLPreProcessor {
         }
 
         // Wrap the items into an itemized list
-        final List<Element> items = DocBookUtilities.wrapItemizedListItemsInPara(doc, list);
+        final List<Element> items = DocBookUtilities.wrapItemsInListItems(doc, list);
         for (final Element ele : items) {
-            formalParaEle.appendChild(ele);
+            itemisedListEle.appendChild(ele);
         }
 
         // Add the paragraph and list after at the end of the xml data
-        doc.getDocumentElement().appendChild(formalParaEle);
+        doc.getDocumentElement().appendChild(itemisedListEle);
     }
 
     public static String processDocumentType(final String xml) {

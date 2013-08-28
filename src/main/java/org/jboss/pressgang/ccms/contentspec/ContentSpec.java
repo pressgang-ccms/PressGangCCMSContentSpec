@@ -24,6 +24,7 @@ import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.HashUtilities;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class ContentSpec extends Node {
     private KeyValueNode<Integer> id = null;
@@ -144,7 +145,7 @@ public class ContentSpec extends Node {
             removeChild(this.product);
             this.product = null;
         } else if (this.product == null) {
-            this.product = new KeyValueNode<String>(CSConstants.PRODUCT_TITLE, product);
+            this.product = new KeyValueNode<String>(CommonConstants.CS_PRODUCT_TITLE, product);
             appendChild(this.product, false);
         } else {
             this.product.setValue(product);
@@ -172,7 +173,7 @@ public class ContentSpec extends Node {
             removeChild(this.version);
             this.version = null;
         } else if (this.version == null) {
-            this.version = new KeyValueNode<String>(CSConstants.VERSION_TITLE, version);
+            this.version = new KeyValueNode<String>(CommonConstants.CS_VERSION_TITLE, version);
             appendChild(this.version, false);
         } else {
             this.version.setValue(version);
@@ -200,7 +201,7 @@ public class ContentSpec extends Node {
             removeChild(this.brand);
             this.brand = null;
         } else if (this.brand == null) {
-            this.brand = new KeyValueNode<String>(CSConstants.BRAND_TITLE, brand);
+            this.brand = new KeyValueNode<String>(CommonConstants.CS_BRAND_TITLE, brand);
             appendChild(this.brand, false);
         } else {
             this.brand.setValue(brand);
@@ -219,7 +220,7 @@ public class ContentSpec extends Node {
             removeChild(this.id);
             this.id = null;
         } else if (this.id == null) {
-            this.id = new KeyValueNode<Integer>(CSConstants.ID_TITLE, id);
+            this.id = new KeyValueNode<Integer>(CommonConstants.CS_ID_TITLE, id);
             nodes.addFirst(this.id);
             if (this.id.getParent() != null) {
                 this.id.removeParent();
@@ -289,7 +290,7 @@ public class ContentSpec extends Node {
             removeChild(this.title);
             this.title = null;
         } else if (this.title == null) {
-            this.title = new KeyValueNode<String>(CSConstants.TITLE_TITLE, title);
+            this.title = new KeyValueNode<String>(CommonConstants.CS_TITLE_TITLE, title);
             appendChild(this.title, false);
         } else {
             this.title.setValue(title);
@@ -317,7 +318,7 @@ public class ContentSpec extends Node {
             removeChild(this.subtitle);
             this.subtitle = null;
         } else if (this.subtitle == null) {
-            this.subtitle = new KeyValueNode<String>(CSConstants.SUBTITLE_TITLE, subtitle);
+            this.subtitle = new KeyValueNode<String>(CommonConstants.CS_SUBTITLE_TITLE, subtitle);
             appendChild(this.subtitle, false);
         } else {
             this.subtitle.setValue(subtitle);
@@ -345,7 +346,7 @@ public class ContentSpec extends Node {
             removeChild(this.bookVersion);
             this.bookVersion = null;
         } else if (this.bookVersion == null) {
-            this.bookVersion = new KeyValueNode<String>(CSConstants.BOOK_VERSION_TITLE, bookVersion);
+            this.bookVersion = new KeyValueNode<String>(CommonConstants.CS_BOOK_VERSION_TITLE, bookVersion);
             appendChild(this.bookVersion, false);
         } else {
             this.bookVersion.setValue(bookVersion);
@@ -373,7 +374,7 @@ public class ContentSpec extends Node {
             removeChild(this.edition);
             this.edition = null;
         } else if (this.edition == null) {
-            this.edition = new KeyValueNode<String>(CSConstants.EDITION_TITLE, edition);
+            this.edition = new KeyValueNode<String>(CommonConstants.CS_EDITION_TITLE, edition);
             appendChild(this.edition, false);
         } else {
             this.edition.setValue(edition);
@@ -401,7 +402,7 @@ public class ContentSpec extends Node {
             removeChild(this.pubsNumber);
             this.pubsNumber = null;
         } else if (this.pubsNumber == null) {
-            this.pubsNumber = new KeyValueNode<Integer>(CSConstants.PUBSNUMBER_TITLE, pubsNumber);
+            this.pubsNumber = new KeyValueNode<Integer>(CommonConstants.CS_PUBSNUMBER_TITLE, pubsNumber);
             appendChild(this.pubsNumber, false);
         } else {
             this.pubsNumber.setValue(pubsNumber);
@@ -429,7 +430,7 @@ public class ContentSpec extends Node {
             removeChild(this.publicanCfg);
             this.publicanCfg = null;
         } else if (this.publicanCfg == null) {
-            this.publicanCfg = new KeyValueNode<String>(CSConstants.PUBLICAN_CFG_TITLE, publicanCfg);
+            this.publicanCfg = new KeyValueNode<String>(CommonConstants.CS_PUBLICAN_CFG_TITLE, publicanCfg);
             appendChild(this.publicanCfg, false);
         } else {
             this.publicanCfg.setValue(publicanCfg);
@@ -457,7 +458,7 @@ public class ContentSpec extends Node {
             removeChild(this.dtd);
             this.dtd = null;
         } else if (this.dtd == null) {
-            this.dtd = new KeyValueNode<String>(CSConstants.DTD_TITLE, dtd);
+            this.dtd = new KeyValueNode<String>(CommonConstants.CS_DTD_TITLE, dtd);
             appendChild(this.dtd, false);
         } else {
             this.dtd.setValue(dtd);
@@ -489,7 +490,7 @@ public class ContentSpec extends Node {
             removeChild(this.checksum);
             this.checksum = null;
         } else if (this.checksum == null) {
-            this.checksum = new KeyValueNode<String>(CSConstants.CHECKSUM_TITLE, checksum);
+            this.checksum = new KeyValueNode<String>(CommonConstants.CS_CHECKSUM_TITLE, checksum);
             appendChild(this.checksum, false);
         } else {
             this.checksum.setValue(checksum);
@@ -517,7 +518,7 @@ public class ContentSpec extends Node {
             removeChild(this.description);
             this.description = null;
         } else if (this.description == null) {
-            this.description = new KeyValueNode<String>(CSConstants.ABSTRACT_TITLE, description);
+            this.description = new KeyValueNode<String>(CommonConstants.CS_ABSTRACT_TITLE, description);
             appendChild(this.description, false);
         } else {
             this.description.setValue(description);
@@ -545,7 +546,7 @@ public class ContentSpec extends Node {
             removeChild(this.copyrightHolder);
             this.copyrightHolder = null;
         } else if (this.copyrightHolder == null) {
-            this.copyrightHolder = new KeyValueNode<String>(CSConstants.COPYRIGHT_HOLDER_TITLE, copyrightHolder);
+            this.copyrightHolder = new KeyValueNode<String>(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, copyrightHolder);
             appendChild(this.copyrightHolder, false);
         } else {
             this.copyrightHolder.setValue(copyrightHolder);
@@ -573,7 +574,7 @@ public class ContentSpec extends Node {
             removeChild(this.copyrightYear);
             this.copyrightYear = null;
         } else if (this.copyrightYear == null) {
-            this.copyrightYear = new KeyValueNode<String>(CSConstants.COPYRIGHT_YEAR_TITLE, copyrightYear);
+            this.copyrightYear = new KeyValueNode<String>(CommonConstants.CS_COPYRIGHT_YEAR_TITLE, copyrightYear);
             appendChild(this.copyrightYear, false);
         } else {
             this.copyrightYear.setValue(copyrightYear);
@@ -603,7 +604,7 @@ public class ContentSpec extends Node {
             removeChild(this.bookType);
             this.bookType = null;
         } else if (this.bookType == null) {
-            this.bookType = new KeyValueNode<BookType>(CSConstants.BOOK_TYPE_TITLE, bookType);
+            this.bookType = new KeyValueNode<BookType>(CommonConstants.CS_BOOK_TYPE_TITLE, bookType);
             appendChild(this.bookType, false);
         } else {
             this.bookType.setValue(bookType);
@@ -631,7 +632,7 @@ public class ContentSpec extends Node {
             removeChild(this.brandLogo);
             this.brandLogo = null;
         } else if (this.brandLogo == null) {
-            this.brandLogo = new KeyValueNode<String>(CSConstants.BRAND_LOGO_TITLE, brandLogo);
+            this.brandLogo = new KeyValueNode<String>(CommonConstants.CS_BRAND_LOGO_TITLE, brandLogo);
             appendChild(this.brandLogo, false);
         } else {
             this.brandLogo.setValue(brandLogo);
@@ -659,7 +660,7 @@ public class ContentSpec extends Node {
             removeChild(this.injectionOptions);
             this.injectionOptions = null;
         } else if (this.injectionOptions == null) {
-            this.injectionOptions = new KeyValueNode<InjectionOptions>(CSConstants.INLINE_INJECTION_TITLE, injectionOptions);
+            this.injectionOptions = new KeyValueNode<InjectionOptions>(CommonConstants.CS_INLINE_INJECTION_TITLE, injectionOptions);
             appendChild(this.injectionOptions, false);
         } else {
             this.injectionOptions.setValue(injectionOptions);
@@ -1017,7 +1018,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaProduct);
             this.bugzillaProduct = null;
         } else if (this.bugzillaProduct == null) {
-            this.bugzillaProduct = new KeyValueNode<String>(CSConstants.BUGZILLA_PRODUCT_TITLE, bugzillaProduct);
+            this.bugzillaProduct = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE, bugzillaProduct);
             appendChild(this.bugzillaProduct, false);
         } else {
             this.bugzillaProduct.setValue(bugzillaProduct);
@@ -1035,7 +1036,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaComponent);
             this.bugzillaComponent = null;
         } else if (this.bugzillaComponent == null) {
-            this.bugzillaComponent = new KeyValueNode<String>(CSConstants.BUGZILLA_COMPONENT_TITLE, bugzillaComponent);
+            this.bugzillaComponent = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_COMPONENT_TITLE, bugzillaComponent);
             appendChild(this.bugzillaComponent, false);
         } else {
             this.bugzillaComponent.setValue(bugzillaComponent);
@@ -1063,7 +1064,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaVersion);
             this.bugzillaVersion = null;
         } else if (this.bugzillaVersion == null) {
-            this.bugzillaVersion = new KeyValueNode<String>(CSConstants.BUGZILLA_VERSION_TITLE, bugzillaVersion);
+            this.bugzillaVersion = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_VERSION_TITLE, bugzillaVersion);
             appendChild(this.bugzillaVersion, false);
         } else {
             this.bugzillaVersion.setValue(bugzillaVersion);
@@ -1091,7 +1092,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaKeywords);
             this.bugzillaKeywords = null;
         } else if (this.bugzillaKeywords == null) {
-            this.bugzillaKeywords = new KeyValueNode<String>(CSConstants.BUGZILLA_KEYWORDS_TITLE, bugzillaKeywords);
+            this.bugzillaKeywords = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE, bugzillaKeywords);
             appendChild(this.bugzillaKeywords, false);
         } else {
             this.bugzillaVersion.setValue(bugzillaKeywords);
@@ -1115,7 +1116,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaServer);
             this.bugzillaServer = null;
         } else if (this.bugzillaServer == null) {
-            this.bugzillaServer = new KeyValueNode<String>(CSConstants.BUGZILLA_SERVER_TITLE, bugzillaServer);
+            this.bugzillaServer = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_SERVER_TITLE, bugzillaServer);
             appendChild(this.bugzillaServer, false);
         } else {
             this.bugzillaServer.setValue(bugzillaServer);
@@ -1143,7 +1144,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugzillaURL);
             this.bugzillaURL = null;
         } else if (this.bugzillaURL == null) {
-            this.bugzillaURL = new KeyValueNode<String>(CSConstants.BUGZILLA_URL_TITLE, bugzillaURL);
+            this.bugzillaURL = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_URL_TITLE, bugzillaURL);
             appendChild(this.bugzillaURL, false);
         } else {
             this.bugzillaURL.setValue(bugzillaURL);
@@ -1169,7 +1170,7 @@ public class ContentSpec extends Node {
             removeChild(this.bugLinks);
             this.bugLinks = null;
         } else if (this.bugLinks == null) {
-            this.bugLinks = new KeyValueNode<BugLinkType>(CSConstants.BUG_LINKS_TITLE, bugLinks);
+            this.bugLinks = new KeyValueNode<BugLinkType>(CommonConstants.CS_BUG_LINKS_TITLE, bugLinks);
             appendChild(this.bugLinks, false);
         } else {
             this.bugLinks.setValue(bugLinks);
@@ -1205,7 +1206,7 @@ public class ContentSpec extends Node {
             removeChild(this.injectBugzillaAssignee);
             this.injectBugzillaAssignee = null;
         } else if (this.injectBugzillaAssignee == null) {
-            this.injectBugzillaAssignee = new KeyValueNode<Boolean>(CSConstants.BUGZILLA_ASSIGNEE_TITLE, injectBugzillaAssignee);
+            this.injectBugzillaAssignee = new KeyValueNode<Boolean>(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE, injectBugzillaAssignee);
             appendChild(this.injectBugzillaAssignee, false);
         } else {
             this.injectBugzillaAssignee.setValue(injectBugzillaAssignee);
@@ -1235,7 +1236,7 @@ public class ContentSpec extends Node {
             removeChild(this.jiraProject);
             this.jiraProject = null;
         } else if (this.jiraProject == null) {
-            this.jiraProject = new KeyValueNode<String>(CSConstants.JIRA_PROJECT_TITLE, jiraProject);
+            this.jiraProject = new KeyValueNode<String>(CommonConstants.CS_JIRA_PROJECT_TITLE, jiraProject);
             appendChild(this.jiraProject, false);
         } else {
             this.jiraProject.setValue(jiraProject);
@@ -1253,7 +1254,7 @@ public class ContentSpec extends Node {
             removeChild(this.jiraComponent);
             this.jiraComponent = null;
         } else if (this.jiraComponent == null) {
-            this.jiraComponent = new KeyValueNode<String>(CSConstants.JIRA_COMPONENT_TITLE, jiraComponent);
+            this.jiraComponent = new KeyValueNode<String>(CommonConstants.CS_JIRA_COMPONENT_TITLE, jiraComponent);
             appendChild(this.jiraComponent, false);
         } else {
             this.jiraComponent.setValue(jiraComponent);
@@ -1281,7 +1282,7 @@ public class ContentSpec extends Node {
             removeChild(this.jiraVersion);
             this.jiraVersion = null;
         } else if (this.jiraVersion == null) {
-            this.jiraVersion = new KeyValueNode<String>(CSConstants.JIRA_VERSION_TITLE, jiraVersion);
+            this.jiraVersion = new KeyValueNode<String>(CommonConstants.CS_JIRA_VERSION_TITLE, jiraVersion);
             appendChild(this.jiraVersion, false);
         } else {
             this.jiraVersion.setValue(jiraVersion);
@@ -1309,7 +1310,7 @@ public class ContentSpec extends Node {
             removeChild(this.jiraLabels);
             this.jiraLabels = null;
         } else if (this.jiraLabels == null) {
-            this.jiraLabels = new KeyValueNode<String>(CSConstants.JIRA_LABELS_TITLE, jiraLabels);
+            this.jiraLabels = new KeyValueNode<String>(CommonConstants.CS_JIRA_LABELS_TITLE, jiraLabels);
             appendChild(this.jiraLabels, false);
         } else {
             this.jiraVersion.setValue(jiraLabels);
@@ -1333,7 +1334,7 @@ public class ContentSpec extends Node {
             removeChild(this.jiraServer);
             this.jiraServer = null;
         } else if (this.jiraServer == null) {
-            this.jiraServer = new KeyValueNode<String>(CSConstants.JIRA_SERVER_TITLE, jiraServer);
+            this.jiraServer = new KeyValueNode<String>(CommonConstants.CS_JIRA_SERVER_TITLE, jiraServer);
             appendChild(this.jiraServer, false);
         } else {
             this.jiraServer.setValue(jiraServer);
@@ -1373,7 +1374,7 @@ public class ContentSpec extends Node {
             this.revisionHistory = null;
         } else if (this.revisionHistory == null) {
             revisionHistory.setTopicType(TopicType.REVISION_HISTORY);
-            this.revisionHistory = new KeyValueNode<SpecTopic>(CSConstants.REV_HISTORY_TITLE, revisionHistory);
+            this.revisionHistory = new KeyValueNode<SpecTopic>(CommonConstants.CS_REV_HISTORY_TITLE, revisionHistory);
             appendChild(this.revisionHistory, false);
         } else {
             revisionHistory.setTopicType(TopicType.REVISION_HISTORY);
@@ -1403,7 +1404,7 @@ public class ContentSpec extends Node {
             this.feedback = null;
         } else if (this.feedback == null) {
             feedback.setTopicType(TopicType.FEEDBACK);
-            this.feedback = new KeyValueNode<SpecTopic>(CSConstants.FEEDBACK_TITLE, feedback);
+            this.feedback = new KeyValueNode<SpecTopic>(CommonConstants.CS_FEEDBACK_TITLE, feedback);
             appendChild(this.feedback, false);
         } else {
             feedback.setTopicType(TopicType.FEEDBACK);
@@ -1433,7 +1434,7 @@ public class ContentSpec extends Node {
             this.legalNotice = null;
         } else if (this.legalNotice == null) {
             legalNotice.setTopicType(TopicType.LEGAL_NOTICE);
-            this.legalNotice = new KeyValueNode<SpecTopic>(CSConstants.LEGAL_NOTICE_TITLE, legalNotice);
+            this.legalNotice = new KeyValueNode<SpecTopic>(CommonConstants.CS_LEGAL_NOTICE_TITLE, legalNotice);
             appendChild(this.legalNotice, false);
         } else {
             legalNotice.setTopicType(TopicType.LEGAL_NOTICE);
@@ -1462,7 +1463,7 @@ public class ContentSpec extends Node {
             removeChild(this.groupId);
             this.groupId = null;
         } else if (this.groupId == null) {
-            this.groupId = new KeyValueNode<String>(CSConstants.MAVEN_GROUP_ID_TITLE, groupId);
+            this.groupId = new KeyValueNode<String>(CommonConstants.CS_MAVEN_GROUP_ID_TITLE, groupId);
             appendChild(this.groupId, false);
         } else {
             this.groupId.setValue(groupId);
@@ -1490,7 +1491,7 @@ public class ContentSpec extends Node {
             removeChild(this.artifactId);
             this.artifactId = null;
         } else if (this.artifactId == null) {
-            this.artifactId = new KeyValueNode<String>(CSConstants.MAVEN_ARTIFACT_ID_TITLE, artifactId);
+            this.artifactId = new KeyValueNode<String>(CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE, artifactId);
             appendChild(this.artifactId, false);
         } else {
             this.artifactId.setValue(artifactId);
@@ -1518,7 +1519,7 @@ public class ContentSpec extends Node {
             removeChild(this.files);
             this.files = null;
         } else if (this.files == null) {
-            this.files = new FileList(CSConstants.FILE_TITLE, files);
+            this.files = new FileList(CommonConstants.CS_FILE_TITLE, files);
             appendChild(this.files, false);
         } else {
             this.files.setValue(files);
@@ -1581,9 +1582,9 @@ public class ContentSpec extends Node {
 
         KeyValueNode<?> fixedNode = node;
 
-        if (key.equalsIgnoreCase(CSConstants.TITLE_TITLE) && value instanceof String) {
+        if (key.equalsIgnoreCase(CommonConstants.CS_TITLE_TITLE) && value instanceof String) {
             title = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.ID_TITLE) && (value instanceof String || value instanceof Integer)) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_ID_TITLE) && (value instanceof String || value instanceof Integer)) {
             final KeyValueNode<Integer> idNode;
             if (value instanceof String) {
                 idNode = new KeyValueNode<Integer>(key, Integer.parseInt((String) value));
@@ -1593,13 +1594,13 @@ public class ContentSpec extends Node {
                 idNode = (KeyValueNode<Integer>) node;
             }
             id = idNode;
-        } else if (key.equalsIgnoreCase(CSConstants.CHECKSUM_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_CHECKSUM_TITLE) && value instanceof String) {
             checksum = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.PRODUCT_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_PRODUCT_TITLE) && value instanceof String) {
             product = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.VERSION_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_VERSION_TITLE) && value instanceof String) {
             version = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE) && (value instanceof String || value instanceof BookType)) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_TYPE_TITLE) && (value instanceof String || value instanceof BookType)) {
             final KeyValueNode<BookType> bookTypeNode;
             if (value instanceof String) {
                 bookTypeNode = new KeyValueNode<BookType>(key, BookType.getBookType((String) value));
@@ -1609,12 +1610,12 @@ public class ContentSpec extends Node {
                 bookTypeNode = (KeyValueNode<BookType>) node;
             }
             bookType = bookTypeNode;
-        } else if (key.equalsIgnoreCase(CSConstants.EDITION_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_EDITION_TITLE) && value instanceof String) {
             edition = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BOOK_VERSION_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_VERSION_TITLE) && value instanceof String) {
             bookVersion = (KeyValueNode<String>) node;
         } else if (key.equalsIgnoreCase(
-                CSConstants.BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value instanceof BugLinkType)) {
+                CommonConstants.CS_BUG_LINKS_TITLE.toUpperCase(Locale.ENGLISH)) && (value instanceof String || value instanceof BugLinkType)) {
             final KeyValueNode<BugLinkType> bugLinkNode;
             if (value instanceof String) {
                 bugLinkNode = new KeyValueNode<BugLinkType>(key, BugLinkType.getType((String) value));
@@ -1624,19 +1625,19 @@ public class ContentSpec extends Node {
                 bugLinkNode = (KeyValueNode<BugLinkType>) value;
             }
             bugLinks = bugLinkNode;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
             bugzillaComponent = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_PRODUCT_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE) && value instanceof String) {
             bugzillaProduct = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_VERSION_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_VERSION_TITLE) && value instanceof String) {
             bugzillaVersion = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_KEYWORDS_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE) && value instanceof String) {
             bugzillaKeywords = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_SERVER_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_SERVER_TITLE) && value instanceof String) {
             bugzillaServer = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_URL_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_URL_TITLE) && value instanceof String) {
             bugzillaURL = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
             final KeyValueNode<Boolean> injectBugzillaAssigneeNode;
             if (value instanceof String) {
                 final Boolean fixedValue;
@@ -1653,7 +1654,7 @@ public class ContentSpec extends Node {
             }
             injectBugzillaAssignee = injectBugzillaAssigneeNode;
         } else if (key.equalsIgnoreCase(
-                CSConstants.INLINE_INJECTION_TITLE) && (value instanceof String || value instanceof InjectionOptions)) {
+                CommonConstants.CS_INLINE_INJECTION_TITLE) && (value instanceof String || value instanceof InjectionOptions)) {
             final KeyValueNode<InjectionOptions> injectionOptionsNode;
             if (value instanceof String) {
                 injectionOptionsNode = new KeyValueNode<InjectionOptions>(key, new InjectionOptions((String) value));
@@ -1663,11 +1664,11 @@ public class ContentSpec extends Node {
                 injectionOptionsNode = (KeyValueNode<InjectionOptions>) node;
             }
             injectionOptions = injectionOptionsNode;
-        } else if (key.equalsIgnoreCase(CSConstants.DTD_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_DTD_TITLE) && value instanceof String) {
             dtd = (KeyValueNode<String>) node;
         } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
             outputStyle = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.PUBSNUMBER_TITLE) && (value instanceof String || value instanceof Integer)) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBSNUMBER_TITLE) && (value instanceof String || value instanceof Integer)) {
             final KeyValueNode<Integer> pubsNumberNode;
             if (value instanceof String) {
                 pubsNumberNode = new KeyValueNode<Integer>(key, Integer.parseInt((String) value));
@@ -1677,7 +1678,7 @@ public class ContentSpec extends Node {
                 pubsNumberNode = (KeyValueNode<Integer>) node;
             }
             pubsNumber = pubsNumberNode;
-        } else if (key.equalsIgnoreCase(CSConstants.PUBLICAN_CFG_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) && value instanceof String) {
             publicanCfg = (KeyValueNode<String>) node;
         } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
             final KeyValueNode<Boolean> injectSurveyLinkNode;
@@ -1695,50 +1696,50 @@ public class ContentSpec extends Node {
                 injectSurveyLinkNode = (KeyValueNode<Boolean>) node;
             }
             injectSurveyLinks = injectSurveyLinkNode;
-        } else if (key.equalsIgnoreCase(CSConstants.BRAND_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_TITLE) && value instanceof String) {
             brand = (KeyValueNode<String>) node;
-        } else if ((key.equalsIgnoreCase(CSConstants.ABSTRACT_TITLE) || key.equalsIgnoreCase(
-                CSConstants.ABSTRACT_ALTERNATE_TITLE)) && value instanceof String) {
+        } else if ((key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE)) && value instanceof String) {
             description = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
             copyrightHolder = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.COPYRIGHT_YEAR_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_YEAR_TITLE) && value instanceof String) {
             copyrightYear = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.SUBTITLE_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_SUBTITLE_TITLE) && value instanceof String) {
             subtitle = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.REV_HISTORY_TITLE) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_REV_HISTORY_TITLE) && value instanceof SpecTopic) {
             revisionHistory = (KeyValueNode<SpecTopic>) node;
             if (value != null) {
                 revisionHistory.getValue().setTopicType(TopicType.REVISION_HISTORY);
             }
-        } else if (key.equalsIgnoreCase(CSConstants.FEEDBACK_TITLE) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) && value instanceof SpecTopic) {
             feedback = (KeyValueNode<SpecTopic>) node;
             if (value != null) {
                 feedback.getValue().setTopicType(TopicType.FEEDBACK);
             }
-        } else if (key.equalsIgnoreCase(CSConstants.LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
             legalNotice = (KeyValueNode<SpecTopic>) node;
             if (value != null) {
                 legalNotice.getValue().setTopicType(TopicType.LEGAL_NOTICE);
             }
-        } else if (key.equalsIgnoreCase(CSConstants.MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
             artifactId = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.MAVEN_GROUP_ID_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_GROUP_ID_TITLE) && value instanceof String) {
             groupId = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.BRAND_LOGO_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_LOGO_TITLE) && value instanceof String) {
             brandLogo = (KeyValueNode<String>) node;
-        } else if ((key.equalsIgnoreCase(CSConstants.FILE_TITLE) || key.equalsIgnoreCase(
-                CSConstants.FILE_SHORT_TITLE)) && node instanceof List) {
+        } else if ((key.equalsIgnoreCase(CommonConstants.CS_FILE_TITLE) || key.equalsIgnoreCase(
+                CommonConstants.CS_FILE_SHORT_TITLE)) && node instanceof List) {
             files = (FileList) node;
-        } else if (key.equalsIgnoreCase(CSConstants.JIRA_COMPONENT_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_COMPONENT_TITLE) && value instanceof String) {
             jiraComponent = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.JIRA_PROJECT_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_PROJECT_TITLE) && value instanceof String) {
             jiraProject = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.JIRA_VERSION_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_VERSION_TITLE) && value instanceof String) {
             jiraVersion = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.JIRA_LABELS_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_LABELS_TITLE) && value instanceof String) {
             jiraLabels = (KeyValueNode<String>) node;
-        } else if (key.equalsIgnoreCase(CSConstants.JIRA_SERVER_TITLE) && value instanceof String) {
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_SERVER_TITLE) && value instanceof String) {
             jiraServer = (KeyValueNode<String>) node;
         }
 
@@ -1763,7 +1764,7 @@ public class ContentSpec extends Node {
         for (final Node node : nodes) {
             if (node instanceof KeyValueNode) {
                 final KeyValueNode keyValueNode = (KeyValueNode) node;
-                if (!keyValueNode.getKey().equals(CSConstants.CHECKSUM_TITLE) && !keyValueNode.getKey().equals(CSConstants.ID_TITLE)) {
+                if (!keyValueNode.getKey().equals(CommonConstants.CS_CHECKSUM_TITLE) && !keyValueNode.getKey().equals(CommonConstants.CS_ID_TITLE)) {
                     output.append(node.toString());
                 }
             } else {
@@ -1782,8 +1783,8 @@ public class ContentSpec extends Node {
 
         // If the id isn't null then add the id and checksum
         if (getId() != null) {
-            output.insert(0, CSConstants.CHECKSUM_TITLE + "=" + HashUtilities.generateMD5(
-                    CSConstants.ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CSConstants.ID_TITLE + " = " + id.getValue() +
+            output.insert(0, CommonConstants.CS_CHECKSUM_TITLE + "=" + HashUtilities.generateMD5(
+                    CommonConstants.CS_ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CommonConstants.CS_ID_TITLE + " = " + id.getValue() +
                     "\n");
         }
         return output.toString();

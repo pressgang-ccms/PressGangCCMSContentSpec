@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec;
 
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class FileList extends KeyValueNode<List<File>> {
     public FileList(String key, List<File> value, char separator) {
@@ -15,7 +15,7 @@ public class FileList extends KeyValueNode<List<File>> {
 
     @Override
     public String getText() {
-        final StringBuilder output = new StringBuilder(CSConstants.FILE_TITLE);
+        final StringBuilder output = new StringBuilder(CommonConstants.CS_FILE_TITLE);
         output.append(" ").append(getSeparator()).append(" [");
         int count = 1;
         for (final File file : getValue()) {

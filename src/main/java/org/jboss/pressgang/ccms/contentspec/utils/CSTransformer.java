@@ -22,7 +22,6 @@ import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
@@ -42,8 +41,8 @@ public class CSTransformer {
     /**
      * A List of lower case metadata properties that should be ignored during transformation because they exist else where.
      */
-    private static final List<String> IGNORE_META_DATA = Arrays.asList(CSConstants.ID_TITLE.toLowerCase(),
-            CSConstants.CHECKSUM_TITLE.toLowerCase());
+    private static final List<String> IGNORE_META_DATA = Arrays.asList(CommonConstants.CS_ID_TITLE.toLowerCase(),
+            CommonConstants.CS_CHECKSUM_TITLE.toLowerCase());
 
     /**
      * Transforms a content spec datasource entity into a generic content spec object.
@@ -164,9 +163,9 @@ public class CSTransformer {
             final Map<String, List<SpecTopic>> specTopicMap, final Map<String, SpecTopic> targetTopics,
             final List<CSNodeWrapper> relationshipFromNodes) {
         final KeyValueNode<?> keyValueNode;
-        if (node.getTitle().equalsIgnoreCase(CSConstants.BOOK_TYPE_TITLE)) {
+        if (node.getTitle().equalsIgnoreCase(CommonConstants.CS_BOOK_TYPE_TITLE)) {
             keyValueNode = new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
-        } else if (node.getTitle().equalsIgnoreCase(CSConstants.INLINE_INJECTION_TITLE)) {
+        } else if (node.getTitle().equalsIgnoreCase(CommonConstants.CS_INLINE_INJECTION_TITLE)) {
             keyValueNode = new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
         } else if (ContentSpecUtilities.isSpecTopicMetaData(node.getTitle())) {
             final SpecTopic specTopic = transformSpecTopicWithoutTypeCheck(node, nodes, specTopicMap, targetTopics, relationshipFromNodes);

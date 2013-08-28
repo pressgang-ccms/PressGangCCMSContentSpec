@@ -11,7 +11,6 @@ import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.structures.StringToCSNodeCollection;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TranslatedCSNodeProvider;
@@ -29,8 +28,8 @@ import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
 
 public class TranslationUtilities {
     private static final List<String> TRANSLATABLE_METADATA = CollectionUtilities.toArrayList(
-            new String[]{CSConstants.TITLE_TITLE, CSConstants.PRODUCT_TITLE, CSConstants.SUBTITLE_TITLE, CSConstants.ABSTRACT_TITLE,
-                    CSConstants.COPYRIGHT_HOLDER_TITLE, CSConstants.VERSION_TITLE, CSConstants.EDITION_TITLE});
+            new String[]{CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE, CommonConstants.CS_SUBTITLE_TITLE, CommonConstants.CS_ABSTRACT_TITLE,
+                    CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, CommonConstants.CS_VERSION_TITLE, CommonConstants.CS_EDITION_TITLE});
 
     /**
      * Create a TranslatedTopic based on the content from a normal Topic.

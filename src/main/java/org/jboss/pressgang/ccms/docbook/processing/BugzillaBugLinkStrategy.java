@@ -19,7 +19,6 @@ import com.j2bugzilla.base.ProductVersion;
 import com.j2bugzilla.rpc.GetBugField;
 import com.j2bugzilla.rpc.GetProduct;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
@@ -237,28 +236,28 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
     public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, BugzillaBugLinkOptions bugOptions) {
         boolean changed = false;
         // Server
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_SERVER_TITLE, bugzillaUrl, contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_SERVER_TITLE, bugzillaUrl, contentSpecEntity)) {
             changed = true;
         }
 
         // Product
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_PRODUCT_TITLE, bugOptions.getProduct(), contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE, bugOptions.getProduct(), contentSpecEntity)) {
             changed = true;
         }
 
         // Version
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_VERSION_TITLE, bugOptions.getVersion(), contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_VERSION_TITLE, bugOptions.getVersion(), contentSpecEntity)) {
             changed = true;
         }
 
         // Component
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_COMPONENT_TITLE, bugOptions.getComponent(),
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_COMPONENT_TITLE, bugOptions.getComponent(),
                 contentSpecEntity)) {
             changed = true;
         }
 
         // Keywords
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CSConstants.BUGZILLA_KEYWORDS_TITLE, bugOptions.getKeywords(),
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE, bugOptions.getKeywords(),
                 contentSpecEntity)) {
             changed = true;
         }

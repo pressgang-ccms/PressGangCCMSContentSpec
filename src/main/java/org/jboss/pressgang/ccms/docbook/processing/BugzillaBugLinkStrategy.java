@@ -42,12 +42,16 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
 
     public BugzillaBugLinkStrategy(final String bugzillaUrl) {
         connector = new BugzillaConnector();
-        this.bugzillaUrl = bugzillaUrl.endsWith("/") ? bugzillaUrl : (bugzillaUrl + "/");
+        this.bugzillaUrl = bugzillaUrl;
     }
 
     protected void connect() throws ConnectionException {
         connected = true;
-        connector.connectTo(bugzillaUrl);
+        connector.connectTo(getFixedBugzillaUrl());
+    }
+
+    protected String getFixedBugzillaUrl() {
+        return bugzillaUrl == null ? "https://bugzilla.redhat.com/" : (bugzillaUrl.endsWith("/") ? bugzillaUrl : (bugzillaUrl + "/"));
     }
 
     @Override
@@ -157,7 +161,7 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
         }
 
         // build the bugzilla url with the base components
-        return bugzillaUrl + "enter_bug.cgi" + bugzillaURLComponents.toString();
+        return getFixedBugzillaUrl() + "enter_bug.cgi" + bugzillaURLComponents.toString();
     }
 
     @Override
@@ -172,29 +176,31 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
         final GetProduct getProduct = new GetProduct(bugzillaOptions.getProduct());
         final GetBugField getBugField = new GetBugField("keywords");
         try {
-            connector.executeMethod(getProduct);
-            final Product product = getProduct.getProduct();
-            if (product == null) {
-                throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\".");
-            } else {
-                // Validate the Bugzilla Component
-                if (bugzillaOptions.getComponent() != null) {
-                    final ProductComponent component = getBugzillaComponent(bugzillaOptions.getComponent(), product);
-                    if (component == null) {
-                        throw new ValidationException(
-                                "No Bugzilla Component exists for component \"" + bugzillaOptions.getComponent() + "\".");
-                    } else if (!component.getIsActive()) {
-                        throw new ValidationException("The Bugzilla Component \"" + bugzillaOptions.getComponent() + "\" is not active.");
+            if (!isNullOrEmpty(bugzillaOptions.getProduct())) {
+                connector.executeMethod(getProduct);
+                final Product product = getProduct.getProduct();
+                if (product == null) {
+                    throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\".");
+                } else {
+                    // Validate the Bugzilla Component
+                    if (bugzillaOptions.getComponent() != null) {
+                        final ProductComponent component = getBugzillaComponent(bugzillaOptions.getComponent(), product);
+                        if (component == null) {
+                            throw new ValidationException(
+                                    "No Bugzilla Component exists for component \"" + bugzillaOptions.getComponent() + "\".");
+                        } else if (!component.getIsActive()) {
+                            throw new ValidationException("The Bugzilla Component \"" + bugzillaOptions.getComponent() + "\" is not active.");
+                        }
                     }
-                }
 
-                // Validate the Bugzilla Version
-                if (bugzillaOptions.getVersion() != null) {
-                    final ProductVersion version = getBugzillaVersion(bugzillaOptions.getVersion(), product);
-                    if (version == null) {
-                        throw new ValidationException("No Bugzilla Version exists for version \"" + bugzillaOptions.getComponent() + "\".");
-                    } else if (!version.getIsActive()) {
-                        throw new ValidationException("The Bugzilla Version \"" + bugzillaOptions.getComponent() + "\" is not active.");
+                    // Validate the Bugzilla Version
+                    if (bugzillaOptions.getVersion() != null) {
+                        final ProductVersion version = getBugzillaVersion(bugzillaOptions.getVersion(), product);
+                        if (version == null) {
+                            throw new ValidationException("No Bugzilla Version exists for version \"" + bugzillaOptions.getComponent() + "\".");
+                        } else if (!version.getIsActive()) {
+                            throw new ValidationException("The Bugzilla Version \"" + bugzillaOptions.getComponent() + "\" is not active.");
+                        }
                     }
                 }
             }

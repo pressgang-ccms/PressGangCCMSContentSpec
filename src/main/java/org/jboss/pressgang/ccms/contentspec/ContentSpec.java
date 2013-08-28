@@ -1102,7 +1102,7 @@ public class ContentSpec extends Node {
      * @return
      */
     public String getBugzillaServer() {
-        return bugzillaServer == null ? "https://bugzilla.redhat.com/" : bugzillaServer.getValue().toString();
+        return bugzillaServer == null ? null : bugzillaServer.getValue().toString();
     }
 
     /**
@@ -1156,6 +1156,10 @@ public class ContentSpec extends Node {
 
     public BugLinkType getBugLinks() {
         return (bugLinks == null || bugLinks.getValue() == null) ? BugLinkType.BUGZILLA : bugLinks.getValue();
+    }
+
+    public BugLinkType getBugLinksActualValue() {
+        return bugLinks == null ? null : bugLinks.getValue();
     }
 
     public void setBugLinks(final BugLinkType bugLinks) {
@@ -1316,7 +1320,7 @@ public class ContentSpec extends Node {
      * @return
      */
     public String getJIRAServer() {
-        return jiraServer == null ? "https://jira.redhat.com/" : jiraServer.getValue().toString();
+        return jiraServer == null ? null : jiraServer.getValue().toString();
     }
 
     /**

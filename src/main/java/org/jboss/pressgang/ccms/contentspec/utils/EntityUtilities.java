@@ -363,7 +363,7 @@ public class EntityUtilities {
         if (metaData != null && metaData.getAdditionalText() != null && !metaData.getAdditionalText().equals(currentValue)) {
             // The values no longer match
             return true;
-        } else if (currentValue != null) {
+        } else if ((metaData == null || metaData.getAdditionalText() == null) && currentValue != null) {
             // The meta data node doesn't exist but it exists now
             return true;
         } else {

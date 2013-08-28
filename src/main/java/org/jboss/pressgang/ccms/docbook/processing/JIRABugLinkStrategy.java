@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.docbook.processing;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DateFormat;
@@ -96,23 +98,27 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
 
     @Override
     public void validate(final JIRABugLinkOptions jiraOptions) throws ValidationException {
-        final JIRAProject project = getJIRAProject(client, jiraOptions.getProject());
-        if (project == null) {
-            throw new ValidationException("No JIRA Project exists for project \"" + jiraOptions.getProject() + "\".");
+        if (isNullOrEmpty(jiraOptions.getProject())) {
+            throw new ValidationException("No Jira Project was specified.");
         } else {
-            // Validate the JIRA Component
-            if (jiraOptions.getComponent() != null) {
-                final JIRAComponent component = getJIRAComponent(jiraOptions.getComponent(), project);
-                if (component == null) {
-                    throw new ValidationException("No JIRA Component exists for component \"" + jiraOptions.getComponent() + "\".");
+            final JIRAProject project = getJIRAProject(client, jiraOptions.getProject());
+            if (project == null) {
+                throw new ValidationException("No JIRA Project exists for project \"" + jiraOptions.getProject() + "\".");
+            } else {
+                // Validate the JIRA Component
+                if (jiraOptions.getComponent() != null) {
+                    final JIRAComponent component = getJIRAComponent(jiraOptions.getComponent(), project);
+                    if (component == null) {
+                        throw new ValidationException("No JIRA Component exists for component \"" + jiraOptions.getComponent() + "\".");
+                    }
                 }
-            }
 
-            // Validate the JIRA Version
-            if (jiraOptions.getVersion() != null) {
-                final JIRAVersion version = getJIRAVersion(jiraOptions.getVersion(), project);
-                if (version == null) {
-                    throw new ValidationException("No JIRA Version exists for version \"" + jiraOptions.getVersion() + "\".");
+                // Validate the JIRA Version
+                if (jiraOptions.getVersion() != null) {
+                    final JIRAVersion version = getJIRAVersion(jiraOptions.getVersion(), project);
+                    if (version == null) {
+                        throw new ValidationException("No JIRA Version exists for version \"" + jiraOptions.getVersion() + "\".");
+                    }
                 }
             }
         }

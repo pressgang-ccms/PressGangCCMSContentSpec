@@ -299,6 +299,20 @@ public class ContentSpecUtilities {
         if (title == null) {
             return null;
         } else {
+            return title.replace("[", "\\[");
+        }
+    }
+
+    /**
+     * Escapes a title so that it can be used in a relationship in a Content Specification.
+     *
+     * @param title
+     * @return
+     */
+    public static String escapeRelationshipTitle(final String title) {
+        if (title == null) {
+            return null;
+        } else {
             return title.replace(",", "\\,").replace("[", "\\[");
         }
     }

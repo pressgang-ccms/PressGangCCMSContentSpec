@@ -801,7 +801,7 @@ public class SpecTopic extends SpecNode {
                 retValue.append(spacer);
                 retValue.append(SPACER);
                 if (related.getRelationshipTitle() != null && !related.getRelationshipTitle().trim().isEmpty()) {
-                    retValue.append(ContentSpecUtilities.escapeTitle(related.getRelationshipTitle())).append(" ");
+                    retValue.append(ContentSpecUtilities.escapeRelationshipTitle(related.getRelationshipTitle())).append(" ");
                 }
                 retValue.append("[");
                 retValue.append(related.getSecondaryRelationshipTopicId());

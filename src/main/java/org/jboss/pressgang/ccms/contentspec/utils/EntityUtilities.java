@@ -323,14 +323,17 @@ public class EntityUtilities {
      * @param tags The List of tags to be converted.
      * @return The mapping of Categories to Tags.
      */
-    public static Map<CategoryInTagWrapper, List<TagWrapper>> getCategoryMappingFromTagList(final Collection<TagWrapper> tags) {
-        final HashMap<CategoryInTagWrapper, List<TagWrapper>> mapping = new HashMap<CategoryInTagWrapper, List<TagWrapper>>();
+    public static Map<Integer, List<TagWrapper>> getCategoryMappingFromTagList(final Collection<TagWrapper>
+            tags) {
+        final HashMap<Integer, List<TagWrapper>> mapping = new HashMap<Integer, List<TagWrapper>>();
         for (final TagWrapper tag : tags) {
             final List<CategoryInTagWrapper> catList = tag.getCategories().getItems();
             if (catList != null) {
                 for (final CategoryInTagWrapper cat : catList) {
-                    if (!mapping.containsKey(cat)) mapping.put(cat, new ArrayList<TagWrapper>());
-                    mapping.get(cat).add(tag);
+                    if (!mapping.containsKey(cat.getId())) {
+                        mapping.put(cat.getId(), new ArrayList<TagWrapper>());
+                    }
+                    mapping.get(cat.getId()).add(tag);
                 }
             }
         }

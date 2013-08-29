@@ -119,6 +119,7 @@ public class CSConstants {
     public static final String REVNUMBER_OVERRIDE = "revnumber";
 
     public static final String BRAND_OVERRIDE = "brand";
+    public static final String BRAND_ALT_OVERRIDE = "Brand";
 
     public static final String SURVEY_LINK_TITLE = "Survey Links";
 

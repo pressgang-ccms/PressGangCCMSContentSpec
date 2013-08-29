@@ -265,6 +265,19 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
         return changed;
     }
 
+    @Override
+    public void checkValidValues(BugzillaBugLinkOptions bugOptions) throws ValidationException {
+        if (isNullOrEmpty(bugOptions.getProduct())) {
+            if (!isNullOrEmpty(bugOptions.getComponent()) || !isNullOrEmpty(bugOptions.getVersion())) {
+                throw new ValidationException("A Bugzilla Product must be specified to set additional fields.");
+            }
+        } else if (isNullOrEmpty(bugOptions.getComponent())) {
+            if (!isNullOrEmpty(bugOptions.getVersion())) {
+                throw new ValidationException("A Bugzilla Component must be specified to set a Version.");
+            }
+        }
+    }
+
     protected ProductComponent getBugzillaComponent(final String component, final Product product) {
         if (product.getComponents() != null) {
             for (final ProductComponent componentEntity : product.getComponents()) {

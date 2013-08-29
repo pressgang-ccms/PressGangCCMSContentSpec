@@ -160,6 +160,17 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
         return changed;
     }
 
+    @Override
+    public void checkValidValues(JIRABugLinkOptions bugOptions) throws ValidationException {
+        if (isNullOrEmpty(bugOptions.getProject())) {
+            throw new ValidationException("No JIRA Project has been specified. A Project must be specified for all JIRA links.");
+        } else if (isNullOrEmpty(bugOptions.getComponent())) {
+            if (!isNullOrEmpty(bugOptions.getVersion())) {
+                throw new ValidationException("A JIRA Component must be specified to set a Version.");
+            }
+        }
+    }
+
     protected JIRAProject getJIRAProject(final JIRARESTInterface client, final String project) {
         try {
             if (projects == null) {

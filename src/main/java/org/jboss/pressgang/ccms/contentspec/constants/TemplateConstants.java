@@ -22,16 +22,25 @@ public class TemplateConstants {
             "# Type = \n" +
             "# publican.cfg = [ custom content to append to publican.cfg can be\n" +
             "multiline ]\n" +
-            "# pubsnumber =\n" +
+            "# Pubsnumber =\n" +
             "\n" +
-            "# Bug Links = Off\n" +
+            "# Bug Links = Off | JIRA | Bugzilla\n" +
+            "# BZServer will default to https://bugzilla.redhat.com/ is its not specified.\n" +
+            "# BZServer = \n" +
             "# BZProduct = \n" +
             "# BZComponent = \n" +
             "# BZVersion = \n" +
+            "# BZKeywords = \n" +
             "# BZURL = \n" +
             "# Uncomment this to disable automatic assignment of bugs to the\n" +
             "# topic's assigned author\n" +
             "# BZ Assignee = Off\n" +
+            "\n" +
+            "# JIRAServer = \n" +
+            "# JIRAProject = \n" +
+            "# JIRAComponent = \n" +
+            "# JIRAVersion = \n" +
+            "# JIRALabels = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
             "# a custom Revision History, Feedback, or Legal Notice.\n" +
@@ -204,16 +213,25 @@ public class TemplateConstants {
             "# Type = \n" +
             "# publican.cfg = [ custom content to append to publican.cfg can be\n" +
             "multiline ]\n" +
-            "# pubsnumber = \n" +
+            "# Pubsnumber = \n" +
             "\n" +
-            "# Bug Links = Off\n" +
+            "# Bug Links = Off | JIRA | Bugzilla\n" +
+            "# BZServer will default to https://bugzilla.redhat.com/ is its not specified.\n" +
+            "# BZServer = \n" +
             "# BZProduct = \n" +
             "# BZComponent = \n" +
             "# BZVersion = \n" +
+            "# BZKeywords = \n" +
             "# BZURL = \n" +
             "# Uncomment this to disable automatic assignment of bugs to the\n" +
             "# topic's assigned author\n" +
             "# BZ Assignee = Off\n" +
+            "\n" +
+            "# JIRAServer = \n" +
+            "# JIRAProject = \n" +
+            "# JIRAComponent = \n" +
+            "# JIRAVersion = \n" +
+            "# JIRALabels = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
             "# a custom Revision History, Feedback, or Legal Notice.\n" +

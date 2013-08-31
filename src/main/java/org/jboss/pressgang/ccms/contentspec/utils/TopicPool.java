@@ -101,7 +101,6 @@ public class TopicPool {
                     if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
                         if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
                             specTopic.setId(Integer.toString(topic.getId()));
-                            cleanSpecTopicWhenCreatedOrUpdated(specTopic);
                             return specTopic;
                         }
                     }
@@ -112,7 +111,6 @@ public class TopicPool {
                     if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
                         if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
                             specTopic.setId(Integer.toString(topic.getId()));
-                            cleanSpecTopicWhenCreatedOrUpdated(specTopic);
                             return specTopic;
                         }
                     }
@@ -120,20 +118,6 @@ public class TopicPool {
             }
         }
         return specTopic;
-    }
-
-    /**
-     * Cleans a SpecTopic to reset any content that should be removed in a post processed content spec.
-     *
-     * @param specTopic
-     */
-    private void cleanSpecTopicWhenCreatedOrUpdated(final SpecTopic specTopic) {
-        specTopic.setSourceUrls(new ArrayList<String>());
-        specTopic.setDescription(null);
-        specTopic.setTags(new ArrayList<String>());
-        specTopic.setRemoveTags(new ArrayList<String>());
-        specTopic.setAssignedWriter(null);
-        specTopic.setType(null);
     }
 
     /**

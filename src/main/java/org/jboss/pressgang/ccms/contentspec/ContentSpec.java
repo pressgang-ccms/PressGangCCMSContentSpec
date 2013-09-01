@@ -1508,6 +1508,15 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the list of additional files needed by the book.
+     *
+     * @return The list of additional Files.
+     */
+    public FileList getFileList() {
+        return files;
+    }
+
+    /**
      * Sets the list of additional files needed by the book.
      *
      * @param files The list of additional Files.

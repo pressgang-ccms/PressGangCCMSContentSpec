@@ -21,7 +21,8 @@ public class File {
         if (title == null) {
             output.append(getIdAndRevisionText());
         } else {
-            output.append(ContentSpecUtilities.escapeTitle(title)).append(" ").append("[").append(getIdAndRevisionText()).append("]");
+            output.append(ContentSpecUtilities.escapeRelationshipTitle(title)).append(" ").append("[").append(getIdAndRevisionText()).append
+                    ("]");
         }
         return output.toString();
     }

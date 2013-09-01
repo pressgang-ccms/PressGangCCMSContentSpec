@@ -26,7 +26,7 @@ public class Preface extends Level {
      * @param title The title of the Chapter.
      */
     public Preface(final String title) {
-        super(title, LevelType.CHAPTER);
+        super(title, LevelType.PREFACE);
     }
 
 }

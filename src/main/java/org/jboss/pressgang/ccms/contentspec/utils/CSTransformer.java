@@ -6,6 +6,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,8 @@ import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Chapter;
 import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.File;
+import org.jboss.pressgang.ccms.contentspec.FileList;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
@@ -76,7 +79,8 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
-                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA || childNode.getNodeType() == CommonConstants
+                        .CS_NODE_META_DATA_TOPIC) {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
                         final KeyValueNode<?> metaDataNode = transformMetaData(childNode, nodes, specTopicMap, topicTargets,
                                 relationshipFromNodes);
@@ -167,15 +171,59 @@ public class CSTransformer {
             keyValueNode = new KeyValueNode<BookType>(node.getTitle(), BookType.getBookType(node.getAdditionalText()));
         } else if (node.getTitle().equalsIgnoreCase(CommonConstants.CS_INLINE_INJECTION_TITLE)) {
             keyValueNode = new KeyValueNode<InjectionOptions>(node.getTitle(), new InjectionOptions(node.getAdditionalText()));
-        } else if (ContentSpecUtilities.isSpecTopicMetaData(node.getTitle())) {
+        } else if (node.getNodeType().equals(CommonConstants.CS_NODE_META_DATA_TOPIC)) {
             final SpecTopic specTopic = transformSpecTopicWithoutTypeCheck(node, nodes, specTopicMap, targetTopics, relationshipFromNodes);
             keyValueNode = new KeyValueNode<SpecTopic>(node.getTitle(), specTopic);
+        } else if (node.getTitle().equalsIgnoreCase(CommonConstants.CS_FILE_SHORT_TITLE) || node.getTitle().equalsIgnoreCase
+                (CommonConstants.CS_FILE_TITLE)) {
+            keyValueNode = transformFileList(node);
         } else {
             keyValueNode = new KeyValueNode<String>(node.getTitle(), node.getAdditionalText());
         }
         keyValueNode.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         return keyValueNode;
+    }
+
+    /**
+     * Transforms a MetaData CSNode into a FileList that can be added to a ContentSpec object.
+     *
+     * @param node                  The CSNode to be transformed.
+     * @return The transformed FileList object.
+     */
+    protected static FileList transformFileList(final CSNodeWrapper node) {
+        final List<File> files = new LinkedList<File>();
+
+        // Add all the child files
+        if (node.getChildren() != null && node.getChildren().getItems() != null) {
+            final List<CSNodeWrapper> childNodes = node.getChildren().getItems();
+            final HashMap<CSNodeWrapper, File> fileNodes = new HashMap<CSNodeWrapper, File>();
+            for (final CSNodeWrapper childNode : childNodes) {
+                fileNodes.put(childNode, transformFile(childNode));
+            }
+
+            // Sort the file list nodes so that they are in the right order based on next/prev values.
+            final LinkedHashMap<CSNodeWrapper, File> sortedMap = CSNodeSorter.sortMap(fileNodes);
+
+            // Add the child nodes to the file list now that they are in the right order.
+            final Iterator<Map.Entry<CSNodeWrapper, File>> iter = sortedMap.entrySet().iterator();
+            while (iter.hasNext()) {
+                final Map.Entry<CSNodeWrapper, File> entry = iter.next();
+                files.add(entry.getValue());
+            }
+        }
+
+        return new FileList(CommonConstants.CS_FILE_TITLE, files);
+    }
+
+    private static File transformFile(final CSNodeWrapper node) {
+        final File file  = new File(node.getTitle(), node.getEntityId());
+
+        // Basic data
+        file.setRevision(node.getEntityRevision());
+        file.setUniqueId(node.getId() == null ? null : node.getId().toString());
+
+        return file;
     }
 
     /**

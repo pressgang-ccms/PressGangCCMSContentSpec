@@ -2,7 +2,7 @@ package org.jboss.pressgang.ccms.contentspec;
 
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 
-public class File {
+public class File extends Node {
     private String title;
     private Integer id;
     private Integer revision;
@@ -25,6 +25,26 @@ public class File {
                     ("]");
         }
         return output.toString();
+    }
+
+    @Override
+    public Integer getStep() {
+        return getParent() == null ? null : getParent().getStep();
+    }
+
+    @Override
+    public FileList getParent() {
+        return (FileList) super.getParent();
+    }
+
+    public void setParent(final FileList fileList) {
+        super.setParent(fileList);
+    }
+
+    @Override
+    protected void removeParent() {
+        getParent().getValue().remove(this);
+        setParent(null);
     }
 
     protected String getIdAndRevisionText() {

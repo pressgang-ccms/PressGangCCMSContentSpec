@@ -104,6 +104,10 @@ public class CSConstants {
      * The Legal Notice tag ID
      */
     public static final Integer LEGAL_NOTICE_TAG_ID = 599;
+    /**
+     * The Author Group tag ID
+     */
+    public static final Integer AUTHOR_GROUP_TAG_ID = 664;
 
     // Override keys
     public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";

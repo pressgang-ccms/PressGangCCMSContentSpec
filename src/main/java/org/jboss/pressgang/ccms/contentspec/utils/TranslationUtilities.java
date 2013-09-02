@@ -74,7 +74,7 @@ public class TranslationUtilities {
         final Set<CSNodeWrapper> nodes = new HashSet<CSNodeWrapper>();
         final List<CSNodeWrapper> childrenNodes = contentSpec.getChildren().getItems();
         for (CSNodeWrapper childNode : childrenNodes) {
-            if (ContentSpecUtilities.isNodeALevel(childNode)) {
+            if (EntityUtilities.isNodeALevel(childNode)) {
                 nodes.add(childNode);
             } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                 if (TRANSLATABLE_METADATA.contains(childNode.getTitle())) {
@@ -90,7 +90,7 @@ public class TranslationUtilities {
         if (csNode.getChildren() != null) {
             final List<CSNodeWrapper> childrenNodes = csNode.getChildren().getItems();
             for (CSNodeWrapper childNode : childrenNodes) {
-                if (ContentSpecUtilities.isNodeALevel(childNode)) {
+                if (EntityUtilities.isNodeALevel(childNode)) {
                     nodes.add(childNode);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                     if (TRANSLATABLE_METADATA.contains(childNode.getTitle())) {
@@ -131,7 +131,7 @@ public class TranslationUtilities {
         final String sourceString;
         if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
             sourceString = node.getAdditionalText();
-        } else if (ContentSpecUtilities.isNodeALevel(node)) {
+        } else if (EntityUtilities.isNodeALevel(node)) {
             sourceString = node.getTitle();
         } else {
             // The node isn't a translatable node so it must be a topic or comment.

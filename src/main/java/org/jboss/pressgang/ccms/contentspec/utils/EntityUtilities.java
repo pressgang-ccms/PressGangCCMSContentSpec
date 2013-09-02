@@ -28,6 +28,7 @@ import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseCSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
@@ -348,9 +349,46 @@ public class EntityUtilities {
      * @return The topic entity represented by the node, or null if there isn't one that matches.
      */
     public static TopicWrapper getCSNodeTopicEntity(final CSNodeWrapper node, final TopicProvider topicProvider) {
-        if (node.getNodeType() != CommonConstants.CS_NODE_TOPIC) return null;
+        if (!isNodeATopic(node)) return null;
 
         return topicProvider.getTopic(node.getEntityId(), node.getEntityRevision());
+    }
+
+    /**
+     * Checks to see if the node is some representation of a Topic entity.
+     *
+     * @param node The node to be checked.
+     * @return
+     */
+    public static boolean isNodeATopic(final BaseCSNodeWrapper<?> node) {
+        switch (node.getNodeType()) {
+            case CommonConstants.CS_NODE_TOPIC:
+            case CommonConstants.CS_NODE_INNER_TOPIC:
+            case CommonConstants.CS_NODE_META_DATA_TOPIC:
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    /**
+     * Checks to see if an entity node is a level representation.
+     *
+     * @param node
+     * @return
+     */
+    public static boolean isNodeALevel(final BaseCSNodeWrapper<?> node) {
+        switch (node.getNodeType()) {
+            case CommonConstants.CS_NODE_APPENDIX:
+            case CommonConstants.CS_NODE_CHAPTER:
+            case CommonConstants.CS_NODE_PART:
+            case CommonConstants.CS_NODE_PREFACE:
+            case CommonConstants.CS_NODE_PROCESS:
+            case CommonConstants.CS_NODE_SECTION:
+                return true;
+            default:
+                return false;
+        }
     }
 
     /**

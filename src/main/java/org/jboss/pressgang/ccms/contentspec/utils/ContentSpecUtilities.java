@@ -270,26 +270,6 @@ public class ContentSpecUtilities {
     }
 
     /**
-     * Checks to see if an entity node is a level representation.
-     *
-     * @param node
-     * @return
-     */
-    public static boolean isNodeALevel(final CSNodeWrapper node) {
-        switch (node.getNodeType()) {
-            case CommonConstants.CS_NODE_APPENDIX:
-            case CommonConstants.CS_NODE_CHAPTER:
-            case CommonConstants.CS_NODE_PART:
-            case CommonConstants.CS_NODE_PREFACE:
-            case CommonConstants.CS_NODE_PROCESS:
-            case CommonConstants.CS_NODE_SECTION:
-                return true;
-            default:
-                return false;
-        }
-    }
-
-    /**
      * Escapes a title so that it can be used in a Content Specification.
      *
      * @param title

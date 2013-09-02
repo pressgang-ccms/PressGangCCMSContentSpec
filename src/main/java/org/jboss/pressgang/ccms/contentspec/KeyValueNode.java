@@ -5,8 +5,8 @@ public class KeyValueNode<T> extends Node {
     private T value = null;
     private final char separator;
 
-    public KeyValueNode(final String key, final T value, final char separator) {
-        super(key + " " + separator + " " + value);
+    public KeyValueNode(final String key, final T value, final char separator, final int lineNumber) {
+        super(lineNumber, key + " " + separator + " " + value);
         this.key = key;
         this.value = value;
         this.separator = separator;
@@ -14,6 +14,14 @@ public class KeyValueNode<T> extends Node {
         if (value instanceof Node) {
             ((Node) value).setParent(this);
         }
+    }
+
+    public KeyValueNode(final String key, final T value, final char separator) {
+        this(key, value, separator, 0);
+    }
+
+    public KeyValueNode(final String key, final T value, final int lineNumber) {
+        this(key, value, '=', lineNumber);
     }
 
     public KeyValueNode(final String key, final T value) {

@@ -5,8 +5,16 @@ import java.util.List;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class FileList extends KeyValueNode<List<File>> {
+    public FileList(String key, List<File> value, char separator, int lineNumber) {
+        super(key, value, separator, lineNumber);
+    }
+
     public FileList(String key, List<File> value, char separator) {
         super(key, value, separator);
+    }
+
+    public FileList(String key, List<File> value, int lineNumber) {
+        super(key, value, '=', lineNumber);
     }
 
     public FileList(String key, List<File> value) {

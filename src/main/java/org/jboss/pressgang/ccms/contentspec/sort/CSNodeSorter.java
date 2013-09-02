@@ -8,12 +8,12 @@ import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 public class CSNodeSorter {
-    public static LinkedHashMap<CSNodeWrapper, Node> sortMap(Map<CSNodeWrapper, Node> map) {
+    public static <T extends Node> LinkedHashMap<CSNodeWrapper, T> sortMap(Map<CSNodeWrapper, T> map) {
         // If the map is empty then just return an empty map
-        if (map.isEmpty()) return new LinkedHashMap<CSNodeWrapper, Node>(map);
+        if (map.isEmpty()) return new LinkedHashMap<CSNodeWrapper, T>(map);
 
-        final LinkedHashMap<CSNodeWrapper, Node> retValue = new LinkedHashMap<CSNodeWrapper, Node>();
-        final LinkedList<Map.Entry<CSNodeWrapper, Node>> sortIndex = new LinkedList<Map.Entry<CSNodeWrapper, Node>>();
+        final LinkedHashMap<CSNodeWrapper, T> retValue = new LinkedHashMap<CSNodeWrapper, T>();
+        final LinkedList<Map.Entry<CSNodeWrapper, T>> sortIndex = new LinkedList<Map.Entry<CSNodeWrapper, T>>();
 
         /*
          * Note: To sort the map we have to use the next node references to create this. Since we also don't know the initial node,
@@ -21,7 +21,7 @@ public class CSNodeSorter {
          */
 
         // Find the last node in the map
-        Map.Entry<CSNodeWrapper, Node> nodeEntry = findLastEntry(map);
+        Map.Entry<CSNodeWrapper, T> nodeEntry = findLastEntry(map);
 
         // Add the initial entry to the linked hash map
         sortIndex.add(nodeEntry);
@@ -32,7 +32,7 @@ public class CSNodeSorter {
         }
 
         // Now create the map since the we have order
-        for (final Map.Entry<CSNodeWrapper, Node> sortKey : sortIndex) {
+        for (final Map.Entry<CSNodeWrapper, T> sortKey : sortIndex) {
             retValue.put(sortKey.getKey(), sortKey.getValue());
         }
 
@@ -46,10 +46,10 @@ public class CSNodeSorter {
      * @param id  The next node ID of to find in the map
      * @return The Entry value where the key matches the node id otherwise null.
      */
-    private static Map.Entry<CSNodeWrapper, Node> findEntry(Map<CSNodeWrapper, Node> map, Integer id) {
+    private static <T extends Node> Map.Entry<CSNodeWrapper, T> findEntry(Map<CSNodeWrapper, T> map, Integer id) {
         if (id == null) return null;
 
-        for (final Map.Entry<CSNodeWrapper, Node> entry : map.entrySet()) {
+        for (final Map.Entry<CSNodeWrapper, T> entry : map.entrySet()) {
             if (entry.getKey().getNextNode() != null && entry.getKey().getNextNode().getId().equals(id)) {
                 return entry;
             }
@@ -64,11 +64,11 @@ public class CSNodeSorter {
      * @param map The unordered map.
      * @return The initial entry to start sorting the map from.
      */
-    private static Map.Entry<CSNodeWrapper, Node> findLastEntry(Map<CSNodeWrapper, Node> map) {
-        Map.Entry<CSNodeWrapper, Node> nodeEntry = null;
+    private static <T extends Node> Map.Entry<CSNodeWrapper, T> findLastEntry(Map<CSNodeWrapper, T> map) {
+        Map.Entry<CSNodeWrapper, T> nodeEntry = null;
 
         // Find the initial entry
-        for (final Map.Entry<CSNodeWrapper, Node> entry : map.entrySet()) {
+        for (final Map.Entry<CSNodeWrapper, T> entry : map.entrySet()) {
             if (entry.getKey().getNextNode() == null) {
                 nodeEntry = entry;
                 break;

@@ -41,6 +41,12 @@ public class TestUtil {
         return levelNode;
     }
 
+    public static CSNodeWrapper createValidFileMock() {
+        CSNodeWrapper fileNode = mock(CSNodeWrapper.class);
+        given(fileNode.getNodeType()).willReturn(CommonConstants.CS_NODE_FILE);
+        return fileNode;
+    }
+
     public static CSNodeWrapper createMetaDataMock(String title, String additionalText) {
         CSNodeWrapper metaDataNode = mock(CSNodeWrapper.class);
         given(metaDataNode.getNodeType()).willReturn(CommonConstants.CS_NODE_META_DATA);

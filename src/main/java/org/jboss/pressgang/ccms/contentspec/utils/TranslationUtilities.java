@@ -155,7 +155,12 @@ public class TranslationUtilities {
         // Get all the translatable nodes and create the StringToCSNode collection
         final Set<CSNodeWrapper> contentSpecNodes = getAllTranslatableContentSpecNodes(contentSpec);
         for (final CSNodeWrapper node : contentSpecNodes) {
-            addTranslationToNodeDetailsToCollection(node.getAdditionalText().toString(), node, allowDuplicates, retValue);
+            // The node will either be a meta data field or a level
+            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+                addTranslationToNodeDetailsToCollection(node.getAdditionalText(), node, allowDuplicates, retValue);
+            } else {
+                addTranslationToNodeDetailsToCollection(node.getTitle(), node, allowDuplicates, retValue);
+            }
         }
 
         return retValue;

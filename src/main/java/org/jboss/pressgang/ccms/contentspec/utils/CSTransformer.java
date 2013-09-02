@@ -432,6 +432,9 @@ public class CSTransformer {
                         // Add the relationship
                         fromNode.addRelationshipToTarget(toSpecTopic,
                                 RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), toSpecTopic.getTitle());
+                    } else if (toSpecTopic.getTargetId() != null) {
+                        fromNode.addRelationshipToTarget(toSpecTopic,
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), toSpecTopic.getTitle());
                     } else {
                         fromNode.addRelationshipToTopic(toSpecTopic,
                                 RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), toSpecTopic.getTitle());

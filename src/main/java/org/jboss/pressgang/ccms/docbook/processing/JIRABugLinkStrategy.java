@@ -128,8 +128,7 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
     public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, JIRABugLinkOptions bugOptions) {
         boolean changed = false;
         // Server
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_JIRA_SERVER_TITLE, jiraUrl,
-                contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_JIRA_SERVER_TITLE, jiraUrl, contentSpecEntity)) {
             changed = true;
         }
 
@@ -173,14 +172,20 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
 
     protected JIRAProject getJIRAProject(final JIRARESTInterface client, final String project) {
         try {
-            if (projects == null) {
-                // Check our key map first
-                if (projectKeyMap.containsKey(project)) {
-                    return projectKeyMap.get(project);
-                }
+            // Check our key map first
+            if (projectKeyMap.containsKey(project)) {
+                return projectKeyMap.get(project);
+            }
 
+            if (projects == null) {
                 // Try and get the project first if the project entered is the project key
-                JIRAProject projectEntity = client.getProject(project);
+                JIRAProject projectEntity = null;
+                try {
+                    projectEntity = client.getProject(project);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    // do nothing as we will pick up a missing project later
+                }
 
                 // If the project isn't null then we found a matching one, otherwise load all the projects
                 if (projectEntity != null) {
@@ -195,10 +200,12 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
             for (final JIRAProject projectEntity : projects) {
                 if (projectEntity.getKey() != null && projectEntity.getKey().equals(project)) {
                     return projectEntity;
-                } else if (projectEntity.getName() != null && projectEntity.getName().equals(project)) {
-                    return projectEntity;
-                } else if (NUMBER_PATTERN.matcher(project).matches() && projectEntity.getId().equals(Long.parseLong(project))) {
-                    return projectEntity;
+                } else if ((projectEntity.getName() != null && projectEntity.getName().equals(project)) || (NUMBER_PATTERN.matcher(
+                        project).matches() && projectEntity.getId().equals(Long.parseLong(project)))) {
+                    // Load the project from the server as we'll need it to get the components/versions
+                    final JIRAProject foundProject = client.getProject(projectEntity.getKey());
+                    projectKeyMap.put(project, foundProject);
+                    return foundProject;
                 }
             }
         } catch (ProviderException e) {

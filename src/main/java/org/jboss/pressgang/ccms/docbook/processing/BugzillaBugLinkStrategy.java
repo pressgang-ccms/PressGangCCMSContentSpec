@@ -196,9 +196,9 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
                     if (bugzillaOptions.getVersion() != null) {
                         final ProductVersion version = getBugzillaVersion(bugzillaOptions.getVersion(), product);
                         if (version == null) {
-                            throw new ValidationException("No Bugzilla Version exists for version \"" + bugzillaOptions.getComponent() + "\".");
+                            throw new ValidationException("No Bugzilla Version exists for version \"" + bugzillaOptions.getVersion() + "\".");
                         } else if (!version.getIsActive()) {
-                            throw new ValidationException("The Bugzilla Version \"" + bugzillaOptions.getComponent() + "\" is not active.");
+                            throw new ValidationException("The Bugzilla Version \"" + bugzillaOptions.getVersion() + "\" is not active.");
                         }
                     }
                 }

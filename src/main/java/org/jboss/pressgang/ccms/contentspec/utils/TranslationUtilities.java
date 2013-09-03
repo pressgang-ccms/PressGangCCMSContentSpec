@@ -129,7 +129,7 @@ public class TranslationUtilities {
      */
     public static TranslatedCSNodeWrapper createCSTranslatedNode(final DataProviderFactory providerFactory, final CSNodeWrapper node) {
         final String sourceString;
-        if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+        if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA && TRANSLATABLE_METADATA.contains(node.getTitle())) {
             sourceString = node.getAdditionalText();
         } else if (EntityUtilities.isNodeALevel(node)) {
             sourceString = node.getTitle();

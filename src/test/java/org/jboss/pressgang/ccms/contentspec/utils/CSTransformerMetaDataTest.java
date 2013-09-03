@@ -47,7 +47,6 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
     List<CSNodeWrapper> relationshipFromNodes = new ArrayList<CSNodeWrapper>();
     Map<Integer, Node> nodes = newHashMap();
     Map<String, SpecTopic> targetTopics = newHashMap();
-    Map<String, List<SpecTopic>> specTopicMap = newHashMap();
 
     @Test
     public void shouldTransformBookMetaData() throws Exception {
@@ -60,8 +59,8 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         given(nodeWrapper.getId()).willReturn(id);
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap,
-                targetTopics, relationshipFromNodes);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics,
+                relationshipFromNodes);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CommonConstants.CS_BOOK_TYPE_TITLE));
@@ -78,8 +77,8 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         CSNodeWrapper nodeWrapper = createMetaDataMock(CommonConstants.CS_BOOK_TYPE_TITLE, "foo");
 
         // When the node metadata is transformed
-        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap,
-                targetTopics, relationshipFromNodes);
+        KeyValueNode<BookType> result = (KeyValueNode<BookType>) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics,
+                relationshipFromNodes);
 
         // Then the result has a book type key
         assertThat(result.getKey(), is(CommonConstants.CS_BOOK_TYPE_TITLE));
@@ -96,7 +95,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
 
         // When the node metadata is transformed
         KeyValueNode<InjectionOptions> result = (KeyValueNode<InjectionOptions>) CSTransformer.transformMetaData(nodeWrapper, nodes,
-                specTopicMap, targetTopics, relationshipFromNodes);
+                targetTopics, relationshipFromNodes);
 
         // Then the result has an inline injection type key
         assertThat(result.getKey(), is(CS_INLINE_INJECTION_TITLE));
@@ -114,7 +113,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         given(nodeWrapper.getId()).willReturn(id);
 
         // When the node metadata is transformed
-        KeyValueNode<String> result = (KeyValueNode<String>) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap, targetTopics,
+        KeyValueNode<String> result = (KeyValueNode<String>) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics,
                 relationshipFromNodes);
 
         // Then the result has the key given
@@ -138,8 +137,8 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         given(nodeWrapper.getNodeType()).willReturn(CommonConstants.CS_NODE_META_DATA_TOPIC);
 
         // When the node metadata is transformed
-        KeyValueNode<SpecTopic> result = (KeyValueNode<SpecTopic>) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap,
-                targetTopics, relationshipFromNodes);
+        KeyValueNode<SpecTopic> result = (KeyValueNode<SpecTopic>) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics,
+                relationshipFromNodes);
 
         // Then the result has a revision history key
         assertThat(result.getKey(), is(CommonConstants.CS_REV_HISTORY_TITLE));
@@ -162,8 +161,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         given(nodeWrapper.getNodeType()).willReturn(CommonConstants.CS_NODE_META_DATA);
 
         // When the node metadata is transformed
-        final FileList result = (FileList) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap,
-                targetTopics, relationshipFromNodes);
+        final FileList result = (FileList) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
 
         // Then the result has a file key
         assertThat(result.getKey(), is(CommonConstants.CS_FILE_TITLE));
@@ -192,8 +190,7 @@ public class CSTransformerMetaDataTest extends CSTransformerTest {
         given(children.getItems()).willReturn(Arrays.asList(fileWrapper));
 
         // When the node metadata is transformed
-        final FileList result = (FileList) CSTransformer.transformMetaData(nodeWrapper, nodes, specTopicMap,
-                targetTopics, relationshipFromNodes);
+        final FileList result = (FileList) CSTransformer.transformMetaData(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
 
         // Then the result has a file key
         assertThat(result.getKey(), is(CommonConstants.CS_FILE_TITLE));

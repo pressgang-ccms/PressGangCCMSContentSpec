@@ -297,7 +297,7 @@ public class CSTransformerTransformTest extends CSTransformerTest {
         // And the level should have been added to the spec's processes
         ArgumentCaptor<List> processesCaptor = ArgumentCaptor.forClass(List.class);
         PowerMockito.verifyStatic(times(1));
-        CSTransformer.applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyMap(), anyList(), processesCaptor.capture(),
+        CSTransformer.applyRelationships(any(ContentSpec.class), anyMap(), anyMap(), anyList(), processesCaptor.capture(),
                 any(DataProviderFactory.class));
         assertThat(processesCaptor.getValue().size(), is(1));
         Level expectedLevel = (Level) processesCaptor.getValue().get(0);

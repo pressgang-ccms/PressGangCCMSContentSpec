@@ -26,7 +26,7 @@ public enum LevelType {
      *
      * @return The unique ID.
      */
-    public int getId() {
+    public Integer getId() {
         return type;
     }
 

@@ -1,7 +1,5 @@
 package org.jboss.pressgang.ccms.contentspec;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -199,20 +197,16 @@ public class Process extends Level {
 
     @Override
     public String toString() {
-        if (hasSpecTopics()) {
-            final StringBuilder output = new StringBuilder();
-            final int indentationSize = parent != null ? getColumn() : 0;
-            for (int i = 1; i < indentationSize; i++) {
-                output.append(SPACER);
-            }
-            output.append(getText() + "\n");
-
-            for (final Node node : nodes) {
-                output.append(node.toString());
-            }
-            return output.toString();
-        } else {
-            return "";
+        final StringBuilder output = new StringBuilder();
+        final int indentationSize = parent != null ? getColumn() : 0;
+        for (int i = 1; i < indentationSize; i++) {
+            output.append(SPACER);
         }
+        output.append(getText() + "\n");
+
+        for (final Node node : nodes) {
+            output.append(node.toString());
+        }
+        return output.toString();
     }
 }

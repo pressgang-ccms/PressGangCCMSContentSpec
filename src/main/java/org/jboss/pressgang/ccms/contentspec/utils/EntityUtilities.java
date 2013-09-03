@@ -88,6 +88,14 @@ public class EntityUtilities {
      */
     public static TranslatedTopicWrapper getTranslatedTopicByTopicId(final DataProviderFactory providerFactory, final Integer id,
             final Integer rev, final String locale) {
+        return getTranslatedTopicByTopicAndNodeId(providerFactory, id, rev, null, locale);
+    }
+
+    /**
+     * Gets a translated topic based on a topic id, revision and locale.
+     */
+    public static TranslatedTopicWrapper getTranslatedTopicByTopicAndNodeId(final DataProviderFactory providerFactory, final Integer id,
+            final Integer rev, final Integer translatedCSNodeId, final String locale) {
         if (locale == null) return null;
         final CollectionWrapper<TranslatedTopicWrapper> translatedTopics = providerFactory.getProvider(
                 TopicProvider.class).getTopicTranslations(id, rev);
@@ -95,10 +103,14 @@ public class EntityUtilities {
         if (translatedTopics != null) {
             final List<TranslatedTopicWrapper> translatedTopicItems = translatedTopics.getItems();
             for (final TranslatedTopicWrapper translatedTopic : translatedTopicItems) {
-                if (rev != null && translatedTopic.getTopicRevision().equals(rev) && translatedTopic.getLocale().equals(locale)) {
-                    return translatedTopic;
-                } else if (rev == null) {
-                    return translatedTopic;
+                // Make sure the locale and topic revision matches
+                if (translatedTopic.getLocale().equals(locale) && translatedTopic.getTopicRevision().equals(rev)) {
+                    // Make sure the translated cs node id matches
+                    if ((translatedCSNodeId == null && translatedTopic.getTranslatedCSNode() == null) ||
+                            (translatedTopic.getTranslatedCSNode() != null && translatedTopic.getTranslatedCSNode().getId().equals(
+                                    translatedCSNodeId))) {
+                        return translatedTopic;
+                    }
                 }
             }
         }
@@ -297,7 +309,7 @@ public class EntityUtilities {
      */
     public static RevisionList getTopicRevisionsById(final TopicProvider topicProvider, final Integer csId) {
         final List<Revision> results = new ArrayList<Revision>();
-        final CollectionWrapper<TopicWrapper> topicRevisions = topicProvider.getTopic(csId).getRevisions();
+        CollectionWrapper<TopicWrapper> topicRevisions = topicProvider.getTopic(csId).getRevisions();
 
         // Create the unique array from the revisions
         if (topicRevisions != null && topicRevisions.getItems() != null) {
@@ -324,8 +336,7 @@ public class EntityUtilities {
      * @param tags The List of tags to be converted.
      * @return The mapping of Categories to Tags.
      */
-    public static Map<Integer, List<TagWrapper>> getCategoryMappingFromTagList(final Collection<TagWrapper>
-            tags) {
+    public static Map<Integer, List<TagWrapper>> getCategoryMappingFromTagList(final Collection<TagWrapper> tags) {
         final HashMap<Integer, List<TagWrapper>> mapping = new HashMap<Integer, List<TagWrapper>>();
         for (final TagWrapper tag : tags) {
             final List<CategoryInTagWrapper> catList = tag.getCategories().getItems();
@@ -394,8 +405,8 @@ public class EntityUtilities {
     /**
      * Checks to see if a Content Spec Meta Data element has changed.
      *
-     * @param metaDataName The Content Spec Meta Data name.
-     * @param currentValue The expected current value of the Meta Data node.
+     * @param metaDataName      The Content Spec Meta Data name.
+     * @param currentValue      The expected current value of the Meta Data node.
      * @param contentSpecEntity The Content Spec Entity to check against.
      * @return True if the meta data node has changed, otherwise false.
      */

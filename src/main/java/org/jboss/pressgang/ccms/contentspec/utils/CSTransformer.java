@@ -27,6 +27,7 @@ import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
+import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
@@ -453,6 +454,14 @@ public class CSTransformer {
     }
 
     protected static boolean isNodeASeparatorLevel(final Node node) {
-        return node instanceof Chapter || node instanceof Part || node instanceof Appendix || node instanceof Preface;
+        if (node instanceof Chapter || node instanceof Part || node instanceof Appendix || node instanceof Preface) {
+            return true;
+        } else if (node instanceof Process) {
+            final Process process = (Process) node;
+            return process.getParent() != null && (process.getParent().getLevelType() == LevelType.BASE || process.getParent()
+                    .getLevelType() == LevelType.PART);
+        } else {
+            return false;
+        }
     }
 }

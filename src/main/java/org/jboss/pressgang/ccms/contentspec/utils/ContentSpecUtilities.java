@@ -141,16 +141,27 @@ public class ContentSpecUtilities {
     }
 
     public static Node findMatchingContentSpecNode(final Level level, final Integer csNodeId) {
-        for (final Node node : level.getChildNodes()) {
-            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
-                return node;
-            }
+        // Check the node
+        if (level.getUniqueId() != null && level.getUniqueId().equals(csNodeId + "")) {
+            return level;
+        }
 
+        // Check the inner topic if it exists
+        if (level.getInnerTopic() != null && level.getInnerTopic().getUniqueId() != null && level.getInnerTopic().getUniqueId().equals(
+                csNodeId + "")) {
+            return level.getInnerTopic();
+        }
+
+        for (final Node node : level.getChildNodes()) {
             // Check the children of the node if it is a level
             if (node instanceof Level) {
                 final Node foundNode = findMatchingContentSpecNode((Level) node, csNodeId);
                 if (foundNode != null) {
                     return foundNode;
+                }
+            } else {
+                if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
+                    return node;
                 }
             }
         }

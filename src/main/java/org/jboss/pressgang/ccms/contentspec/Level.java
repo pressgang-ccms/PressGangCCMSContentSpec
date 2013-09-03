@@ -411,6 +411,27 @@ public class Level extends SpecNode {
         return false;
     }
 
+    /**
+     * Checks to see if this level or any of its children contain SpecTopics that represent a revision.
+     *
+     * @return True if the level or the levels children contain at least one SpecTopic that is a revision.
+     */
+    public boolean hasRevisionSpecTopics() {
+        for (final SpecTopic specTopic : getSpecTopics()) {
+            if (specTopic.getRevision() != null) {
+                return true;
+            }
+        }
+
+        for (final Level childLevel : getChildLevels()) {
+            if (childLevel.hasRevisionSpecTopics()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public Integer getStep() {
         if (getParent() == null) {

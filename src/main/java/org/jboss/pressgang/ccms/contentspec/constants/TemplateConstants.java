@@ -8,20 +8,19 @@ public class TemplateConstants {
             "\n" +
             "# The fields below are mandatory\n" +
             "Title =\n" +
-            "Subtitle =\n" +
-            "Abstract=\n" +
             "Product =\n" +
             "Version =\n" +
-            "DTD = Docbook 4.5\n" +
-            "Copyright Holder=\n" +
+            "Copyright Holder =\n" +
             "\n" +
             "# The commented fields below are optional\n" +
-            "\n" +
+            "# DTD = Docbook 4.5\n" +
+            "# Subtitle =\n" +
+            "# Abstract=\n" +
             "# Edition =\n" +
             "# Brand =\n" +
             "# Type = \n" +
             "# publican.cfg = [ custom content to append to publican.cfg can be\n" +
-            "multiline ]\n" +
+            "# multiline ]\n" +
             "# Pubsnumber =\n" +
             "\n" +
             "# Bug Links = Off | JIRA | Bugzilla\n" +
@@ -53,12 +52,19 @@ public class TemplateConstants {
             "# Indentation is meaningful. Use 2 spaces.\n" +
             "\n" +
             "# These are global tags. Anything declared at this level is inherited by the entire content spec. They will be applied to " +
-            "any new topics created by this content spec. They *will not* be applied to existing topics.\n" +
-            "\n" +
-            "[Nu-Tea, 2.0, Tea, Writer=jwulf]\n" +
+            "any new topics created by this content spec, and will be assigned to any existing topics included in this spec. They will " +
+            "also not be applied to existing topics that are referenced by the spec after the global tag was defined.\n" +
             "\n" +
             "# The \"Writer=jwulf\" directive will tag all the new topics with the Assigned Writer \"jwulf\". It relies on \"jwulf\" " +
             "existing as a tag in PressGang in the Assigned Writer category.\n" +
+            "\n" +
+            "[Nu-Tea, 2.0, Tea, Writer=jwulf]\n" +
+            "\n" +
+            "# Conditions are used to selectively include XML elements from topics. This allows the same topic to be included in multiple" +
+            " content specifications with slight differences.\n" +
+            "# Conditions defined at the global level are used by all topics in the content specification.\n" +
+            "\n" +
+            "[condition = foo]\n" +
             "\n" +
             "# Chapters are specified with the \"Chapter\" keyword. They cannot be nested. They must be indented with 0 spaces.\n" +
             "# This Chapter has the title \"Tea\"\n" +
@@ -75,16 +81,16 @@ public class TemplateConstants {
             "\n" +
             "   Beverages [3456]\n" +
             "\n" +
-            "# If Topic 3456 has a title different from \"Beverages\", the content spec processor will throw an error when pushing or " +
-            "building this spec. This is to ensure that it doesn't build a spec with a topic other than the one human readers are " +
-            "expecting; for example: if an author has mixed up the ID by mistake.\n" +
+            "# If Topic 3456 has a title different from \"Beverages\", the content spec processor will display a warning when pushing or " +
+            "building this spec. These warnings should be reviewed to ensure that the topic that was defined in the spec is actually the " +
+            "topic that was intended to be included, and not a mistyped topic ID.\n" +
             "\n" +
             "\n" +
             "# Sometimes the Topic title has been edited since the Content Spec was written. For example, " +
             "capitalisation may have changed or a title may have been edited. In this case, when you try to build or push the spec it " +
-            "will throw an error with a list of mismatching topics and IDs. If you determine that the mismatches are due to minor edits, " +
-            "and not mix-ups, then use permissive mode (-p) when building or pushing, and the processor will replace the human-readable " +
-            "topic title with the actual title of the topic with, in this case, ID 234.\n" +
+            "will display a warning with a list of mismatching topics and IDs, and then automatically update the title. If you prefer " +
+            "that an error be thrown in this case, preventing the spec from being built with inconsistent titles, " +
+            "use the --strict-titles option.\n" +
             "\n" +
             "   Biscuits (Content spec Topic title doesn't match Topic title in PressGang) [234]\n" +
             "\n" +
@@ -95,7 +101,7 @@ public class TemplateConstants {
             "\n" +
             "   Tea-making tools [N1, Reference]\n" +
             "\n" +
-            "# Sections are specified by the keyword \"Section\". They must be within Chapters. Sections can be nested.\n" +
+            "# Sections are specified by the keyword \"Section\". They must be within Chapters or Appendices . Sections can be nested.\n" +
             "# This Section is in the \"Tea\" chapter, and has the title \"Simple Tea\"\n" +
             "\n" +
             "   Section: Simple Tea\n" +
@@ -188,9 +194,24 @@ public class TemplateConstants {
             "\n" +
             "   Brew a pot of fruit tea [N3, Task] [P: 56]\n" +
             "\n" +
+            "# A contents of a single topic can be included directly under a Chapter, Appendix, Part or Section by listing the topic ID " +
+            "after the title. These topics supply the front matter for the level, and usually contain introductory information.\n" +
+            "# A warning will be displayed if the title of the level does not match the title of the topic. However, " +
+            "unlike inconsistencies between topic titles for the children of a level, inconsistent titles for front matter topics will " +
+            "not be automatically updated when the content specification is pushed or built.\n" +
+            "\n" +
+            "Chapter: The future of tea [123]\n" +
+            "\n" +
+            "# Conditions can be overriden at any level in the content specification.\n" +
+            "# The topic Tea appreciation societies [125] will use the condition bar as defined on the chapter.\n" +
+            "# The topic Useful tea websites [124] will use the condition baz as defined on the topic itself.\n" +
+            "\n" +
+            "Chapter: Getting more information on Tea [condition = bar]\n" +
+            "  Tea appreciation societies [125]\n" +
+            "  Useful tea websites [124, condition = baz]\n" +
+            "\n" +
             "Appendix: Nu-Tea Distributors\n" +
-            "   List of Nu-Tea Distributors by Country [N, Reference, URL=http://www.nu-tea.com/distributors, " +
-            "Description=Make it a table and  segment by geo]\n";
+            "   List of Nu-Tea Distributors by Country [N, Reference, URL=http://www.nu-tea.com/distributors, Description=Make it a table and segment by geo]";
 
     public static final String EMPTY_TEMPLATE = "# Content spec written by\n" +
             "# Generated on <date>\n" +

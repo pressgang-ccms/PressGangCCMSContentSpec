@@ -45,10 +45,8 @@ public class TranslationUtilities {
         translatedTopic.setTopicId(topic.getId());
         translatedTopic.setTopicRevision(topic.getRevision());
         translatedTopic.setXml(topic.getXml());
-        if (translatedCSNode != null) {
+        if (translatedCSNode != null && condition != null) {
             translatedTopic.setTranslatedCSNode(translatedCSNode);
-        }
-        if (condition != null) {
             translatedTopic.setTranslatedXMLCondition(condition);
         }
         return translatedTopic;

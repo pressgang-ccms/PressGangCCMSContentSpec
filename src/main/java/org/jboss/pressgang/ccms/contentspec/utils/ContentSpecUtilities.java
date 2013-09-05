@@ -73,6 +73,17 @@ public class ContentSpecUtilities {
         return null;
     }
 
+    public static String removeChecksum(final String contentSpecString) {
+        String retValue = contentSpecString;
+
+        Matcher matcher = CS_CHECKSUM_PATTERN.matcher(retValue);
+        if (matcher.find()) {
+            retValue = matcher.replaceFirst("");
+        }
+
+        return retValue;
+    }
+
     public static String removeChecksumAndId(final String contentSpecString) {
         String retValue = contentSpecString;
 

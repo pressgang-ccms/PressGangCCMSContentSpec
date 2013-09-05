@@ -56,7 +56,8 @@ public class CSTransformer {
      * @param providerFactory
      * @return The generic Content Spec object that was transformed from the entity.
      */
-    public static ContentSpec transform(final ContentSpecWrapper spec, final DataProviderFactory providerFactory) {
+    public static ContentSpec transform(final ContentSpecWrapper spec, final DataProviderFactory providerFactory,
+            final boolean includeChecksum) {
         // local variables that are used to map transformed content
         Map<Integer, Node> nodes = new HashMap<Integer, Node>();
         Map<String, SpecTopic> topicTargets = new HashMap<String, SpecTopic>();
@@ -130,7 +131,7 @@ public class CSTransformer {
         applyRelationships(contentSpec, nodes, topicTargets, relationshipFromNodes, processes, providerFactory);
 
         // Set the line numbers
-        setLineNumbers(contentSpec, 2);
+        setLineNumbers(contentSpec, includeChecksum ? 2 : 1);
 
         return contentSpec;
     }

@@ -81,6 +81,7 @@ public class ContentSpec extends Node {
      * @param product         The Product that the Content Specification documents.
      * @param version         The Version of the Product that the Content Specification documents.
      * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
+     * @param includeChecksum If the checksum should be used when calculating line numbers or displaying output
      */
     public ContentSpec(final String title, final String product, final String version, final String copyrightHolder) {
         setTitle(title);

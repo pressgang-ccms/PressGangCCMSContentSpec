@@ -122,31 +122,43 @@ public class ContentSpecUtilities {
      *
      *
      * @param contentSpec The content spec to fix.
+     * @param validText The content specs latest valid text.
+     * @param includeChecksum If the checksum should be included in the output.
      * @return The fixed failed content spec string.
      */
-    public static String fixFailedContentSpec(final ContentSpecWrapper contentSpec, final String text) {
-        return fixFailedContentSpec(contentSpec.getId(), contentSpec.getFailed(), text);
+    public static String fixFailedContentSpec(final ContentSpecWrapper contentSpec, final String validText, final boolean includeChecksum) {
+        return fixFailedContentSpec(contentSpec.getId(), contentSpec.getFailed(), validText, includeChecksum);
     }
 
     /**
      * Fixes a failed Content Spec so that the ID and CHECKSUM are included. This is primarily an issue when creating new content specs
      * and they are initially invalid.
      *
-     * @param id
-     * @param failedContentSpec The content spec to fix.
+     * @param id The id of the content spec tha tis being fixed.
+     * @param failedContentSpec The failed content spec to fix.
+     * @param validText The content specs latest valid text.
+     * @param includeChecksum If the checksum should be included in the output.
      * @return The fixed failed content spec string.
      */
-    public static String fixFailedContentSpec(final Integer id, final String failedContentSpec, final String text) {
+    public static String fixFailedContentSpec(final Integer id, final String failedContentSpec, final String validText,
+            final boolean includeChecksum) {
         if (failedContentSpec == null || failedContentSpec.isEmpty()) {
             return null;
-        } else {
+        } else if (includeChecksum) {
             if (id == null || getContentSpecChecksum(failedContentSpec) != null) {
                 return failedContentSpec;
             } else {
                 final String cleanContentSpec = removeChecksumAndId(failedContentSpec);
-                final String checksum = getContentSpecChecksum(text);
-                return CommonConstants.CS_CHECKSUM_TITLE + "=" + checksum + "\n" + CommonConstants.CS_ID_TITLE + " = " +
+                final String checksum = getContentSpecChecksum(validText);
+                return CommonConstants.CS_CHECKSUM_TITLE + " = " + checksum + "\n" + CommonConstants.CS_ID_TITLE + " = " +
                         id + "\n" + cleanContentSpec;
+            }
+        } else {
+            final String cleanContentSpec = removeChecksum(failedContentSpec);
+            if (id == null || getContentSpecID(cleanContentSpec) != null) {
+                return cleanContentSpec;
+            } else {
+                return CommonConstants.CS_ID_TITLE + " = " + id + "\n" + cleanContentSpec;
             }
         }
     }

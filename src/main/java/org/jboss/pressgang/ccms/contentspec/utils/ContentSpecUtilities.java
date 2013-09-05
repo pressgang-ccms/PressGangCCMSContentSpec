@@ -145,8 +145,15 @@ public class ContentSpecUtilities {
                 return failedContentSpec;
             } else {
                 final String cleanContentSpec = removeChecksumAndId(failedContentSpec);
-                final String checksum = HashUtilities.generateMD5(removeChecksum(failedContentSpec));
-                return CommonConstants.CS_CHECKSUM_TITLE + "=" + checksum + "\n" + CommonConstants.CS_ID_TITLE + "=" +
+                final Integer currentID = getContentSpecID(failedContentSpec);
+                final String checksum;
+                if (currentID != null) {
+                    checksum = HashUtilities.generateMD5(removeChecksum(failedContentSpec));
+                } else  {
+                    checksum = HashUtilities.generateMD5(removeChecksum(CommonConstants.CS_ID_TITLE + " = " +
+                            id + "\n" + failedContentSpec));
+                }
+                return CommonConstants.CS_CHECKSUM_TITLE + "=" + checksum + "\n" + CommonConstants.CS_ID_TITLE + " = " +
                         id + "\n" + cleanContentSpec;
             }
         }

@@ -1769,6 +1769,10 @@ public class ContentSpec extends Node {
     @SuppressWarnings("rawtypes")
     @Override
     public String toString() {
+        return toString(true);
+    }
+
+    public String toString(boolean includeChecksum) {
         final StringBuilder output = new StringBuilder();
         for (final Node node : nodes) {
             if (node instanceof KeyValueNode) {
@@ -1792,9 +1796,13 @@ public class ContentSpec extends Node {
 
         // If the id isn't null then add the id and checksum
         if (getId() != null) {
-            output.insert(0, CommonConstants.CS_CHECKSUM_TITLE + " = " + HashUtilities.generateMD5(
+            if (includeChecksum) {
+                output.insert(0, CommonConstants.CS_CHECKSUM_TITLE + " = " + HashUtilities.generateMD5(
                     CommonConstants.CS_ID_TITLE + " = " + id.getValue() + "\n" + output) + "\n" + CommonConstants.CS_ID_TITLE + " = " + id.getValue() +
                     "\n");
+            } else {
+                output.insert(0, CommonConstants.CS_ID_TITLE + " = " + id.getValue() + "\n");
+            }
         }
         return output.toString();
     }

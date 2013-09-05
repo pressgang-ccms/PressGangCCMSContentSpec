@@ -8,7 +8,7 @@ package org.jboss.pressgang.ccms.contentspec;
 public abstract class Node {
     protected static final String SPACER = "  ";
 
-    protected final int lineNumber;
+    protected int lineNumber;
     protected String text;
     protected Node parent;
     protected String uniqueId = null;
@@ -36,6 +36,15 @@ public abstract class Node {
      */
     public int getLineNumber() {
         return lineNumber;
+    }
+
+    /**
+     * Sets the line number that the node is on in a Content Specification.
+     *
+     * @param lineNumber The Line Number for the node.
+     */
+    public void setLineNumber(int lineNumber) {
+        this.lineNumber = lineNumber;
     }
 
     /**

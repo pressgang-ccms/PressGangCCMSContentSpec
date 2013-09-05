@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Chapter;
 import org.jboss.pressgang.ccms.contentspec.Comment;
@@ -128,7 +129,62 @@ public class CSTransformer {
         // Apply the relationships to the nodes
         applyRelationships(contentSpec, nodes, topicTargets, relationshipFromNodes, processes, providerFactory);
 
+        // Set the line numbers
+        setLineNumbers(contentSpec, 2);
+
         return contentSpec;
+    }
+
+    private static int setLineNumbers(final Node node, int current) {
+        if (node instanceof ContentSpec) {
+            for (final Node childNode : ((ContentSpec) node).getNodes()) {
+                current = setLineNumbers(childNode, current);
+            }
+
+            final Level baseLevel = ((ContentSpec) node).getBaseLevel();
+            if (!baseLevel.getTags(false).isEmpty() || baseLevel.getConditionStatement() != null) {
+                current++;
+            }
+
+            for (final Node childNode : ((ContentSpec) node).getChildNodes()) {
+                current = setLineNumbers(childNode, current);
+            }
+
+            return current;
+        } else {
+            node.setLineNumber(current);
+            current++;
+
+            if (node instanceof Level) {
+                for (final Node childNode : ((Level) node).getChildNodes()) {
+                    current = setLineNumbers(childNode, current);
+                }
+            } else if (node instanceof FileList) {
+                final List<File> files = ((FileList) node).getValue();
+                current += files == null || files.isEmpty() ? 0 : (files.size() - 1);
+            } else if (node instanceof KeyValueNode) {
+                if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_PUBLICAN_CFG_TITLE)) {
+                    final String publicanCfg = (String) ((KeyValueNode) node).getValue();
+                    current += StringUtils.countMatches(publicanCfg, "\n");
+                }
+            } else if (node instanceof SpecTopic && !((SpecTopic) node).getRelationships().isEmpty()) {
+                int numPrereqs = ((SpecTopic) node).getPrerequisiteRelationships().size();
+                int numReferTo = ((SpecTopic) node).getRelatedRelationships().size();
+                int numLinkList = ((SpecTopic) node).getLinkListRelationships().size();
+
+                if (numPrereqs > 0) {
+                    current += numPrereqs + 1;
+                }
+                if (numReferTo > 0) {
+                    current += numReferTo + 1;
+                }
+                if (numLinkList > 0) {
+                    current += numLinkList + 1;
+                }
+            }
+
+            return current;
+        }
     }
 
     private static void transformGlobalOptions(final ContentSpecWrapper spec, final ContentSpec contentSpec) {

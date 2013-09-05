@@ -17,6 +17,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
+import org.jboss.pressgang.ccms.utils.common.HashUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -114,6 +115,41 @@ public class ContentSpecUtilities {
         }
 
         return contentSpecString;
+    }
+
+    /**
+     * Fixes a failed Content Spec so that the ID and CHECKSUM are included. This is primarily an issue when creating new content specs
+     * and they are initially invalid.
+     *
+     *
+     * @param contentSpec The content spec to fix.
+     * @return The fixed failed content spec string.
+     */
+    public static String fixFailedContentSpec(final ContentSpecWrapper contentSpec) {
+        return fixFailedContentSpec(contentSpec.getId(), contentSpec.getFailed());
+    }
+
+    /**
+     * Fixes a failed Content Spec so that the ID and CHECKSUM are included. This is primarily an issue when creating new content specs
+     * and they are initially invalid.
+     *
+     * @param id
+     * @param failedContentSpec The content spec to fix.
+     * @return The fixed failed content spec string.
+     */
+    public static String fixFailedContentSpec(final Integer id, final String failedContentSpec) {
+        if (failedContentSpec == null || failedContentSpec.isEmpty()) {
+            return null;
+        } else {
+            if (id == null || getContentSpecChecksum(failedContentSpec) != null) {
+                return failedContentSpec;
+            } else {
+                final String cleanContentSpec = removeChecksumAndId(failedContentSpec);
+                final String checksum = HashUtilities.generateMD5(removeChecksum(failedContentSpec));
+                return CommonConstants.CS_CHECKSUM_TITLE + "=" + checksum + "\n" + CommonConstants.CS_ID_TITLE + "=" +
+                        id + "\n" + cleanContentSpec;
+            }
+        }
     }
 
     /**

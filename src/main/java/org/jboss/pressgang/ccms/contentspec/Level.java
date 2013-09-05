@@ -472,6 +472,16 @@ public class Level extends SpecNode {
             output.append(ContentSpecUtilities.escapeTitle(title));
             if (innerTopic != null) {
                 output.append(" [").append(innerTopic.getIdAndOptionsString()).append("]");
+                if (!innerTopic.getRelationships().isEmpty()) {
+                    final int indentationSize = parent != null ? getColumn() : 0;
+                    final StringBuilder spacer = new StringBuilder();
+                    for (int i = 1; i < indentationSize; i++) {
+                        spacer.append(SPACER);
+                    }
+                    spacer.append(SPACER);
+
+                    output.append(innerTopic.getRelationshipText(spacer.toString()));
+                }
             }
             if (targetId != null) {
                 output.append(" [").append(targetId).append("]");

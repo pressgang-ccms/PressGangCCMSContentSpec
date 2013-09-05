@@ -695,20 +695,7 @@ public class SpecTopic extends SpecNode {
         }
         spacer.append(SPACER);
 
-        if (!getPrerequisiteRelationships().isEmpty()) {
-            boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
-            output.append(generateRelationshipText(RelationshipType.PREREQUISITE, !useLongSyntax, spacer.toString()));
-        }
-
-        if (!getRelatedRelationships().isEmpty()) {
-            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
-            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer.toString()));
-        }
-
-        if (!getLinkListRelationships().isEmpty()) {
-            boolean useLongSyntax = printRelationshipsWithLongSyntax(getLinkListRelationships());
-            output.append(generateRelationshipText(RelationshipType.LINKLIST, !useLongSyntax, spacer.toString()));
-        }
+        output.append(getRelationshipText(spacer.toString()));
 
         setText(output.toString());
         return text;
@@ -726,6 +713,26 @@ public class SpecTopic extends SpecNode {
         } else {
             return id + (revision == null ? "" : (", rev: " + revision)) + (options.equals("") ? "" : (", " + options));
         }
+    }
+
+    protected String getRelationshipText(final String spacer) {
+        final StringBuilder output = new StringBuilder();
+        if (!getPrerequisiteRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getPrerequisiteRelationships());
+            output.append(generateRelationshipText(RelationshipType.PREREQUISITE, !useLongSyntax, spacer));
+        }
+
+        if (!getRelatedRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getRelatedRelationships());
+            output.append(generateRelationshipText(RelationshipType.REFER_TO, !useLongSyntax, spacer));
+        }
+
+        if (!getLinkListRelationships().isEmpty()) {
+            boolean useLongSyntax = printRelationshipsWithLongSyntax(getLinkListRelationships());
+            output.append(generateRelationshipText(RelationshipType.LINKLIST, !useLongSyntax, spacer));
+        }
+
+        return output.toString();
     }
 
     /**

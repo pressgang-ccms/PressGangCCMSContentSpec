@@ -435,6 +435,7 @@ public class CSTransformer {
         // Apply the user defined relationships stored in the database
         for (final CSNodeWrapper node : relationshipFromNodes) {
             final SpecTopic fromNode = (SpecTopic) nodes.get(node.getId());
+            boolean frontMatterTopic = node.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC;
 
             // Check if we have any relationships to process
             if (node.getRelatedToNodes() == null || node.getRelatedToNodes().isEmpty()) continue;
@@ -459,7 +460,7 @@ public class CSTransformer {
 
                     // Add the relationship
                     fromNode.addRelationshipToTarget(toLevel, RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
-                            toLevel.getTitle());
+                            frontMatterTopic ? null : toLevel.getTitle());
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
@@ -467,10 +468,12 @@ public class CSTransformer {
                     // Add the relationship
                     if (relatedToNode.getRelationshipMode().equals(CommonConstants.CS_RELATIONSHIP_MODE_TARGET)) {
                         fromNode.addRelationshipToTarget(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), toSpecTopic.getTitle());
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
+                                frontMatterTopic ? null : toSpecTopic.getTitle());
                     } else {
                         fromNode.addRelationshipToTopic(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), toSpecTopic.getTitle());
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
+                                frontMatterTopic ? null : toSpecTopic.getTitle());
                     }
                 }
             }

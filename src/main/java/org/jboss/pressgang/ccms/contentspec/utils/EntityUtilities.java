@@ -18,6 +18,7 @@ import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TagProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
+import org.jboss.pressgang.ccms.provider.exception.NotFoundException;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -238,10 +239,16 @@ public class EntityUtilities {
     /*
      * Gets the Author Information for a specific author
      */
-    public static AuthorInformation getAuthorInformation(final DataProviderFactory providerFactory, final Integer authorId) {
+    public static AuthorInformation getAuthorInformation(final DataProviderFactory providerFactory, final Integer authorId,
+            final Integer revision) {
         final AuthorInformation authInfo = new AuthorInformation();
         authInfo.setAuthorId(authorId);
-        final TagWrapper tag = providerFactory.getProvider(TagProvider.class).getTag(authorId);
+        TagWrapper tag = null;
+        try {
+            tag = providerFactory.getProvider(TagProvider.class).getTag(authorId);
+        } catch (NotFoundException e) {
+            tag = providerFactory.getProvider(TagProvider.class).getTag(authorId, revision);
+        }
         if (tag != null && tag.getProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && tag.getProperty(
                 CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null) {
             authInfo.setFirstName(tag.getProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());

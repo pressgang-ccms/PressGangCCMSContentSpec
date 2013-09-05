@@ -17,7 +17,6 @@ import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
-import org.jboss.pressgang.ccms.utils.common.HashUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -125,8 +124,8 @@ public class ContentSpecUtilities {
      * @param contentSpec The content spec to fix.
      * @return The fixed failed content spec string.
      */
-    public static String fixFailedContentSpec(final ContentSpecWrapper contentSpec) {
-        return fixFailedContentSpec(contentSpec.getId(), contentSpec.getFailed());
+    public static String fixFailedContentSpec(final ContentSpecWrapper contentSpec, final String text) {
+        return fixFailedContentSpec(contentSpec.getId(), contentSpec.getFailed(), text);
     }
 
     /**
@@ -137,7 +136,7 @@ public class ContentSpecUtilities {
      * @param failedContentSpec The content spec to fix.
      * @return The fixed failed content spec string.
      */
-    public static String fixFailedContentSpec(final Integer id, final String failedContentSpec) {
+    public static String fixFailedContentSpec(final Integer id, final String failedContentSpec, final String text) {
         if (failedContentSpec == null || failedContentSpec.isEmpty()) {
             return null;
         } else {
@@ -145,14 +144,7 @@ public class ContentSpecUtilities {
                 return failedContentSpec;
             } else {
                 final String cleanContentSpec = removeChecksumAndId(failedContentSpec);
-                final Integer currentID = getContentSpecID(failedContentSpec);
-                final String checksum;
-                if (currentID != null) {
-                    checksum = HashUtilities.generateMD5(removeChecksum(failedContentSpec));
-                } else  {
-                    checksum = HashUtilities.generateMD5(removeChecksum(CommonConstants.CS_ID_TITLE + " = " +
-                            id + "\n" + failedContentSpec));
-                }
+                final String checksum = getContentSpecChecksum(text);
                 return CommonConstants.CS_CHECKSUM_TITLE + "=" + checksum + "\n" + CommonConstants.CS_ID_TITLE + " = " +
                         id + "\n" + cleanContentSpec;
             }

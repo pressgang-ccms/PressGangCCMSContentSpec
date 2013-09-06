@@ -348,7 +348,7 @@ public class ContentSpecUtilities {
         if (title == null) {
             return null;
         } else {
-            return title.replace("[", "\\[");
+            return title.replace("[", "\\[").replace("]", "\\]");
         }
     }
 
@@ -362,7 +362,7 @@ public class ContentSpecUtilities {
         if (title == null) {
             return null;
         } else {
-            return title.replace(",", "\\,").replace("[", "\\[");
+            return escapeTitle(title).replace(",", "\\,");
         }
     }
 }

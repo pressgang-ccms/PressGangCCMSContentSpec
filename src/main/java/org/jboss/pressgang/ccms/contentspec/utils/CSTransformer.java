@@ -465,16 +465,17 @@ public class CSTransformer {
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
+                    final String title = frontMatterTopic && toSpecTopic.getParent() instanceof Level ? ((Level) toSpecTopic.getParent())
+                            .getTitle() : toSpecTopic.getTitle();
 
                     // Add the relationship
                     if (relatedToNode.getRelationshipMode().equals(CommonConstants.CS_RELATIONSHIP_MODE_TARGET)) {
                         fromNode.addRelationshipToTarget(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
-                                frontMatterTopic ? null : toSpecTopic.getTitle());
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), frontMatterTopic ? null : title);
                     } else {
                         fromNode.addRelationshipToTopic(toSpecTopic,
                                 RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
-                                frontMatterTopic ? null : toSpecTopic.getTitle());
+                                frontMatterTopic ? null : title);
                     }
                 }
             }

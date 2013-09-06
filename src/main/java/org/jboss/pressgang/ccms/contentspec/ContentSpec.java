@@ -1772,7 +1772,7 @@ public class ContentSpec extends Node {
             brandLogo = (KeyValueNode<String>) node;
             setKeyValueNodeKey(brandLogo, CommonConstants.CS_BRAND_LOGO_TITLE);
         } else if ((key.equalsIgnoreCase(CommonConstants.CS_FILE_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_FILE_SHORT_TITLE)) && node instanceof List) {
+                CommonConstants.CS_FILE_SHORT_TITLE)) && node instanceof FileList) {
             files = (FileList) node;
             setKeyValueNodeKey(files, CommonConstants.CS_FILE_TITLE);
         } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_COMPONENT_TITLE) && value instanceof String) {

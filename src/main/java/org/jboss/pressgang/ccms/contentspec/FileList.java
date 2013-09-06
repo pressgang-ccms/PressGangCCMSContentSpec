@@ -25,13 +25,14 @@ public class FileList extends KeyValueNode<List<File>> {
     public String getText() {
         final StringBuilder output = new StringBuilder(CommonConstants.CS_FILE_TITLE);
         output.append(" ").append(getSeparator()).append(" [");
-        int count = 1;
-        for (final File file : getValue()) {
-            if (count != 1) {
-                output.append(",\n").append(SPACER);
+        if (getValue() != null) {
+            for (int i = 0; i < getValue().size(); i++) {
+                final File file = getValue().get(i);
+                if (i > 0) {
+                    output.append(",\n").append(SPACER);
+                }
+                output.append(file.getText());
             }
-            output.append(file.toString());
-            count++;
         }
         output.append("]");
         return output.toString();

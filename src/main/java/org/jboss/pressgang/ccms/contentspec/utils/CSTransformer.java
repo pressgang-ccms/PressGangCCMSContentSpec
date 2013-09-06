@@ -30,6 +30,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
+import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.EntityWrapperIDComparator;
@@ -465,7 +466,8 @@ public class CSTransformer {
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
-                    final String title = frontMatterTopic && toSpecTopic.getParent() instanceof Level ? ((Level) toSpecTopic.getParent())
+                    final String title = TopicType.LEVEL.equals(
+                            toSpecTopic.getTopicType()) && toSpecTopic.getParent() instanceof Level ? ((Level) toSpecTopic.getParent())
                             .getTitle() : toSpecTopic.getTitle();
 
                     // Add the relationship
@@ -474,8 +476,7 @@ public class CSTransformer {
                                 RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), frontMatterTopic ? null : title);
                     } else {
                         fromNode.addRelationshipToTopic(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
-                                frontMatterTopic ? null : title);
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), frontMatterTopic ? null : title);
                     }
                 }
             }

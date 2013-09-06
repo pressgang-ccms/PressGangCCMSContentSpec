@@ -1,7 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
 public class KeyValueNode<T> extends Node {
-    private final String key;
+    private String key;
     private T value = null;
     private final char separator;
 
@@ -43,6 +43,10 @@ public class KeyValueNode<T> extends Node {
 
     public String getKey() {
         return key;
+    }
+
+    protected void setKey(final String key) {
+        this.key = key;
     }
 
     public T getValue() {

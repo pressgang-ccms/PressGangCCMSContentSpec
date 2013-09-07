@@ -271,10 +271,10 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
             if (!isNullOrEmpty(bugOptions.getComponent()) || !isNullOrEmpty(bugOptions.getVersion())) {
                 throw new ValidationException("A Bugzilla Product must be specified to set additional fields.");
             }
-        } else if (isNullOrEmpty(bugOptions.getComponent())) {
-            if (!isNullOrEmpty(bugOptions.getVersion())) {
-                throw new ValidationException("A Bugzilla Component must be specified to set a Version.");
-            }
+//        } else if (isNullOrEmpty(bugOptions.getComponent())) {
+//            if (!isNullOrEmpty(bugOptions.getVersion())) {
+//                throw new ValidationException("A Bugzilla Component must be specified to set a Version.");
+//            }
         }
     }
 

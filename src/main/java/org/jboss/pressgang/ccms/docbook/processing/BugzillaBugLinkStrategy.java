@@ -12,6 +12,7 @@ import java.util.List;
 import com.j2bugzilla.base.BugField;
 import com.j2bugzilla.base.BugFieldValue;
 import com.j2bugzilla.base.BugzillaConnector;
+import com.j2bugzilla.base.BugzillaException;
 import com.j2bugzilla.base.ConnectionException;
 import com.j2bugzilla.base.Product;
 import com.j2bugzilla.base.ProductComponent;
@@ -227,8 +228,12 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
             }
         } catch (ValidationException e) {
             throw e;
-        } catch (Exception e) {
-            throw new ValidationException(e);
+        } catch (InstantiationException e) {
+            throw new RuntimeException(e);
+        } catch (BugzillaException e) {
+            throw new RuntimeException(e);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 

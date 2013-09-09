@@ -30,7 +30,6 @@
         <jira.rest.client.version>1.0-SNAPSHOT</jira.rest.client.version>
         <slf4j.version>1.6.4</slf4j.version>
         <ipsedixit.version>1.0.2</ipsedixit.version>
-        <google-guava.version>14.0.1</google-guava.version>
         <!-- Can't move to Mockito 1.9.5 and PowerMock 1.5 yet due to bug -->
         <mockito.version>1.9.0</mockito.version>
         <powermock.version>1.4.11</powermock.version>
@@ -67,13 +66,6 @@
             <groupId>org.jboss.pressgang.ccms</groupId>
             <artifactId>jira-rest-client</artifactId>
             <version>${jira.rest.client.version}</version>
-        </dependency>
-
-        <!-- Other libraries -->
-        <dependency>
-            <groupId>com.google.guava</groupId>
-            <artifactId>guava</artifactId>
-            <version>${google-guava.version}</version>
         </dependency>
 
         <!-- Testing Libraries -->

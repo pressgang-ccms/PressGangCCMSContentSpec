@@ -1,6 +1,6 @@
-package org.jboss.pressgang.ccms.contentspec.entities;
+package org.jboss.pressgang.ccms.contentspec.buglinks;
 
-public class JIRABugLinkOptions extends BaseBugLinkOptions {
+public class JIRABugLinkOptions extends BugLinkOptions {
     private String project;
     private String component;
     private String labels;

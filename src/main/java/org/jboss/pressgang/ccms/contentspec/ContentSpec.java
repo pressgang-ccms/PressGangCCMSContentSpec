@@ -13,9 +13,9 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
-import org.jboss.pressgang.ccms.contentspec.entities.BugzillaBugLinkOptions;
+import org.jboss.pressgang.ccms.contentspec.buglinks.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
-import org.jboss.pressgang.ccms.contentspec.entities.JIRABugLinkOptions;
+import org.jboss.pressgang.ccms.contentspec.buglinks.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.BugLinkType;
@@ -1218,7 +1218,7 @@ public class ContentSpec extends Node {
         bzOption.setProduct(getBugzillaProduct());
         bzOption.setComponent(getBugzillaComponent());
         bzOption.setVersion(getBugzillaVersion());
-        bzOption.setBaseUrl(getBugzillaServer());
+        bzOption.setBaseUrl(getBugzillaServer() == null ? "https://bugzilla.redhat.com/" : getBugzillaServer());
         bzOption.setBugLinksEnabled(isInjectBugLinks());
         bzOption.setInjectAssignee(isInjectBugzillaAssignee());
         bzOption.setKeywords(getBugzillaKeywords());

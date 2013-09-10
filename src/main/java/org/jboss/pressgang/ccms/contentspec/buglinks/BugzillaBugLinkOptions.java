@@ -1,6 +1,6 @@
-package org.jboss.pressgang.ccms.contentspec.entities;
+package org.jboss.pressgang.ccms.contentspec.buglinks;
 
-public class BugzillaBugLinkOptions extends BaseBugLinkOptions {
+public class BugzillaBugLinkOptions extends BugLinkOptions {
 
     private String product = null;
     private String component = null;

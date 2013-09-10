@@ -1,4 +1,4 @@
-package org.jboss.pressgang.ccms.docbook.processing;
+package org.jboss.pressgang.ccms.contentspec.buglinks;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -20,29 +20,30 @@ import com.j2bugzilla.base.ProductVersion;
 import com.j2bugzilla.rpc.GetBugField;
 import com.j2bugzilla.rpc.GetProduct;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.entities.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
-import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
-public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkOptions> {
+public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLinkOptions> {
     protected static final String ENCODING = "UTF-8";
     protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
-    private final BugzillaConnector connector;
-    private final String bugzillaUrl;
+    private BugzillaConnector connector;
     private boolean connected = false;
 
-    public BugzillaBugLinkStrategy(final String bugzillaUrl) {
+    public BugzillaBugLinkStrategy(){
+    }
+
+    @Override
+    public void initialise(final String bugzillaUrl, final Object... args) {
         connector = new BugzillaConnector();
-        this.bugzillaUrl = bugzillaUrl;
+        setServerUrl(bugzillaUrl);
     }
 
     protected void connect() throws ConnectionException {
@@ -51,7 +52,7 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
     }
 
     protected String getFixedBugzillaUrl() {
-        return bugzillaUrl == null ? "https://bugzilla.redhat.com/" : (bugzillaUrl.endsWith("/") ? bugzillaUrl : (bugzillaUrl + "/"));
+        return getServerUrl() == null ? "https://bugzilla.redhat.com/" : getFixedServerUrl();
     }
 
     @Override
@@ -189,7 +190,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
                             throw new ValidationException(
                                     "No Bugzilla Component exists for component \"" + bugzillaOptions.getComponent() + "\".");
                         } else if (!component.getIsActive()) {
-                            throw new ValidationException("The Bugzilla Component \"" + bugzillaOptions.getComponent() + "\" is not active.");
+                            throw new ValidationException(
+                                    "The Bugzilla Component \"" + bugzillaOptions.getComponent() + "\" is not active.");
                         }
                     }
 
@@ -197,7 +199,8 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
                     if (bugzillaOptions.getVersion() != null) {
                         final ProductVersion version = getBugzillaVersion(bugzillaOptions.getVersion(), product);
                         if (version == null) {
-                            throw new ValidationException("No Bugzilla Version exists for version \"" + bugzillaOptions.getVersion() + "\".");
+                            throw new ValidationException(
+                                    "No Bugzilla Version exists for version \"" + bugzillaOptions.getVersion() + "\".");
                         } else if (!version.getIsActive()) {
                             throw new ValidationException("The Bugzilla Version \"" + bugzillaOptions.getVersion() + "\" is not active.");
                         }
@@ -241,17 +244,19 @@ public class BugzillaBugLinkStrategy implements BugLinkStrategy<BugzillaBugLinkO
     public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, BugzillaBugLinkOptions bugOptions) {
         boolean changed = false;
         // Server
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_SERVER_TITLE, bugzillaUrl, contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_SERVER_TITLE, getServerUrl(), contentSpecEntity)) {
             changed = true;
         }
 
         // Product
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE, bugOptions.getProduct(), contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE, bugOptions.getProduct(),
+                contentSpecEntity)) {
             changed = true;
         }
 
         // Version
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_VERSION_TITLE, bugOptions.getVersion(), contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_BUGZILLA_VERSION_TITLE, bugOptions.getVersion(),
+                contentSpecEntity)) {
             changed = true;
         }
 

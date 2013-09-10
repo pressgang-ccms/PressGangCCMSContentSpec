@@ -1,4 +1,4 @@
-package org.jboss.pressgang.ccms.docbook.processing;
+package org.jboss.pressgang.ccms.contentspec.buglinks;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
@@ -13,10 +13,8 @@ import java.util.Map;
 import java.util.regex.Pattern;
 
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.entities.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
-import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.jira.rest.JIRAProxyFactory;
 import org.jboss.pressgang.ccms.jira.rest.JIRARESTInterface;
 import org.jboss.pressgang.ccms.jira.rest.entities.component.JIRAComponent;
@@ -28,21 +26,24 @@ import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.resteasy.client.ClientResponseFailure;
 
-public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> {
+public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions> {
     protected static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
     protected static final String ENCODING = "UTF-8";
     protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
-    private final JIRARESTInterface client;
-    private final String jiraUrl;
+    private JIRARESTInterface client = null;
     private List<JIRAProject> projects = null;
     private Map<String, JIRAProject> projectKeyMap = new HashMap<String, JIRAProject>();
 
-    public JIRABugLinkStrategy(final String jiraUrl) {
+    public JIRABugLinkStrategy() {
+    }
+
+    @Override
+    public void initialise(final String jiraUrl, final Object... args) {
+        setServerUrl(jiraUrl);
         client = JIRAProxyFactory.create(jiraUrl).getRESTClient();
-        this.jiraUrl = jiraUrl.endsWith("/") ? jiraUrl : (jiraUrl + "/");
     }
 
     @Override
@@ -93,7 +94,7 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
         }
 
         // build the JIRA url with the base components
-        return jiraUrl + "secure/CreateIssueDetails!init.jspa" + JIRAURLComponents.toString();
+        return getFixedServerUrl() + "secure/CreateIssueDetails!init.jspa" + JIRAURLComponents.toString();
     }
 
     @Override
@@ -128,7 +129,7 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
     public boolean hasValuesChanged(ContentSpecWrapper contentSpecEntity, JIRABugLinkOptions bugOptions) {
         boolean changed = false;
         // Server
-        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_JIRA_SERVER_TITLE, jiraUrl, contentSpecEntity)) {
+        if (EntityUtilities.hasContentSpecMetaDataChanged(CommonConstants.CS_JIRA_SERVER_TITLE, getServerUrl(), contentSpecEntity)) {
             changed = true;
         }
 
@@ -161,7 +162,9 @@ public class JIRABugLinkStrategy implements BugLinkStrategy<JIRABugLinkOptions> 
 
     @Override
     public void checkValidValues(JIRABugLinkOptions bugOptions) throws ValidationException {
-        if (isNullOrEmpty(bugOptions.getProject())) {
+        if (isNullOrEmpty(getServerUrl())) {
+            throw new ValidationException("No JIRA server set.");
+        } else if (isNullOrEmpty(bugOptions.getProject())) {
             throw new ValidationException("No JIRA Project has been specified. A Project must be specified for all JIRA links.");
         } else if (isNullOrEmpty(bugOptions.getComponent())) {
             if (!isNullOrEmpty(bugOptions.getVersion())) {

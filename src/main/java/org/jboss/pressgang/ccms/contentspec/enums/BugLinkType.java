@@ -1,7 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.enums;
 
 public enum BugLinkType {
-    NONE("OFF"), JIRA("Jira"), BUGZILLA("Bugzilla");
+    NONE("OFF"), JIRA("Jira"), BUGZILLA("Bugzilla"), OTHER("Other");
 
     private final String title;
 
@@ -12,6 +12,8 @@ public enum BugLinkType {
             return BUGZILLA;
         } else if (type.equalsIgnoreCase(JIRA.title)) {
             return JIRA;
+        } else if (type.equalsIgnoreCase(OTHER.title)) {
+            return OTHER;
         } else {
             return NONE;
         }

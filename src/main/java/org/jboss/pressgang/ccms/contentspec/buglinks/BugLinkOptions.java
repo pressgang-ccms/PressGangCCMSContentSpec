@@ -1,6 +1,6 @@
-package org.jboss.pressgang.ccms.contentspec.entities;
+package org.jboss.pressgang.ccms.contentspec.buglinks;
 
-public abstract class BaseBugLinkOptions {
+public class BugLinkOptions {
     private String baseUrl = null;
     private boolean injectLinks = true;
 

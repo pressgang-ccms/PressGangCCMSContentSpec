@@ -12,12 +12,12 @@ import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.entities.BaseBugLinkOptions;
+import org.jboss.pressgang.ccms.contentspec.buglinks.BaseBugLinkStrategy;
+import org.jboss.pressgang.ccms.contentspec.buglinks.BugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
-import org.jboss.pressgang.ccms.docbook.compiling.BugLinkStrategy;
 import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
@@ -185,14 +185,14 @@ public class DocbookXMLPreProcessor {
     protected static final String ENCODING = "UTF-8";
 
     protected final ResourceBundle translations;
-    protected final BugLinkStrategy bugLinkStrategy;
+    protected final BaseBugLinkStrategy bugLinkStrategy;
 
-    public DocbookXMLPreProcessor(final ResourceBundle translationStrings, final BugLinkStrategy bugLinkStrategy) {
+    public DocbookXMLPreProcessor(final ResourceBundle translationStrings, final BaseBugLinkStrategy bugLinkStrategy) {
         translations = translationStrings;
         this.bugLinkStrategy = bugLinkStrategy;
     }
 
-    public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
+    public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate) {
         // BUG LINK
         try {
@@ -226,7 +226,7 @@ public class DocbookXMLPreProcessor {
     /**
      * Adds some debug information and links to the end of the topic
      */
-    public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BaseBugLinkOptions bugOptions,
+    public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate, final ZanataDetails zanataDetails) {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 

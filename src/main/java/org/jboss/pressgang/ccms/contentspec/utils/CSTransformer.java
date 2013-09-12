@@ -89,13 +89,8 @@ public class CSTransformer {
                         levelNodes.put(childNode, metaDataNode);
                     }
                 } else {
-                    final Level level = transformLevel(childNode, nodes, topicTargets, relationshipFromNodes);
+                    final Level level = transformLevel(childNode, nodes, topicTargets, relationshipFromNodes, processes);
                     levelNodes.put(childNode, level);
-
-                    // We need to keep track of processes to process their relationships
-                    if (level instanceof Process) {
-                        processes.add((Process) level);
-                    }
                 }
             }
 
@@ -284,14 +279,16 @@ public class CSTransformer {
     /**
      * Transform a Level CSNode entity object into a Level Object that can be added to a Content Specification.
      *
+     *
      * @param node                  The CSNode entity object to be transformed.
      * @param nodes                 A mapping of node entity ids to their transformed counterparts.
      * @param targetTopics          A mapping of target ids to SpecTopics.
      * @param relationshipFromNodes A list of CSNode entities that have relationships.
+     * @param processes
      * @return The transformed level entity.
      */
     protected static Level transformLevel(final CSNodeWrapper node, final Map<Integer, Node> nodes,
-            final Map<String, SpecTopic> targetTopics, final List<CSNodeWrapper> relationshipFromNodes) {
+            final Map<String, SpecTopic> targetTopics, final List<CSNodeWrapper> relationshipFromNodes, List<Process> processes) {
         final Level level;
         if (node.getNodeType() == CommonConstants.CS_NODE_APPENDIX) {
             level = new Appendix(node.getTitle());
@@ -328,7 +325,7 @@ public class CSTransformer {
                     final SpecTopic innerTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics, relationshipFromNodes);
                     level.setInnerTopic(innerTopic);
                 } else {
-                    final Level childLevel = transformLevel(childNode, nodes, targetTopics, relationshipFromNodes);
+                    final Level childLevel = transformLevel(childNode, nodes, targetTopics, relationshipFromNodes, processes);
                     levelNodes.put(childNode, childLevel);
                 }
             }
@@ -351,6 +348,11 @@ public class CSTransformer {
 
         // Add the node to the list of processed nodes so that the relationships can be added once everything is processed
         nodes.put(node.getId(), level);
+
+        // We need to keep track of processes to process their relationships
+        if (level instanceof Process) {
+            processes.add((Process) level);
+        }
 
         return level;
     }

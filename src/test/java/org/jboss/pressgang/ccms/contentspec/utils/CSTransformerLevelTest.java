@@ -25,6 +25,7 @@ import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
@@ -49,6 +50,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
     List<CSNodeWrapper> relationshipFromNodes = new ArrayList<CSNodeWrapper>();
     Map<Integer, Node> nodes = newHashMap();
     Map<String, SpecTopic> targetTopics = newHashMap();
+    List<Process> processes = new ArrayList<Process>();
 
     @Test
     public void shouldThrowExceptionIfNodeNotLevel() throws Exception {
@@ -57,7 +59,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
 
         // When transformLevel is called
         try {
-            CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+            CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
             // Then an exception should be thrown
             fail(ILLEGAL_ARG_EX_MISSING);
@@ -75,7 +77,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(nodeWrapper.getNodeType()).willReturn(levelType);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then a level of that type is created
         assertThat(result.getClass().equals(getLevelTypeMapping().get(levelType)), is(true));
@@ -92,7 +94,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(nodeWrapper.getId()).willReturn(id);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then those values are transformed and set on the level as expected
         assertThat(result.getTitle(), is(title));
@@ -111,7 +113,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         assertThat(nodes.size(), is(0));
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the level should be added to the processed nodes
         assertThat(nodes.get(nodeWrapper.getId()), is((Node) result));
@@ -128,7 +130,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(topicNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the topic is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -146,7 +148,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(commentNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the comment is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -164,7 +166,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(levelNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the level is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -184,7 +186,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(levelNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the level is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
@@ -208,7 +210,7 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         given(commentChildNode.getNextNode()).willReturn(null);
 
         // When transformLevel is called
-        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes);
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
 
         // Then the nodes should have been added as children
         // And be in the order expected

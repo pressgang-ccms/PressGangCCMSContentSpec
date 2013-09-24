@@ -26,63 +26,14 @@ import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
+import org.jboss.pressgang.ccms.wrapper.TranslatedCSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedContentSpecWrapper;
-import org.jboss.pressgang.ccms.wrapper.TranslatedTopicStringWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseCSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 
 public class EntityUtilities {
-
-    /**
-     * Gets a translated topic based on a topic id, revision and locale. The translated topic that is returned will be less then
-     * or equal to the revision that is passed. If the revision is null then the latest translated topic will be returned.
-     *
-     * @param providerFactory
-     * @param id              The TopicID to find the translation for.
-     * @param rev             The Topic Revision to find the translation for.
-     * @param locale          The locale of the translation to find.
-     * @return The closest matching translated topic otherwise null if none exist.
-     */
-    public static TranslatedTopicWrapper getClosestTranslatedTopicByTopicId(final DataProviderFactory providerFactory, final Integer id,
-            final Integer rev, final String locale) {
-        if (locale == null) {
-            return null;
-        }
-
-        final CollectionWrapper<TranslatedTopicWrapper> translatedTopics = providerFactory.getProvider(TopicProvider.class).getTopic(id,
-                rev).getTranslatedTopics();
-
-        TranslatedTopicWrapper closestTranslation = null;
-        if (translatedTopics != null && translatedTopics.getItems() != null) {
-            final List<TranslatedTopicWrapper> entities = translatedTopics.getItems();
-            for (final TranslatedTopicWrapper translatedTopic : entities) {
-                if (translatedTopic.getLocale().equals(locale)
-                /* Ensure that the translation is the newest translation possible */ && (closestTranslation == null || closestTranslation
-                        .getTopicRevision() < translatedTopic.getTopicRevision())
-                /* Ensure that the translation revision is less than or equal to the revision specified */ && (rev == null ||
-                        translatedTopic.getTopicRevision() <= rev)) {
-
-                    closestTranslation = translatedTopic;
-                }
-            }
-        }
-
-        return closestTranslation;
-    }
-
-    /**
-     * Gets a translated topic based on a topic id, revision and locale.
-     */
-    public static CollectionWrapper<TranslatedTopicStringWrapper> getTranslatedTopicStringsByTopicId(
-            final DataProviderFactory providerFactory, final Integer id, final Integer rev, final String locale) {
-        final TranslatedTopicWrapper translatedTopic = getClosestTranslatedTopicByTopicId(providerFactory, id, rev, locale);
-
-        if (translatedTopic == null) return null;
-
-        return translatedTopic.getTranslatedTopicStrings();
-    }
 
     /**
      * Gets a translated topic based on a topic id, revision and locale.
@@ -107,9 +58,9 @@ public class EntityUtilities {
                 // Make sure the locale and topic revision matches
                 if (translatedTopic.getLocale().equals(locale) && translatedTopic.getTopicRevision().equals(rev)) {
                     // Make sure the translated cs node id matches
-                    if ((translatedCSNodeId == null && translatedTopic.getTranslatedCSNode() == null) ||
-                            (translatedTopic.getTranslatedCSNode() != null && translatedTopic.getTranslatedCSNode().getId().equals(
-                                    translatedCSNodeId))) {
+                    if ((translatedCSNodeId == null && translatedTopic.getTranslatedCSNode() == null) || (translatedTopic
+                            .getTranslatedCSNode() != null && translatedTopic.getTranslatedCSNode().getId().equals(
+                            translatedCSNodeId))) {
                         return translatedTopic;
                     }
                 }
@@ -268,18 +219,32 @@ public class EntityUtilities {
     }
 
     public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TopicWrapper source) {
+        return returnPushedTranslatedTopic(source, null);
+    }
+
+    public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TopicWrapper source,
+            final TranslatedCSNodeWrapper translatedCSNode) {
         // Check that a translation exists that is the same locale as the base topic
         TranslatedTopicWrapper pushedTranslatedTopic = null;
         if (source.getTranslatedTopics() != null && source.getTranslatedTopics().getItems() != null) {
             final Integer topicRev = source.getTopicRevision();
             final List<TranslatedTopicWrapper> topics = source.getTranslatedTopics().getItems();
             for (final TranslatedTopicWrapper translatedTopic : topics) {
-                if (translatedTopic.getLocale().equals(source.getLocale()) &&
-                        // Ensure that the topic revision is less than or equal to the source revision
-                        (topicRev == null || translatedTopic.getTopicRevision() <= topicRev) &&
-                        // Check if this translated topic is a higher revision then the current stored translation
-                        (pushedTranslatedTopic == null || pushedTranslatedTopic.getTopicRevision() < translatedTopic.getTopicRevision()))
-                    pushedTranslatedTopic = translatedTopic;
+                // Make sure the locale and topic revision matches
+                if (translatedTopic.getLocale().equals(source.getLocale())) {
+                    // Ensure that the topic revision is less than or equal to the source revision
+                    if ((topicRev == null || translatedTopic.getTopicRevision() <= topicRev) &&
+                            // Check if this translated topic is a higher revision then the current stored translation
+                            (pushedTranslatedTopic == null || pushedTranslatedTopic.getTopicRevision() < translatedTopic.getTopicRevision
+                                    ())) {
+                        // Make sure the translated topic csnode and translatedcsnode match
+                        if ((translatedCSNode == null && translatedTopic.getTranslatedCSNode() == null) || (translatedTopic
+                                .getTranslatedCSNode() != null && translatedCSNode != null && translatedTopic.getTranslatedCSNode().getId
+                                ().equals(translatedCSNode.getId()))) {
+                            pushedTranslatedTopic = translatedTopic;
+                        }
+                    }
+                }
             }
         }
 
@@ -287,10 +252,15 @@ public class EntityUtilities {
     }
 
     public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TranslatedTopicWrapper source) {
+        return returnPushedTranslatedTopic(source, null);
+    }
+
+    public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TranslatedTopicWrapper source,
+            final TranslatedCSNodeWrapper translatedCSNodeWrapper) {
         if (!isDummyTopic(source)) return source;
 
         if (source.getTopic() != null) {
-            return returnPushedTranslatedTopic(source.getTopic());
+            return returnPushedTranslatedTopic(source.getTopic(), translatedCSNodeWrapper);
         } else {
             return null;
         }

@@ -45,6 +45,6 @@ public class Revision {
 
     public String toString() {
         final SimpleDateFormat dateFormatter = new SimpleDateFormat("EEE, MMM dd, yyyy 'at' hh:mm:ss a");
-        return String.format("-> ID: %6d on %s", id, dateFormatter.format(date));
+        return String.format("-> ID: %6d on %s", revision, dateFormatter.format(date));
     }
 }

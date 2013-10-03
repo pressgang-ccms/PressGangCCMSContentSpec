@@ -43,7 +43,9 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     @Override
     public void initialise(final String jiraUrl, final Object... args) {
         setServerUrl(jiraUrl);
-        client = JIRAProxyFactory.create(jiraUrl).getRESTClient();
+        if (jiraUrl != null) {
+            client = JIRAProxyFactory.create(jiraUrl).getRESTClient();
+        }
     }
 
     @Override

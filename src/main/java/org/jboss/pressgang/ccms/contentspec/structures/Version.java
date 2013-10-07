@@ -37,13 +37,16 @@ public class Version implements Comparable<Version> {
     }
 
     public Version(final Integer major, final Integer minor, final Integer revision, final String other) {
+        assert major != null;
+
         this.major = major;
         this.minor = minor;
         this.revision = revision;
         this.other = other;
 
         // Build the version
-        final StringBuilder version = new StringBuilder(major);
+        final StringBuilder version = new StringBuilder(10);
+        version.append(major);
         if (minor != null) {
             version.append(".").append(minor);
             if (revision != null) {

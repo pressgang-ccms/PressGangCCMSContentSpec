@@ -224,14 +224,23 @@ public class EntityUtilities {
 
     public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TopicWrapper source,
             final TranslatedCSNodeWrapper translatedCSNode) {
-        // Check that a translation exists that is the same locale as the base topic
+        return returnClosestTranslatedTopic(source, translatedCSNode, source.getLocale());
+    }
+
+    public static TranslatedTopicWrapper returnClosestTranslatedTopic(final TopicWrapper source, final String locale) {
+        return returnClosestTranslatedTopic(source, null, locale);
+    }
+
+    public static TranslatedTopicWrapper returnClosestTranslatedTopic(final TopicWrapper source,
+            final TranslatedCSNodeWrapper translatedCSNode, final String locale) {
+        // Check that a translation exists that is the same locale as the locale specified
         TranslatedTopicWrapper pushedTranslatedTopic = null;
         if (source.getTranslatedTopics() != null && source.getTranslatedTopics().getItems() != null) {
             final Integer topicRev = source.getTopicRevision();
             final List<TranslatedTopicWrapper> topics = source.getTranslatedTopics().getItems();
             for (final TranslatedTopicWrapper translatedTopic : topics) {
                 // Make sure the locale and topic revision matches
-                if (translatedTopic.getLocale().equals(source.getLocale())) {
+                if (translatedTopic.getLocale().equals(locale)) {
                     // Ensure that the topic revision is less than or equal to the source revision
                     if ((topicRev == null || translatedTopic.getTopicRevision() <= topicRev) &&
                             // Check if this translated topic is a higher revision then the current stored translation

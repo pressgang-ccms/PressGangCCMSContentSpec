@@ -59,6 +59,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> revisionHistory = null;
     private KeyValueNode<SpecTopic> feedback = null;
     private KeyValueNode<SpecTopic> legalNotice = null;
+    private KeyValueNode<SpecTopic> authorGroup = null;
     private KeyValueNode<String> groupId = null;
     private KeyValueNode<String> artifactId = null;
     private KeyValueNode<String> jiraProject = null;
@@ -80,7 +81,6 @@ public class ContentSpec extends Node {
      * @param product         The Product that the Content Specification documents.
      * @param version         The Version of the Product that the Content Specification documents.
      * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
-     * @param includeChecksum If the checksum should be used when calculating line numbers or displaying output
      */
     public ContentSpec(final String title, final String product, final String version, final String copyrightHolder) {
         setTitle(title);
@@ -983,6 +983,11 @@ public class ContentSpec extends Node {
             specTopics.add(getLegalNotice());
         }
 
+        // Add the Author Group Spec Topic
+        if (getAuthorGroup() != null) {
+            specTopics.add(getAuthorGroup());
+        }
+
         return specTopics;
     }
 
@@ -1443,6 +1448,36 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the Author Group SpecTopic of the Content Specification.
+     *
+     * @return The SpecTopic for the Author Group.
+     */
+    public SpecTopic getAuthorGroup() {
+        return authorGroup == null ? null : authorGroup.getValue();
+    }
+
+    /**
+     * Sets the SpecTopic of the Author Group for the Content Specification.
+     *
+     * @param authorGroup The SpecTopic for the Author Group.
+     */
+    public void setAuthorGroup(final SpecTopic authorGroup) {
+        if (authorGroup == null && this.authorGroup == null) {
+            return;
+        } else if (authorGroup == null) {
+            removeChild(this.authorGroup);
+            this.authorGroup = null;
+        } else if (this.authorGroup == null) {
+            authorGroup.setTopicType(TopicType.AUTHOR_GROUP);
+            this.authorGroup = new KeyValueNode<SpecTopic>(CommonConstants.CS_AUTHOR_GROUP_TITLE, authorGroup);
+            appendChild(this.authorGroup, false);
+        } else {
+            authorGroup.setTopicType(TopicType.AUTHOR_GROUP);
+            this.authorGroup.setValue(authorGroup);
+        }
+    }
+
+    /**
      * Get the Maven groupId that is used in the pom.xml file when building the jDocbook files.
      *
      * @return The Maven groupId for the content specification.
@@ -1762,6 +1797,12 @@ public class ContentSpec extends Node {
                 legalNotice.getValue().setTopicType(TopicType.LEGAL_NOTICE);
             }
             setKeyValueNodeKey(legalNotice, CommonConstants.CS_LEGAL_NOTICE_TITLE);
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_AUTHOR_GROUP_TITLE) && value instanceof SpecTopic) {
+            authorGroup = (KeyValueNode<SpecTopic>) node;
+            if (value != null) {
+                authorGroup.getValue().setTopicType(TopicType.AUTHOR_GROUP);
+            }
+            setKeyValueNodeKey(authorGroup, CommonConstants.CS_AUTHOR_GROUP_TITLE);
         } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
             artifactId = (KeyValueNode<String>) node;
             setKeyValueNodeKey(artifactId, CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE);

@@ -335,7 +335,8 @@ public class ContentSpecUtilities {
      */
     public static boolean isSpecTopicMetaData(final String key) {
         return key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE);
+                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) || key.equals
+                (CommonConstants.CS_AUTHOR_GROUP_TITLE);
     }
 
     /**

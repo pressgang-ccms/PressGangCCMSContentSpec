@@ -68,6 +68,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraLabels = null;
     private KeyValueNode<String> jiraServer = null;
     private FileList files = null;
+    private KeyValueNode<String> entities = null;
     private Integer revision = null;
     private String locale = null;
 
@@ -1318,7 +1319,7 @@ public class ContentSpec extends Node {
             this.jiraLabels = new KeyValueNode<String>(CommonConstants.CS_JIRA_LABELS_TITLE, jiraLabels);
             appendChild(this.jiraLabels, false);
         } else {
-            this.jiraVersion.setValue(jiraLabels);
+            this.jiraLabels.setValue(jiraLabels);
         }
     }
 
@@ -1567,6 +1568,34 @@ public class ContentSpec extends Node {
             appendChild(this.files, false);
         } else {
             this.files.setValue(files);
+        }
+    }
+
+    /**
+     * Gets the data what will be appended to the &lt;book&gt;.ent file when built.
+     *
+     * @return The data to be appended or null if none exist.
+     */
+    public String getEntities() {
+        return entities == null ? null : entities.getValue();
+    }
+
+    /**
+     * Set the data that will be appended to the &lt;book&gt;.ent file when built.
+     *
+     * @param entities The data to be appended.
+     */
+    public void setEntities(final String entities) {
+        if (entities == null && this.entities == null) {
+            return;
+        } else if (entities == null) {
+            removeChild(this.entities);
+            this.entities = null;
+        } else if (this.entities == null) {
+            this.entities = new KeyValueNode<String>(CommonConstants.CS_ENTITIES_TITLE, entities);
+            appendChild(this.entities, false);
+        } else {
+            this.entities.setValue(entities);
         }
     }
 
@@ -1831,6 +1860,9 @@ public class ContentSpec extends Node {
         } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_SERVER_TITLE) && value instanceof String) {
             jiraServer = (KeyValueNode<String>) node;
             setKeyValueNodeKey(jiraServer, CommonConstants.CS_JIRA_SERVER_TITLE);
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_ENTITIES_TITLE) && value instanceof String) {
+            publicanCfg = (KeyValueNode<String>) node;
+            setKeyValueNodeKey(entities, CommonConstants.CS_ENTITIES_TITLE);
         }
 
         // Add the node to the list of nodes

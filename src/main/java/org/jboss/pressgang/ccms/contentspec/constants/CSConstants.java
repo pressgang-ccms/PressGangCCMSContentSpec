@@ -108,6 +108,10 @@ public class CSConstants {
      * The Author Group tag ID
      */
     public static final Integer AUTHOR_GROUP_TAG_ID = 664;
+    /**
+     * The Valid XML Entities string constant ID
+     */
+    public static final Integer VALID_ENTITIES_STRING_CONSTANT_ID = 72;
 
     // Override keys
     public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";
@@ -130,8 +134,6 @@ public class CSConstants {
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";
 
-    // Other Meta Data Constants
-    public static final String SPACES_TITLE = "spaces";
     public static final String DEBUG_TITLE = "Debug";
 
     public static final String BRACKET_CONTENTS = "Brackets";

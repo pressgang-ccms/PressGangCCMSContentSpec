@@ -1861,7 +1861,7 @@ public class ContentSpec extends Node {
             jiraServer = (KeyValueNode<String>) node;
             setKeyValueNodeKey(jiraServer, CommonConstants.CS_JIRA_SERVER_TITLE);
         } else if (key.equalsIgnoreCase(CommonConstants.CS_ENTITIES_TITLE) && value instanceof String) {
-            publicanCfg = (KeyValueNode<String>) node;
+            entities = (KeyValueNode<String>) node;
             setKeyValueNodeKey(entities, CommonConstants.CS_ENTITIES_TITLE);
         }
 

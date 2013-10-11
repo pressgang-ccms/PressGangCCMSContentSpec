@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
+import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
+
 public class KeyValueNode<T> extends Node {
     private String key;
     private T value = null;
@@ -80,7 +82,7 @@ public class KeyValueNode<T> extends Node {
     }
 
     public String getText() {
-        if (key.equals("publican.cfg")) {
+        if (ContentSpecUtilities.isMetaDataMultiLine(key)) {
             return key + " " + separator + " [" + (value == null ? "" : value.toString()) + "]";
         } else if (value instanceof Boolean) {
             return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));

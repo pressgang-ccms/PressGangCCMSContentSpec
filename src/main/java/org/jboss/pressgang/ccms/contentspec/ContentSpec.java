@@ -11,11 +11,12 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
 
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.buglinks.BugzillaBugLinkOptions;
-import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.buglinks.JIRABugLinkOptions;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
+import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.BugLinkType;
@@ -26,6 +27,8 @@ import org.jboss.pressgang.ccms.utils.common.HashUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class ContentSpec extends Node {
+    private static final String DEFAULT_PUBLICAN_CFG_KEY = "DEFAULT";
+
     private KeyValueNode<Integer> id = null;
     private KeyValueNode<String> title = null;
     private KeyValueNode<String> product = null;
@@ -35,7 +38,6 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> edition = null;
     private KeyValueNode<String> bookVersion = null;
     private KeyValueNode<Integer> pubsNumber = null;
-    private KeyValueNode<String> publicanCfg = null;
     private KeyValueNode<String> dtd = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
@@ -69,6 +71,8 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraServer = null;
     private FileList files = null;
     private KeyValueNode<String> entities = null;
+    private Map<String, KeyValueNode<String>> publicanCfgs = new HashMap<String, KeyValueNode<String>>();
+    private KeyValueNode<String> defaultPublicanCfg = null;
     private Integer revision = null;
     private String locale = null;
 
@@ -416,7 +420,7 @@ public class ContentSpec extends Node {
      * @return The data to be appended or null if none exist.
      */
     public String getPublicanCfg() {
-        return publicanCfg == null ? null : publicanCfg.getValue();
+        return !publicanCfgs.containsKey(DEFAULT_PUBLICAN_CFG_KEY) ? null : publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY).getValue();
     }
 
     /**
@@ -425,16 +429,94 @@ public class ContentSpec extends Node {
      * @param publicanCfg The data to be appended.
      */
     public void setPublicanCfg(final String publicanCfg) {
-        if (publicanCfg == null && this.publicanCfg == null) {
+        if (publicanCfg == null && !publicanCfgs.containsKey(DEFAULT_PUBLICAN_CFG_KEY)) {
             return;
         } else if (publicanCfg == null) {
-            removeChild(this.publicanCfg);
-            this.publicanCfg = null;
-        } else if (this.publicanCfg == null) {
-            this.publicanCfg = new KeyValueNode<String>(CommonConstants.CS_PUBLICAN_CFG_TITLE, publicanCfg);
-            appendChild(this.publicanCfg, false);
+            removeChild(publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY));
+            publicanCfgs.remove(DEFAULT_PUBLICAN_CFG_KEY);
+        } else if (!publicanCfgs.containsKey(DEFAULT_PUBLICAN_CFG_KEY)) {
+            final KeyValueNode<String> publicanCfgMetaData = new KeyValueNode<String>(CommonConstants.CS_PUBLICAN_CFG_TITLE, publicanCfg);
+            publicanCfgs.put(DEFAULT_PUBLICAN_CFG_KEY, publicanCfgMetaData);
+            appendChild(publicanCfgMetaData, false);
         } else {
-            this.publicanCfg.setValue(publicanCfg);
+            publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY).setValue(publicanCfg);
+        }
+    }
+
+    /**
+     * Gets the data what will be appended to the custom additional publican.cfg file when built.
+     *
+     * @param name The custom configuration name.
+     * @return The data to be appended or null if none exist.
+     */
+    public String getAdditionalPublicanCfg(final String name) {
+        return !publicanCfgs.containsKey(name) ? null : publicanCfgs.get(name).getValue();
+    }
+
+    /**
+     * Gets all of the additional custom publican.cfg files in the
+     *
+     * @return A mapping of file names to publican.cfg content.
+     */
+    public Map<String, String> getAllAdditionalPublicanCfgs() {
+        final Map<String, String> retValue = new HashMap<String, String>();
+
+        for (final Map.Entry<String, KeyValueNode<String>> entry : publicanCfgs.entrySet()) {
+            if (!DEFAULT_PUBLICAN_CFG_KEY.equals(entry.getKey())) {
+                retValue.put(entry.getValue().getKey(), entry.getValue().getValue());
+            }
+        }
+
+        return retValue;
+    }
+
+    /**
+     * Set the data that will be appended to the publican.cfg file when built.
+     *
+     * @param name The custom configuration name.
+     * @param publicanCfg The data to be appended.
+     */
+    public void setAdditionalPublicanCfg(final String name, final String publicanCfg) {
+        if (publicanCfg == null && !publicanCfgs.containsKey(name)) {
+            return;
+        } else if (publicanCfg == null) {
+            removeChild(publicanCfgs.get(name));
+            publicanCfgs.remove(name);
+        } else if (!publicanCfgs.containsKey(name)) {
+            final String fixedName = name + "-" + CommonConstants.CS_PUBLICAN_CFG_TITLE;
+            final KeyValueNode<String> publicanCfgMetaData = new KeyValueNode<String>(fixedName, publicanCfg);
+            publicanCfgs.put(name, publicanCfgMetaData);
+            appendChild(publicanCfgMetaData, false);
+        } else {
+            publicanCfgs.get(name).setValue(publicanCfg);
+        }
+    }
+
+    /**
+     * Get the default publican.cfg configuration that should be used when building.
+     *
+     * @return The name of the default publican.cfg to use when building.
+     */
+    public String getDefaultPublicanCfg() {
+        return defaultPublicanCfg == null ? CommonConstants.CS_PUBLICAN_CFG_TITLE : defaultPublicanCfg.getValue();
+    }
+
+    /**
+     * Set the default publican.cfg configuration that should be used when building.
+     *
+     * @param defaultPublicanCfg The name of the default publican.cfg to use when building.
+     */
+    public void setSefaultPublicanCfg(final String defaultPublicanCfg) {
+        if (defaultPublicanCfg == null && this.defaultPublicanCfg == null) {
+            return;
+        } else if (defaultPublicanCfg == null) {
+            removeChild(this.defaultPublicanCfg);
+            this.defaultPublicanCfg = null;
+        } else if (this.defaultPublicanCfg == null) {
+            this.defaultPublicanCfg = new KeyValueNode<String>(CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE, defaultPublicanCfg);
+            appendChild(this.defaultPublicanCfg, false);
+        } else {
+            this.defaultPublicanCfg.setValue(defaultPublicanCfg);
         }
     }
 
@@ -1773,8 +1855,8 @@ public class ContentSpec extends Node {
             pubsNumber = pubsNumberNode;
             setKeyValueNodeKey(pubsNumber, CommonConstants.CS_PUBSNUMBER_TITLE);
         } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) && value instanceof String) {
-            publicanCfg = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(publicanCfg, CommonConstants.CS_PUBLICAN_CFG_TITLE);
+            publicanCfgs.put(DEFAULT_PUBLICAN_CFG_KEY, (KeyValueNode<String>) node);
+            setKeyValueNodeKey(node, CommonConstants.CS_PUBLICAN_CFG_TITLE);
         } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
             final KeyValueNode<Boolean> injectSurveyLinkNode;
             if (value instanceof String) {
@@ -1863,6 +1945,15 @@ public class ContentSpec extends Node {
         } else if (key.equalsIgnoreCase(CommonConstants.CS_ENTITIES_TITLE) && value instanceof String) {
             entities = (KeyValueNode<String>) node;
             setKeyValueNodeKey(entities, CommonConstants.CS_ENTITIES_TITLE);
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE) && value instanceof String) {
+            defaultPublicanCfg = (KeyValueNode<String>) node;
+            setKeyValueNodeKey(defaultPublicanCfg, CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE);
+        } else if (CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches() && value instanceof String) {
+            final Matcher matcher = CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key);
+            matcher.find();
+            final String name = matcher.group(1);
+            setKeyValueNodeKey(node, name + "-" + CommonConstants.CS_PUBLICAN_CFG_TITLE);
+            publicanCfgs.put(name, (KeyValueNode<String>) node);
         }
 
         // Add the node to the list of nodes

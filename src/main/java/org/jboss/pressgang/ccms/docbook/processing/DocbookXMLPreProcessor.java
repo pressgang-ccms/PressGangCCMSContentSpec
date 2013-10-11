@@ -26,6 +26,7 @@ import org.jboss.pressgang.ccms.docbook.structures.TocTopicDatabase;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.sort.ExternalListSort;
+import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 import org.slf4j.Logger;
@@ -223,13 +224,54 @@ public class DocbookXMLPreProcessor {
         }
     }
 
+    public void processTopicEditorLinks(final SpecTopic specTopic, final Document document,
+            final DocbookBuildingOptions docbookBuildingOptions, final ZanataDetails zanataDetails) {
+        // EDITOR LINK
+        if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertEditorLinks()) {
+            final BaseTopicWrapper<?> topic = specTopic.getTopic();
+            final String editorUrl = topic.getEditorURL(zanataDetails);
+
+            final Element editorLinkPara = document.createElement("para");
+            editorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
+            document.getDocumentElement().appendChild(editorLinkPara);
+
+            if (editorUrl != null) {
+                final Element editorULink = document.createElement("ulink");
+                editorLinkPara.appendChild(editorULink);
+                editorULink.setTextContent("Edit this topic");
+                editorULink.setAttribute("url", editorUrl);
+            } else {
+                /*
+                 * Since the getEditorURL method only returns null for translations we don't need to check the topic
+                 * type.
+                 */
+                editorLinkPara.setTextContent("No editor available for this topic, as it hasn't been pushed for translation.");
+            }
+
+            // Add a link for additional translated content for Revision Histories and author groups
+            if (topic instanceof TranslatedTopicWrapper && (specTopic.getTopicType() == TopicType.REVISION_HISTORY || specTopic
+                    .getTopicType() == TopicType.AUTHOR_GROUP)) {
+                final String additionalXMLEditorUrl = topic.getPressGangURL();
+
+                if (additionalXMLEditorUrl != null) {
+                    final Element additionalXMLEditorLinkPara = document.createElement("para");
+                    additionalXMLEditorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
+                    document.getDocumentElement().appendChild(additionalXMLEditorLinkPara);
+
+                    final Element editorULink = document.createElement("ulink");
+                    editorLinkPara.appendChild(editorULink);
+                    editorULink.setTextContent("Edit the Additional Translated XML");
+                    editorULink.setAttribute("url", additionalXMLEditorUrl);
+                }
+            }
+        }
+    }
+
     /**
      * Adds some debug information and links to the end of the topic
      */
     public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate, final ZanataDetails zanataDetails) {
-        final BaseTopicWrapper<?> topic = specTopic.getTopic();
-
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
                 .getInsertEditorLinks()))) {
 
@@ -253,27 +295,7 @@ public class DocbookXMLPreProcessor {
                 surveyPara.appendChild(endSurveyText);
             }
 
-            // EDITOR LINK
-            if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertEditorLinks()) {
-                final String editorUrl = topic.getEditorURL(zanataDetails);
-
-                final Element editorLinkPara = document.createElement("para");
-                editorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
-                document.getDocumentElement().appendChild(editorLinkPara);
-
-                if (editorUrl != null) {
-                    final Element surveyULink = document.createElement("ulink");
-                    editorLinkPara.appendChild(surveyULink);
-                    surveyULink.setTextContent("Edit this topic");
-                    surveyULink.setAttribute("url", editorUrl);
-                } else {
-                    /*
-                     * Since the returnEditorURL method only returns null for translations we don't need to check the topic
-                     * type.
-                     */
-                    editorLinkPara.setTextContent("No editor available for this topic, as it hasn't been pushed for translation.");
-                }
-            }
+            processTopicEditorLinks(specTopic, document, docbookBuildingOptions, zanataDetails);
         }
 
         // Only include a bugzilla link for normal topics
@@ -465,7 +487,7 @@ public class DocbookXMLPreProcessor {
 
                             /* if the toc is null, we are building an internal page */
                             if (level == null) {
-                                final String url = relatedTopic.getInternalURL();
+                                final String url = relatedTopic.getPressGangURL();
                                 if (sequenceID.optional) {
                                     list.add(DocBookUtilities.buildEmphasisPrefixedULink(xmlDocument, OPTIONAL_LIST_PREFIX, url,
                                             relatedTopic.getTitle()));

@@ -259,7 +259,7 @@ public class DocbookXMLPreProcessor {
                     document.getDocumentElement().appendChild(additionalXMLEditorLinkPara);
 
                     final Element editorULink = document.createElement("ulink");
-                    editorLinkPara.appendChild(editorULink);
+                    additionalXMLEditorLinkPara.appendChild(editorULink);
                     editorULink.setTextContent("Edit the Additional Translated XML");
                     editorULink.setAttribute("url", additionalXMLEditorUrl);
                 }

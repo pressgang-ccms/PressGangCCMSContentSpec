@@ -193,13 +193,48 @@ public class DocbookXMLPreProcessor {
         this.bugLinkStrategy = bugLinkStrategy;
     }
 
+    /**
+     * Creates the wrapper element for bug or editor links and adds it to the document.
+     *
+     * @param document The document to add the wrapper/link to.
+     * @param cssClass The css class name to use for the wrapper.
+     * @return The wrapper element that links can be added to.
+     */
+    protected Element createLinkWrapperElement(final Document document, final String cssClass) {
+        // Create the bug/editor link root element
+        final Element linkElement = document.createElement("para");
+        if (cssClass != null) {
+            linkElement.setAttribute("role", cssClass);
+        }
+
+        /* Create the wrapper if needed.
+         *
+         * refentry's or nested sections will make the XML invalid if we just use a para, so we need to wrap the para in a simplesect.
+         *
+         * This does mean though that the XML could be invalid for inner level topics.
+         */
+        final NodeList refEntries = document.getDocumentElement().getElementsByTagName("refentry");
+        final NodeList sections = document.getDocumentElement().getElementsByTagName("section");
+        if (refEntries.getLength() > 0 || sections.getLength() > 0) {
+            final Element bugzillaSection = document.createElement("simplesect");
+            document.getDocumentElement().appendChild(bugzillaSection);
+
+            final Element bugzillaSectionTitle = document.createElement("title");
+            bugzillaSectionTitle.setTextContent("");
+            bugzillaSection.appendChild(bugzillaSectionTitle);
+
+            bugzillaSection.appendChild(linkElement);
+        } else {
+            document.getDocumentElement().appendChild(linkElement);
+        }
+
+        return linkElement;
+    }
+
     public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
             final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate) {
         // BUG LINK
         try {
-            final Element bugzillaSection = document.createElement("para");
-            bugzillaSection.setAttribute("role", ROLE_CREATE_BUG_PARA);
-
             final Element bugzillaULink = document.createElement("ulink");
 
             final String reportBugTranslation = translations.getString(REPORT_A_BUG_PROPERTY);
@@ -217,8 +252,8 @@ public class DocbookXMLPreProcessor {
             /*
              * only add the elements to the XML DOM if there was no exception (not that there should be one
              */
+            final Element bugzillaSection = createLinkWrapperElement(document, ROLE_CREATE_BUG_PARA);
             bugzillaSection.appendChild(bugzillaULink);
-            document.getDocumentElement().appendChild(bugzillaSection);
         } catch (final Exception ex) {
             LOG.error("Failed to insert Bug Links into the DOM Document", ex);
         }
@@ -231,9 +266,7 @@ public class DocbookXMLPreProcessor {
             final BaseTopicWrapper<?> topic = specTopic.getTopic();
             final String editorUrl = topic.getEditorURL(zanataDetails);
 
-            final Element editorLinkPara = document.createElement("para");
-            editorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
-            document.getDocumentElement().appendChild(editorLinkPara);
+            final Element editorLinkPara = createLinkWrapperElement(document, ROLE_CREATE_BUG_PARA);
 
             if (editorUrl != null) {
                 final Element editorULink = document.createElement("ulink");
@@ -254,9 +287,7 @@ public class DocbookXMLPreProcessor {
                 final String additionalXMLEditorUrl = topic.getPressGangURL();
 
                 if (additionalXMLEditorUrl != null) {
-                    final Element additionalXMLEditorLinkPara = document.createElement("para");
-                    additionalXMLEditorLinkPara.setAttribute("role", ROLE_CREATE_BUG_PARA);
-                    document.getDocumentElement().appendChild(additionalXMLEditorLinkPara);
+                    final Element additionalXMLEditorLinkPara = createLinkWrapperElement(document, ROLE_CREATE_BUG_PARA);
 
                     final Element editorULink = document.createElement("ulink");
                     additionalXMLEditorLinkPara.appendChild(editorULink);

@@ -5,10 +5,43 @@ package org.jboss.pressgang.ccms.contentspec.structures;
  */
 public class Version implements Comparable<Version> {
     private final Integer major;
+    private final int majorLeadingZeros;
     private final Integer minor;
+    private final int minorLeadingZeros;
     private final Integer revision;
+    private final int revisionLeadingZeros;
     private final String other;
     private final String version;
+
+    private Version(final int majorLeadingZeros, final Integer major, final int minorLeadingZeros, final Integer minor,
+            final int revisionLeadingZeros, final Integer revision, final String other) {
+        assert major != null;
+
+        this.majorLeadingZeros = majorLeadingZeros;
+        this.major = major;
+        this.minorLeadingZeros = minorLeadingZeros;
+        this.minor = minor;
+        this.revisionLeadingZeros = revisionLeadingZeros;
+        this.revision = revision;
+        this.other = other;
+
+        // Build the version
+        final StringBuilder version = new StringBuilder(10);
+        addLeadingZeros(version, majorLeadingZeros);
+        version.append(major);
+        if (minor != null) {
+            version.append(".");
+            addLeadingZeros(version, minorLeadingZeros);
+            version.append(minor);
+            if (revision != null) {
+                version.append(".");
+                addLeadingZeros(version, revisionLeadingZeros);
+                version.append(revision);
+            }
+        }
+
+        this.version = version.toString();
+    }
 
     public Version(final String version) throws NumberFormatException {
         String[] val = version.split("-", 2);
@@ -16,16 +49,22 @@ public class Version implements Comparable<Version> {
         // Get the major/minor/revision values
         this.version = val[0];
         String[] vals = this.version.split("\\.");
-        this.major = Integer.parseInt(vals[0]);
+        majorLeadingZeros = numLeadingZeros(vals[0]);
+        major = Integer.parseInt(vals[0]);
         if (vals.length > 1) {
+            minorLeadingZeros = numLeadingZeros(vals[1]);
             minor = Integer.valueOf(vals[1]);
             if (vals.length > 2) {
+                revisionLeadingZeros = numLeadingZeros(vals[2]);
                 revision = Integer.valueOf(vals[2]);
             } else {
+                revisionLeadingZeros = 0;
                 revision = null;
             }
         } else {
+            minorLeadingZeros = 0;
             minor = null;
+            revisionLeadingZeros = 0;
             revision = null;
         }
 
@@ -37,24 +76,21 @@ public class Version implements Comparable<Version> {
     }
 
     public Version(final Integer major, final Integer minor, final Integer revision, final String other) {
-        assert major != null;
+        this(0, major, 0, minor, 0, revision, other);
+    }
 
-        this.major = major;
-        this.minor = minor;
-        this.revision = revision;
-        this.other = other;
-
-        // Build the version
-        final StringBuilder version = new StringBuilder(10);
-        version.append(major);
-        if (minor != null) {
-            version.append(".").append(minor);
-            if (revision != null) {
-                version.append(".").append(revision);
-            }
+    private int numLeadingZeros(final String num) {
+        int i;
+        for (i = 0; i < num.length() && num.charAt(i) == '0'; i++) {
         }
 
-        this.version = version.toString();
+        return i;
+    }
+
+    private void addLeadingZeros(final StringBuilder builder, int numZeros) {
+        for (int i = 0; i < numZeros; i++) {
+            builder.append('0');
+        }
     }
 
     @Override
@@ -164,5 +200,19 @@ public class Version implements Comparable<Version> {
 
     public String getOther() {
         return other;
+    }
+
+    public Version adjustMajor(int increment) {
+        return new Version(majorLeadingZeros, major + increment, minorLeadingZeros, minor, revisionLeadingZeros, revision, other);
+    }
+
+    public Version adjustMinor(int increment) {
+        int newMinor = minor == null ? increment : (minor + increment);
+        return new Version(majorLeadingZeros, major, minorLeadingZeros, newMinor, revisionLeadingZeros, revision, other);
+    }
+
+    public Version adjustRevision(int increment) {
+        int newRevision = revision == null ? increment : (revision + increment);
+        return new Version(majorLeadingZeros, major, minorLeadingZeros, minor, revisionLeadingZeros, newRevision, other);
     }
 }

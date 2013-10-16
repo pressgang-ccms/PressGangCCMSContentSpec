@@ -25,8 +25,11 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.resteasy.client.ClientResponseFailure;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions> {
+    private static final Logger LOG = LoggerFactory.getLogger(JIRABugLinkStrategy.class);
     protected static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
     protected static final String ENCODING = "UTF-8";
     protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
@@ -188,7 +191,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
                 try {
                     projectEntity = client.getProject(project);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    LOG.debug("", e);
                     // do nothing as we will pick up a missing project later
                 }
 

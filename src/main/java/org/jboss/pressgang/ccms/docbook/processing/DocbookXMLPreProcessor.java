@@ -326,7 +326,9 @@ public class DocbookXMLPreProcessor {
                 surveyPara.appendChild(endSurveyText);
             }
 
-            processTopicEditorLinks(specTopic, document, docbookBuildingOptions, zanataDetails);
+            if (specTopic.getTopicType() != TopicType.AUTHOR_GROUP) {
+                processTopicEditorLinks(specTopic, document, docbookBuildingOptions, zanataDetails);
+            }
         }
 
         // Only include a bugzilla link for normal topics

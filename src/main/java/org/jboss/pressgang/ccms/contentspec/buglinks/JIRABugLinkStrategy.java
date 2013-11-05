@@ -171,10 +171,6 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
             throw new ValidationException("No JIRA server set.");
         } else if (isNullOrEmpty(bugOptions.getProject())) {
             throw new ValidationException("No JIRA Project has been specified. A Project must be specified for all JIRA links.");
-        } else if (isNullOrEmpty(bugOptions.getComponent())) {
-            if (!isNullOrEmpty(bugOptions.getVersion())) {
-                throw new ValidationException("A JIRA Component must be specified to set a Version.");
-            }
         }
     }
 

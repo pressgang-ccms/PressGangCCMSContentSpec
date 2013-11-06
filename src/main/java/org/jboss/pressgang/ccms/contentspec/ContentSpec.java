@@ -506,7 +506,7 @@ public class ContentSpec extends Node {
      *
      * @param defaultPublicanCfg The name of the default publican.cfg to use when building.
      */
-    public void setSefaultPublicanCfg(final String defaultPublicanCfg) {
+    public void setDefaultPublicanCfg(final String defaultPublicanCfg) {
         if (defaultPublicanCfg == null && this.defaultPublicanCfg == null) {
             return;
         } else if (defaultPublicanCfg == null) {

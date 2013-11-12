@@ -30,6 +30,7 @@ public class DocbookBuildingOptions {
     private Boolean flatten = false;
     private Boolean forceInjectBugLinks = false;
     private Boolean serverBuild = false;
+    private Integer maxRevision = null;
 
     public DocbookBuildingOptions() {
 
@@ -225,5 +226,13 @@ public class DocbookBuildingOptions {
 
     public void setFlatten(Boolean flatten) {
         this.flatten = flatten;
+    }
+
+    public Integer getMaxRevision() {
+        return maxRevision;
+    }
+
+    public void setMaxRevision(Integer maxRevision) {
+        this.maxRevision = maxRevision;
     }
 }

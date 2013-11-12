@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
+import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
 public class KeyValueNode<T> extends Node {
     private String key;
@@ -83,7 +84,14 @@ public class KeyValueNode<T> extends Node {
 
     public String getText() {
         if (ContentSpecUtilities.isMetaDataMultiLine(key)) {
-            return key + " " + separator + " [" + (value == null ? "" : value.toString()) + "]";
+            final String valueString = (value == null ? "" : value.toString()).replace("[", "\\[").replace("]", "\\]");
+            // For abstracts remove the mutliline braces for single line abstracts.
+            if (!valueString.contains("\n") && (key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                    CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE))) {
+                return key + " " + separator + valueString;
+            } else {
+                return key + " " + separator + " [" + valueString + "]";
+            }
         } else if (value instanceof Boolean) {
             return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));
         } else if (value instanceof SpecTopic) {

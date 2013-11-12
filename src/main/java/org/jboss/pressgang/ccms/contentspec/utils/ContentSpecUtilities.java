@@ -121,9 +121,8 @@ public class ContentSpecUtilities {
      * Fixes a failed Content Spec so that the ID and CHECKSUM are included. This is primarily an issue when creating new content specs
      * and they are initially invalid.
      *
-     *
-     * @param contentSpec The content spec to fix.
-     * @param validText The content specs latest valid text.
+     * @param contentSpec     The content spec to fix.
+     * @param validText       The content specs latest valid text.
      * @param includeChecksum If the checksum should be included in the output.
      * @return The fixed failed content spec string.
      */
@@ -135,10 +134,10 @@ public class ContentSpecUtilities {
      * Fixes a failed Content Spec so that the ID and CHECKSUM are included. This is primarily an issue when creating new content specs
      * and they are initially invalid.
      *
-     * @param id The id of the content spec tha tis being fixed.
+     * @param id                The id of the content spec tha tis being fixed.
      * @param failedContentSpec The failed content spec to fix.
-     * @param validText The content specs latest valid text.
-     * @param includeChecksum If the checksum should be included in the output.
+     * @param validText         The content specs latest valid text.
+     * @param includeChecksum   If the checksum should be included in the output.
      * @return The fixed failed content spec string.
      */
     public static String fixFailedContentSpec(final Integer id, final String failedContentSpec, final String validText,
@@ -336,19 +335,28 @@ public class ContentSpecUtilities {
      */
     public static boolean isSpecTopicMetaData(final String key) {
         return key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) || key.equals
-                (CommonConstants.CS_AUTHOR_GROUP_TITLE);
+                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) || key.equals(
+                CommonConstants.CS_AUTHOR_GROUP_TITLE);
     }
 
     /**
-     * Checks if a line is a multiple line metadata node.
+     * Checks if a line is a multiple line metadata node. These are the elements that are classed as multiple line metadata elements:
+     * <ul>
+     *     <li>publican.cfg</li>
+     *     <li>&lt;NAME&gt;-publican.cfg</li>
+     *     <li>Entities</li>
+     *     <li>Abstract</li>
+     *     <li>Description</li>
+     * </ul>
      *
      * @param key The key of the metadata line.
      * @return True if it should be parsed as a multiple line node, otherwise false.
      */
     public static boolean isMetaDataMultiLine(final String key) {
         return key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_ENTITIES_TITLE) || CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches();
+                CommonConstants.CS_ENTITIES_TITLE) || CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(
+                key).matches() || key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE);
     }
 
     /**

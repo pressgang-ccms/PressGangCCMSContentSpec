@@ -69,6 +69,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraVersion = null;
     private KeyValueNode<String> jiraLabels = null;
     private KeyValueNode<String> jiraServer = null;
+    private KeyValueNode<Boolean> includeIndex = null;
     private FileList files = null;
     private KeyValueNode<String> entities = null;
     private Map<String, KeyValueNode<String>> publicanCfgs = new HashMap<String, KeyValueNode<String>>();
@@ -1682,6 +1683,34 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Check if the index should be included in the output.
+     *
+     * @return True if the index should be included, otherwise false.
+     */
+    public boolean getIncludeIndex() {
+        return (Boolean) (includeIndex == null ? false : includeIndex.getValue());
+    }
+
+    /**
+     * Set whether an index should be included in the Content Specification output.
+     *
+     * @param includeIndex A boolean value that is true if the index should be used, otherwise false.
+     */
+    public void setIncludeIndex(final Boolean includeIndex) {
+        if (includeIndex == null && this.includeIndex == null) {
+            return;
+        } else if (includeIndex == null) {
+            removeChild(this.includeIndex);
+            this.includeIndex = null;
+        } else if (this.includeIndex == null) {
+            this.includeIndex = new KeyValueNode<Boolean>(CommonConstants.CS_INDEX_TITLE, includeIndex);
+            appendChild(this.includeIndex, false);
+        } else {
+            this.includeIndex.setValue(includeIndex);
+        }
+    }
+
+    /**
      * Adds a Child node to the Content Spec. If the Child node already has a parent, then it is removed from that parent and added
      * to this content spec.
      *
@@ -1954,6 +1983,23 @@ public class ContentSpec extends Node {
             final String name = matcher.group(1);
             setKeyValueNodeKey(node, name + "-" + CommonConstants.CS_PUBLICAN_CFG_TITLE);
             publicanCfgs.put(name, (KeyValueNode<String>) node);
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_INDEX_TITLE) && (value instanceof String || value instanceof Boolean)) {
+            final KeyValueNode<Boolean> useIndexNode;
+            if (value instanceof String) {
+                final Boolean fixedValue;
+                if (((String) value).equalsIgnoreCase("ON")) {
+                    fixedValue = true;
+                } else {
+                    fixedValue = Boolean.parseBoolean((String) value);
+                }
+                useIndexNode = new KeyValueNode<Boolean>(CommonConstants.CS_INDEX_TITLE, fixedValue);
+                cloneKeyValueNode(node, useIndexNode);
+                fixedNode = useIndexNode;
+            } else {
+                useIndexNode = (KeyValueNode<Boolean>) node;
+            }
+            includeIndex = useIndexNode;
+            setKeyValueNodeKey(includeIndex, CommonConstants.CS_INDEX_TITLE);
         }
 
         // Add the node to the list of nodes

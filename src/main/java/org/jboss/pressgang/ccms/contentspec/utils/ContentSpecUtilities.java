@@ -335,18 +335,19 @@ public class ContentSpecUtilities {
      */
     public static boolean isSpecTopicMetaData(final String key) {
         return key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) || key.equals(
-                CommonConstants.CS_AUTHOR_GROUP_TITLE);
+                CommonConstants.CS_REV_HISTORY_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) || key.equalsIgnoreCase(
+                CommonConstants.CS_AUTHOR_GROUP_TITLE) || key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE);
     }
 
     /**
      * Checks if a line is a multiple line metadata node. These are the elements that are classed as multiple line metadata elements:
      * <ul>
-     *     <li>publican.cfg</li>
-     *     <li>&lt;NAME&gt;-publican.cfg</li>
-     *     <li>Entities</li>
-     *     <li>Abstract</li>
-     *     <li>Description</li>
+     * <li>publican.cfg</li>
+     * <li>&lt;NAME&gt;-publican.cfg</li>
+     * <li>Entities</li>
+     * <li>Abstract</li>
+     * <li>Description</li>
      * </ul>
      *
      * @param key The key of the metadata line.
@@ -354,9 +355,7 @@ public class ContentSpecUtilities {
      */
     public static boolean isMetaDataMultiLine(final String key) {
         return key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_ENTITIES_TITLE) || CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(
-                key).matches() || key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE);
+                CommonConstants.CS_ENTITIES_TITLE) || CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches();
     }
 
     /**

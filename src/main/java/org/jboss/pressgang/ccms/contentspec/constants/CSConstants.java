@@ -114,6 +114,10 @@ public class CSConstants {
      */
     public static final Integer AUTHOR_GROUP_TAG_ID = 664;
     /**
+     * The Abstract tag ID
+     */
+    public static final Integer ABSTRACT_TAG_ID = 692;
+    /**
      * The Valid XML Entities string constant ID
      */
     public static final Integer VALID_ENTITIES_STRING_CONSTANT_ID = 72;

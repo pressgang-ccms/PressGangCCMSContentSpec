@@ -43,6 +43,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> copyrightHolder = null;
     private KeyValueNode<String> copyrightYear = null;
     private KeyValueNode<String> description = null;
+    private KeyValueNode<SpecTopic> abstractTopic = null;
     private KeyValueNode<InjectionOptions> injectionOptions = null;
     private KeyValueNode<String> bugzillaProduct = null;
     private KeyValueNode<String> bugzillaComponent = null;
@@ -610,6 +611,36 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the Abstract (or Description) for a Content Specification that will be added to a book when built.
+     *
+     * @return The abstract for the Content Specification or null if one doesn't exist.
+     */
+    public SpecTopic getAbstractTopic() {
+        return abstractTopic == null ? null : abstractTopic.getValue();
+    }
+
+    /**
+     * Sets the Abstract (or Description) for a Content Specification.
+     *
+     * @param abstractTopic The Abstract for the Content Specifications book.
+     */
+    public void setAbstractTopic(final SpecTopic abstractTopic) {
+        if (abstractTopic == null && this.abstractTopic == null) {
+            return;
+        } else if (abstractTopic == null) {
+            removeChild(this.abstractTopic);
+            this.abstractTopic = null;
+        } else if (this.abstractTopic == null) {
+            abstractTopic.setTopicType(TopicType.ABSTRACT);
+            this.abstractTopic = new KeyValueNode<SpecTopic>(CommonConstants.CS_ABSTRACT_TITLE, abstractTopic);
+            appendChild(this.abstractTopic, false);
+        } else {
+            abstractTopic.setTopicType(TopicType.ABSTRACT);
+            this.abstractTopic.setValue(abstractTopic);
+        }
+    }
+
+    /**
      * Get the Copyright Holder of the Content Specification and the book it creates.
      *
      * @return The name of the Copyright Holder.
@@ -1070,6 +1101,11 @@ public class ContentSpec extends Node {
         // Add the Author Group Spec Topic
         if (getAuthorGroup() != null) {
             specTopics.add(getAuthorGroup());
+        }
+
+        // Add the abstract spec topic
+        if (getAbstractTopic() != null) {
+            specTopics.add(getAbstractTopic());
         }
 
         return specTopics;
@@ -1907,9 +1943,17 @@ public class ContentSpec extends Node {
             brand = (KeyValueNode<String>) node;
             setKeyValueNodeKey(brand, CommonConstants.CS_BRAND_TITLE);
         } else if ((key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE)) && value instanceof String) {
-            description = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(description, CommonConstants.CS_ABSTRACT_TITLE);
+                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE)) && (value instanceof String || value instanceof SpecTopic)) {
+            if (value instanceof SpecTopic) {
+                abstractTopic = (KeyValueNode<SpecTopic>) node;
+                if (value != null) {
+                    abstractTopic.getValue().setTopicType(TopicType.ABSTRACT);
+                }
+                setKeyValueNodeKey(abstractTopic, CommonConstants.CS_ABSTRACT_TITLE);
+            } else {
+                description = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(description, CommonConstants.CS_ABSTRACT_TITLE);
+            }
         } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
             copyrightHolder = (KeyValueNode<String>) node;
             setKeyValueNodeKey(copyrightHolder, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE);

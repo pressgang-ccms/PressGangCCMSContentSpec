@@ -23,6 +23,9 @@ public class TemplateConstants {
             "# multiline ]\n" +
             "# Pubsnumber =\n" +
             "\n" +
+            "# Uncomment this to enable the index in the book.\n" +
+            "# Index = ON\n" +
+            "\n" +
             "# Bug Links = Off | JIRA | Bugzilla\n" +
             "# BZServer will default to https://bugzilla.redhat.com/ is its not specified.\n" +
             "# BZServer = \n" +
@@ -42,7 +45,8 @@ public class TemplateConstants {
             "# JIRALabels = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
-            "# a custom Revision History, Feedback, or Legal Notice.\n" +
+            "# a custom Revision History, Author Group, Feedback, or Legal Notice.\n" +
+            "# Author Group = [XXXX]\n" +
             "# Feedback = [XXXX]\n" +
             "# Legal Notice = [XXXX]\n" +
             "# Revision History = [XXXX]\n" +
@@ -236,6 +240,9 @@ public class TemplateConstants {
             "multiline ]\n" +
             "# Pubsnumber = \n" +
             "\n" +
+            "# Uncomment this to enable the index in the book.\n" +
+            "# Index = ON\n" +
+            "\n" +
             "# Bug Links = Off | JIRA | Bugzilla\n" +
             "# BZServer will default to https://bugzilla.redhat.com/ is its not specified.\n" +
             "# BZServer = \n" +
@@ -255,7 +262,8 @@ public class TemplateConstants {
             "# JIRALabels = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
-            "# a custom Revision History, Feedback, or Legal Notice.\n" +
+            "# a custom Revision History, Author Group, Feedback, or Legal Notice.\n" +
+            "# Author Group = [XXXX]\n" +
             "# Feedback = [XXXX]\n" +
             "# Legal Notice = [XXXX]\n" +
             "# Revision History = [XXXX]\n" +

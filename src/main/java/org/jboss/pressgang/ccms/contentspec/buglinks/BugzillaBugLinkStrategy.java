@@ -24,8 +24,6 @@ import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
-import org.jboss.pressgang.ccms.wrapper.PropertyTagInTagWrapper;
-import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLinkOptions> {
@@ -79,33 +77,6 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
             bugzillaEnvironment.append(" [Specified]");
         }
         final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
-
-        // look for the bugzilla options
-        if (topic.getTags() != null && topic.getTags() != null) {
-            final List<TagWrapper> tags = topic.getTags().getItems();
-            for (final TagWrapper tag : tags) {
-                final PropertyTagInTagWrapper bugzillaProductTag = tag.getProperty(CommonConstants.BUGZILLA_PRODUCT_PROP_TAG_ID);
-                final PropertyTagInTagWrapper bugzillaComponentTag = tag.getProperty(CommonConstants.BUGZILLA_COMPONENT_PROP_TAG_ID);
-                final PropertyTagInTagWrapper bugzillaKeywordsTag = tag.getProperty(CommonConstants.BUGZILLA_KEYWORDS_PROP_TAG_ID);
-                final PropertyTagInTagWrapper bugzillaVersionTag = tag.getProperty(CommonConstants.BUGZILLA_VERSION_PROP_TAG_ID);
-                final PropertyTagInTagWrapper bugzillaAssignedToTag = tag.getProperty(CommonConstants.BUGZILLA_PROFILE_PROPERTY);
-
-                if (bugzillaProduct == null && bugzillaProductTag != null)
-                    bugzillaProduct = URLEncoder.encode(bugzillaProductTag.getValue(), ENCODING);
-
-                if (bugzillaComponent == null && bugzillaComponentTag != null)
-                    bugzillaComponent = URLEncoder.encode(bugzillaComponentTag.getValue(), ENCODING);
-
-                if (bugzillaKeywords == null && bugzillaKeywordsTag != null)
-                    bugzillaKeywords = URLEncoder.encode(bugzillaKeywordsTag.getValue(), ENCODING);
-
-                if (bugzillaVersion == null && bugzillaVersionTag != null)
-                    bugzillaVersion = URLEncoder.encode(bugzillaVersionTag.getValue(), ENCODING);
-
-                if (bugzillaAssignedTo == null && bugzillaAssignedToTag != null)
-                    bugzillaAssignedTo = URLEncoder.encode(bugzillaAssignedToTag.getValue(), ENCODING);
-            }
-        }
 
         // build the bugzilla url options
         final StringBuilder bugzillaURLComponents = new StringBuilder("?");

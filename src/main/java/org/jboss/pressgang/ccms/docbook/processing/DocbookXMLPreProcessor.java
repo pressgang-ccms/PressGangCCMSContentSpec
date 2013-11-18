@@ -18,7 +18,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
-import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
+import org.jboss.pressgang.ccms.docbook.compiling.DocBookBuildingOptions;
 import org.jboss.pressgang.ccms.docbook.sort.TopicTitleSorter;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionListData;
 import org.jboss.pressgang.ccms.docbook.structures.InjectionTopicData;
@@ -232,7 +232,7 @@ public class DocbookXMLPreProcessor {
     }
 
     public void processTopicBugLink(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
-            final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate) {
+            final DocBookBuildingOptions docbookBuildingOptions, final Date buildDate) {
         // BUG LINK
         try {
             final Element bugzillaULink = document.createElement("ulink");
@@ -260,7 +260,7 @@ public class DocbookXMLPreProcessor {
     }
 
     public void processTopicEditorLinks(final SpecTopic specTopic, final Document document,
-            final DocbookBuildingOptions docbookBuildingOptions, final ZanataDetails zanataDetails) {
+            final DocBookBuildingOptions docbookBuildingOptions, final ZanataDetails zanataDetails) {
         // EDITOR LINK
         if (docbookBuildingOptions != null && docbookBuildingOptions.getInsertEditorLinks()) {
             final BaseTopicWrapper<?> topic = specTopic.getTopic();
@@ -302,7 +302,7 @@ public class DocbookXMLPreProcessor {
      * Adds some debug information and links to the end of the topic
      */
     public void processTopicAdditionalInfo(final SpecTopic specTopic, final Document document, final BugLinkOptions bugOptions,
-            final DocbookBuildingOptions docbookBuildingOptions, final Date buildDate, final ZanataDetails zanataDetails) {
+            final DocBookBuildingOptions docbookBuildingOptions, final Date buildDate, final ZanataDetails zanataDetails) {
         if ((docbookBuildingOptions != null && (docbookBuildingOptions.getInsertSurveyLink() || docbookBuildingOptions
                 .getInsertEditorLinks()))) {
 
@@ -372,8 +372,8 @@ public class DocbookXMLPreProcessor {
 
     @SuppressWarnings("unchecked")
     public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds,
-            final Document xmlDocument, final DocbookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
-            final boolean usedFixedUrls) {
+            final Document xmlDocument, final DocBookBuildingOptions docbookBuildingOptions, final TocTopicDatabase relatedTopicsDatabase,
+            final boolean usedFixedUrls, final Integer fixedUrlPropertyTagId) {
         TocTopicDatabase relatedTopicDatabase = relatedTopicsDatabase;
         if (relatedTopicDatabase == null) {
             /*
@@ -401,15 +401,15 @@ public class DocbookXMLPreProcessor {
         final List<Integer> errorTopics = new ArrayList<Integer>();
 
         errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ORDEREDLIST_INJECTION_POINT, xmlDocument,
-                CUSTOM_INJECTION_SEQUENCE_RE, null, relatedTopicDatabase, usedFixedUrls));
+                CUSTOM_INJECTION_SEQUENCE_RE, null, relatedTopicDatabase, usedFixedUrls, fixedUrlPropertyTagId));
         errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, XREF_INJECTION_POINT, xmlDocument,
-                CUSTOM_INJECTION_SINGLE_RE, null, relatedTopicDatabase, usedFixedUrls));
+                CUSTOM_INJECTION_SINGLE_RE, null, relatedTopicDatabase, usedFixedUrls, fixedUrlPropertyTagId));
         errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument,
-                CUSTOM_INJECTION_LIST_RE, null, relatedTopicDatabase, usedFixedUrls));
+                CUSTOM_INJECTION_LIST_RE, null, relatedTopicDatabase, usedFixedUrls, fixedUrlPropertyTagId));
         errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, ITEMIZEDLIST_INJECTION_POINT, xmlDocument,
-                CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), relatedTopicDatabase, usedFixedUrls));
+                CUSTOM_ALPHA_SORT_INJECTION_LIST_RE, new TopicTitleSorter(), relatedTopicDatabase, usedFixedUrls, fixedUrlPropertyTagId));
         errorTopics.addAll(processInjections(level, topic, customInjectionIds, customInjections, LIST_INJECTION_POINT, xmlDocument,
-                CUSTOM_INJECTION_LISTITEMS_RE, null, relatedTopicDatabase, usedFixedUrls));
+                CUSTOM_INJECTION_LISTITEMS_RE, null, relatedTopicDatabase, usedFixedUrls, fixedUrlPropertyTagId));
 
         /*
          * If we are not ignoring errors, return the list of topics that could not be injected
@@ -452,7 +452,7 @@ public class DocbookXMLPreProcessor {
     public List<Integer> processInjections(final Level level, final SpecTopic topic, final ArrayList<Integer> customInjectionIds,
             final HashMap<Node, InjectionListData> customInjections, final int injectionPointType, final Document xmlDocument,
             final Pattern regularExpression, final ExternalListSort<Integer, BaseTopicWrapper<?>, InjectionTopicData> sortComparator,
-            final TocTopicDatabase relatedTopicsDatabase, final boolean usedFixedUrls) {
+            final TocTopicDatabase relatedTopicsDatabase, final boolean usedFixedUrls, final Integer fixedUrlPropertyTagId) {
         final List<Integer> retValue = new ArrayList<Integer>();
 
         if (xmlDocument == null) return retValue;
@@ -533,9 +533,9 @@ public class DocbookXMLPreProcessor {
                                 final SpecTopic closestSpecTopic = topic.getClosestTopicByDBId(topicId, true);
                                 if (sequenceID.optional) {
                                     list.add(DocBookUtilities.buildEmphasisPrefixedXRef(xmlDocument, OPTIONAL_LIST_PREFIX,
-                                            closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+                                            closestSpecTopic.getUniqueLinkId(fixedUrlPropertyTagId, usedFixedUrls)));
                                 } else {
-                                    list.add(DocBookUtilities.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(usedFixedUrls)));
+                                    list.add(DocBookUtilities.buildXRef(xmlDocument, closestSpecTopic.getUniqueLinkId(fixedUrlPropertyTagId, usedFixedUrls)));
                                 }
                             }
 
@@ -558,11 +558,13 @@ public class DocbookXMLPreProcessor {
      * Insert a itemized list into the start of the topic, below the title with any PREVIOUS relationships that exists for the
      * Spec Topic. The title for the list is set to "Previous Step(s) in <TOPIC_PARENT_NAME>".
      *
-     * @param topic        The topic to process the injection for.
-     * @param doc          The DOM Document object that represents the topics XML.
-     * @param useFixedUrls Whether fixed URL's should be used in the injected links.
+     * @param topic                 The topic to process the injection for.
+     * @param doc                   The DOM Document object that represents the topics XML.
+     * @param useFixedUrls          Whether fixed URL's should be used in the injected links.
+     * @param fixedUrlPropertyTagId The ID for the Fixed URL Property Tag.
      */
-    public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+    public void processPrevRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls,
+            final Integer fixedUrlPropertyTagId) {
         if (topic.getPrevTopicRelationships().isEmpty()) return;
 
         // Get the title element so that it can be used later to add the prev topic node
@@ -613,7 +615,7 @@ public class DocbookXMLPreProcessor {
             } else {
                 titleXrefItem.setTextContent(level.getTitle());
             }
-            titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
+            titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls));
             titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_PREVIOUS_TITLE_LINK);
             linkTitleEle.appendChild(titleXrefItem);
 
@@ -631,7 +633,7 @@ public class DocbookXMLPreProcessor {
                 // Add the previous element to either the list or paragraph
                 // Create the link element
                 final Element xrefItem = doc.createElement("xref");
-                xrefItem.setAttribute("linkend", prevTopic.getUniqueLinkId(useFixedUrls));
+                xrefItem.setAttribute("linkend", prevTopic.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls));
                 xrefItem.setAttribute("xrefstyle", ROLE_PROCESS_PREVIOUS_LINK);
                 prevEle.appendChild(xrefItem);
 
@@ -654,11 +656,13 @@ public class DocbookXMLPreProcessor {
      * Insert a itemized list into the end of the topic with any NEXT relationships that exists for the Spec Topic. The title
      * for the list is set to "Next Step(s) in <TOPIC_PARENT_NAME>".
      *
-     * @param topic        The topic to process the injection for.
-     * @param doc          The DOM Document object that represents the topics XML.
-     * @param useFixedUrls Whether fixed URL's should be used in the injected links.
+     * @param topic                 The topic to process the injection for.
+     * @param doc                   The DOM Document object that represents the topics XML.
+     * @param useFixedUrls          Whether fixed URL's should be used in the injected links.
+     * @param fixedUrlPropertyTagId
      */
-    public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+    public void processNextRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls,
+            final Integer fixedUrlPropertyTagId) {
         if (topic.getNextTopicRelationships().isEmpty()) return;
 
         // Attempt to get the previous topic and process it
@@ -698,7 +702,7 @@ public class DocbookXMLPreProcessor {
         } else {
             titleXrefItem.setTextContent(level.getTitle());
         }
-        titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(useFixedUrls));
+        titleXrefItem.setAttribute("linkend", ((Level) topic.getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls));
         titleXrefItem.setAttribute("xrefstyle", ROLE_PROCESS_NEXT_TITLE_LINK);
         linkTitleEle.appendChild(titleXrefItem);
 
@@ -716,7 +720,7 @@ public class DocbookXMLPreProcessor {
             // Add the next element to either the list or paragraph
             // Create the link element
             final Element xrefItem = doc.createElement("xref");
-            xrefItem.setAttribute("linkend", nextTopic.getUniqueLinkId(useFixedUrls));
+            xrefItem.setAttribute("linkend", nextTopic.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls));
             xrefItem.setAttribute("xrefstyle", ROLE_PROCESS_NEXT_LINK);
             nextEle.appendChild(xrefItem);
 
@@ -734,11 +738,13 @@ public class DocbookXMLPreProcessor {
      * Insert a itemized list into the start of the topic, below the title with any PREREQUISITE relationships that exists for
      * the Spec Topic. The title for the list is set to the "PREREQUISITE" property or "Prerequisites:" by default.
      *
-     * @param topic        The topic to process the injection for.
-     * @param doc          The DOM Document object that represents the topics XML.
-     * @param useFixedUrls Whether fixed URL's should be used in the injected links.
+     * @param topic                 The topic to process the injection for.
+     * @param doc                   The DOM Document object that represents the topics XML.
+     * @param useFixedUrls          Whether fixed URL's should be used in the injected links.
+     * @param fixedUrlPropertyTagId The ID for the Fixed URL Property Tag.
      */
-    public void processPrerequisiteInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+    public void processPrerequisiteInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls,
+            Integer fixedUrlPropertyTagId) {
         if (topic.getPrerequisiteRelationships().isEmpty()) return;
 
         // Get the title element so that it can be used later to add the prerequisite topic nodes
@@ -768,11 +774,13 @@ public class DocbookXMLPreProcessor {
                 if (prereq instanceof TopicRelationship) {
                     final SpecTopic relatedTopic = ((TopicRelationship) prereq).getSecondaryRelationship();
 
-                    list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_PREREQUISITE));
+                    list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls),
+                            ROLE_PREREQUISITE));
                 } else {
                     final SpecNode specNode = ((TargetRelationship) prereq).getSecondaryRelationship();
 
-                    list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_PREREQUISITE));
+                    list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls),
+                            ROLE_PREREQUISITE));
                 }
             }
 
@@ -796,11 +804,13 @@ public class DocbookXMLPreProcessor {
      * Insert a itemized list into the end of the topic with any RELATED relationships that exists for the Spec Topic. The title
      * for the list is set to "See Also:".
      *
-     * @param topic        The topic to process the injection for.
-     * @param doc          The DOM Document object that represents the topics XML.
-     * @param useFixedUrls Whether fixed URL's should be used in the injected links.
+     * @param topic                 The topic to process the injection for.
+     * @param doc                   The DOM Document object that represents the topics XML.
+     * @param useFixedUrls          Whether fixed URL's should be used in the injected links.
+     * @param fixedUrlPropertyTagId The ID for the Fixed URL Property Tag.
      */
-    public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+    public void processSeeAlsoInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls,
+            final Integer fixedUrlPropertyTagId) {
         // Create the paragraph and list of prerequisites.
         if (topic.getRelatedRelationships().isEmpty()) return;
         final Element itemisedListEle = doc.createElement("itemizedlist");
@@ -818,11 +828,11 @@ public class DocbookXMLPreProcessor {
             if (seeAlso instanceof TopicRelationship) {
                 final SpecTopic relatedTopic = ((TopicRelationship) seeAlso).getSecondaryRelationship();
 
-                list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_SEE_ALSO));
+                list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls), ROLE_SEE_ALSO));
             } else {
                 final SpecNode specNode = ((TargetRelationship) seeAlso).getSecondaryRelationship();
 
-                list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_SEE_ALSO));
+                list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls), ROLE_SEE_ALSO));
             }
         }
 
@@ -839,11 +849,13 @@ public class DocbookXMLPreProcessor {
     /**
      * Insert a itemized list into the end of the topic with the any LINKLIST relationships that exists for the Spec Topic.
      *
-     * @param topic        The topic to process the injection for.
-     * @param doc          The DOM Document object that represents the topics XML.
-     * @param useFixedUrls Whether fixed URL's should be used in the injected links.
+     * @param topic                 The topic to process the injection for.
+     * @param doc                   The DOM Document object that represents the topics XML.
+     * @param useFixedUrls          Whether fixed URL's should be used in the injected links.
+     * @param fixedUrlPropertyTagId The ID for the Fixed URL Property Tag.
      */
-    public void processLinkListRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls) {
+    public void processLinkListRelationshipInjections(final SpecTopic topic, final Document doc, final boolean useFixedUrls,
+            final Integer fixedUrlPropertyTagId) {
         // Create the paragraph and list of prerequisites.
         if (topic.getLinkListRelationships().isEmpty()) return;
         final Element itemisedListEle = doc.createElement("itemizedlist");
@@ -858,11 +870,12 @@ public class DocbookXMLPreProcessor {
             if (linkList instanceof TopicRelationship) {
                 final SpecTopic relatedTopic = ((TopicRelationship) linkList).getSecondaryRelationship();
 
-                list.add(DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(useFixedUrls), ROLE_LINK_LIST));
+                list.add(
+                        DocBookUtilities.buildXRef(doc, relatedTopic.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls), ROLE_LINK_LIST));
             } else {
                 final SpecNode specNode = ((TargetRelationship) linkList).getSecondaryRelationship();
 
-                list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(useFixedUrls), ROLE_LINK_LIST));
+                list.add(DocBookUtilities.buildXRef(doc, specNode.getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls), ROLE_LINK_LIST));
             }
         }
 
@@ -874,20 +887,5 @@ public class DocbookXMLPreProcessor {
 
         // Add the paragraph and list after at the end of the xml data
         doc.getDocumentElement().appendChild(itemisedListEle);
-    }
-
-    public static String processDocumentType(final String xml) {
-        assert xml != null : "The xml parameter can not be null";
-
-        if (XMLUtilities.findDocumentType(xml) == null) {
-            final String preamble = XMLUtilities.findPreamble(xml);
-            final String fixedPreamble = preamble == null ? "" : preamble + "\n";
-            final String fixedXML = preamble == null ? xml : xml.replace(preamble, "");
-
-            return fixedPreamble + "<!DOCTYPE section PUBLIC \"-//OASIS//DTD DocBook XML V4.5//EN\" \"http://www.oasis-open" +
-                    ".org/docbook/xml/4.5/docbookx.dtd\" []>\n" + fixedXML;
-        }
-
-        return xml;
     }
 }

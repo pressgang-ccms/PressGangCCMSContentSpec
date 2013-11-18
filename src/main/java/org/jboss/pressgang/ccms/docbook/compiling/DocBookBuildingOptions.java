@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class DocbookBuildingOptions {
+public class DocBookBuildingOptions {
     private Boolean suppressContentSpecPage = false;
     private Boolean insertBugLinks = true;
     private Boolean publicanShowRemarks = false;
@@ -32,7 +32,7 @@ public class DocbookBuildingOptions {
     private Boolean serverBuild = false;
     private Integer maxRevision = null;
 
-    public DocbookBuildingOptions() {
+    public DocBookBuildingOptions() {
 
     }
 

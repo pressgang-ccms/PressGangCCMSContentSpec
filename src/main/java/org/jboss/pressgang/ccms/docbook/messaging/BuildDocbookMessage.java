@@ -1,11 +1,11 @@
 package org.jboss.pressgang.ccms.docbook.messaging;
 
-import org.jboss.pressgang.ccms.docbook.compiling.DocbookBuildingOptions;
+import org.jboss.pressgang.ccms.docbook.compiling.DocBookBuildingOptions;
 import org.jboss.pressgang.ccms.zanata.ZanataDetails;
 
 public class BuildDocbookMessage {
     private String query;
-    private DocbookBuildingOptions docbookOptions;
+    private DocBookBuildingOptions docbookOptions;
     private int entityType;
     private ZanataDetails zanataDetails;
 
@@ -17,11 +17,11 @@ public class BuildDocbookMessage {
         this.query = query;
     }
 
-    public DocbookBuildingOptions getDocbookOptions() {
+    public DocBookBuildingOptions getDocbookOptions() {
         return docbookOptions;
     }
 
-    public void setDocbookOptions(final DocbookBuildingOptions docbookOptions) {
+    public void setDocbookOptions(final DocBookBuildingOptions docbookOptions) {
         this.docbookOptions = docbookOptions;
     }
 

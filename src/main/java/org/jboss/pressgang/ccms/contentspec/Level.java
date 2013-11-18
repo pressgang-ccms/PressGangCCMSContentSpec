@@ -703,7 +703,7 @@ public class Level extends SpecNode {
     }
 
     @Override
-    public String getUniqueLinkId(final boolean useFixedUrls) {
+    public String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
         // Get the pre link string
         final String preFix;
         switch (getLevelType()) {

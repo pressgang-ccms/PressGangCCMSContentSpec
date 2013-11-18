@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
+import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 
@@ -101,13 +101,16 @@ public class Process extends Level {
      *
      * @param specTopics        A mapping of all the topics in a content specification to their unique ids
      * @param topicTargets      The topic targets that already exist in a content specification
-     * @param topicDataProvider A DBReader object that is used to access database objects via the REST Interface
+     * @param topicDataProvider A TopicProvider object that is used to access database objects via the REST Interface
+     * @param serverSettingsProvider A TopicProvider object that is used to access the server settings.
      * @return True if everything loaded successfully otherwise false
      */
     public boolean processTopics(final Map<String, SpecTopic> specTopics, final Map<String, SpecTopic> topicTargets,
-            final TopicProvider topicDataProvider) {
+            final TopicProvider topicDataProvider, final ServerSettingsProvider serverSettingsProvider) {
         // Check if the topics have already been processed. If so then don't re-process them.
         if (isTopicsProcessed()) return true;
+
+        final Integer taskId = serverSettingsProvider.getServerSettings().getEntities().getTaskTagId();
 
         boolean successfullyLoaded = true;
         SpecTopic prevTopic = null;
@@ -130,7 +133,7 @@ public class Process extends Level {
 
                 if (topic != null) {
                     // Add relationships if the topic is a task
-                    if (topic.hasTag(CSConstants.TASK_TAG_ID)) {
+                    if (topic.hasTag(taskId)) {
                         // Create a target if one doesn't already exist
                         if (specTopic.getTargetId() == null) {
                             // Create a randomly generated target id using the process topic count

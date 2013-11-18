@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.AuthorInformation;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
@@ -24,6 +23,7 @@ import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.ServerEntitiesWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedCSNodeWrapper;
@@ -190,8 +190,8 @@ public class EntityUtilities {
     /*
      * Gets the Author Information for a specific author
      */
-    public static AuthorInformation getAuthorInformation(final DataProviderFactory providerFactory, final Integer authorId,
-            final Integer revision) {
+    public static AuthorInformation getAuthorInformation(final DataProviderFactory providerFactory,
+            final ServerEntitiesWrapper serverEntities, final Integer authorId, final Integer revision) {
         final AuthorInformation authInfo = new AuthorInformation();
         authInfo.setAuthorId(authorId);
         TagWrapper tag = null;
@@ -200,18 +200,18 @@ public class EntityUtilities {
         } catch (NotFoundException e) {
             tag = providerFactory.getProvider(TagProvider.class).getTag(authorId, revision);
         }
-        if (tag != null && tag.getProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID) != null && tag.getProperty(
-                CSConstants.LAST_NAME_PROPERTY_TAG_ID) != null) {
-            authInfo.setFirstName(tag.getProperty(CSConstants.FIRST_NAME_PROPERTY_TAG_ID).getValue());
-            authInfo.setLastName(tag.getProperty(CSConstants.LAST_NAME_PROPERTY_TAG_ID).getValue());
-            if (tag.getProperty(CSConstants.EMAIL_PROPERTY_TAG_ID) != null) {
-                authInfo.setEmail(tag.getProperty(CSConstants.EMAIL_PROPERTY_TAG_ID).getValue());
+        if (tag != null && tag.getProperty(serverEntities.getFirstNamePropertyTagId()) != null && tag.getProperty(
+                serverEntities.getSurnamePropertyTagId()) != null) {
+            authInfo.setFirstName(tag.getProperty(serverEntities.getFirstNamePropertyTagId()).getValue());
+            authInfo.setLastName(tag.getProperty(serverEntities.getSurnamePropertyTagId()).getValue());
+            if (tag.getProperty(serverEntities.getEmailPropertyTagId()) != null) {
+                authInfo.setEmail(tag.getProperty(serverEntities.getEmailPropertyTagId()).getValue());
             }
-            if (tag.getProperty(CSConstants.ORGANIZATION_PROPERTY_TAG_ID) != null) {
-                authInfo.setOrganization(tag.getProperty(CSConstants.ORGANIZATION_PROPERTY_TAG_ID).getValue());
+            if (tag.getProperty(serverEntities.getOrganizationPropertyTagId()) != null) {
+                authInfo.setOrganization(tag.getProperty(serverEntities.getOrganizationPropertyTagId()).getValue());
             }
-            if (tag.getProperty(CSConstants.ORG_DIVISION_PROPERTY_TAG_ID) != null) {
-                authInfo.setOrgDivision(tag.getProperty(CSConstants.ORG_DIVISION_PROPERTY_TAG_ID).getValue());
+            if (tag.getProperty(serverEntities.getOrganizationDivisionPropertyTagId()) != null) {
+                authInfo.setOrgDivision(tag.getProperty(serverEntities.getOrganizationPropertyTagId()).getValue());
             }
             return authInfo;
         }
@@ -249,7 +249,8 @@ public class EntityUtilities {
                         // Make sure the translated topic csnode and translatedcsnode match
                         if ((translatedCSNode == null && translatedTopic.getTranslatedCSNode() == null) || (translatedTopic
                                 .getTranslatedCSNode() != null && translatedCSNode != null && translatedTopic.getTranslatedCSNode().getId
-                                ().equals(translatedCSNode.getId()))) {
+                                ().equals(
+                                translatedCSNode.getId()))) {
                             pushedTranslatedTopic = translatedTopic;
                         }
                     }

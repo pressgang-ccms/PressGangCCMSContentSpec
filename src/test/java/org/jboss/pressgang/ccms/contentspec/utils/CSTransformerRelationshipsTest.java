@@ -33,6 +33,7 @@ import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
@@ -92,7 +93,7 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
                 providerFactory);
 
         // Then the process should have its relationships applied
-        verify(process, times(1)).processTopics(anyMap(), anyMap(), any(TopicProvider.class));
+        verify(process, times(1)).processTopics(anyMap(), anyMap(), any(TopicProvider.class), any(ServerSettingsProvider.class));
     }
 
     @Test

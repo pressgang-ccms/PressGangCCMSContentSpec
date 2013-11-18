@@ -22,7 +22,6 @@ import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
-import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.w3c.dom.Document;
 
@@ -877,14 +876,14 @@ public class SpecTopic extends SpecNode {
     }
 
     @Override
-    public String getUniqueLinkId(final boolean useFixedUrls) {
+    public String getUniqueLinkId(Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
         // If this is an inner topic then get the parents id
         if (getTopicType() == TopicType.LEVEL) {
-            return ((Level) getParent()).getUniqueLinkId(useFixedUrls);
+            return ((Level) getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls);
         } else {
             final String topicXRefId;
             if (useFixedUrls) {
-                topicXRefId = topic.getXRefPropertyOrId(CommonConstants.FIXED_URL_PROP_TAG_ID);
+                topicXRefId = topic.getXRefPropertyOrId(fixedUrlPropertyTagId);
             } else {
                 topicXRefId = topic.getXRefId();
             }

@@ -11,34 +11,15 @@ public class CSConstants {
     private CSConstants() {
     }
 
-    public static final String BUGZILLA_URL_PROPERTY = "contentSpec.bugzillaUrl";
-
     // Level Type Constants
     public static final int LEVEL_BASE = -1;
 
     // Other
-    public static final int CSP_PROPERTY_ID = 15;
     public static final String CSP_PRE_PROCESSED_STRING = "Pre Processed";
     public static final String CSP_POST_PROCESSED_STRING = "Post Processed";
 
     // Output format constants
     public static final String CSP_OUTPUT_FORMAT = "Narrative";
-
-    public static final Integer TYPE_CATEGORY_ID = 4;
-    public static final Integer TECHNOLOGY_CATEGORY_ID = 3;
-    public static final Integer RELEASE_CATEGORY_ID = 15;
-    public static final Integer WRITER_CATEGORY_ID = 12;
-    public static final Integer COMMON_NAME_CATEGORY_ID = 17;
-    public static final Integer CONCERN_CATEGORY_ID = 2;
-    public static final Integer LIFECYCLE_CATEGORY_ID = 5;
-    public static final Integer INFORMATION_SENSITIVITY_CATEGORY_ID = 19;
-    public static final Integer SEO_METADATA_CATEGORY_ID = 24;
-    public static final Integer CONTENT_TYPE_CATEGORY_ID = 23;
-    public static final Integer PROGRAMMING_LANGUAGE_CATEGORY_ID = 22;
-
-    public static final Integer RH_INTERNAL_TAG_ID = 315;
-
-    public static final Integer UNKNOWN_USER_ID = 89;
 
     public static final String NEW_TOPIC_ID_REGEX = "^N[0-9]*$";
     public static final Pattern NEW_TOPIC_ID_PATTERN = Pattern.compile(NEW_TOPIC_ID_REGEX);
@@ -61,62 +42,7 @@ public class CSConstants {
     public static final String BOOK_TYPE_ARTICLE = "Article";
     public static final String BOOK_TYPE_BOOK_DRAFT = "Book-Draft";
     public static final String BOOK_TYPE_ARTICLE_DRAFT = "Article-Draft";
-    /**
-     * The Task tag ID
-     */
-    public static final Integer TASK_TAG_ID = 4;
-    /**
-     * The Content Specification tag ID
-     */
-    public static final Integer CONTENT_SPEC_TAG_ID = 268;
-    /**
-     * The Added By Property Tag ID
-     */
-    public static final Integer ADDED_BY_PROPERTY_TAG_ID = 14;
-    /**
-     * The First Name Property Tag ID
-     */
-    public static final Integer FIRST_NAME_PROPERTY_TAG_ID = 1;
-    /**
-     * The Last Name Property Tag ID
-     */
-    public static final Integer LAST_NAME_PROPERTY_TAG_ID = 2;
-    /**
-     * The Email Address Property Tag ID
-     */
-    public static final Integer EMAIL_PROPERTY_TAG_ID = 3;
-    /**
-     * The Organization Property Tag ID
-     */
-    public static final Integer ORGANIZATION_PROPERTY_TAG_ID = 18;
-    /**
-     * The Organization Division Property Tag ID
-     */
-    public static final Integer ORG_DIVISION_PROPERTY_TAG_ID = 19;
-    /**
-     * The Content Specification Type Property Tag ID
-     */
-    public static final Integer CSP_TYPE_PROPERTY_TAG_ID = 17;
-    /**
-     * The Content Specification Read-Only Property Tag ID
-     */
-    public static final Integer CSP_READ_ONLY_PROPERTY_TAG_ID = 25;
-    /**
-     * The Revision History tag ID
-     */
-    public static final Integer REVISION_HISTORY_TAG_ID = 598;
-    /**
-     * The Legal Notice tag ID
-     */
-    public static final Integer LEGAL_NOTICE_TAG_ID = 599;
-    /**
-     * The Author Group tag ID
-     */
-    public static final Integer AUTHOR_GROUP_TAG_ID = 664;
-    /**
-     * The Abstract tag ID
-     */
-    public static final Integer ABSTRACT_TAG_ID = 692;
+
     /**
      * The Valid XML Entities string constant ID
      */

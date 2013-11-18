@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
@@ -24,12 +24,14 @@ public class TopicPool {
     private CollectionWrapper<TopicWrapper> newTopicPool;
     private CollectionWrapper<TopicWrapper> updatedTopicPool;
     private final TopicProvider topicProvider;
+    private final Integer cspIdPropertyTagId;
     private boolean initialised = false;
 
     public TopicPool(final DataProviderFactory providerFactory) {
         this.topicProvider = providerFactory.getProvider(TopicProvider.class);
         newTopicPool = topicProvider.newTopicCollection();
         updatedTopicPool = topicProvider.newTopicCollection();
+        cspIdPropertyTagId = providerFactory.getProvider(ServerSettingsProvider.class).getServerSettings().getEntities().getCspIdPropertyTagId();
     }
 
     /**
@@ -98,8 +100,8 @@ public class TopicPool {
         if (initialised) {
             if (newTopicPool != null && !newTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : newTopicPool.getItems()) {
-                    if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
-                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
+                    if (topic.getProperty(cspIdPropertyTagId) != null) {
+                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(specTopic.getUniqueId())) {
                             specTopic.setId(Integer.toString(topic.getId()));
                             return specTopic;
                         }
@@ -108,8 +110,8 @@ public class TopicPool {
             }
             if (updatedTopicPool != null && !updatedTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : updatedTopicPool.getItems()) {
-                    if (topic.getProperty(CSConstants.CSP_PROPERTY_ID) != null) {
-                        if (topic.getProperty(CSConstants.CSP_PROPERTY_ID).getValue().equals(specTopic.getUniqueId())) {
+                    if (topic.getProperty(cspIdPropertyTagId) != null) {
+                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(specTopic.getUniqueId())) {
                             specTopic.setId(Integer.toString(topic.getId()));
                             return specTopic;
                         }

@@ -17,6 +17,7 @@ import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyList;
 import static org.mockito.Matchers.anyMap;
 import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 import java.util.List;
@@ -34,13 +35,17 @@ import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.ServerEntitiesWrapper;
+import org.jboss.pressgang.ccms.wrapper.ServerSettingsWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
@@ -64,12 +69,23 @@ public class CSTransformerTransformTest extends CSTransformerTest {
     @Arbitrary Integer anotherId;
     @Mock ContentSpecWrapper specWrapper;
     @Mock DataProviderFactory providerFactory;
+    @Mock ServerSettingsProvider serverSettingsProvider;
+    @Mock ServerSettingsWrapper serverSettings;
+    @Mock ServerEntitiesWrapper serverEntities;
     @Mock CollectionWrapper<TagWrapper> tagWrapper;
     @Mock TagWrapper tag;
     @Mock TagWrapper tag2;
     @Mock UpdateableCollectionWrapper<CSNodeWrapper> nodeCollectionWrapper;
     @Mock UpdateableCollectionWrapper<CSRelatedNodeWrapper> collectionWrapper;
     @Mock CSRelatedNodeWrapper relatedNodeWrapper;
+
+    @Before
+    public void setUp() {
+        when(providerFactory.getProvider(ServerSettingsProvider.class)).thenReturn(serverSettingsProvider);
+        when(serverSettingsProvider.getServerSettings()).thenReturn(serverSettings);
+        when(serverSettings.getEntities()).thenReturn(serverEntities);
+        when(serverEntities.getTaskTagId()).thenReturn(4);
+    }
 
     @Test
     public void shouldSetBasicValues() throws Exception {

@@ -35,6 +35,7 @@ import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.EntityWrapperIDComparator;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -489,7 +490,8 @@ public class CSTransformer {
 
         // Apply the process relationships
         for (final Process process : processes) {
-            process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class));
+            process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class),
+                    providerFactory.getProvider(ServerSettingsProvider.class));
         }
     }
 

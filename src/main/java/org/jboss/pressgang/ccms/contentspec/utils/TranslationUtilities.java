@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -17,6 +19,7 @@ import org.jboss.pressgang.ccms.provider.TranslatedCSNodeProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedTopicProvider;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
+import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
@@ -25,29 +28,41 @@ import org.jboss.pressgang.ccms.wrapper.TranslatedCSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
+import org.w3c.dom.Document;
+import org.w3c.dom.Entity;
+import org.w3c.dom.EntityReference;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 public class TranslationUtilities {
     private static final List<String> TRANSLATABLE_METADATA = CollectionUtilities.toArrayList(
-            new String[]{CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE, CommonConstants.CS_SUBTITLE_TITLE, CommonConstants.CS_ABSTRACT_TITLE,
-                    CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, CommonConstants.CS_VERSION_TITLE, CommonConstants.CS_EDITION_TITLE});
+            new String[]{CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE, CommonConstants.CS_SUBTITLE_TITLE,
+                    CommonConstants.CS_ABSTRACT_TITLE, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, CommonConstants.CS_VERSION_TITLE,
+                    CommonConstants.CS_EDITION_TITLE});
 
     /**
      * Create a TranslatedTopic based on the content from a normal Topic.
      *
-     * @param topic The topic to transform to a TranslatedTopic
+     * @param topic          The topic to transform to a TranslatedTopic
+     * @param customEntities
      * @return The new TranslatedTopic initialised with data from the topic.
      */
     public static TranslatedTopicWrapper createTranslatedTopic(final DataProviderFactory providerFactory, final TopicWrapper topic,
-            final TranslatedCSNodeWrapper translatedCSNode, final String condition) {
+            final TranslatedCSNodeWrapper translatedCSNode, final String condition, String customEntities) {
         final TranslatedTopicWrapper translatedTopic = providerFactory.getProvider(TranslatedTopicProvider.class).newTranslatedTopic();
         translatedTopic.setLocale(topic.getLocale());
         translatedTopic.setTranslationPercentage(100);
         translatedTopic.setTopicId(topic.getId());
         translatedTopic.setTopicRevision(topic.getRevision());
         translatedTopic.setXml(topic.getXml());
-        if (translatedCSNode != null && condition != null) {
+        if (translatedCSNode != null && (!isNullOrEmpty(condition) || !isNullOrEmpty(customEntities))) {
             translatedTopic.setTranslatedCSNode(translatedCSNode);
-            translatedTopic.setTranslatedXMLCondition(condition);
+            if (!isNullOrEmpty(condition)) {
+                translatedTopic.setTranslatedXMLCondition(condition);
+            }
+            if (!isNullOrEmpty(customEntities)) {
+                translatedTopic.setCustomEntities(customEntities);
+            }
         }
         return translatedTopic;
     }
@@ -245,5 +260,33 @@ public class TranslationUtilities {
         }
 
         return null;
+    }
+
+    public static boolean resolveCustomEntities(final List<Entity> customEntities, final Document doc) throws SAXException {
+        boolean entitiesResolved = false;
+        /*
+         * Loop over each entity and try to see if it exists in the doc. If it does then remove the EntityReference node and insert
+         * the entities value.
+         */
+        for (final Entity entity : customEntities) {
+            final List<org.w3c.dom.Node> entityReferences = XMLUtilities.getChildNodes(doc, entity.getNodeName());
+            for (final org.w3c.dom.Node entityReference : entityReferences) {
+                if (entityReference instanceof EntityReference) {
+                    final String tempXml = "<tempRoot>" + entity.getTextContent() + "</tempRoot>";
+                    final Document entityValueDoc = XMLUtilities.convertStringToDocument(tempXml);
+                    final org.w3c.dom.Node entityValue = doc.importNode(entityValueDoc.getDocumentElement(), true);
+
+                    final NodeList entityValueChildren = entityValue.getChildNodes();
+                    for (int k = 0; k < entityValueChildren.getLength(); k++) {
+                        entityReference.getParentNode().insertBefore(entityValueChildren.item(k), entityReference);
+                    }
+                    entityReference.getParentNode().removeChild(entityReference);
+
+                    entitiesResolved = true;
+                }
+            }
+        }
+
+        return entitiesResolved;
     }
 }

@@ -43,11 +43,6 @@ public class CSConstants {
     public static final String BOOK_TYPE_BOOK_DRAFT = "Book-Draft";
     public static final String BOOK_TYPE_ARTICLE_DRAFT = "Article-Draft";
 
-    /**
-     * The Valid XML Entities string constant ID
-     */
-    public static final Integer VALID_ENTITIES_STRING_CONSTANT_ID = 72;
-
     // Override keys
     public static final String AUTHOR_GROUP_OVERRIDE = "Author_Group.xml";
 

@@ -70,6 +70,15 @@ public class CSConstants {
     public static final String BRACKET_NAMED_PATTERN = "(?<!\\\\)\\%c(?<" + BRACKET_CONTENTS + ">(.|\n)*?)(?<!\\\\)\\%c";
     public static final String BRACKET_PATTERN = "(?<!\\\\)\\%c((.|\n)*?)(?<!\\\\)\\%c";
 
+    public static final String DUMMY_CS_NAME_ENT_FILE = "<!ENTITY PRODUCT \"Product\">\n" +
+            "<!ENTITY BOOKID \"BOOKID\">\n" +
+            "<!ENTITY YEAR \"YYYY\">\n" +
+            "<!ENTITY TITLE \"TITLE\">\n" +
+            "<!ENTITY HOLDER \"HOLDER\">\n" +
+            "<!ENTITY BZURL \"BZURL\">\n" +
+            "<!ENTITY BZCOMPONENT \"BZCOMPONENT\">\n" +
+            "<!ENTITY BZPRODUCT \"BZPRODUCT\">";
+
     public static final List<String> PUBLICAN_CFG_PARAMETERS = Arrays.asList(
             "docname",
             "version",

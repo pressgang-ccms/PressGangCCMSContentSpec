@@ -262,7 +262,7 @@ public class TranslationUtilities {
         return null;
     }
 
-    public static boolean resolveCustomEntities(final List<Entity> customEntities, final Document doc) throws SAXException {
+    public static boolean resolveCustomTopicEntities(final List<Entity> customEntities, final Document doc) throws SAXException {
         boolean entitiesResolved = false;
         /*
          * Loop over each entity and try to see if it exists in the doc. If it does then remove the EntityReference node and insert
@@ -288,5 +288,29 @@ public class TranslationUtilities {
         }
 
         return entitiesResolved;
+    }
+
+    public static void resolveCustomContentSpecEntities(final List<Entity> customEntities, final ContentSpecWrapper contentSpec) {
+        final List<CSNodeWrapper> translatableNodes = new ArrayList<CSNodeWrapper>();
+
+        // Find all the translatable nodes first
+        for (final CSNodeWrapper node : contentSpec.getChildren().getItems()) {
+            if (node.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
+                if (TRANSLATABLE_METADATA.contains(node.getTitle())) {
+                    translatableNodes.add(node);
+                }
+            }
+        }
+
+        // Resolve any custom entities
+        for (final Entity entity : customEntities) {
+            final String entityString = "&" + entity.getNodeName() + ";";
+            for (final CSNodeWrapper node : translatableNodes) {
+                if (node.getAdditionalText().contains(entityString)) {
+                    final String fixedValue = node.getAdditionalText().replace(entityString, entity.getTextContent());
+                    node.setAdditionalText(fixedValue);
+                }
+            }
+        }
     }
 }

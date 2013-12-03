@@ -95,7 +95,7 @@ public class Level extends SpecNode {
     /**
      * Sets the translated title for the Level.
      *
-     * @param title The translated title for the Level.
+     * @param translatedTitle The translated title for the Level.
      */
     public void setTranslatedTitle(final String translatedTitle) {
         this.translatedTitle = translatedTitle;

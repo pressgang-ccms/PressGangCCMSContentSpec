@@ -329,9 +329,9 @@ public abstract class SpecNode extends Node {
     }
 
     /**
-     * Adds a source URL to the list of URL's for this set of node
+     * Sets the conditional statement to be used when building
      *
-     * @param url The URL to be added
+     * @param condition The conditional statement for this node and it's sub nodes.
      */
     public void setConditionStatement(final String condition) {
         this.condition = condition;

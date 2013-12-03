@@ -286,9 +286,9 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Add a relationship to the topic.
+     * Add a relationship to the target level.
      *
-     * @param topic The topic that is to be related to.
+     * @param level The target level that is to be related to.
      * @param type  The type of the relationship.
      */
     public void addRelationshipToTarget(final Level level, final RelationshipType type) {
@@ -298,11 +298,11 @@ public class SpecTopic extends SpecNode {
     }
 
     /**
-     * Add a relationship to the topic.
+     * Add a relationship to the target level.
      *
-     * @param topic The topic that is to be related to.
+     * @param level The target level that is to be related to.
      * @param type  The type of the relationship.
-     * @param title The title of the topic to be related to.
+     * @param title The title of the target level to be related to.
      */
     public void addRelationshipToTarget(final Level level, final RelationshipType type, final String title) {
         final TargetRelationship relationship = new TargetRelationship(this, level, type, title);

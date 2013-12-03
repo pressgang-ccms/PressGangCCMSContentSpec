@@ -24,9 +24,9 @@ public class ErrorLogger {
     }
 
     /**
-     * Turn debugging on for this logger.
+     * Set the debug verbosity for the logger.
      *
-     * @param state The state the debug should be in. True = On, False = Off
+     * @param level The debug verbosity level.
      */
     public void setVerboseDebug(final int level) {
         debugLevel = level;

@@ -80,8 +80,9 @@ public class Version implements Comparable<Version> {
     }
 
     private int numLeadingZeros(final String num) {
+        // Ignore the last value to account for a '0' value
         int i;
-        for (i = 0; i < num.length() && num.charAt(i) == '0'; i++) {
+        for (i = 0; i < num.length() - 1 && num.charAt(i) == '0'; i++) {
         }
 
         return i;

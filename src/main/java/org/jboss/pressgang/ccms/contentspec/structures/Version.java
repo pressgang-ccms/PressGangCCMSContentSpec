@@ -154,7 +154,7 @@ public class Version implements Comparable<Version> {
         int i = 0;
 
         // Most efficient way to skip past equal version subparts
-        while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) i++;
+        while (i < vals1.length && i < vals2.length && Integer.valueOf(vals1[i]).equals(Integer.valueOf(vals2[i]))) i++;
 
         try {
             // If we didn't reach the end,

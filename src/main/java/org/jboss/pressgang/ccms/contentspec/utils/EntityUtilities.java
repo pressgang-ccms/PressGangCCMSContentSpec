@@ -211,7 +211,7 @@ public class EntityUtilities {
                 authInfo.setOrganization(tag.getProperty(serverEntities.getOrganizationPropertyTagId()).getValue());
             }
             if (tag.getProperty(serverEntities.getOrganizationDivisionPropertyTagId()) != null) {
-                authInfo.setOrgDivision(tag.getProperty(serverEntities.getOrganizationPropertyTagId()).getValue());
+                authInfo.setOrgDivision(tag.getProperty(serverEntities.getOrganizationDivisionPropertyTagId()).getValue());
             }
             return authInfo;
         }

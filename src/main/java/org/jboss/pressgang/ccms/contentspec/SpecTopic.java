@@ -852,8 +852,12 @@ public class SpecTopic extends SpecNode {
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null && getParent() instanceof Level) {
-            return ((Level) getParent()).getClosestTopic(topic, checkParentNode);
+        if (getParent() != null) {
+            if (getParent() instanceof Level) {
+                return ((Level) getParent()).getClosestTopic(topic, checkParentNode);
+            } else if (getParent() instanceof KeyValueNode) {
+                return ((KeyValueNode) getParent()).getParent().getBaseLevel().getClosestTopic(topic, checkParentNode);
+            }
         }
 
         return null;
@@ -868,8 +872,12 @@ public class SpecTopic extends SpecNode {
         /*
          * If we still haven't found the closest node then check this nodes parents.
          */
-        if (getParent() != null && getParent() instanceof Level) {
-            return ((Level) getParent()).getClosestTopicByDBId(DBId, checkParentNode);
+        if (getParent() != null) {
+            if (getParent() instanceof Level) {
+                return ((Level) getParent()).getClosestTopicByDBId(DBId, checkParentNode);
+            } else if (getParent() instanceof KeyValueNode) {
+                return ((KeyValueNode) getParent()).getParent().getBaseLevel().getClosestTopicByDBId(DBId, checkParentNode);
+            }
         }
 
         return null;

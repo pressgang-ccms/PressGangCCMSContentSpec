@@ -80,8 +80,9 @@ public class Version implements Comparable<Version> {
     }
 
     private int numLeadingZeros(final String num) {
+        // Ignore the last value to account for a '0' value
         int i;
-        for (i = 0; i < num.length() && num.charAt(i) == '0'; i++) {
+        for (i = 0; i < num.length() - 1 && num.charAt(i) == '0'; i++) {
         }
 
         return i;
@@ -154,7 +155,7 @@ public class Version implements Comparable<Version> {
         int i = 0;
 
         // Most efficient way to skip past equal version subparts
-        while (i < vals1.length && i < vals2.length && vals1[i].equals(vals2[i])) i++;
+        while (i < vals1.length && i < vals2.length && Integer.valueOf(vals1[i]).equals(Integer.valueOf(vals2[i]))) i++;
 
         try {
             // If we didn't reach the end,
@@ -164,19 +165,11 @@ public class Version implements Comparable<Version> {
             }
 
             if (i < vals1.length) {
-                // end of version.version, check if this.version is all 0's
-                boolean allZeros = true;
-                for (int j = i; allZeros & (j < vals1.length); j++)
-                    allZeros &= (Integer.parseInt(vals1[j]) == 0);
-                return allZeros ? 0 : -1;
+                return -1;
             }
 
             if (i < vals2.length) {
-                // end of this.version, check if version.version is all 0's
-                boolean allZeros = true;
-                for (int j = i; allZeros & (j < vals2.length); j++)
-                    allZeros &= (Integer.parseInt(vals2[j]) == 0);
-                return allZeros ? 0 : 1;
+                return 1;
             }
         } catch (NumberFormatException e) {
             // If a number can't be parsed then ignore it and assume it's in the right position

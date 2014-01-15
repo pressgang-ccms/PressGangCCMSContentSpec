@@ -14,6 +14,7 @@ public class TemplateConstants {
             "\n" +
             "# The commented fields below are optional\n" +
             "# DTD = Docbook 4.5\n" +
+            "# Copyright Year = \n" +
             "# Subtitle =\n" +
             "# Abstract=\n" +
             "# Edition =\n" +
@@ -43,6 +44,11 @@ public class TemplateConstants {
             "# JIRAComponent = \n" +
             "# JIRAVersion = \n" +
             "# JIRALabels = \n" +
+            "\n" +
+            "# Uncomment the lines below to customise jDocbook output\n" +
+            "# ArtifactId = \n" +
+            "# GroupId = \n" +
+            "# POM Version = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
             "# a custom Revision History, Author Group, Feedback, or Legal Notice.\n" +
@@ -233,6 +239,7 @@ public class TemplateConstants {
             "\n" +
             "# The commented fields below are optional\n" +
             "\n" +
+            "# Copyright Year = \n" +
             "# Edition = \n" +
             "# Brand = \n" +
             "# Type = \n" +
@@ -260,6 +267,11 @@ public class TemplateConstants {
             "# JIRAComponent = \n" +
             "# JIRAVersion = \n" +
             "# JIRALabels = \n" +
+            "\n" +
+            "# Uncomment the lines below to customise jDocbook output\n" +
+            "# ArtifactId = \n" +
+            "# GroupId = \n" +
+            "# POM Version = \n" +
             "\n" +
             "# Uncomment these lines and change the XXXX to a valid topic to set\n" +
             "# a custom Revision History, Author Group, Feedback, or Legal Notice.\n" +

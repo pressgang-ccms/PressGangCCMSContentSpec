@@ -65,6 +65,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<SpecTopic> authorGroup = null;
     private KeyValueNode<String> groupId = null;
     private KeyValueNode<String> artifactId = null;
+    private KeyValueNode<String> pomVersion = null;
     private KeyValueNode<String> jiraProject = null;
     private KeyValueNode<String> jiraComponent = null;
     private KeyValueNode<String> jiraVersion = null;
@@ -1654,6 +1655,34 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Get the Maven POM Version that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @return The Maven POM version for the content specification.
+     */
+    public String getPOMVersion() {
+        return pomVersion == null ? null : pomVersion.getValue().toString();
+    }
+
+    /**
+     * Set the Maven POM version that is used in the pom.xml file when building the jDocbook files.
+     *
+     * @param pomVersion The Maven POM version to be used when building.
+     */
+    public void setPOMVersion(final String pomVersion) {
+        if (pomVersion == null && this.pomVersion == null) {
+            return;
+        } else if (pomVersion == null) {
+            removeChild(this.pomVersion);
+            this.pomVersion = null;
+        } else if (this.pomVersion == null) {
+            this.pomVersion = new KeyValueNode<String>(CommonConstants.CS_MAVEN_POM_VERSION_TITLE, pomVersion);
+            appendChild(this.pomVersion, false);
+        } else {
+            this.pomVersion.setValue(pomVersion);
+        }
+    }
+
+    /**
      * Gets the list of additional files needed by the book.
      *
      * @return The list of additional Files.
@@ -1993,6 +2022,9 @@ public class ContentSpec extends Node {
         } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_GROUP_ID_TITLE) && value instanceof String) {
             groupId = (KeyValueNode<String>) node;
             setKeyValueNodeKey(groupId, CommonConstants.CS_MAVEN_GROUP_ID_TITLE);
+        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_POM_VERSION_TITLE) && value instanceof String) {
+            pomVersion = (KeyValueNode<String>) node;
+            setKeyValueNodeKey(pomVersion, CommonConstants.CS_MAVEN_POM_VERSION_TITLE);
         } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_LOGO_TITLE) && value instanceof String) {
             brandLogo = (KeyValueNode<String>) node;
             setKeyValueNodeKey(brandLogo, CommonConstants.CS_BRAND_LOGO_TITLE);

@@ -1,4 +1,4 @@
-package org.jboss.pressgang.ccms.docbook.sort;
+package org.jboss.pressgang.ccms.contentspec.sort;
 
 import java.util.Comparator;
 

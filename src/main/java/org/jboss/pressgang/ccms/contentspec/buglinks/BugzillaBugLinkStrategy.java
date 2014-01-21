@@ -19,6 +19,7 @@ import com.j2bugzilla.base.ProductComponent;
 import com.j2bugzilla.base.ProductVersion;
 import com.j2bugzilla.rpc.GetBugField;
 import com.j2bugzilla.rpc.GetProduct;
+import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
@@ -35,7 +36,7 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
     private BugzillaConnector connector;
     private boolean connected = false;
 
-    public BugzillaBugLinkStrategy(){
+    public BugzillaBugLinkStrategy() {
     }
 
     @Override
@@ -55,14 +56,9 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
 
     @Override
     public String generateUrl(final BugzillaBugLinkOptions bzOptions, final SpecTopic specTopic, String buildName,
-            Date buildDate) throws UnsupportedEncodingException {
+            final Date buildDate) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
-        String bugzillaProduct = null;
-        String bugzillaComponent = null;
-        String bugzillaVersion = null;
-        String bugzillaKeywords = null;
-        String bugzillaAssignedTo = null;
         final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
         final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
                 DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
@@ -78,13 +74,52 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
         }
         final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
 
+        return generateUrl(bzOptions, bugzillaBuildID.toString(), bugzillaDescription, encodedBugzillaEnvironment);
+    }
+
+    @Override
+    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final Level level, String buildName,
+            final Date buildDate) throws UnsupportedEncodingException {
+        final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, level.getTitle()), ENCODING);
+        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName)
+                .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
+                .append("\nTopic IDs:");
+
+        for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
+            final BaseTopicWrapper<?> topic = frontMatterTopic.getTopic();
+
+            bugzillaEnvironment.append("\n");
+            bugzillaEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
+            if (frontMatterTopic.getRevision() == null) {
+                bugzillaEnvironment.append(" [Latest]");
+            } else {
+                bugzillaEnvironment.append(" [Specified]");
+            }
+        }
+
+        final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
+
+        return generateUrl(bzOptions, null, bugzillaDescription, encodedBugzillaEnvironment);
+    }
+
+    protected String generateUrl(final BugzillaBugLinkOptions bzOptions, final String buildId, final String encodedDescription,
+            final String encodedEnvironment) throws UnsupportedEncodingException {
+        String bugzillaProduct = null;
+        String bugzillaComponent = null;
+        String bugzillaVersion = null;
+        String bugzillaKeywords = null;
+        String bugzillaAssignedTo = null;
+
         // build the bugzilla url options
         final StringBuilder bugzillaURLComponents = new StringBuilder("?");
-        bugzillaURLComponents.append("cf_environment=").append(encodedBugzillaEnvironment);
+        bugzillaURLComponents.append("cf_environment=").append(encodedEnvironment);
         bugzillaURLComponents.append("&amp;");
-        bugzillaURLComponents.append("cf_build_id=").append(URLEncoder.encode(bugzillaBuildID.toString(), ENCODING));
-        bugzillaURLComponents.append("&amp;");
-        bugzillaURLComponents.append("comment=").append(bugzillaDescription);
+        bugzillaURLComponents.append("comment=").append(encodedDescription);
+
+        if (!isNullOrEmpty(buildId)) {
+            bugzillaURLComponents.append("&amp;");
+            bugzillaURLComponents.append("cf_build_id=").append(URLEncoder.encode(buildId, ENCODING));
+        }
 
         if (bzOptions.isInjectAssignee() && bugzillaAssignedTo != null) {
             bugzillaURLComponents.append("&amp;");

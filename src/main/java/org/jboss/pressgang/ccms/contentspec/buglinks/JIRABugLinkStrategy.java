@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
@@ -52,7 +53,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     }
 
     @Override
-    public String generateUrl(JIRABugLinkOptions bugOptions, SpecTopic specTopic, String buildName,
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final SpecTopic specTopic, final String buildName,
             Date buildDate) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
@@ -66,13 +67,43 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
         }
         final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
 
+        return generateUrl(bugOptions, description, encodedJIRAEnvironment);
+    }
+
+    @Override
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final Level level, final String buildName,
+            Date buildDate) throws UnsupportedEncodingException {
+        final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, level.getTitle()), ENCODING);
+        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName)
+                .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
+                .append("\nTopic IDs:");
+
+        for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
+            final BaseTopicWrapper<?> topic = frontMatterTopic.getTopic();
+
+            jiraEnvironment.append("\n");
+            jiraEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
+            if (frontMatterTopic.getRevision() == null) {
+                jiraEnvironment.append(" [Latest]");
+            } else {
+                jiraEnvironment.append(" [Specified]");
+            }
+        }
+
+        final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
+
+        return generateUrl(bugOptions, description, encodedJIRAEnvironment);
+    }
+
+    protected String generateUrl(final JIRABugLinkOptions bugOptions, final String encodedDescription,
+            final String encodedJIRAEnvironment) throws UnsupportedEncodingException {
         // build the bugzilla url options
         final StringBuilder JIRAURLComponents = new StringBuilder("?issuetype=1");
 
         JIRAURLComponents.append("&amp;");
         JIRAURLComponents.append("environment=").append(encodedJIRAEnvironment);
         JIRAURLComponents.append("&amp;");
-        JIRAURLComponents.append("description=").append(description);
+        JIRAURLComponents.append("description=").append(encodedDescription);
 
         final JIRAProject project = getJIRAProject(client, bugOptions.getProject());
         JIRAURLComponents.append("&amp;");

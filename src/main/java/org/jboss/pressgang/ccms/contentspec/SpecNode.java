@@ -14,9 +14,10 @@ public abstract class SpecNode extends Node {
     protected List<String> tags = new ArrayList<String>();
     protected List<String> removeTags = new ArrayList<String>();
     protected List<String> sourceUrls = new ArrayList<String>();
-    protected String condition = null;
-    protected String description = null;
-    protected String assignedWriter = null;
+    protected String condition;
+    protected String description;
+    protected String assignedWriter;
+    protected Boolean bodyOnly;
 
     protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
@@ -27,54 +28,6 @@ public abstract class SpecNode extends Node {
     }
 
     protected SpecNode() {
-    }
-
-    /**
-     * Gets the line number that the node is on in a Content Specification.
-     *
-     * @return The Line Number for the node.
-     */
-    @Override
-    public int getLineNumber() {
-        return lineNumber;
-    }
-
-    /**
-     * Gets the text for the node's line.
-     *
-     * @return The line of text for the node.
-     */
-    @Override
-    public String getText() {
-        return text;
-    }
-
-    /**
-     * Sets the text for the node.
-     *
-     * @param text The nodes text.
-     */
-    @Override
-    protected void setText(final String text) {
-        this.text = text;
-    }
-
-    /**
-     * Gets the step number of the node in the Content Specification.
-     *
-     * @return The Step of the node.
-     */
-    @Override
-    public abstract Integer getStep();
-
-    /**
-     * Gets the column the node starts at.
-     *
-     * @return The column the node starts at.
-     */
-    @Override
-    public Integer getColumn() {
-        return parent == null ? 0 : (parent.getColumn() + 1);
     }
 
     /**

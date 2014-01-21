@@ -1,6 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class Level extends SpecNode {
     protected String title = null;
     protected String translatedTitle = null;
     protected String duplicateId = null;
-    protected SpecTopic innerTopic = null;
+    protected LinkedList<SpecTopic> frontMatterTopics = new LinkedList<SpecTopic>();
 
     /**
      * Constructor.
@@ -120,16 +121,16 @@ public class Level extends SpecNode {
         super.setParent(parent);
     }
 
-    public SpecTopic getInnerTopic() {
-        return innerTopic;
+    public List<SpecTopic> getFrontMatterTopics() {
+        return Collections.unmodifiableList(frontMatterTopics);
     }
 
-    public void setInnerTopic(SpecTopic innerTopic) {
-        this.innerTopic = innerTopic;
-        if (innerTopic != null) {
-            innerTopic.setTopicType(TopicType.LEVEL);
-            innerTopic.removeParent();
-            innerTopic.setParent(this);
+    public void addFrontMatterTopic(final SpecTopic frontMatterTopic) {
+        frontMatterTopics.add(frontMatterTopic);
+        if (frontMatterTopic != null) {
+            frontMatterTopic.setTopicType(TopicType.LEVEL);
+            frontMatterTopic.removeParent();
+            frontMatterTopic.setParent(this);
         }
     }
 
@@ -141,11 +142,9 @@ public class Level extends SpecNode {
      * @return A List of Content Specification Topics that exist within the level.
      */
     public List<SpecTopic> getSpecTopics() {
-        final List<SpecTopic> retValue = new ArrayList<SpecTopic>(topics);
-        if (innerTopic != null) {
-            retValue.add(innerTopic);
-        }
-
+        final List<SpecTopic> retValue = new ArrayList<SpecTopic>();
+        retValue.addAll(frontMatterTopics);
+        retValue.addAll(topics);
         return retValue;
     }
 
@@ -378,20 +377,6 @@ public class Level extends SpecNode {
         return nodes.size() + numChildrenNodes;
     }
 
-    public SpecNode getFirstSpecNode() {
-        if (nodes == null) {
-            return null;
-        }
-
-        for (final Node node : nodes) {
-            if (node instanceof SpecNode) {
-                return (SpecNode) node;
-            }
-        }
-
-        return null;
-    }
-
     /**
      * Checks to see if this level or any of its children contain SpecTopics.
      *
@@ -470,19 +455,6 @@ public class Level extends SpecNode {
         if (type != LevelType.BASE) {
             output.append(type.getTitle()).append(": ");
             output.append(ContentSpecUtilities.escapeTitle(title));
-            if (innerTopic != null) {
-                output.append(" [").append(innerTopic.getIdAndOptionsString()).append("]");
-                if (!innerTopic.getRelationships().isEmpty()) {
-                    final int indentationSize = parent != null ? getColumn() : 0;
-                    final StringBuilder spacer = new StringBuilder();
-                    for (int i = 1; i < indentationSize; i++) {
-                        spacer.append(SPACER);
-                    }
-                    spacer.append(SPACER);
-
-                    output.append(innerTopic.getRelationshipText(spacer.toString()));
-                }
-            }
             if (targetId != null) {
                 output.append(" [").append(targetId).append("]");
             }
@@ -494,8 +466,30 @@ public class Level extends SpecNode {
         if (!options.equals("")) {
             output.append(" [").append(options).append("]");
         }
+
+        // Add the front matter text
+        if (!frontMatterTopics.isEmpty()) {
+            output.append("\n");
+            output.append(getFrontMatterTopicText());
+        }
+
         setText(output.toString());
         return text;
+    }
+
+    protected String getFrontMatterTopicText() {
+        if (!frontMatterTopics.isEmpty()) {
+            final String spacer = getSpacer() + SPACER;
+            final StringBuilder output = new StringBuilder(spacer);
+            output.append("Front Matter:\n");
+            for (final SpecTopic frontMatterTopic : frontMatterTopics) {
+                output.append(spacer).append(SPACER);
+                output.append(frontMatterTopic.getText());
+            }
+            return output.toString();
+        } else {
+            return "";
+        }
     }
 
     /**
@@ -507,11 +501,9 @@ public class Level extends SpecNode {
     public String toString() {
         final StringBuilder output = new StringBuilder();
         if (type != LevelType.BASE) {
-            final int indentationSize = parent != null ? getColumn() : 0;
-            for (int i = 1; i < indentationSize; i++) {
-                output.append(SPACER);
-            }
-            output.append(getText() + "\n");
+            output.append(getSpacer());
+            output.append(getText());
+            output.append("\n");
         }
 
         for (final Node node : nodes) {

@@ -687,14 +687,8 @@ public class SpecTopic extends SpecNode {
             output.append(" [" + targetId + "]");
         }
 
-        final int indentationSize = parent != null ? getColumn() : 0;
-        final StringBuilder spacer = new StringBuilder();
-        for (int i = 1; i < indentationSize; i++) {
-            spacer.append(SPACER);
-        }
-        spacer.append(SPACER);
-
-        output.append(getRelationshipText(spacer.toString()));
+        final String spacer = getSpacer() + SPACER;
+        output.append(getRelationshipText(spacer));
 
         setText(output.toString());
         return text;
@@ -821,12 +815,7 @@ public class SpecTopic extends SpecNode {
 
     @Override
     public String toString() {
-        final StringBuilder spacer = new StringBuilder();
-        final int indentationSize = parent != null ? getColumn() : 0;
-        for (int i = 1; i < indentationSize; i++) {
-            spacer.append(SPACER);
-        }
-        return spacer + getText() + "\n";
+        return getSpacer() + getText() + "\n";
     }
 
     @Override

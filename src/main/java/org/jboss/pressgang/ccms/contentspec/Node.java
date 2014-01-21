@@ -139,4 +139,18 @@ public abstract class Node {
     public String getTranslationUniqueId() {
         return translationUniqueId;
     }
+
+    /**
+     * Gets the spacer string to append before nodes in their toString methods.
+     *
+     * @return A string containing the amount of space to use for the node.
+     */
+    protected String getSpacer() {
+        final StringBuilder output = new StringBuilder();
+        final int indentationSize = parent != null ? getColumn() : 0;
+        for (int i = 1; i < indentationSize; i++) {
+            output.append(SPACER);
+        }
+        return output.toString();
+    }
 }

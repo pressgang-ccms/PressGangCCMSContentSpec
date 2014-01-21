@@ -315,6 +315,7 @@ public class CSTransformer {
         if (node.getChildren() != null && node.getChildren().getItems() != null) {
             final List<CSNodeWrapper> childNodes = node.getChildren().getItems();
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
+            final HashMap<CSNodeWrapper, SpecTopic> frontMatterTopics = new HashMap<CSNodeWrapper, SpecTopic>();
             for (final CSNodeWrapper childNode : childNodes) {
                 if (childNode.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
                     final SpecTopic topic = transformSpecTopic(childNode, nodes, targetTopics, relationshipFromNodes);
@@ -323,8 +324,8 @@ public class CSTransformer {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC) {
-                    final SpecTopic innerTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics, relationshipFromNodes);
-                    level.setInnerTopic(innerTopic);
+                    final SpecTopic frontMatterTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics, relationshipFromNodes);
+                    frontMatterTopics.put(childNode, frontMatterTopic);
                 } else {
                     final Level childLevel = transformLevel(childNode, nodes, targetTopics, relationshipFromNodes, processes);
                     levelNodes.put(childNode, childLevel);
@@ -333,6 +334,14 @@ public class CSTransformer {
 
             // Sort the level nodes so that they are in the right order based on next/prev values.
             final LinkedHashMap<CSNodeWrapper, Node> sortedMap = CSNodeSorter.sortMap(levelNodes);
+            final LinkedHashMap<CSNodeWrapper, SpecTopic> sortedFrontMatterTopicMap = CSNodeSorter.sortMap(frontMatterTopics);
+
+            // Add the front matter topics to the level now that they are in the right order.
+            final Iterator<Map.Entry<CSNodeWrapper, SpecTopic>> frontMatterIter = sortedFrontMatterTopicMap.entrySet().iterator();
+            while (frontMatterIter.hasNext()) {
+                final Map.Entry<CSNodeWrapper, SpecTopic> entry = frontMatterIter.next();
+                level.addFrontMatterTopic(entry.getValue());
+            }
 
             // Add the child nodes to the level now that they are in the right order.
             final Iterator<Map.Entry<CSNodeWrapper, Node>> iter = sortedMap.entrySet().iterator();

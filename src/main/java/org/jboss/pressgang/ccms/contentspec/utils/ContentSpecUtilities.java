@@ -205,9 +205,12 @@ public class ContentSpecUtilities {
         }
 
         // Check the inner topic if it exists
-        if (level.getInnerTopic() != null && level.getInnerTopic().getUniqueId() != null && level.getInnerTopic().getUniqueId().equals(
-                csNodeId + "")) {
-            return level.getInnerTopic();
+        if (!level.getFrontMatterTopics().isEmpty()) {
+            for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
+                if (frontMatterTopic.getUniqueId() != null && frontMatterTopic.getUniqueId().equals(csNodeId + "")) {
+                    return frontMatterTopic;
+                }
+            }
         }
 
         for (final Node node : level.getChildNodes()) {

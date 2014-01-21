@@ -87,8 +87,8 @@ public class Process extends Level {
     @Override
     public LinkedList<SpecTopic> getSpecTopics() {
         final LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
-        if (getInnerTopic() != null) {
-            topicList.add(getInnerTopic());
+        if (!getFrontMatterTopics().isEmpty()) {
+            topicList.addAll(getFrontMatterTopics());
         }
         for (final Entry<String, SpecTopic> specTopicEntry : topics.entrySet()) {
             topicList.add(specTopicEntry.getValue());
@@ -204,11 +204,9 @@ public class Process extends Level {
     @Override
     public String toString() {
         final StringBuilder output = new StringBuilder();
-        final int indentationSize = parent != null ? getColumn() : 0;
-        for (int i = 1; i < indentationSize; i++) {
-            output.append(SPACER);
-        }
-        output.append(getText() + "\n");
+        output.append(getSpacer());
+        output.append(getText());
+        output.append("\n");
 
         for (final Node node : nodes) {
             output.append(node.toString());

@@ -85,12 +85,12 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
                 .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
                 .append("\nTopic IDs:");
 
-        for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
-            final BaseTopicWrapper<?> topic = frontMatterTopic.getTopic();
+        for (final SpecTopic initialContentTopic : level.getInitialContentTopics()) {
+            final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             bugzillaEnvironment.append("\n");
             bugzillaEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
-            if (frontMatterTopic.getRevision() == null) {
+            if (initialContentTopic.getRevision() == null) {
                 bugzillaEnvironment.append(" [Latest]");
             } else {
                 bugzillaEnvironment.append(" [Specified]");

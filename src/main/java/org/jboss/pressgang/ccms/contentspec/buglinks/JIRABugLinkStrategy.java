@@ -78,12 +78,12 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
                 .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
                 .append("\nTopic IDs:");
 
-        for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
-            final BaseTopicWrapper<?> topic = frontMatterTopic.getTopic();
+        for (final SpecTopic initialContentTopic : level.getInitialContentTopics()) {
+            final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             jiraEnvironment.append("\n");
             jiraEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
-            if (frontMatterTopic.getRevision() == null) {
+            if (initialContentTopic.getRevision() == null) {
                 jiraEnvironment.append(" [Latest]");
             } else {
                 jiraEnvironment.append(" [Specified]");

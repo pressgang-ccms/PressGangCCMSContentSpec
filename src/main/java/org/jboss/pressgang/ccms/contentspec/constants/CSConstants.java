@@ -37,6 +37,7 @@ public class CSConstants {
     public static final String PROCESS = "Process";
     public static final String PART = "Part";
     public static final String PREFACE = "Preface";
+    public static final String LEVEL_INITIAL_CONTENT = "Initial Content";
 
     public static final String BOOK_TYPE_BOOK = "Book";
     public static final String BOOK_TYPE_ARTICLE = "Article";

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
@@ -37,7 +38,7 @@ public class Level extends SpecNode {
     protected String title = null;
     protected String translatedTitle = null;
     protected String duplicateId = null;
-    protected LinkedList<SpecTopic> frontMatterTopics = new LinkedList<SpecTopic>();
+    protected LinkedList<SpecTopic> initialContentTopics = new LinkedList<SpecTopic>();
 
     /**
      * Constructor.
@@ -121,12 +122,12 @@ public class Level extends SpecNode {
         super.setParent(parent);
     }
 
-    public List<SpecTopic> getFrontMatterTopics() {
-        return Collections.unmodifiableList(frontMatterTopics);
+    public List<SpecTopic> getInitialContentTopics() {
+        return Collections.unmodifiableList(initialContentTopics);
     }
 
     public void addFrontMatterTopic(final SpecTopic frontMatterTopic) {
-        frontMatterTopics.add(frontMatterTopic);
+        initialContentTopics.add(frontMatterTopic);
         if (frontMatterTopic != null) {
             frontMatterTopic.setTopicType(TopicType.LEVEL);
             frontMatterTopic.removeParent();
@@ -143,7 +144,7 @@ public class Level extends SpecNode {
      */
     public List<SpecTopic> getSpecTopics() {
         final List<SpecTopic> retValue = new ArrayList<SpecTopic>();
-        retValue.addAll(frontMatterTopics);
+        retValue.addAll(initialContentTopics);
         retValue.addAll(topics);
         return retValue;
     }
@@ -360,8 +361,8 @@ public class Level extends SpecNode {
      *
      * @return The ordered list of child nodes for the level.
      */
-    public LinkedList<Node> getChildNodes() {
-        return nodes;
+    public List<Node> getChildNodes() {
+        return Collections.unmodifiableList(nodes);
     }
 
     /**
@@ -468,23 +469,23 @@ public class Level extends SpecNode {
         }
 
         // Add the front matter text
-        if (!frontMatterTopics.isEmpty()) {
+        if (!initialContentTopics.isEmpty()) {
             output.append("\n");
-            output.append(getFrontMatterTopicText());
+            output.append(getInitialContentTopicText());
         }
 
         setText(output.toString());
         return text;
     }
 
-    protected String getFrontMatterTopicText() {
-        if (!frontMatterTopics.isEmpty()) {
+    protected String getInitialContentTopicText() {
+        if (!initialContentTopics.isEmpty()) {
             final String spacer = getSpacer() + SPACER;
             final StringBuilder output = new StringBuilder(spacer);
-            output.append("Front Matter:\n");
-            for (final SpecTopic frontMatterTopic : frontMatterTopics) {
+            output.append(CSConstants.LEVEL_INITIAL_CONTENT).append(":\n");
+            for (final SpecTopic initialContentTopic : initialContentTopics) {
                 output.append(spacer).append(SPACER);
-                output.append(frontMatterTopic.getText());
+                output.append(initialContentTopic.getText());
             }
             return output.toString();
         } else {

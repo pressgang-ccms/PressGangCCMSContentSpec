@@ -205,8 +205,8 @@ public class ContentSpecUtilities {
         }
 
         // Check the inner topic if it exists
-        if (!level.getFrontMatterTopics().isEmpty()) {
-            for (final SpecTopic frontMatterTopic : level.getFrontMatterTopics()) {
+        if (!level.getInitialContentTopics().isEmpty()) {
+            for (final SpecTopic frontMatterTopic : level.getInitialContentTopics()) {
                 if (frontMatterTopic.getUniqueId() != null && frontMatterTopic.getUniqueId().equals(csNodeId + "")) {
                     return frontMatterTopic;
                 }

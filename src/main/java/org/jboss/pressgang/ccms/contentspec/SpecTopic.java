@@ -18,6 +18,7 @@ import org.jboss.pressgang.ccms.contentspec.entities.ProcessRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TargetRelationship;
 import org.jboss.pressgang.ccms.contentspec.entities.TopicRelationship;
+import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
@@ -659,11 +660,15 @@ public class SpecTopic extends SpecNode {
                 if (node instanceof Level) {
                     previousNode = (previousNode == null ? 0 : previousNode) + ((Level) node).getTotalNumberOfChildren();
                 }
-                // The node is the first item so use the parent levels step
             } else if (nodePos == -1) {
-                previousNode = parent.getStep() - 1;
+                // The node is a front matter topic, so use the parents step
+                if (parent.getLevelType() == LevelType.BASE) {
+                    previousNode = -1;
+                } else {
+                    previousNode = parent.getStep() - 1;
+                }
             } else {
-                previousNode = getParent().getStep();
+                previousNode = parent.getStep();
             }
             // Make sure the previous nodes step isn't 0
             previousNode = previousNode == null ? 0 : previousNode;

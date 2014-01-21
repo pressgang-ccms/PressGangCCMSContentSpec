@@ -1028,7 +1028,7 @@ public class ContentSpec extends Node {
      *
      * @return The ordered list of nodes for the Content Specification.
      */
-    public LinkedList<Node> getChildNodes() {
+    public List<Node> getChildNodes() {
         return level.getChildNodes();
     }
 

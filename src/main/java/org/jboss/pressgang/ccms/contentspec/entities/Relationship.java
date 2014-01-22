@@ -7,8 +7,8 @@ import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
  * A class to hold a basic relationship until it can be processed at a later stage.
  */
 public class Relationship {
-    private final String mainRelationshipTopicId;
-    private final String secondaryRelationshipTopicId;
+    private final String primaryRelationshipId;
+    private final String secondaryRelationshipId;
     private final String relationshipTitle;
     private final RelationshipType type;
 
@@ -16,19 +16,19 @@ public class Relationship {
         this(mainId, secondaryId, type, null);
     }
 
-    public Relationship(final String mainId, final String secondaryId, final RelationshipType type, final String title) {
-        mainRelationshipTopicId = mainId;
-        secondaryRelationshipTopicId = secondaryId;
+    public Relationship(final String primaryId, final String secondaryId, final RelationshipType type, final String title) {
+        primaryRelationshipId = primaryId;
+        secondaryRelationshipId = secondaryId;
         this.type = type;
         relationshipTitle = title;
     }
 
-    public String getSecondaryRelationshipTopicId() {
-        return secondaryRelationshipTopicId;
+    public String getSecondaryRelationshipId() {
+        return secondaryRelationshipId;
     }
 
-    public String getMainRelationshipTopicId() {
-        return mainRelationshipTopicId;
+    public String getPrimaryRelationshipId() {
+        return primaryRelationshipId;
     }
 
     public RelationshipType getType() {

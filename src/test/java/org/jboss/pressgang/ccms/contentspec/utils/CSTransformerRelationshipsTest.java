@@ -233,11 +233,11 @@ public class CSTransformerRelationshipsTest extends CSTransformerTest {
 
         // Then the nodes are sorted and added as expected
         assertThat(specTopicFromNode.getRelationships().size() == 3, is(true));
-        assertThat(specTopicFromNode.getRelationships().get(0).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId3),
+        assertThat(specTopicFromNode.getRelationships().get(0).getSecondaryRelationshipId().equals("T00" + relatedNodeWrapperId3),
                 is(true));
-        assertThat(specTopicFromNode.getRelationships().get(1).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId),
+        assertThat(specTopicFromNode.getRelationships().get(1).getSecondaryRelationshipId().equals("T00" + relatedNodeWrapperId),
                 is(true));
-        assertThat(specTopicFromNode.getRelationships().get(2).getSecondaryRelationshipTopicId().equals("T00" + relatedNodeWrapperId2),
+        assertThat(specTopicFromNode.getRelationships().get(2).getSecondaryRelationshipId().equals("T00" + relatedNodeWrapperId2),
                 is(true));
     }
 

@@ -1120,13 +1120,27 @@ public class ContentSpec extends Node {
         return specTopics;
     }
 
-    public Map<SpecTopic, List<Relationship>> getRelationships() {
-        final List<SpecTopic> specTopics = getSpecTopics();
-        final Map<SpecTopic, List<Relationship>> relationships = new HashMap<SpecTopic, List<Relationship>>();
-        for (final SpecTopic specTopic : specTopics) {
-            relationships.put(specTopic, specTopic.getRelationships());
-        }
+    public Map<SpecNodeWithRelationships, List<Relationship>> getRelationships() {
+        final Map<SpecNodeWithRelationships, List<Relationship>> relationships = new HashMap<SpecNodeWithRelationships, List<Relationship>>();
+        getRelationships(getBaseLevel(), relationships);
         return relationships;
+    }
+
+    protected void getRelationships(final Level level, final Map<SpecNodeWithRelationships, List<Relationship>> relationships) {
+        if (!level.getRelationships().isEmpty()) {
+            relationships.put(level, level.getRelationships());
+        }
+
+        for (final Node node : level.getChildNodes()) {
+            if (node instanceof SpecTopic) {
+                final SpecTopic specTopic = (SpecTopic) node;
+                if (!specTopic.getRelationships().isEmpty()) {
+                    relationships.put(specTopic, specTopic.getRelationships());
+                }
+            } else if (node instanceof Level) {
+                getRelationships((Level) node, relationships);
+            }
+        }
     }
 
     public List<Node> getNodes() {

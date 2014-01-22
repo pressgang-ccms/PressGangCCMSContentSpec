@@ -14,10 +14,6 @@ public class CSConstants {
     // Level Type Constants
     public static final int LEVEL_BASE = -1;
 
-    // Other
-    public static final String CSP_PRE_PROCESSED_STRING = "Pre Processed";
-    public static final String CSP_POST_PROCESSED_STRING = "Post Processed";
-
     // Output format constants
     public static final String CSP_OUTPUT_FORMAT = "Narrative";
 
@@ -37,7 +33,7 @@ public class CSConstants {
     public static final String PROCESS = "Process";
     public static final String PART = "Part";
     public static final String PREFACE = "Preface";
-    public static final String LEVEL_INITIAL_CONTENT = "Initial Content";
+    public static final String LEVEL_INITIAL_CONTENT = "Initial Text";
 
     public static final String BOOK_TYPE_BOOK = "Book";
     public static final String BOOK_TYPE_ARTICLE = "Article";

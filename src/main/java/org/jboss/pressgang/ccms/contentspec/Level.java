@@ -17,7 +17,7 @@ import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
  *
  * @author lnewson
  */
-public class Level extends SpecNode {
+public class Level extends SpecNodeWithRelationships {
     /**
      * A list of the topics that are stored directly within the level.
      */
@@ -480,10 +480,20 @@ public class Level extends SpecNode {
 
     protected String getInitialContentTopicText() {
         if (!initialContentTopics.isEmpty()) {
-            final String spacer = getSpacer() + SPACER;
+            final String spacer;
+            if (getLevelType() != LevelType.BASE) {
+                spacer = getSpacer() + SPACER;
+            } else {
+                spacer = "";
+            }
             final StringBuilder output = new StringBuilder(spacer);
-            output.append(CSConstants.LEVEL_INITIAL_CONTENT).append(":\n");
+            output.append(CSConstants.LEVEL_INITIAL_CONTENT).append(":");
+
+            // Append any relationship text
+            output.append(getRelationshipText(spacer + SPACER));
+
             for (final SpecTopic initialContentTopic : initialContentTopics) {
+                output.append("\n");
                 output.append(spacer).append(SPACER);
                 output.append(initialContentTopic.getText());
             }
@@ -504,6 +514,9 @@ public class Level extends SpecNode {
         if (type != LevelType.BASE) {
             output.append(getSpacer());
             output.append(getText());
+            output.append("\n");
+        } else if (!initialContentTopics.isEmpty()) {
+            output.append(getInitialContentTopicText());
             output.append("\n");
         }
 

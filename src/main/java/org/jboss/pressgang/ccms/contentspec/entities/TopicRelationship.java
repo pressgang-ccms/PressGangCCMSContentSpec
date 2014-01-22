@@ -1,5 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.entities;
 
+import org.jboss.pressgang.ccms.contentspec.SpecNodeWithRelationships;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
 
@@ -8,18 +9,19 @@ import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
  * A class to specify a relationship between two topics.
  */
 public class TopicRelationship extends Relationship {
-    private final SpecTopic mainRelationship;
+    private final SpecNodeWithRelationships primaryRelationship;
     private final SpecTopic secondaryRelationship;
 
-    public TopicRelationship(final SpecTopic mainTopic, final SpecTopic secondaryTopic, final RelationshipType type) {
-        super(mainTopic.getId(), secondaryTopic.getId(), type);
-        mainRelationship = mainTopic;
+    public TopicRelationship(final SpecNodeWithRelationships primaryNode, final SpecTopic secondaryTopic, final RelationshipType type) {
+        super(primaryNode.getUniqueId(), secondaryTopic.getId(), type);
+        primaryRelationship = primaryNode;
         secondaryRelationship = secondaryTopic;
     }
 
-    public TopicRelationship(final SpecTopic mainTopic, final SpecTopic secondaryTopic, final RelationshipType type, final String title) {
-        super(mainTopic.getId(), secondaryTopic.getId(), type, title);
-        mainRelationship = mainTopic;
+    public TopicRelationship(final SpecNodeWithRelationships primaryNode, final SpecTopic secondaryTopic, final RelationshipType type,
+            final String title) {
+        super(primaryNode.getUniqueId(), secondaryTopic.getId(), type, title);
+        primaryRelationship = primaryNode;
         secondaryRelationship = secondaryTopic;
     }
 
@@ -27,7 +29,7 @@ public class TopicRelationship extends Relationship {
         return secondaryRelationship;
     }
 
-    public SpecTopic getMainRelationship() {
-        return mainRelationship;
+    public SpecNodeWithRelationships getPrimaryRelationship() {
+        return primaryRelationship;
     }
 }

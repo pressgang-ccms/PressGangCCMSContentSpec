@@ -24,6 +24,7 @@ import org.jboss.pressgang.ccms.contentspec.Part;
 import org.jboss.pressgang.ccms.contentspec.Preface;
 import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.Section;
+import org.jboss.pressgang.ccms.contentspec.SpecNodeWithRelationships;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
@@ -280,7 +281,6 @@ public class CSTransformer {
     /**
      * Transform a Level CSNode entity object into a Level Object that can be added to a Content Specification.
      *
-     *
      * @param node                  The CSNode entity object to be transformed.
      * @param nodes                 A mapping of node entity ids to their transformed counterparts.
      * @param targetTopics          A mapping of target ids to SpecTopics.
@@ -311,6 +311,11 @@ public class CSTransformer {
         level.setTargetId(node.getTargetId());
         level.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
+        if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
+                .isEmpty()) {
+            relationshipFromNodes.add(node);
+        }
+
         // Add all the levels/topics
         if (node.getChildren() != null && node.getChildren().getItems() != null) {
             final List<CSNodeWrapper> childNodes = node.getChildren().getItems();
@@ -324,7 +329,8 @@ public class CSTransformer {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC) {
-                    final SpecTopic frontMatterTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics, relationshipFromNodes);
+                    final SpecTopic frontMatterTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics,
+                            relationshipFromNodes);
                     frontMatterTopics.put(childNode, frontMatterTopic);
                 } else {
                     final Level childLevel = transformLevel(childNode, nodes, targetTopics, relationshipFromNodes, processes);
@@ -448,8 +454,18 @@ public class CSTransformer {
             final DataProviderFactory providerFactory) {
         // Apply the user defined relationships stored in the database
         for (final CSNodeWrapper node : relationshipFromNodes) {
-            final SpecTopic fromNode = (SpecTopic) nodes.get(node.getId());
-            boolean frontMatterTopic = node.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC;
+            boolean initialContentTopic = node.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC;
+            boolean level = EntityUtilities.isNodeALevel(node);
+
+            // In 1.3 or lower initial content relationships were stored on the topic, however in 1.4+ they are now on the level,
+            // so do the migration here
+            final SpecNodeWithRelationships fromNode;
+            if (initialContentTopic) {
+                final CSNodeWrapper parentNode = node.getParent();
+                fromNode = (SpecNodeWithRelationships) nodes.get(parentNode.getId());
+            } else {
+                fromNode = (SpecNodeWithRelationships) nodes.get(node.getId());
+            }
 
             // Check if we have any relationships to process
             if (node.getRelatedToNodes() == null || node.getRelatedToNodes().isEmpty()) continue;
@@ -474,7 +490,7 @@ public class CSTransformer {
 
                     // Add the relationship
                     fromNode.addRelationshipToTarget(toLevel, RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
-                            frontMatterTopic ? null : toLevel.getTitle());
+                            initialContentTopic || level ? null : toLevel.getTitle());
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
@@ -485,10 +501,12 @@ public class CSTransformer {
                     // Add the relationship
                     if (relatedToNode.getRelationshipMode().equals(CommonConstants.CS_RELATIONSHIP_MODE_TARGET)) {
                         fromNode.addRelationshipToTarget(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), frontMatterTopic ? null : title);
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
+                                initialContentTopic || level ? null : title);
                     } else {
                         fromNode.addRelationshipToTopic(toSpecTopic,
-                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()), frontMatterTopic ? null : title);
+                                RelationshipType.getRelationshipType(relatedToNode.getRelationshipType()),
+                                initialContentTopic || level ? null : title);
                     }
                 }
             }

@@ -13,7 +13,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 public enum LevelType {
     BASE(CSConstants.LEVEL_BASE), CHAPTER(CommonConstants.CS_NODE_CHAPTER), APPENDIX(CommonConstants.CS_NODE_APPENDIX),
     PROCESS(CommonConstants.CS_NODE_PROCESS), SECTION(CommonConstants.CS_NODE_SECTION), PART(CommonConstants.CS_NODE_PART),
-    PREFACE(CommonConstants.CS_NODE_PREFACE);
+    PREFACE(CommonConstants.CS_NODE_PREFACE), INITIAL_CONTENT(CommonConstants.CS_NODE_INITIAL_CONTENT);
 
     private final int type;
 
@@ -49,6 +49,8 @@ public enum LevelType {
                 return CSConstants.PART;
             case CommonConstants.CS_NODE_PREFACE:
                 return CSConstants.PREFACE;
+            case CommonConstants.CS_NODE_INITIAL_CONTENT:
+                return CSConstants.LEVEL_INITIAL_CONTENT;
             case CSConstants.LEVEL_BASE:
                 return "Content Specification";
             default:
@@ -71,6 +73,8 @@ public enum LevelType {
             return LevelType.PART;
         } else if (name.equalsIgnoreCase(CSConstants.PREFACE)){
             return LevelType.PREFACE;
+        } else if (name.equalsIgnoreCase(CSConstants.LEVEL_INITIAL_CONTENT)){
+            return LevelType.INITIAL_CONTENT;
         }
 
         return null;

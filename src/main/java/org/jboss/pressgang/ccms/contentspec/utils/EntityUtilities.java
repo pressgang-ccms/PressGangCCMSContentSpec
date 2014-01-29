@@ -361,7 +361,7 @@ public class EntityUtilities {
     public static boolean isNodeATopic(final BaseCSNodeWrapper<?> node) {
         switch (node.getNodeType()) {
             case CommonConstants.CS_NODE_TOPIC:
-            case CommonConstants.CS_NODE_INNER_TOPIC:
+            case CommonConstants.CS_NODE_INITIAL_CONTENT_TOPIC:
             case CommonConstants.CS_NODE_META_DATA_TOPIC:
                 return true;
             default:
@@ -383,6 +383,7 @@ public class EntityUtilities {
             case CommonConstants.CS_NODE_PREFACE:
             case CommonConstants.CS_NODE_PROCESS:
             case CommonConstants.CS_NODE_SECTION:
+            case CommonConstants.CS_NODE_INITIAL_CONTENT:
                 return true;
             default:
                 return false;

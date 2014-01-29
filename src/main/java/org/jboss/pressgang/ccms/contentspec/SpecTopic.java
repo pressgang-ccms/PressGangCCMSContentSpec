@@ -618,7 +618,7 @@ public class SpecTopic extends SpecNodeWithRelationships {
     @Override
     public String getUniqueLinkId(Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
         // If this is an inner topic then get the parents id
-        if (getTopicType() == TopicType.LEVEL) {
+        if (getTopicType() == TopicType.INITIAL_CONTENT) {
             return ((Level) getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls);
         } else {
             final String topicXRefId;

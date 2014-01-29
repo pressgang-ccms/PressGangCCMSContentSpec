@@ -3,7 +3,7 @@ package org.jboss.pressgang.ccms.contentspec.buglinks;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
-import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
@@ -19,7 +19,7 @@ public abstract class BaseBugLinkStrategy<T extends BugLinkOptions> {
     public abstract String generateUrl(T bugOptions, SpecTopic specTopic, String buildName,
             Date buildDate) throws UnsupportedEncodingException;
 
-    public abstract String generateUrl(T bugOptions, Level level, String buildName,
+    public abstract String generateUrl(T bugOptions, InitialContent initialContent, String buildName,
             Date buildDate) throws UnsupportedEncodingException;
 
     /**

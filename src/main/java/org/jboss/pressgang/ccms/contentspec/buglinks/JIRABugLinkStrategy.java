@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
@@ -71,14 +71,14 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     }
 
     @Override
-    public String generateUrl(final JIRABugLinkOptions bugOptions, final Level level, final String buildName,
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final InitialContent initialContent, final String buildName,
             Date buildDate) throws UnsupportedEncodingException {
-        final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, level.getTitle()), ENCODING);
+        final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, initialContent.getParent().getTitle()), ENCODING);
         final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName)
                 .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
                 .append("\nTopic IDs:");
 
-        for (final SpecTopic initialContentTopic : level.getInitialContentTopics()) {
+        for (final SpecTopic initialContentTopic : initialContent.getSpecTopics()) {
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             jiraEnvironment.append("\n");

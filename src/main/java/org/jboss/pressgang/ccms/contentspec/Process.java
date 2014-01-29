@@ -87,9 +87,6 @@ public class Process extends Level {
     @Override
     public LinkedList<SpecTopic> getSpecTopics() {
         final LinkedList<SpecTopic> topicList = new LinkedList<SpecTopic>();
-        if (!getInitialContentTopics().isEmpty()) {
-            topicList.addAll(getInitialContentTopics());
-        }
         for (final Entry<String, SpecTopic> specTopicEntry : topics.entrySet()) {
             topicList.add(specTopicEntry.getValue());
         }

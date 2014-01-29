@@ -204,15 +204,6 @@ public class ContentSpecUtilities {
             return level;
         }
 
-        // Check the inner topic if it exists
-        if (!level.getInitialContentTopics().isEmpty()) {
-            for (final SpecTopic frontMatterTopic : level.getInitialContentTopics()) {
-                if (frontMatterTopic.getUniqueId() != null && frontMatterTopic.getUniqueId().equals(csNodeId + "")) {
-                    return frontMatterTopic;
-                }
-            }
-        }
-
         for (final Node node : level.getChildNodes()) {
             // Check the children of the node if it is a level
             if (node instanceof Level) {

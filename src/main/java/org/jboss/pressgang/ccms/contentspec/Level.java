@@ -1,13 +1,13 @@
 package org.jboss.pressgang.ccms.contentspec;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
-import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 
@@ -38,7 +38,6 @@ public class Level extends SpecNodeWithRelationships {
     protected String title = null;
     protected String translatedTitle = null;
     protected String duplicateId = null;
-    protected LinkedList<SpecTopic> initialContentTopics = new LinkedList<SpecTopic>();
 
     /**
      * Constructor.
@@ -122,19 +121,6 @@ public class Level extends SpecNodeWithRelationships {
         super.setParent(parent);
     }
 
-    public List<SpecTopic> getInitialContentTopics() {
-        return Collections.unmodifiableList(initialContentTopics);
-    }
-
-    public void addFrontMatterTopic(final SpecTopic frontMatterTopic) {
-        initialContentTopics.add(frontMatterTopic);
-        if (frontMatterTopic != null) {
-            frontMatterTopic.setTopicType(TopicType.LEVEL);
-            frontMatterTopic.removeParent();
-            frontMatterTopic.setParent(this);
-        }
-    }
-
     /**
      * Gets a List of all the Content Specification Topics for the level.
      * <p/>
@@ -144,7 +130,6 @@ public class Level extends SpecNodeWithRelationships {
      */
     public List<SpecTopic> getSpecTopics() {
         final List<SpecTopic> retValue = new ArrayList<SpecTopic>();
-        retValue.addAll(initialContentTopics);
         retValue.addAll(topics);
         return retValue;
     }
@@ -194,6 +179,7 @@ public class Level extends SpecNodeWithRelationships {
      */
     public void appendChild(final Node child) {
         if (child instanceof Level) {
+            // Append the level
             levels.add((Level) child);
             nodes.add(child);
             if (child.getParent() != null) {
@@ -254,7 +240,7 @@ public class Level extends SpecNodeWithRelationships {
      * @param oldNode The node that the new node should be inserted in front of.
      * @return True if the node was inserted correctly otherwise false.
      */
-    public boolean insertBefore(final SpecNode newNode, final SpecNode oldNode) {
+    public boolean insertBefore(final Node newNode, final Node oldNode) {
         if (oldNode == null || newNode == null) {
             return false;
         }
@@ -282,6 +268,16 @@ public class Level extends SpecNodeWithRelationships {
         } else {
             return false;
         }
+    }
+
+    public SpecNode getFirstSpecNode() {
+        for (final Node node : nodes) {
+            if (node instanceof SpecNode) {
+                return (SpecNode) node;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -454,13 +450,18 @@ public class Level extends SpecNodeWithRelationships {
         final String title = (translatedTitle == null ? (this.title == null ? "" : this.title) : translatedTitle);
         final StringBuilder output = new StringBuilder();
         if (type != LevelType.BASE) {
-            output.append(type.getTitle()).append(": ");
-            output.append(ContentSpecUtilities.escapeTitle(title));
-            if (targetId != null) {
-                output.append(" [").append(targetId).append("]");
-            }
-            if (externalTargetId != null) {
-                output.append(" [").append(externalTargetId).append("]");
+            output.append(type.getTitle()).append(":");
+            if (type != LevelType.INITIAL_CONTENT) {
+                if (!isNullOrEmpty(title)) {
+                    output.append(" ");
+                    output.append(ContentSpecUtilities.escapeTitle(title));
+                }
+                if (targetId != null) {
+                    output.append(" [").append(targetId).append("]");
+                }
+                if (externalTargetId != null) {
+                    output.append(" [").append(externalTargetId).append("]");
+                }
             }
         }
         // Add any options
@@ -468,39 +469,11 @@ public class Level extends SpecNodeWithRelationships {
             output.append(" [").append(options).append("]");
         }
 
-        // Add the front matter text
-        if (!initialContentTopics.isEmpty()) {
-            output.append("\n");
-            output.append(getInitialContentTopicText());
-        }
+        // Append any relationship text
+        output.append(getRelationshipText(getSpacer() + SPACER));
 
         setText(output.toString());
         return text;
-    }
-
-    protected String getInitialContentTopicText() {
-        if (!initialContentTopics.isEmpty()) {
-            final String spacer;
-            if (getLevelType() != LevelType.BASE) {
-                spacer = getSpacer() + SPACER;
-            } else {
-                spacer = "";
-            }
-            final StringBuilder output = new StringBuilder(spacer);
-            output.append(CSConstants.LEVEL_INITIAL_CONTENT).append(":");
-
-            // Append any relationship text
-            output.append(getRelationshipText(spacer + SPACER));
-
-            for (final SpecTopic initialContentTopic : initialContentTopics) {
-                output.append("\n");
-                output.append(spacer).append(SPACER);
-                output.append(initialContentTopic.getText());
-            }
-            return output.toString();
-        } else {
-            return "";
-        }
     }
 
     /**
@@ -514,9 +487,6 @@ public class Level extends SpecNodeWithRelationships {
         if (type != LevelType.BASE) {
             output.append(getSpacer());
             output.append(getText());
-            output.append("\n");
-        } else if (!initialContentTopics.isEmpty()) {
-            output.append(getInitialContentTopicText());
             output.append("\n");
         }
 

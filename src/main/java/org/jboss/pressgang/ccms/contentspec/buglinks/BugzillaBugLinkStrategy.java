@@ -19,7 +19,7 @@ import com.j2bugzilla.base.ProductComponent;
 import com.j2bugzilla.base.ProductVersion;
 import com.j2bugzilla.rpc.GetBugField;
 import com.j2bugzilla.rpc.GetProduct;
-import org.jboss.pressgang.ccms.contentspec.Level;
+import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
@@ -78,14 +78,14 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
     }
 
     @Override
-    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final Level level, String buildName,
+    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final InitialContent initialContent, String buildName,
             final Date buildDate) throws UnsupportedEncodingException {
-        final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, level.getTitle()), ENCODING);
-        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName)
-                .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
-                .append("\nTopic IDs:");
+        final String bugzillaDescription = URLEncoder.encode(
+                String.format(BUGZILLA_DESCRIPTION_TEMPLATE, initialContent.getParent().getTitle()), ENCODING);
+        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
+                DATE_FORMATTER.format(buildDate)).append("\nTopic IDs:");
 
-        for (final SpecTopic initialContentTopic : level.getInitialContentTopics()) {
+        for (final SpecTopic initialContentTopic : initialContent.getSpecTopics()) {
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             bugzillaEnvironment.append("\n");

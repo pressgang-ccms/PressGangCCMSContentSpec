@@ -17,6 +17,7 @@ import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.File;
 import org.jboss.pressgang.ccms.contentspec.FileList;
+import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
@@ -27,6 +28,7 @@ import org.jboss.pressgang.ccms.contentspec.Section;
 import org.jboss.pressgang.ccms.contentspec.SpecNodeWithRelationships;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
+import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
@@ -303,6 +305,8 @@ public class CSTransformer {
             level = new Section(node.getTitle());
         } else if (node.getNodeType() == CommonConstants.CS_NODE_PREFACE) {
             level = new Preface(node.getTitle());
+        } else if (node.getNodeType() == CommonConstants.CS_NODE_INITIAL_CONTENT) {
+            level = new InitialContent();
         } else {
             throw new IllegalArgumentException("The passed node is not a Level");
         }
@@ -320,7 +324,7 @@ public class CSTransformer {
         if (node.getChildren() != null && node.getChildren().getItems() != null) {
             final List<CSNodeWrapper> childNodes = node.getChildren().getItems();
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
-            final HashMap<CSNodeWrapper, SpecTopic> frontMatterTopics = new HashMap<CSNodeWrapper, SpecTopic>();
+            final HashMap<CSNodeWrapper, SpecTopic> initialContentNodes = new HashMap<CSNodeWrapper, SpecTopic>();
             for (final CSNodeWrapper childNode : childNodes) {
                 if (childNode.getNodeType() == CommonConstants.CS_NODE_TOPIC) {
                     final SpecTopic topic = transformSpecTopic(childNode, nodes, targetTopics, relationshipFromNodes);
@@ -328,10 +332,14 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
-                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC) {
-                    final SpecTopic frontMatterTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics,
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INITIAL_CONTENT_TOPIC) {
+                    final SpecTopic initialContentTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics,
                             relationshipFromNodes);
-                    frontMatterTopics.put(childNode, frontMatterTopic);
+                    if (level instanceof InitialContent) {
+                        levelNodes.put(childNode, initialContentTopic);
+                    } else {
+                        initialContentNodes.put(childNode, initialContentTopic);
+                    }
                 } else {
                     final Level childLevel = transformLevel(childNode, nodes, targetTopics, relationshipFromNodes, processes);
                     levelNodes.put(childNode, childLevel);
@@ -340,13 +348,20 @@ public class CSTransformer {
 
             // Sort the level nodes so that they are in the right order based on next/prev values.
             final LinkedHashMap<CSNodeWrapper, Node> sortedMap = CSNodeSorter.sortMap(levelNodes);
-            final LinkedHashMap<CSNodeWrapper, SpecTopic> sortedFrontMatterTopicMap = CSNodeSorter.sortMap(frontMatterTopics);
 
-            // Add the front matter topics to the level now that they are in the right order.
-            final Iterator<Map.Entry<CSNodeWrapper, SpecTopic>> frontMatterIter = sortedFrontMatterTopicMap.entrySet().iterator();
-            while (frontMatterIter.hasNext()) {
-                final Map.Entry<CSNodeWrapper, SpecTopic> entry = frontMatterIter.next();
-                level.addFrontMatterTopic(entry.getValue());
+            // PressGang 1.4+ stores the initial content inside it's own container, instead of on the level
+            if (!(level instanceof InitialContent) && !initialContentNodes.isEmpty()) {
+                final LinkedHashMap<CSNodeWrapper, SpecTopic> sortedInitialContentMap = CSNodeSorter.sortMap(initialContentNodes);
+
+                final InitialContent initialContent = new InitialContent();
+                level.appendChild(initialContent);
+
+                // Add the initial content topics to the level now that they are in the right order.
+                final Iterator<Map.Entry<CSNodeWrapper, SpecTopic>> frontMatterIter = sortedInitialContentMap.entrySet().iterator();
+                while (frontMatterIter.hasNext()) {
+                    final Map.Entry<CSNodeWrapper, SpecTopic> entry = frontMatterIter.next();
+                    initialContent.appendSpecTopic(entry.getValue());
+                }
             }
 
             // Add the child nodes to the level now that they are in the right order.
@@ -454,15 +469,30 @@ public class CSTransformer {
             final DataProviderFactory providerFactory) {
         // Apply the user defined relationships stored in the database
         for (final CSNodeWrapper node : relationshipFromNodes) {
-            boolean initialContentTopic = node.getNodeType() == CommonConstants.CS_NODE_INNER_TOPIC;
+            boolean initialContentTopic = node.getNodeType() == CommonConstants.CS_NODE_INITIAL_CONTENT_TOPIC;
             boolean level = EntityUtilities.isNodeALevel(node);
 
-            // In 1.3 or lower initial content relationships were stored on the topic, however in 1.4+ they are now on the level,
-            // so do the migration here
+            // In 1.3 or lower initial content relationships were stored on the topic, however in 1.4+ they are now on the initial
+            // content level, so do the migration here
             final SpecNodeWithRelationships fromNode;
             if (initialContentTopic) {
                 final CSNodeWrapper parentNode = node.getParent();
-                fromNode = (SpecNodeWithRelationships) nodes.get(parentNode.getId());
+                final SpecNodeWithRelationships parent = (SpecNodeWithRelationships) nodes.get(parentNode.getId());
+                if (parent instanceof InitialContent) {
+                    fromNode = parent;
+                } else {
+                    final Level parentLevel = (Level) parent;
+                    if (parentLevel.getFirstSpecNode() instanceof InitialContent) {
+                        fromNode = (SpecNodeWithRelationships) parentLevel.getFirstSpecNode();
+                    } else {
+                        fromNode = new InitialContent(parent.getLineNumber(), CSConstants.LEVEL_INITIAL_CONTENT + ":");
+                        if (parentLevel.getChildNodes().isEmpty()) {
+                            parentLevel.appendChild(fromNode);
+                        } else {
+                            parentLevel.insertBefore(fromNode, parentLevel.getChildNodes().get(0));
+                        }
+                    }
+                }
             } else {
                 fromNode = (SpecNodeWithRelationships) nodes.get(node.getId());
             }
@@ -494,7 +524,7 @@ public class CSTransformer {
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
-                    final String title = TopicType.LEVEL.equals(
+                    final String title = TopicType.INITIAL_CONTENT.equals(
                             toSpecTopic.getTopicType()) && toSpecTopic.getParent() instanceof Level ? ((Level) toSpecTopic.getParent())
                             .getTitle() : toSpecTopic.getTitle();
 

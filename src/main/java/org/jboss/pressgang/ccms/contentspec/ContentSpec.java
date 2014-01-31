@@ -6,6 +6,8 @@ package org.jboss.pressgang.ccms.contentspec;
  * etc...) inside the Content Spec.
  */
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -1843,257 +1845,262 @@ public class ContentSpec extends Node {
         final String key = node.getKey();
         final Object value = node.getValue();
 
-        KeyValueNode<?> fixedNode = node;
+        if (isNullOrEmpty(key)) {
+            // Add the node to the list of nodes
+            appendChild(node, false);
+        } else {
+            KeyValueNode<?> fixedNode = node;
 
-        if (key.equalsIgnoreCase(CommonConstants.CS_TITLE_TITLE) && value instanceof String) {
-            title = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(title, CommonConstants.CS_TITLE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_ID_TITLE) && (value instanceof String || value instanceof Integer)) {
-            final KeyValueNode<Integer> idNode;
-            if (value instanceof String) {
-                idNode = new KeyValueNode<Integer>(CommonConstants.CS_ID_TITLE, Integer.parseInt((String) value));
-                cloneKeyValueNode(node, idNode);
-                fixedNode = idNode;
-            } else {
-                idNode = (KeyValueNode<Integer>) node;
-            }
-            id = idNode;
-            setKeyValueNodeKey(id, CommonConstants.CS_ID_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_CHECKSUM_TITLE) && value instanceof String) {
-            checksum = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(checksum, CommonConstants.CS_CHECKSUM_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_PRODUCT_TITLE) && value instanceof String) {
-            product = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(product, CommonConstants.CS_PRODUCT_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_VERSION_TITLE) && value instanceof String) {
-            version = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(version, CommonConstants.CS_VERSION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_TYPE_TITLE) && (value instanceof String || value instanceof BookType)) {
-            final KeyValueNode<BookType> bookTypeNode;
-            if (value instanceof String) {
-                bookTypeNode = new KeyValueNode<BookType>(key, BookType.getBookType((String) value));
-                cloneKeyValueNode(node, bookTypeNode);
-                fixedNode = bookTypeNode;
-            } else {
-                bookTypeNode = (KeyValueNode<BookType>) node;
-            }
-            bookType = bookTypeNode;
-            setKeyValueNodeKey(bookType, CommonConstants.CS_BOOK_TYPE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_EDITION_TITLE) && value instanceof String) {
-            edition = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(edition, CommonConstants.CS_EDITION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_VERSION_TITLE) && value instanceof String) {
-            bookVersion = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bookVersion, CommonConstants.CS_BOOK_VERSION_TITLE);
-        } else if (key.equalsIgnoreCase(
-                CommonConstants.CS_BUG_LINKS_TITLE) && (value instanceof String || value instanceof BugLinkType)) {
-            final KeyValueNode<BugLinkType> bugLinkNode;
-            if (value instanceof String) {
-                bugLinkNode = new KeyValueNode<BugLinkType>(CommonConstants.CS_BUG_LINKS_TITLE, BugLinkType.getType((String) value));
-                cloneKeyValueNode(node, bugLinkNode);
-                fixedNode = bugLinkNode;
-            } else {
-                bugLinkNode = (KeyValueNode<BugLinkType>) value;
-            }
-            bugLinks = bugLinkNode;
-            setKeyValueNodeKey(bugLinks, CommonConstants.CS_BUG_LINKS_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
-            bugzillaComponent = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaComponent, CommonConstants.CS_BUGZILLA_COMPONENT_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE) && value instanceof String) {
-            bugzillaProduct = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaProduct, CommonConstants.CS_BUGZILLA_PRODUCT_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_VERSION_TITLE) && value instanceof String) {
-            bugzillaVersion = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaVersion, CommonConstants.CS_BUGZILLA_VERSION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE) && value instanceof String) {
-            bugzillaKeywords = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaKeywords, CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_SERVER_TITLE) && value instanceof String) {
-            bugzillaServer = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaServer, CommonConstants.CS_BUGZILLA_SERVER_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_URL_TITLE) && value instanceof String) {
-            bugzillaURL = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(bugzillaURL, CommonConstants.CS_BUGZILLA_URL_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
-            final KeyValueNode<Boolean> injectBugzillaAssigneeNode;
-            if (value instanceof String) {
-                final Boolean fixedValue;
-                if (((String) value).equalsIgnoreCase("ON")) {
-                    fixedValue = true;
+            if (key.equalsIgnoreCase(CommonConstants.CS_TITLE_TITLE) && value instanceof String) {
+                title = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(title, CommonConstants.CS_TITLE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_ID_TITLE) && (value instanceof String || value instanceof Integer)) {
+                final KeyValueNode<Integer> idNode;
+                if (value instanceof String) {
+                    idNode = new KeyValueNode<Integer>(CommonConstants.CS_ID_TITLE, Integer.parseInt((String) value));
+                    cloneKeyValueNode(node, idNode);
+                    fixedNode = idNode;
                 } else {
-                    fixedValue = Boolean.parseBoolean((String) value);
+                    idNode = (KeyValueNode<Integer>) node;
                 }
-                injectBugzillaAssigneeNode = new KeyValueNode<Boolean>(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE, fixedValue);
-                cloneKeyValueNode(node, injectBugzillaAssigneeNode);
-                fixedNode = injectBugzillaAssigneeNode;
-            } else {
-                injectBugzillaAssigneeNode = (KeyValueNode<Boolean>) node;
-            }
-            injectBugzillaAssignee = injectBugzillaAssigneeNode;
-            setKeyValueNodeKey(injectBugzillaAssignee, CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE);
-        } else if (key.equalsIgnoreCase(
-                CommonConstants.CS_INLINE_INJECTION_TITLE) && (value instanceof String || value instanceof InjectionOptions)) {
-            final KeyValueNode<InjectionOptions> injectionOptionsNode;
-            if (value instanceof String) {
-                injectionOptionsNode = new KeyValueNode<InjectionOptions>(CommonConstants.CS_INLINE_INJECTION_TITLE,
-                        new InjectionOptions((String) value));
-                cloneKeyValueNode(node, injectionOptionsNode);
-                fixedNode = injectionOptionsNode;
-            } else {
-                injectionOptionsNode = (KeyValueNode<InjectionOptions>) node;
-            }
-            injectionOptions = injectionOptionsNode;
-            setKeyValueNodeKey(injectionOptions, CommonConstants.CS_INLINE_INJECTION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_DTD_TITLE) && value instanceof String) {
-            dtd = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(dtd, CommonConstants.CS_DTD_TITLE);
-        } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
-            outputStyle = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(outputStyle, CSConstants.OUTPUT_STYLE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBSNUMBER_TITLE) && (value instanceof String || value instanceof Integer)) {
-            final KeyValueNode<Integer> pubsNumberNode;
-            if (value instanceof String) {
-                pubsNumberNode = new KeyValueNode<Integer>(key, Integer.parseInt((String) value));
-                cloneKeyValueNode(node, pubsNumberNode);
-                fixedNode = pubsNumberNode;
-            } else {
-                pubsNumberNode = (KeyValueNode<Integer>) node;
-            }
-            pubsNumber = pubsNumberNode;
-            setKeyValueNodeKey(pubsNumber, CommonConstants.CS_PUBSNUMBER_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) && value instanceof String) {
-            publicanCfgs.put(DEFAULT_PUBLICAN_CFG_KEY, (KeyValueNode<String>) node);
-            setKeyValueNodeKey(node, CommonConstants.CS_PUBLICAN_CFG_TITLE);
-        } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
-            final KeyValueNode<Boolean> injectSurveyLinkNode;
-            if (value instanceof String) {
-                final Boolean fixedValue;
-                if (((String) value).equalsIgnoreCase("ON")) {
-                    fixedValue = true;
+                id = idNode;
+                setKeyValueNodeKey(id, CommonConstants.CS_ID_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_CHECKSUM_TITLE) && value instanceof String) {
+                checksum = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(checksum, CommonConstants.CS_CHECKSUM_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_PRODUCT_TITLE) && value instanceof String) {
+                product = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(product, CommonConstants.CS_PRODUCT_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_VERSION_TITLE) && value instanceof String) {
+                version = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(version, CommonConstants.CS_VERSION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_TYPE_TITLE) && (value instanceof String || value instanceof BookType)) {
+                final KeyValueNode<BookType> bookTypeNode;
+                if (value instanceof String) {
+                    bookTypeNode = new KeyValueNode<BookType>(key, BookType.getBookType((String) value));
+                    cloneKeyValueNode(node, bookTypeNode);
+                    fixedNode = bookTypeNode;
                 } else {
-                    fixedValue = Boolean.parseBoolean((String) value);
+                    bookTypeNode = (KeyValueNode<BookType>) node;
                 }
-                injectSurveyLinkNode = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, fixedValue);
-                cloneKeyValueNode(node, injectSurveyLinkNode);
-                fixedNode = injectSurveyLinkNode;
-            } else {
-                injectSurveyLinkNode = (KeyValueNode<Boolean>) node;
-            }
-            injectSurveyLinks = injectSurveyLinkNode;
-            setKeyValueNodeKey(injectSurveyLinks, CSConstants.SURVEY_LINK_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_TITLE) && value instanceof String) {
-            brand = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(brand, CommonConstants.CS_BRAND_TITLE);
-        } else if ((key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE)) && (value instanceof String || value instanceof SpecTopic)) {
-            if (value instanceof SpecTopic) {
-                abstractTopic = (KeyValueNode<SpecTopic>) node;
+                bookType = bookTypeNode;
+                setKeyValueNodeKey(bookType, CommonConstants.CS_BOOK_TYPE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_EDITION_TITLE) && value instanceof String) {
+                edition = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(edition, CommonConstants.CS_EDITION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BOOK_VERSION_TITLE) && value instanceof String) {
+                bookVersion = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bookVersion, CommonConstants.CS_BOOK_VERSION_TITLE);
+            } else if (key.equalsIgnoreCase(
+                    CommonConstants.CS_BUG_LINKS_TITLE) && (value instanceof String || value instanceof BugLinkType)) {
+                final KeyValueNode<BugLinkType> bugLinkNode;
+                if (value instanceof String) {
+                    bugLinkNode = new KeyValueNode<BugLinkType>(CommonConstants.CS_BUG_LINKS_TITLE, BugLinkType.getType((String) value));
+                    cloneKeyValueNode(node, bugLinkNode);
+                    fixedNode = bugLinkNode;
+                } else {
+                    bugLinkNode = (KeyValueNode<BugLinkType>) value;
+                }
+                bugLinks = bugLinkNode;
+                setKeyValueNodeKey(bugLinks, CommonConstants.CS_BUG_LINKS_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_COMPONENT_TITLE) && value instanceof String) {
+                bugzillaComponent = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaComponent, CommonConstants.CS_BUGZILLA_COMPONENT_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_PRODUCT_TITLE) && value instanceof String) {
+                bugzillaProduct = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaProduct, CommonConstants.CS_BUGZILLA_PRODUCT_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_VERSION_TITLE) && value instanceof String) {
+                bugzillaVersion = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaVersion, CommonConstants.CS_BUGZILLA_VERSION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE) && value instanceof String) {
+                bugzillaKeywords = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaKeywords, CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_SERVER_TITLE) && value instanceof String) {
+                bugzillaServer = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaServer, CommonConstants.CS_BUGZILLA_SERVER_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_URL_TITLE) && value instanceof String) {
+                bugzillaURL = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(bugzillaURL, CommonConstants.CS_BUGZILLA_URL_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE) && (value instanceof String || value instanceof Boolean)) {
+                final KeyValueNode<Boolean> injectBugzillaAssigneeNode;
+                if (value instanceof String) {
+                    final Boolean fixedValue;
+                    if (((String) value).equalsIgnoreCase("ON")) {
+                        fixedValue = true;
+                    } else {
+                        fixedValue = Boolean.parseBoolean((String) value);
+                    }
+                    injectBugzillaAssigneeNode = new KeyValueNode<Boolean>(CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE, fixedValue);
+                    cloneKeyValueNode(node, injectBugzillaAssigneeNode);
+                    fixedNode = injectBugzillaAssigneeNode;
+                } else {
+                    injectBugzillaAssigneeNode = (KeyValueNode<Boolean>) node;
+                }
+                injectBugzillaAssignee = injectBugzillaAssigneeNode;
+                setKeyValueNodeKey(injectBugzillaAssignee, CommonConstants.CS_BUGZILLA_ASSIGNEE_TITLE);
+            } else if (key.equalsIgnoreCase(
+                    CommonConstants.CS_INLINE_INJECTION_TITLE) && (value instanceof String || value instanceof InjectionOptions)) {
+                final KeyValueNode<InjectionOptions> injectionOptionsNode;
+                if (value instanceof String) {
+                    injectionOptionsNode = new KeyValueNode<InjectionOptions>(CommonConstants.CS_INLINE_INJECTION_TITLE,
+                            new InjectionOptions((String) value));
+                    cloneKeyValueNode(node, injectionOptionsNode);
+                    fixedNode = injectionOptionsNode;
+                } else {
+                    injectionOptionsNode = (KeyValueNode<InjectionOptions>) node;
+                }
+                injectionOptions = injectionOptionsNode;
+                setKeyValueNodeKey(injectionOptions, CommonConstants.CS_INLINE_INJECTION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_DTD_TITLE) && value instanceof String) {
+                dtd = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(dtd, CommonConstants.CS_DTD_TITLE);
+            } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
+                outputStyle = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(outputStyle, CSConstants.OUTPUT_STYLE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBSNUMBER_TITLE) && (value instanceof String || value instanceof Integer)) {
+                final KeyValueNode<Integer> pubsNumberNode;
+                if (value instanceof String) {
+                    pubsNumberNode = new KeyValueNode<Integer>(key, Integer.parseInt((String) value));
+                    cloneKeyValueNode(node, pubsNumberNode);
+                    fixedNode = pubsNumberNode;
+                } else {
+                    pubsNumberNode = (KeyValueNode<Integer>) node;
+                }
+                pubsNumber = pubsNumberNode;
+                setKeyValueNodeKey(pubsNumber, CommonConstants.CS_PUBSNUMBER_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) && value instanceof String) {
+                publicanCfgs.put(DEFAULT_PUBLICAN_CFG_KEY, (KeyValueNode<String>) node);
+                setKeyValueNodeKey(node, CommonConstants.CS_PUBLICAN_CFG_TITLE);
+            } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
+                final KeyValueNode<Boolean> injectSurveyLinkNode;
+                if (value instanceof String) {
+                    final Boolean fixedValue;
+                    if (((String) value).equalsIgnoreCase("ON")) {
+                        fixedValue = true;
+                    } else {
+                        fixedValue = Boolean.parseBoolean((String) value);
+                    }
+                    injectSurveyLinkNode = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, fixedValue);
+                    cloneKeyValueNode(node, injectSurveyLinkNode);
+                    fixedNode = injectSurveyLinkNode;
+                } else {
+                    injectSurveyLinkNode = (KeyValueNode<Boolean>) node;
+                }
+                injectSurveyLinks = injectSurveyLinkNode;
+                setKeyValueNodeKey(injectSurveyLinks, CSConstants.SURVEY_LINK_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_TITLE) && value instanceof String) {
+                brand = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(brand, CommonConstants.CS_BRAND_TITLE);
+            } else if ((key.equalsIgnoreCase(CommonConstants.CS_ABSTRACT_TITLE) || key.equalsIgnoreCase(
+                    CommonConstants.CS_ABSTRACT_ALTERNATE_TITLE)) && (value instanceof String || value instanceof SpecTopic)) {
+                if (value instanceof SpecTopic) {
+                    abstractTopic = (KeyValueNode<SpecTopic>) node;
+                    if (value != null) {
+                        abstractTopic.getValue().setTopicType(TopicType.ABSTRACT);
+                    }
+                    setKeyValueNodeKey(abstractTopic, CommonConstants.CS_ABSTRACT_TITLE);
+                } else {
+                    description = (KeyValueNode<String>) node;
+                    setKeyValueNodeKey(description, CommonConstants.CS_ABSTRACT_TITLE);
+                }
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
+                copyrightHolder = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(copyrightHolder, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_YEAR_TITLE) && value instanceof String) {
+                copyrightYear = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(copyrightYear, CommonConstants.CS_COPYRIGHT_YEAR_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_SUBTITLE_TITLE) && value instanceof String) {
+                subtitle = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(subtitle, CommonConstants.CS_SUBTITLE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_REV_HISTORY_TITLE) && value instanceof SpecTopic) {
+                revisionHistory = (KeyValueNode<SpecTopic>) node;
                 if (value != null) {
-                    abstractTopic.getValue().setTopicType(TopicType.ABSTRACT);
+                    revisionHistory.getValue().setTopicType(TopicType.REVISION_HISTORY);
                 }
-                setKeyValueNodeKey(abstractTopic, CommonConstants.CS_ABSTRACT_TITLE);
-            } else {
-                description = (KeyValueNode<String>) node;
-                setKeyValueNodeKey(description, CommonConstants.CS_ABSTRACT_TITLE);
-            }
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_HOLDER_TITLE) && value instanceof String) {
-            copyrightHolder = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(copyrightHolder, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_COPYRIGHT_YEAR_TITLE) && value instanceof String) {
-            copyrightYear = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(copyrightYear, CommonConstants.CS_COPYRIGHT_YEAR_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_SUBTITLE_TITLE) && value instanceof String) {
-            subtitle = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(subtitle, CommonConstants.CS_SUBTITLE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_REV_HISTORY_TITLE) && value instanceof SpecTopic) {
-            revisionHistory = (KeyValueNode<SpecTopic>) node;
-            if (value != null) {
-                revisionHistory.getValue().setTopicType(TopicType.REVISION_HISTORY);
-            }
-            setKeyValueNodeKey(revisionHistory, CommonConstants.CS_REV_HISTORY_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) && value instanceof SpecTopic) {
-            feedback = (KeyValueNode<SpecTopic>) node;
-            if (value != null) {
-                feedback.getValue().setTopicType(TopicType.FEEDBACK);
-            }
-            setKeyValueNodeKey(feedback, CommonConstants.CS_FEEDBACK_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
-            legalNotice = (KeyValueNode<SpecTopic>) node;
-            if (value != null) {
-                legalNotice.getValue().setTopicType(TopicType.LEGAL_NOTICE);
-            }
-            setKeyValueNodeKey(legalNotice, CommonConstants.CS_LEGAL_NOTICE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_AUTHOR_GROUP_TITLE) && value instanceof SpecTopic) {
-            authorGroup = (KeyValueNode<SpecTopic>) node;
-            if (value != null) {
-                authorGroup.getValue().setTopicType(TopicType.AUTHOR_GROUP);
-            }
-            setKeyValueNodeKey(authorGroup, CommonConstants.CS_AUTHOR_GROUP_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
-            artifactId = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(artifactId, CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_GROUP_ID_TITLE) && value instanceof String) {
-            groupId = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(groupId, CommonConstants.CS_MAVEN_GROUP_ID_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_POM_VERSION_TITLE) && value instanceof String) {
-            pomVersion = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(pomVersion, CommonConstants.CS_MAVEN_POM_VERSION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_LOGO_TITLE) && value instanceof String) {
-            brandLogo = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(brandLogo, CommonConstants.CS_BRAND_LOGO_TITLE);
-        } else if ((key.equalsIgnoreCase(CommonConstants.CS_FILE_TITLE) || key.equalsIgnoreCase(
-                CommonConstants.CS_FILE_SHORT_TITLE)) && node instanceof FileList) {
-            files = (FileList) node;
-            setKeyValueNodeKey(files, CommonConstants.CS_FILE_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_COMPONENT_TITLE) && value instanceof String) {
-            jiraComponent = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(jiraComponent, CommonConstants.CS_JIRA_COMPONENT_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_PROJECT_TITLE) && value instanceof String) {
-            jiraProject = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(jiraProject, CommonConstants.CS_JIRA_PROJECT_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_VERSION_TITLE) && value instanceof String) {
-            jiraVersion = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(jiraVersion, CommonConstants.CS_JIRA_VERSION_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_LABELS_TITLE) && value instanceof String) {
-            jiraLabels = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(jiraLabels, CommonConstants.CS_JIRA_LABELS_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_SERVER_TITLE) && value instanceof String) {
-            jiraServer = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(jiraServer, CommonConstants.CS_JIRA_SERVER_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_ENTITIES_TITLE) && value instanceof String) {
-            entities = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(entities, CommonConstants.CS_ENTITIES_TITLE);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE) && value instanceof String) {
-            defaultPublicanCfg = (KeyValueNode<String>) node;
-            setKeyValueNodeKey(defaultPublicanCfg, CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE);
-        } else if (CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches() && value instanceof String) {
-            final Matcher matcher = CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key);
-            matcher.find();
-            final String name = matcher.group(1);
-            setKeyValueNodeKey(node, name + "-" + CommonConstants.CS_PUBLICAN_CFG_TITLE);
-            publicanCfgs.put(name, (KeyValueNode<String>) node);
-        } else if (key.equalsIgnoreCase(CommonConstants.CS_INDEX_TITLE) && (value instanceof String || value instanceof Boolean)) {
-            final KeyValueNode<Boolean> useIndexNode;
-            if (value instanceof String) {
-                final Boolean fixedValue;
-                if (((String) value).equalsIgnoreCase("ON")) {
-                    fixedValue = true;
+                setKeyValueNodeKey(revisionHistory, CommonConstants.CS_REV_HISTORY_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_FEEDBACK_TITLE) && value instanceof SpecTopic) {
+                feedback = (KeyValueNode<SpecTopic>) node;
+                if (value != null) {
+                    feedback.getValue().setTopicType(TopicType.FEEDBACK);
+                }
+                setKeyValueNodeKey(feedback, CommonConstants.CS_FEEDBACK_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_LEGAL_NOTICE_TITLE) && value instanceof SpecTopic) {
+                legalNotice = (KeyValueNode<SpecTopic>) node;
+                if (value != null) {
+                    legalNotice.getValue().setTopicType(TopicType.LEGAL_NOTICE);
+                }
+                setKeyValueNodeKey(legalNotice, CommonConstants.CS_LEGAL_NOTICE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_AUTHOR_GROUP_TITLE) && value instanceof SpecTopic) {
+                authorGroup = (KeyValueNode<SpecTopic>) node;
+                if (value != null) {
+                    authorGroup.getValue().setTopicType(TopicType.AUTHOR_GROUP);
+                }
+                setKeyValueNodeKey(authorGroup, CommonConstants.CS_AUTHOR_GROUP_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE) && value instanceof String) {
+                artifactId = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(artifactId, CommonConstants.CS_MAVEN_ARTIFACT_ID_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_GROUP_ID_TITLE) && value instanceof String) {
+                groupId = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(groupId, CommonConstants.CS_MAVEN_GROUP_ID_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_MAVEN_POM_VERSION_TITLE) && value instanceof String) {
+                pomVersion = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(pomVersion, CommonConstants.CS_MAVEN_POM_VERSION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_LOGO_TITLE) && value instanceof String) {
+                brandLogo = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(brandLogo, CommonConstants.CS_BRAND_LOGO_TITLE);
+            } else if ((key.equalsIgnoreCase(CommonConstants.CS_FILE_TITLE) || key.equalsIgnoreCase(
+                    CommonConstants.CS_FILE_SHORT_TITLE)) && node instanceof FileList) {
+                files = (FileList) node;
+                setKeyValueNodeKey(files, CommonConstants.CS_FILE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_COMPONENT_TITLE) && value instanceof String) {
+                jiraComponent = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(jiraComponent, CommonConstants.CS_JIRA_COMPONENT_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_PROJECT_TITLE) && value instanceof String) {
+                jiraProject = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(jiraProject, CommonConstants.CS_JIRA_PROJECT_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_VERSION_TITLE) && value instanceof String) {
+                jiraVersion = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(jiraVersion, CommonConstants.CS_JIRA_VERSION_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_LABELS_TITLE) && value instanceof String) {
+                jiraLabels = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(jiraLabels, CommonConstants.CS_JIRA_LABELS_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_JIRA_SERVER_TITLE) && value instanceof String) {
+                jiraServer = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(jiraServer, CommonConstants.CS_JIRA_SERVER_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_ENTITIES_TITLE) && value instanceof String) {
+                entities = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(entities, CommonConstants.CS_ENTITIES_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE) && value instanceof String) {
+                defaultPublicanCfg = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(defaultPublicanCfg, CommonConstants.CS_DEFAULT_PUBLICAN_CFG_TITLE);
+            } else if (CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches() && value instanceof String) {
+                final Matcher matcher = CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key);
+                matcher.find();
+                final String name = matcher.group(1);
+                setKeyValueNodeKey(node, name + "-" + CommonConstants.CS_PUBLICAN_CFG_TITLE);
+                publicanCfgs.put(name, (KeyValueNode<String>) node);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_INDEX_TITLE) && (value instanceof String || value instanceof Boolean)) {
+                final KeyValueNode<Boolean> useIndexNode;
+                if (value instanceof String) {
+                    final Boolean fixedValue;
+                    if (((String) value).equalsIgnoreCase("ON")) {
+                        fixedValue = true;
+                    } else {
+                        fixedValue = Boolean.parseBoolean((String) value);
+                    }
+                    useIndexNode = new KeyValueNode<Boolean>(CommonConstants.CS_INDEX_TITLE, fixedValue);
+                    cloneKeyValueNode(node, useIndexNode);
+                    fixedNode = useIndexNode;
                 } else {
-                    fixedValue = Boolean.parseBoolean((String) value);
+                    useIndexNode = (KeyValueNode<Boolean>) node;
                 }
-                useIndexNode = new KeyValueNode<Boolean>(CommonConstants.CS_INDEX_TITLE, fixedValue);
-                cloneKeyValueNode(node, useIndexNode);
-                fixedNode = useIndexNode;
-            } else {
-                useIndexNode = (KeyValueNode<Boolean>) node;
+                includeIndex = useIndexNode;
+                setKeyValueNodeKey(includeIndex, CommonConstants.CS_INDEX_TITLE);
             }
-            includeIndex = useIndexNode;
-            setKeyValueNodeKey(includeIndex, CommonConstants.CS_INDEX_TITLE);
-        }
 
-        // Add the node to the list of nodes
-        appendChild(fixedNode, false);
+            // Add the node to the list of nodes
+            appendChild(fixedNode, false);
+        }
     }
 
     private void setKeyValueNodeKey(final KeyValueNode<?> node, final String key) {

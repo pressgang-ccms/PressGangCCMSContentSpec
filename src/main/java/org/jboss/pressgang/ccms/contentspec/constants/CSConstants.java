@@ -19,7 +19,7 @@ public class CSConstants {
 
     public static final String NEW_TOPIC_ID_REGEX = "^N[0-9]*$";
     public static final Pattern NEW_TOPIC_ID_PATTERN = Pattern.compile(NEW_TOPIC_ID_REGEX);
-    public static final String EXISTING_TOPIC_ID_REGEX = "^[0-9]+$";
+    public static final String EXISTING_TOPIC_ID_REGEX = "^(-)?[0-9]+$";
     public static final String CLONED_TOPIC_ID_REGEX = "^C[0-9]+$";
     public static final String DUPLICATE_TOPIC_ID_REGEX = "^X[0-9]+$";
     public static final String CLONED_DUPLICATE_TOPIC_ID_REGEX = "^XC[0-9]+$";

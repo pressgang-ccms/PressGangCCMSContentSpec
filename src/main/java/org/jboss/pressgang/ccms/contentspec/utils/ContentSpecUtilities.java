@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -348,7 +350,7 @@ public class ContentSpecUtilities {
      * @return True if it should be parsed as a multiple line node, otherwise false.
      */
     public static boolean isMetaDataMultiLine(final String key) {
-        return key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) || key.equalsIgnoreCase(
+        return isNullOrEmpty(key) ? false : key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) || key.equalsIgnoreCase(
                 CommonConstants.CS_ENTITIES_TITLE) || CSConstants.CUSTOM_PUBLICAN_CFG_PATTERN.matcher(key).matches();
     }
 

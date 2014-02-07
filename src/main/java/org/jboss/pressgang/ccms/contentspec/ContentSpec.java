@@ -40,7 +40,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> edition = null;
     private KeyValueNode<String> bookVersion = null;
     private KeyValueNode<Integer> pubsNumber = null;
-    private KeyValueNode<String> dtd = null;
+    private KeyValueNode<String> format = null;
     private KeyValueNode<String> checksum = null;
     private KeyValueNode<String> copyrightHolder = null;
     private KeyValueNode<String> copyrightYear = null;
@@ -55,7 +55,6 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> bugzillaURL = null;
     private KeyValueNode<BugLinkType> bugLinks = null;
     private KeyValueNode<Boolean> injectBugzillaAssignee = null;
-    private KeyValueNode<Boolean> injectSurveyLinks = null;
     private KeyValueNode<String> outputStyle = null;
     private KeyValueNode<Boolean> allowDuplicateTopics = null;
     private KeyValueNode<Boolean> allowEmptyLevels = null;
@@ -526,30 +525,30 @@ public class ContentSpec extends Node {
     }
 
     /**
-     * Get the DTD of the Content Specification. The default value is "Docbook 4.5".
+     * Get the DTD of the Content Specification. The default value is "DocBook 4.5".
      *
      * @return The DTD of the Content Specification or the default value if one isn't set.
      */
-    public String getDtd() {
-        return dtd == null ? "Docbook 4.5" : dtd.getValue();
+    public String getFormat() {
+        return format == null ? CommonConstants.DOCBOOK_45_TITLE : format.getValue();
     }
 
     /**
      * Sets the DTD for a Content Specification.
      *
-     * @param dtd The DTD of the Content Specification.
+     * @param format The DTD of the Content Specification.
      */
-    public void setDtd(final String dtd) {
-        if (dtd == null && this.dtd == null) {
+    public void setFormat(final String format) {
+        if (format == null && this.format == null) {
             return;
-        } else if (dtd == null) {
-            removeChild(this.dtd);
-            this.dtd = null;
-        } else if (this.dtd == null) {
-            this.dtd = new KeyValueNode<String>(CommonConstants.CS_DTD_TITLE, dtd);
-            appendChild(this.dtd, false);
+        } else if (format == null) {
+            removeChild(this.format);
+            this.format = null;
+        } else if (this.format == null) {
+            this.format = new KeyValueNode<String>(CommonConstants.CS_FORMAT_TITLE, format);
+            appendChild(this.format, false);
         } else {
-            this.dtd.setValue(dtd);
+            this.format.setValue(format);
         }
     }
 
@@ -1319,24 +1318,6 @@ public class ContentSpec extends Node {
         }
     }
 
-    public boolean isInjectSurveyLinks() {
-        return (Boolean) (injectSurveyLinks == null ? false : injectSurveyLinks.getValue());
-    }
-
-    public void setInjectSurveyLinks(final Boolean injectSurveyLinks) {
-        if (injectSurveyLinks == null && this.injectSurveyLinks == null) {
-            return;
-        } else if (injectSurveyLinks == null) {
-            removeChild(this.injectSurveyLinks);
-            this.injectSurveyLinks = null;
-        } else if (this.injectSurveyLinks == null) {
-            this.injectSurveyLinks = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, injectSurveyLinks);
-            appendChild(this.injectSurveyLinks, false);
-        } else {
-            this.injectSurveyLinks.setValue(injectSurveyLinks);
-        }
-    }
-
     public boolean isInjectBugzillaAssignee() {
         return (Boolean) (injectBugzillaAssignee == null ? true : injectBugzillaAssignee.getValue());
     }
@@ -1951,9 +1932,16 @@ public class ContentSpec extends Node {
                 }
                 injectionOptions = injectionOptionsNode;
                 setKeyValueNodeKey(injectionOptions, CommonConstants.CS_INLINE_INJECTION_TITLE);
-            } else if (key.equalsIgnoreCase(CommonConstants.CS_DTD_TITLE) && value instanceof String) {
-                dtd = (KeyValueNode<String>) node;
-                setKeyValueNodeKey(dtd, CommonConstants.CS_DTD_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_FORMAT_TITLE) && value instanceof String) {
+                format = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(format, CommonConstants.CS_FORMAT_TITLE);
+                if (value != null) {
+                    if (((String) value).equalsIgnoreCase(CommonConstants.DOCBOOK_50_TITLE)) {
+                        format.setValue(CommonConstants.DOCBOOK_50_TITLE);
+                    } else if (((String) value).equalsIgnoreCase(CommonConstants.DOCBOOK_45_TITLE)) {
+                        format.setValue(CommonConstants.DOCBOOK_45_TITLE);
+                    }
+                }
             } else if (key.equalsIgnoreCase(CSConstants.OUTPUT_STYLE_TITLE) && value instanceof String) {
                 outputStyle = (KeyValueNode<String>) node;
                 setKeyValueNodeKey(outputStyle, CSConstants.OUTPUT_STYLE_TITLE);
@@ -1971,23 +1959,6 @@ public class ContentSpec extends Node {
             } else if (key.equalsIgnoreCase(CommonConstants.CS_PUBLICAN_CFG_TITLE) && value instanceof String) {
                 publicanCfgs.put(DEFAULT_PUBLICAN_CFG_KEY, (KeyValueNode<String>) node);
                 setKeyValueNodeKey(node, CommonConstants.CS_PUBLICAN_CFG_TITLE);
-            } else if (key.equalsIgnoreCase(CSConstants.SURVEY_LINK_TITLE) && (value instanceof String || value instanceof Boolean)) {
-                final KeyValueNode<Boolean> injectSurveyLinkNode;
-                if (value instanceof String) {
-                    final Boolean fixedValue;
-                    if (((String) value).equalsIgnoreCase("ON")) {
-                        fixedValue = true;
-                    } else {
-                        fixedValue = Boolean.parseBoolean((String) value);
-                    }
-                    injectSurveyLinkNode = new KeyValueNode<Boolean>(CSConstants.SURVEY_LINK_TITLE, fixedValue);
-                    cloneKeyValueNode(node, injectSurveyLinkNode);
-                    fixedNode = injectSurveyLinkNode;
-                } else {
-                    injectSurveyLinkNode = (KeyValueNode<Boolean>) node;
-                }
-                injectSurveyLinks = injectSurveyLinkNode;
-                setKeyValueNodeKey(injectSurveyLinks, CSConstants.SURVEY_LINK_TITLE);
             } else if (key.equalsIgnoreCase(CommonConstants.CS_BRAND_TITLE) && value instanceof String) {
                 brand = (KeyValueNode<String>) node;
                 setKeyValueNodeKey(brand, CommonConstants.CS_BRAND_TITLE);

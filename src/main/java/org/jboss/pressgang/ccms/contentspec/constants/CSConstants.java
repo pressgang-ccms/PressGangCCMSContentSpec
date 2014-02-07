@@ -56,8 +56,6 @@ public class CSConstants {
     public static final String BRAND_OVERRIDE = "brand";
     public static final String BRAND_ALT_OVERRIDE = "Brand";
 
-    public static final String SURVEY_LINK_TITLE = "Survey Links";
-
     // Outdated Meta Data Regex Constants
     public static final String OUTPUT_STYLE_TITLE = "Output Style";
 

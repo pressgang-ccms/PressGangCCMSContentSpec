@@ -13,7 +13,7 @@ public class TemplateConstants {
             "Copyright Holder =\n" +
             "\n" +
             "# The commented fields below are optional\n" +
-            "# DTD = Docbook 4.5\n" +
+            "# Format = DocBook 4.5\n" +
             "# Copyright Year = \n" +
             "# Subtitle =\n" +
             "# Abstract=\n" +
@@ -234,7 +234,7 @@ public class TemplateConstants {
             "Abstract= \n" +
             "Product = \n" +
             "Version = \n" +
-            "DTD = Docbook 4.5\n" +
+            "Format = DocBook 4.5\n" +
             "Copyright Holder= \n" +
             "\n" +
             "# The commented fields below are optional\n" +

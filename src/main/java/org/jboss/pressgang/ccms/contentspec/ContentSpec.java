@@ -1932,7 +1932,7 @@ public class ContentSpec extends Node {
                 }
                 injectionOptions = injectionOptionsNode;
                 setKeyValueNodeKey(injectionOptions, CommonConstants.CS_INLINE_INJECTION_TITLE);
-            } else if (key.equalsIgnoreCase(CommonConstants.CS_FORMAT_TITLE) && value instanceof String) {
+            } else if ((key.equalsIgnoreCase(CommonConstants.CS_FORMAT_TITLE) || key.equalsIgnoreCase("DTD")) && value instanceof String) {
                 format = (KeyValueNode<String>) node;
                 setKeyValueNodeKey(format, CommonConstants.CS_FORMAT_TITLE);
                 if (value != null) {

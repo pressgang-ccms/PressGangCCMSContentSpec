@@ -26,9 +26,6 @@ public class SpecTopic extends SpecNodeWithRelationships {
     private String id;
     private Integer DBId = null;
     private String type;
-    private String targetId = null;
-    private String title = null;
-    private String duplicateId = null;
     private BaseTopicWrapper<?> topic = null;
     private Document xmlDocument = null;
     private Integer revision = null;
@@ -157,24 +154,6 @@ public class SpecTopic extends SpecNodeWithRelationships {
         this.revision = revision;
     }
 
-    /**
-     * Gets the title of the topic.
-     *
-     * @return The topics Title.
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the title for the topic.
-     *
-     * @param title The title for the topic.
-     */
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public TopicType getTopicType() {
         return topicType;
     }
@@ -199,33 +178,6 @@ public class SpecTopic extends SpecNodeWithRelationships {
      */
     public String getType() {
         return type;
-    }
-
-    /**
-     * Gets the Target ID for the Content Specification Topic if one exists.
-     *
-     * @return The Target ID or null if none exist.
-     */
-    public String getTargetId() {
-        return targetId;
-    }
-
-    /**
-     * Set the Target ID for the Content Specification Topic.
-     *
-     * @param targetId The Target ID for the Topic.
-     */
-    public void setTargetId(final String targetId) {
-        this.targetId = targetId;
-    }
-
-    /**
-     * Checks if the target id is only an internally used id, used for processes
-     *
-     * @return True if the target id is an internal id, otherwise false.
-     */
-    public boolean isTargetIdAnInternalId() {
-        return targetId == null ? false : getTargetId().matches("^T-" + getUniqueId() + "0[0-9]+$");
     }
 
     /**
@@ -531,8 +483,8 @@ public class SpecTopic extends SpecNodeWithRelationships {
         final String idAndOptions = getIdAndOptionsString();
         output.append((title == null ? "" : ContentSpecUtilities.escapeTitle(title)) + " [" + idAndOptions + "]");
 
-        if (targetId != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
-            output.append(" [" + targetId + "]");
+        if (getTargetId() != null && !((parent instanceof Process) && isTargetIdAnInternalId())) {
+            output.append(" [" + getTargetId() + "]");
         }
 
         final String spacer = getSpacer() + SPACER;
@@ -615,6 +567,26 @@ public class SpecTopic extends SpecNodeWithRelationships {
         return null;
     }
 
+    public SpecNode getClosestSpecNodeByTargetId(final String targetId, final boolean checkParentNode) {
+        /*
+         * Check this topic to see if it is the topic we are looking for
+         */
+        if (getTargetId() != null && getTargetId().equals(targetId)) return this;
+
+        /*
+         * If we still haven't found the closest node then check this nodes parents.
+         */
+        if (getParent() != null) {
+            if (getParent() instanceof Level) {
+                return ((Level) getParent()).getClosestSpecNodeByTargetId(targetId, checkParentNode);
+            } else if (getParent() instanceof KeyValueNode) {
+                return ((KeyValueNode) getParent()).getParent().getBaseLevel().getClosestTopicByDBId(DBId, checkParentNode);
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public String getUniqueLinkId(Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
         // If this is an inner topic then get the parents id
@@ -630,14 +602,6 @@ public class SpecTopic extends SpecNodeWithRelationships {
 
             return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
         }
-    }
-
-    public String getDuplicateId() {
-        return duplicateId;
-    }
-
-    public void setDuplicateId(final String duplicateId) {
-        this.duplicateId = duplicateId;
     }
 
     public Document getXMLDocument() {

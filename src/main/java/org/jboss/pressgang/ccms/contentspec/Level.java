@@ -33,11 +33,8 @@ public class Level extends SpecNodeWithRelationships {
      */
     protected final LinkedList<Node> nodes = new LinkedList<Node>();
     protected final LevelType type;
-    private String targetId = null;
+    protected String translatedTitle;
     private String externalTargetId = null;
-    protected String title = null;
-    protected String translatedTitle = null;
-    protected String duplicateId = null;
 
     /**
      * Constructor.
@@ -66,23 +63,6 @@ public class Level extends SpecNodeWithRelationships {
 
     // Start of the basic getter/setter methods for this Level.
 
-    /**
-     * Gets the title of the Level.
-     *
-     * @return The title of the Level.
-     */
-    public String getTitle() {
-        return title;
-    }
-
-    /**
-     * Sets the title for the Level.
-     *
-     * @param title The title for the Level.
-     */
-    public void setTitle(final String title) {
-        this.title = title;
-    }
 
     /**
      * Gets the translated title of the Level.
@@ -290,24 +270,6 @@ public class Level extends SpecNodeWithRelationships {
     }
 
     /**
-     * Get the Target ID for the level if one exists.
-     *
-     * @return A String that represents a Target ID if one exists otherwise null.
-     */
-    public String getTargetId() {
-        return targetId;
-    }
-
-    /**
-     * Set the Target ID for the level.
-     *
-     * @param targetId The Target ID to associate with the level.
-     */
-    public void setTargetId(final String targetId) {
-        this.targetId = targetId;
-    }
-
-    /**
      * Get the External Target ID for the level if one exists.
      *
      * @return A String that represents an External Target ID if one exists otherwise null.
@@ -456,8 +418,8 @@ public class Level extends SpecNodeWithRelationships {
                     output.append(" ");
                     output.append(ContentSpecUtilities.escapeTitle(title));
                 }
-                if (targetId != null) {
-                    output.append(" [").append(targetId).append("]");
+                if (getTargetId() != null) {
+                    output.append(" [").append(getTargetId()).append("]");
                 }
                 if (externalTargetId != null) {
                     output.append(" [").append(externalTargetId).append("]");
@@ -617,6 +579,65 @@ public class Level extends SpecNodeWithRelationships {
     }
 
     /**
+     * This function checks the levels nodes and child nodes to see if it can match a spec topic for a topic database id.
+     *
+     * @param targetId            The topic database id
+     * @param checkParentNode If the function should check the levels parents as well
+     * @return The closest available SpecTopic that matches the DBId otherwise null.
+     */
+    public SpecNode getClosestSpecNodeByTargetId(final String targetId, final boolean checkParentNode) {
+        return getClosestSpecNodeByTargetId(targetId, this, checkParentNode);
+    }
+
+    /**
+     * This function checks the levels nodes and child nodes to see if it can match a spec topic for a topic database id.
+     *
+     * @param targetId            The topic database id
+     * @param callerNode      The node that called this function so that it isn't rechecked
+     * @param checkParentNode If the function should check the levels parents as well
+     * @return The closest available SpecTopic that matches the DBId otherwise null.
+     */
+    public SpecNode getClosestSpecNodeByTargetId(final String targetId, final SpecNode callerNode, final boolean checkParentNode) {
+        /*
+         * Check this level to see if the topic exists
+         */
+        final List<Node> children = getChildNodes();
+        for (final Node childNode : children) {
+            if (childNode instanceof SpecNode) {
+                final SpecNode specNode = (SpecNode) childNode;
+                if (specNode.getTargetId() != null && specNode.getTargetId().equals(targetId)) {
+                    return specNode;
+                }
+            }
+        }
+
+        /*
+         * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
+         * first.
+         */
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
+            if (childLevel == callerNode) {
+                continue;
+            } else {
+                final SpecNode childLevelNode = childLevel.getClosestSpecNodeByTargetId(targetId, callerNode, false);
+                if (childLevelNode != null) {
+                    return childLevelNode;
+                }
+            }
+        }
+
+        /*
+         * If we still haven't found the closest node then check this nodes parents.
+         */
+        if (getParent() != null && checkParentNode) {
+            return getParent().getClosestSpecNodeByTargetId(targetId, this, checkParentNode);
+        }
+
+        return null;
+    }
+
+    /**
      * Checks to see if a SpecTopic exists within this level or its children.
      *
      * @param topic The topic to see if it exists
@@ -678,6 +699,40 @@ public class Level extends SpecNodeWithRelationships {
         return false;
     }
 
+    /**
+     * Checks to see if a SpecNode exists within this level or its children.
+     *
+     * @param targetId The Target ID of the level/topic to see if it exists.
+     * @return True if the level/topic exists within this level or its children otherwise false.
+     */
+    public boolean isSpecNodeInLevelByTargetID(final String targetId) {
+        /*
+         * Check this level to see if the node exists
+         */
+        final List<Node> children = getChildNodes();
+        for (final Node childNode : children) {
+            if (childNode instanceof SpecNode) {
+                final SpecNode specNode = (SpecNode) childNode;
+                if (specNode.getTargetId() != null && specNode.getTargetId().equals(targetId)) {
+                    return true;
+                }
+            }
+        }
+
+        /*
+         * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
+         * first.
+         */
+        final List<Level> childLevels = getChildLevels();
+        for (final Level childLevel : childLevels) {
+            if (childLevel.isSpecNodeInLevelByTargetID(targetId)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     @Override
     public String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
         // Get the pre link string
@@ -714,13 +769,5 @@ public class Level extends SpecNodeWithRelationships {
         }
 
         return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
-    }
-
-    public String getDuplicateId() {
-        return duplicateId;
-    }
-
-    public void setDuplicateId(final String duplicateId) {
-        this.duplicateId = duplicateId;
     }
 }

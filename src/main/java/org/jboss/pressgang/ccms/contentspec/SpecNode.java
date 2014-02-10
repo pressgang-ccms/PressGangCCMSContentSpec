@@ -17,7 +17,9 @@ public abstract class SpecNode extends Node {
     protected String condition;
     protected String description;
     protected String assignedWriter;
-    protected Boolean bodyOnly;
+    protected String targetId;
+    protected String title;
+    protected String duplicateId;
 
     protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
@@ -28,6 +30,59 @@ public abstract class SpecNode extends Node {
     }
 
     protected SpecNode() {
+    }
+
+    /**
+     * Gets the title of the Level.
+     *
+     * @return The title of the Level.
+     */
+    public String getTitle() {
+        return title;
+    }
+
+    /**
+     * Sets the title for the Level.
+     *
+     * @param title The title for the Level.
+     */
+    public void setTitle(final String title) {
+        this.title = title;
+    }
+
+    public String getDuplicateId() {
+        return duplicateId;
+    }
+
+    public void setDuplicateId(final String duplicateId) {
+        this.duplicateId = duplicateId;
+    }
+
+    /**
+     * Gets the Target ID for the Content Specification Node if one exists.
+     *
+     * @return The Target ID or null if none exist.
+     */
+    public String getTargetId() {
+        return targetId;
+    }
+
+    /**
+     * Set the Target ID for the Content Specification Node.
+     *
+     * @param targetId The Target ID for the Node.
+     */
+    public void setTargetId(final String targetId) {
+        this.targetId = targetId;
+    }
+
+    /**
+     * Checks if the target id is only an internally used id, used for processes
+     *
+     * @return True if the target id is an internal id, otherwise false.
+     */
+    public boolean isTargetIdAnInternalId() {
+        return targetId == null ? false : getTargetId().matches("^T-" + getUniqueId() + "0[0-9]+$");
     }
 
     /**

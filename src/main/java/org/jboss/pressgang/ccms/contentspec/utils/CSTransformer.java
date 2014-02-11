@@ -213,6 +213,16 @@ public class CSTransformer {
      * Transforms a MetaData CSNode into a KeyValuePair that can be added to a ContentSpec object.
      *
      * @param node                  The CSNode to be transformed.
+     * @return The transformed KeyValuePair object.
+     */
+    public static KeyValueNode<?> transformMetaData(final CSNodeWrapper node) {
+        return transformMetaData(node, new HashMap<Integer, Node>(), new HashMap<String, SpecTopic>(), new ArrayList<CSNodeWrapper>());
+    }
+
+    /**
+     * Transforms a MetaData CSNode into a KeyValuePair that can be added to a ContentSpec object.
+     *
+     * @param node                  The CSNode to be transformed.
      * @param nodes                 A mapping of node entity ids to their transformed counterparts.
      * @param targetTopics          A mapping of target ids to SpecTopics.
      * @param relationshipFromNodes A list of CSNode entities that have relationships.

@@ -17,6 +17,9 @@ public class CSConstants {
     // Output format constants
     public static final String CSP_OUTPUT_FORMAT = "Narrative";
 
+    public static final String DEFAULT_BUGZILLA_URL = "https://bugzilla.redhat.com/";
+    public static final String DEFAULT_BZCOMPONENT = "documentation";
+
     public static final String NEW_TOPIC_ID_REGEX = "^N[0-9]*$";
     public static final Pattern NEW_TOPIC_ID_PATTERN = Pattern.compile(NEW_TOPIC_ID_REGEX);
     public static final String EXISTING_TOPIC_ID_REGEX = "^(-)?[0-9]+$";

@@ -2,7 +2,10 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 
 import static com.google.common.base.Strings.isNullOrEmpty;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,17 +23,26 @@ import org.jboss.pressgang.ccms.contentspec.entities.Revision;
 import org.jboss.pressgang.ccms.contentspec.entities.RevisionList;
 import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
+import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
+import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.w3c.dom.Document;
+import org.w3c.dom.Entity;
+import org.w3c.dom.NamedNodeMap;
 
 
 public class ContentSpecUtilities {
+    private static final Logger log = LoggerFactory.getLogger(ContentSpecUtilities.class);
     public static final Pattern CS_CHECKSUM_PATTERN = Pattern.compile("CHECKSUM[ ]*=[ ]*(?<Checksum>[A-Za-z0-9]+)(\r)?\n");
     public static final Pattern CS_ID_PATTERN = Pattern.compile("ID[ ]*=[ ]*(?<ID>[0-9]+)(\r)?\n");
-
+    private static final String ENCODING = "UTF-8";
 
     protected ContentSpecUtilities() {
     }
@@ -380,6 +392,155 @@ public class ContentSpecUtilities {
         } else {
             return escapeTitle(title).replace(",", "\\,");
         }
+    }
+
+    public static String generateEntitiesForContentSpec(final ContentSpec contentSpec, final DocBookVersion docBookVersion,
+            final String escapedTitle, final String originalTitle, final String originalProduct) {
+        Document doc = null;
+        if (!isNullOrEmpty(contentSpec.getEntities())) {
+            try {
+                final String wrappedEntities = "<!DOCTYPE section [" + contentSpec.getEntities() + "]><section></section>";
+                doc = XMLUtilities.convertStringToDocument(wrappedEntities);
+            } catch (Exception e) {
+                log.debug("Invalid Content Specification entities", e);
+            }
+        }
+
+        // Find what entities have already been defined
+        final StringBuilder retValue = new StringBuilder(100);
+        final List<String> definedEntities = new ArrayList<String>();
+        if (doc != null) {
+            final NamedNodeMap entityNodes = doc.getDoctype().getEntities();
+            for (int i = 0; i < entityNodes.getLength(); i++) {
+                final org.w3c.dom.Node entityNode = entityNodes.item(i);
+                definedEntities.add(entityNode.getNodeName());
+            }
+        }
+
+        // Add the default entities
+        // BOOKID
+        if (!definedEntities.contains("BOOKID")) {
+            retValue.append("<!ENTITY BOOKID \"").append(escapedTitle).append("\">\n");
+        }
+
+        // PRODUCT
+        if (!definedEntities.contains("PRODUCT")) {
+            final String escapedProduct = escapeForXMLEntity(contentSpec.getProduct());
+            retValue.append("<!ENTITY PRODUCT \"").append(escapedProduct).append("\">\n");
+        }
+
+        // TITLE
+        if (!definedEntities.contains("TITLE")) {
+            final String title = escapeTitleForXMLEntity(originalTitle);
+            retValue.append("<!ENTITY TITLE \"").append(title).append("\">\n");
+        }
+
+        // YEAR
+        if (!definedEntities.contains("YEAR")) {
+            final String year = contentSpec.getCopyrightYear() == null ? Integer.toString(
+                    Calendar.getInstance().get(Calendar.YEAR)) : contentSpec.getCopyrightYear();
+            retValue.append("<!ENTITY YEAR \"").append(year).append("\">\n");
+        }
+
+        // HOLDER
+        if (!definedEntities.contains("HOLDER")) {
+            final String escapedHolder = escapeForXMLEntity(contentSpec.getCopyrightHolder());
+            retValue.append("<!ENTITY HOLDER \"").append(escapedHolder).append("\">\n");
+        }
+
+        // BZPRODUCT
+        if (!definedEntities.contains("BZPRODUCT")) {
+            final String escapedBZProduct = escapeForXMLEntity(
+                    contentSpec.getBugzillaProduct() == null ? originalProduct : contentSpec.getBugzillaProduct());
+            retValue.append("<!ENTITY BZPRODUCT \"").append(escapedBZProduct).append("\">\n");
+        }
+
+        // BZCOMPONENT
+        if (!definedEntities.contains("BZCOMPONENT")) {
+            final String escapedBZComponent = escapeForXMLEntity(
+                    contentSpec.getBugzillaComponent() == null ? CSConstants.DEFAULT_BZCOMPONENT : contentSpec.getBugzillaComponent());
+            retValue.append("<!ENTITY BZCOMPONENT \"").append(escapedBZComponent).append("\">\n");
+        }
+
+        // BZURL
+        if (!definedEntities.contains("BZURL")) {
+            final String host = isNullOrEmpty(contentSpec.getBugzillaServer()) ? CSConstants.DEFAULT_BUGZILLA_URL : contentSpec
+                    .getBugzillaServer();
+            try {
+                final StringBuilder fixedBZURL = new StringBuilder();
+                if (contentSpec.getBugzillaURL() == null) {
+                    if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                        fixedBZURL.append("<link xlink:href='");
+                    } else {
+                        fixedBZURL.append("<ulink url='");
+                    }
+                    fixedBZURL.append(host);
+                    fixedBZURL.append("enter_bug.cgi");
+                    // Add in the product specific link details
+                    if (contentSpec.getBugzillaProduct() != null) {
+                        final String encodedProduct = URLEncoder.encode(contentSpec.getBugzillaProduct(), ENCODING);
+                        fixedBZURL.append("?product=").append(encodedProduct.replace("%", "&percnt;"));
+                        if (contentSpec.getBugzillaComponent() != null) {
+                            final String encodedComponent = URLEncoder.encode(contentSpec.getBugzillaComponent(), ENCODING);
+                            fixedBZURL.append("&amp;component=").append(encodedComponent.replace("%", "&percnt;"));
+                        }
+                        if (contentSpec.getBugzillaVersion() != null) {
+                            final String encodedVersion = URLEncoder.encode(contentSpec.getBugzillaVersion(), ENCODING);
+                            fixedBZURL.append("&amp;version=").append(encodedVersion.replace("&", "&percnt;"));
+                        }
+                    }
+                    fixedBZURL.append("'>").append(host);
+                    if (docBookVersion == DocBookVersion.DOCBOOK_50) {
+                        fixedBZURL.append("</link>");
+                    } else {
+                        fixedBZURL.append("</ulink>");
+                    }
+                } else {
+                    fixedBZURL.append(contentSpec.getBugzillaURL().replace("&", "&percnt;"));
+                }
+
+                retValue.append("<!ENTITY BZURL \"").append(fixedBZURL).append("\">\n");
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
+        // Add the custom entities if any exist
+        if (doc != null) {
+            retValue.append(contentSpec.getEntities().trim());
+        }
+
+        return retValue.toString();
+    }
+
+    protected static String escapeForXMLEntity(final String input) {
+        return StringUtilities.escapeForXML(input).replace("%", "&percnt;");
+    }
+
+    protected static String escapeTitleForXMLEntity(final String input) {
+        return DocBookUtilities.escapeForXML(input).replace("%", "&percnt;");
+    }
+
+    public static DocBookVersion getDocBookVersion(final ContentSpec contentSpec) {
+        if (CommonConstants.DOCBOOK_50_TITLE.equals(contentSpec.getFormat())) {
+            return DocBookVersion.DOCBOOK_50;
+        } else {
+            return DocBookVersion.DOCBOOK_45;
+        }
+    }
+
+    /**
+     * Gets the entities that are allowed to be used in a Content Specification.
+     *
+     * @param contentSpec The content spec object to get the entities from.
+     * @return A {@link List} of {@link org.w3c.dom.Entity} objects created from the content spec entities.
+     */
+    public static List<Entity> getContentSpecEntities(final ContentSpec contentSpec) {
+        final DocBookVersion docBookVersion = getDocBookVersion(contentSpec);
+        final String escapedTitle = DocBookUtilities.escapeTitle(contentSpec.getTitle());
+        final String entitiesString = ContentSpecUtilities.generateEntitiesForContentSpec(contentSpec, docBookVersion, escapedTitle,
+                contentSpec.getTitle(), contentSpec.getProduct());
+        return XMLUtilities.parseEntitiesFromString(entitiesString);
     }
 }
 

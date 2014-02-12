@@ -418,12 +418,12 @@ public class Level extends SpecNodeWithRelationships {
                     output.append(" ");
                     output.append(ContentSpecUtilities.escapeTitle(title));
                 }
-                if (getTargetId() != null) {
-                    output.append(" [").append(getTargetId()).append("]");
-                }
-                if (externalTargetId != null) {
-                    output.append(" [").append(externalTargetId).append("]");
-                }
+            }
+            if (getTargetId() != null) {
+                output.append(" [").append(getTargetId()).append("]");
+            }
+            if (externalTargetId != null) {
+                output.append(" [").append(externalTargetId).append("]");
             }
         }
         // Add any options

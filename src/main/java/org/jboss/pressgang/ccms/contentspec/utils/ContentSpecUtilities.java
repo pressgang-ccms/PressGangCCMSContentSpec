@@ -470,7 +470,8 @@ public class ContentSpecUtilities {
                 final StringBuilder fixedBZURL = new StringBuilder();
                 if (contentSpec.getBugzillaURL() == null) {
                     if (docBookVersion == DocBookVersion.DOCBOOK_50) {
-                        fixedBZURL.append("<link xlink:href='");
+                        final String linkEle = DocBookUtilities.addDocBook50Namespace("<link>", "link").replace("\"", "'").replace(">", "");
+                        fixedBZURL.append(linkEle).append(" xlink:href='");
                     } else {
                         fixedBZURL.append("<ulink url='");
                     }
@@ -479,14 +480,14 @@ public class ContentSpecUtilities {
                     // Add in the product specific link details
                     if (contentSpec.getBugzillaProduct() != null) {
                         final String encodedProduct = URLEncoder.encode(contentSpec.getBugzillaProduct(), ENCODING);
-                        fixedBZURL.append("?product=").append(encodedProduct.replace("%", "&percnt;"));
+                        fixedBZURL.append("?product=").append(escapeForXMLEntity(encodedProduct));
                         if (contentSpec.getBugzillaComponent() != null) {
                             final String encodedComponent = URLEncoder.encode(contentSpec.getBugzillaComponent(), ENCODING);
-                            fixedBZURL.append("&amp;component=").append(encodedComponent.replace("%", "&percnt;"));
+                            fixedBZURL.append("&amp;component=").append(escapeForXMLEntity(encodedComponent));
                         }
                         if (contentSpec.getBugzillaVersion() != null) {
                             final String encodedVersion = URLEncoder.encode(contentSpec.getBugzillaVersion(), ENCODING);
-                            fixedBZURL.append("&amp;version=").append(encodedVersion.replace("&", "&percnt;"));
+                            fixedBZURL.append("&amp;version=").append(escapeForXMLEntity(encodedVersion));
                         }
                     }
                     fixedBZURL.append("'>").append(host);
@@ -496,7 +497,7 @@ public class ContentSpecUtilities {
                         fixedBZURL.append("</ulink>");
                     }
                 } else {
-                    fixedBZURL.append(contentSpec.getBugzillaURL().replace("&", "&percnt;"));
+                    fixedBZURL.append(escapeForXMLEntity(contentSpec.getBugzillaURL()));
                 }
 
                 retValue.append("<!ENTITY BZURL \"").append(fixedBZURL).append("\">\n");

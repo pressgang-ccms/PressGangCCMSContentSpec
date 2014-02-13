@@ -644,28 +644,8 @@ public class Level extends SpecNodeWithRelationships {
      * @return True if the topic exists within this level or its children otherwise false.
      */
     public boolean isSpecTopicInLevel(final SpecTopic topic) {
-        /*
-         * Check this level to see if the topic exists
-         */
-        final List<SpecTopic> topics = getSpecTopics();
-        for (final SpecTopic childTopic : topics) {
-            if (childTopic == topic || childTopic.getId().equals(topic.getId())) {
-                return true;
-            }
-        }
-
-        /*
-         * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
-         * first.
-         */
-        final List<Level> childLevels = getChildLevels();
-        for (final Level childLevel : childLevels) {
-            if (childLevel.isSpecTopicInLevel(topic)) {
-                return true;
-            }
-        }
-
-        return false;
+        final SpecTopic foundTopic = getClosestTopic(topic, false);
+        return foundTopic != null;
     }
 
     /**
@@ -675,28 +655,8 @@ public class Level extends SpecNodeWithRelationships {
      * @return True if the topic exists within this level or its children otherwise false.
      */
     public boolean isSpecTopicInLevelByTopicID(final Integer topicId) {
-        /*
-         * Check this level to see if the topic exists
-         */
-        final List<SpecTopic> topics = getSpecTopics();
-        for (final SpecTopic childTopic : topics) {
-            if (childTopic.getDBId().equals(topicId)) {
-                return true;
-            }
-        }
-
-        /*
-         * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
-         * first.
-         */
-        final List<Level> childLevels = getChildLevels();
-        for (final Level childLevel : childLevels) {
-            if (childLevel.isSpecTopicInLevelByTopicID(topicId)) {
-                return true;
-            }
-        }
-
-        return false;
+        final SpecTopic foundTopic = getClosestTopicByDBId(topicId, false);
+        return foundTopic != null;
     }
 
     /**
@@ -706,31 +666,8 @@ public class Level extends SpecNodeWithRelationships {
      * @return True if the level/topic exists within this level or its children otherwise false.
      */
     public boolean isSpecNodeInLevelByTargetID(final String targetId) {
-        /*
-         * Check this level to see if the node exists
-         */
-        final List<Node> children = getChildNodes();
-        for (final Node childNode : children) {
-            if (childNode instanceof SpecNode) {
-                final SpecNode specNode = (SpecNode) childNode;
-                if (specNode.getTargetId() != null && specNode.getTargetId().equals(targetId)) {
-                    return true;
-                }
-            }
-        }
-
-        /*
-         * If we get to this stage, then the topic wasn't directly at this level. So we should try this levels, child levels
-         * first.
-         */
-        final List<Level> childLevels = getChildLevels();
-        for (final Level childLevel : childLevels) {
-            if (childLevel.isSpecNodeInLevelByTargetID(targetId)) {
-                return true;
-            }
-        }
-
-        return false;
+        final SpecNode foundTopic = getClosestSpecNodeByTargetId(targetId, false);
+        return foundTopic != null;
     }
 
     @Override

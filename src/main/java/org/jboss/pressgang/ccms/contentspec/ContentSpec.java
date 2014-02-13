@@ -22,7 +22,6 @@ import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.entities.Relationship;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.BugLinkType;
-import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.HashUtilities;
@@ -81,7 +80,7 @@ public class ContentSpec extends Node {
     private String locale = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
-    private final Level level = new Level("Initial Level", 0, null, LevelType.BASE);
+    private final Level level;
 
     /**
      * Constructor
@@ -92,7 +91,7 @@ public class ContentSpec extends Node {
      * @param copyrightHolder The Copyright Holder of the Content Specification and the book it creates.
      */
     public ContentSpec(final String title, final String product, final String version, final String copyrightHolder) {
-        setTitle(title);
+        this(title);
         setProduct(product);
         setVersion(version);
         setCopyrightHolder(copyrightHolder);
@@ -104,6 +103,7 @@ public class ContentSpec extends Node {
      * @param title The title of the Content Specification.
      */
     public ContentSpec(final String title) {
+        this();
         setTitle(title);
     }
 
@@ -119,6 +119,7 @@ public class ContentSpec extends Node {
     }
 
     public ContentSpec() {
+        level = new BaseLevel(this);
     }
 
     // Start of the basic getter/setter methods for this Scope.

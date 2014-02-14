@@ -4,6 +4,7 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,7 +30,6 @@ import org.slf4j.LoggerFactory;
 public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions> {
     private static final Logger LOG = LoggerFactory.getLogger(JIRABugLinkStrategy.class);
     protected static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
-    protected static final String ENCODING = "UTF-8";
     protected static final String DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
@@ -49,12 +49,13 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     }
 
     @Override
-    public String generateUrl(final JIRABugLinkOptions bugOptions, final SpecTopic specTopic) throws UnsupportedEncodingException {
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final SpecTopic specTopic, final String buildName,
+            Date buildDate) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
-                "\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        final StringBuilder jiraEnvironment = buildBaseEnvironment(bugOptions, buildName, buildDate);
+        jiraEnvironment.append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
         if (specTopic.getRevision() == null) {
             jiraEnvironment.append(" [Latest]");
         } else {
@@ -68,10 +69,11 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     }
 
     @Override
-    public String generateUrl(final JIRABugLinkOptions bugOptions, final InitialContent initialContent) throws UnsupportedEncodingException {
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final InitialContent initialContent, final String buildName,
+            Date buildDate) throws UnsupportedEncodingException {
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, initialContent.getParent().getTitle()), ENCODING);
-        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
-                "\nTopic IDs:");
+        final StringBuilder jiraEnvironment = buildBaseEnvironment(bugOptions, buildName, buildDate);
+        jiraEnvironment.append("\nTopic IDs:");
 
         for (final SpecTopic initialContentTopic : initialContent.getSpecTopics()) {
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
@@ -86,9 +88,35 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
         }
 
         // Encode the URL and add in the build name/date entities
-        final String encodedJIRAEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(jiraEnvironment.toString(), ENCODING));
+        final String encodedJIRAEnvironment;
+        if (bugOptions.isUseEntities()) {
+            encodedJIRAEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(jiraEnvironment.toString(), ENCODING));
+        } else {
+            encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
+        }
 
         return generateUrl(bugOptions, description, encodedJIRAEnvironment);
+    }
+
+    @Override
+    public String generateEntities(final JIRABugLinkOptions bugOptions, final String buildName,
+            final Date buildDate) throws UnsupportedEncodingException {
+        final StringBuilder retValue = new StringBuilder(super.generateEntities(bugOptions, buildName, buildDate));
+
+        final JIRAProject project = getJIRAProject(client, bugOptions.getProject());
+        retValue.append("<!ENTITY BUILD_JIRA_PID \"").append(project.getId()).append("\">\n");
+
+        if (bugOptions.getComponent() != null) {
+            final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
+            retValue.append("<!ENTITY BUILD_JIRA_CID \"").append(component.getId()).append("\">\n");
+        }
+
+        if (bugOptions.getVersion() != null) {
+            final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
+            retValue.append("<!ENTITY BUILD_JIRA_VID \"").append(version.getId()).append("\">\n");
+        }
+
+        return retValue.toString();
     }
 
     protected String generateUrl(final JIRABugLinkOptions bugOptions, final String encodedDescription,
@@ -103,25 +131,41 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
 
         final JIRAProject project = getJIRAProject(client, bugOptions.getProject());
         JIRAURLComponents.append("&amp;");
-        JIRAURLComponents.append("pid=").append(project.getId());
+        JIRAURLComponents.append("pid=");
+        if (bugOptions.isUseEntities()) {
+            JIRAURLComponents.append("&BUILD_JIRA_PID;");
+        } else {
+            JIRAURLComponents.append(project.getId());
+        }
 
         if (bugOptions.getComponent() != null) {
             final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
             JIRAURLComponents.append("&amp;");
-            JIRAURLComponents.append("components=").append(component.getId());
+            JIRAURLComponents.append("components=");
+            if (bugOptions.isUseEntities()) {
+                JIRAURLComponents.append("&BUILD_JIRA_CID;");
+            } else {
+                JIRAURLComponents.append(component.getId());
+            }
         }
 
         if (bugOptions.getVersion() != null) {
             final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
             JIRAURLComponents.append("&amp;");
-            JIRAURLComponents.append("versions=").append(version.getId());
+            JIRAURLComponents.append("versions=");
+            if (bugOptions.isUseEntities()) {
+                JIRAURLComponents.append("&BUILD_JIRA_VID;");
+            } else {
+                JIRAURLComponents.append(version.getId());
+            }
         }
 
         if (bugOptions.getLabels() != null) {
             final String[] labels = bugOptions.getLabels().split("\\s*,\\s*");
             for (final String label : labels) {
                 JIRAURLComponents.append("&amp;");
-                JIRAURLComponents.append("labels=").append(URLEncoder.encode(label, ENCODING));
+                JIRAURLComponents.append("labels=");
+                JIRAURLComponents.append(URLEncoder.encode(label, ENCODING));
             }
         }
 

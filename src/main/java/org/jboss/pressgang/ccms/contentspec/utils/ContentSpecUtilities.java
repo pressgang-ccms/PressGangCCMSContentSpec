@@ -425,7 +425,7 @@ public class ContentSpecUtilities {
 
         // PRODUCT
         if (!definedEntities.contains("PRODUCT")) {
-            final String escapedProduct = escapeForXMLEntity(contentSpec.getProduct());
+            final String escapedProduct = StringUtilities.escapeForXMLEntity(contentSpec.getProduct());
             retValue.append("<!ENTITY PRODUCT \"").append(escapedProduct).append("\">\n");
         }
 
@@ -444,20 +444,20 @@ public class ContentSpecUtilities {
 
         // HOLDER
         if (!definedEntities.contains("HOLDER")) {
-            final String escapedHolder = escapeForXMLEntity(contentSpec.getCopyrightHolder());
+            final String escapedHolder = StringUtilities.escapeForXMLEntity(contentSpec.getCopyrightHolder());
             retValue.append("<!ENTITY HOLDER \"").append(escapedHolder).append("\">\n");
         }
 
         // BZPRODUCT
         if (!definedEntities.contains("BZPRODUCT")) {
-            final String escapedBZProduct = escapeForXMLEntity(
+            final String escapedBZProduct = StringUtilities.escapeForXMLEntity(
                     contentSpec.getBugzillaProduct() == null ? originalProduct : contentSpec.getBugzillaProduct());
             retValue.append("<!ENTITY BZPRODUCT \"").append(escapedBZProduct).append("\">\n");
         }
 
         // BZCOMPONENT
         if (!definedEntities.contains("BZCOMPONENT")) {
-            final String escapedBZComponent = escapeForXMLEntity(
+            final String escapedBZComponent = StringUtilities.escapeForXMLEntity(
                     contentSpec.getBugzillaComponent() == null ? CSConstants.DEFAULT_BZCOMPONENT : contentSpec.getBugzillaComponent());
             retValue.append("<!ENTITY BZCOMPONENT \"").append(escapedBZComponent).append("\">\n");
         }
@@ -480,14 +480,14 @@ public class ContentSpecUtilities {
                     // Add in the product specific link details
                     if (contentSpec.getBugzillaProduct() != null) {
                         final String encodedProduct = URLEncoder.encode(contentSpec.getBugzillaProduct(), ENCODING);
-                        fixedBZURL.append("?product=").append(escapeForXMLEntity(encodedProduct));
+                        fixedBZURL.append("?product=").append(StringUtilities.escapeForXMLEntity(encodedProduct));
                         if (contentSpec.getBugzillaComponent() != null) {
                             final String encodedComponent = URLEncoder.encode(contentSpec.getBugzillaComponent(), ENCODING);
-                            fixedBZURL.append("&amp;component=").append(escapeForXMLEntity(encodedComponent));
+                            fixedBZURL.append("&amp;component=").append(StringUtilities.escapeForXMLEntity(encodedComponent));
                         }
                         if (contentSpec.getBugzillaVersion() != null) {
                             final String encodedVersion = URLEncoder.encode(contentSpec.getBugzillaVersion(), ENCODING);
-                            fixedBZURL.append("&amp;version=").append(escapeForXMLEntity(encodedVersion));
+                            fixedBZURL.append("&amp;version=").append(StringUtilities.escapeForXMLEntity(encodedVersion));
                         }
                     }
                     fixedBZURL.append("'>").append(host);
@@ -497,7 +497,7 @@ public class ContentSpecUtilities {
                         fixedBZURL.append("</ulink>");
                     }
                 } else {
-                    fixedBZURL.append(escapeForXMLEntity(contentSpec.getBugzillaURL()));
+                    fixedBZURL.append(StringUtilities.escapeForXMLEntity(contentSpec.getBugzillaURL()));
                 }
 
                 retValue.append("<!ENTITY BZURL \"").append(fixedBZURL).append("\">\n");
@@ -512,10 +512,6 @@ public class ContentSpecUtilities {
         }
 
         return retValue.toString();
-    }
-
-    protected static String escapeForXMLEntity(final String input) {
-        return StringUtilities.escapeForXML(input).replace("%", "&percnt;");
     }
 
     protected static String escapeTitleForXMLEntity(final String input) {

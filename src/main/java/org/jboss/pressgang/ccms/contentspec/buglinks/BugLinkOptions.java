@@ -3,6 +3,7 @@ package org.jboss.pressgang.ccms.contentspec.buglinks;
 public class BugLinkOptions {
     private String baseUrl = null;
     private boolean injectLinks = true;
+    private boolean useEntities = false;
 
     public boolean isBugLinksEnabled() {
         return injectLinks;
@@ -21,5 +22,13 @@ public class BugLinkOptions {
 
     public void setBaseUrl(final String baseUrl) {
         this.baseUrl = baseUrl;
+    }
+
+    public boolean isUseEntities() {
+        return useEntities;
+    }
+
+    public void setUseEntities(boolean useEntities) {
+        this.useEntities = useEntities;
     }
 }

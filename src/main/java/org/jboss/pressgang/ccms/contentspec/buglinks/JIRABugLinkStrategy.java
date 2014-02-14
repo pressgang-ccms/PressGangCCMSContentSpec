@@ -4,9 +4,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +30,6 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     private static final Logger LOG = LoggerFactory.getLogger(JIRABugLinkStrategy.class);
     protected static final Pattern NUMBER_PATTERN = Pattern.compile("^\\d+$");
     protected static final String ENCODING = "UTF-8";
-    protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
@@ -53,30 +49,29 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
     }
 
     @Override
-    public String generateUrl(final JIRABugLinkOptions bugOptions, final SpecTopic specTopic, final String buildName,
-            Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final SpecTopic specTopic) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
-                DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
+                "\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
         if (specTopic.getRevision() == null) {
             jiraEnvironment.append(" [Latest]");
         } else {
             jiraEnvironment.append(" [Specified]");
         }
-        final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
+
+        // Encode the URL and add in the build name/date entities
+        final String encodedJIRAEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(jiraEnvironment.toString(), ENCODING));
 
         return generateUrl(bugOptions, description, encodedJIRAEnvironment);
     }
 
     @Override
-    public String generateUrl(final JIRABugLinkOptions bugOptions, final InitialContent initialContent, final String buildName,
-            Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(final JIRABugLinkOptions bugOptions, final InitialContent initialContent) throws UnsupportedEncodingException {
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, initialContent.getParent().getTitle()), ENCODING);
-        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append(buildName)
-                .append("\nBuild Date: ").append(DATE_FORMATTER.format(buildDate))
-                .append("\nTopic IDs:");
+        final StringBuilder jiraEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
+                "\nTopic IDs:");
 
         for (final SpecTopic initialContentTopic : initialContent.getSpecTopics()) {
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
@@ -90,7 +85,8 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
             }
         }
 
-        final String encodedJIRAEnvironment = URLEncoder.encode(jiraEnvironment.toString(), ENCODING);
+        // Encode the URL and add in the build name/date entities
+        final String encodedJIRAEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(jiraEnvironment.toString(), ENCODING));
 
         return generateUrl(bugOptions, description, encodedJIRAEnvironment);
     }

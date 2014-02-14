@@ -4,9 +4,6 @@ import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import com.j2bugzilla.base.BugField;
@@ -29,7 +26,6 @@ import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 
 public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLinkOptions> {
     protected static final String ENCODING = "UTF-8";
-    protected static final DateFormat DATE_FORMATTER = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
     protected static final String BUGZILLA_DESCRIPTION_TEMPLATE = "Title: %s\n\n" + "Describe the issue:\n\n\nSuggestions for " +
             "improvement:\n\n\nAdditional information:";
 
@@ -55,13 +51,12 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
     }
 
     @Override
-    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final SpecTopic specTopic, String buildName,
-            final Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final SpecTopic specTopic) throws UnsupportedEncodingException {
         final BaseTopicWrapper<?> topic = specTopic.getTopic();
 
         final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
-        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
-                DATE_FORMATTER.format(buildDate)).append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
+                "\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
         final StringBuilder bugzillaBuildID = new StringBuilder();
         bugzillaBuildID.append(topic.getBugzillaBuildId());
 
@@ -72,18 +67,19 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
             bugzillaBuildID.append(" [Specified]");
             bugzillaEnvironment.append(" [Specified]");
         }
-        final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
+
+        // Encode the URL and add in the build name/date entities
+        final String encodedBugzillaEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING));
 
         return generateUrl(bzOptions, bugzillaBuildID.toString(), bugzillaDescription, encodedBugzillaEnvironment);
     }
 
     @Override
-    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final InitialContent initialContent, String buildName,
-            final Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(final BugzillaBugLinkOptions bzOptions, final InitialContent initialContent) throws UnsupportedEncodingException {
         final String bugzillaDescription = URLEncoder.encode(
                 String.format(BUGZILLA_DESCRIPTION_TEMPLATE, initialContent.getParent().getTitle()), ENCODING);
-        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append(buildName).append("\nBuild Date: ").append(
-                DATE_FORMATTER.format(buildDate)).append("\nTopic IDs:");
+        final StringBuilder bugzillaEnvironment = new StringBuilder("Build Name: ").append("\nBuild Date: ").append(
+                "\nTopic IDs:");
 
         for (final SpecTopic initialContentTopic : initialContent.getSpecTopics()) {
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
@@ -97,7 +93,8 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
             }
         }
 
-        final String encodedBugzillaEnvironment = URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING);
+        // Encode the URL and add in the build name/date entities
+        final String encodedBugzillaEnvironment = addBuildNameAndDateEntities(URLEncoder.encode(bugzillaEnvironment.toString(), ENCODING));
 
         return generateUrl(bzOptions, null, bugzillaDescription, encodedBugzillaEnvironment);
     }

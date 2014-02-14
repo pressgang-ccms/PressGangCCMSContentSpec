@@ -1,7 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.buglinks;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 
 import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -14,14 +13,12 @@ public class DefaultBugLinkHelper extends BaseBugLinkStrategy<BugLinkOptions> {
     }
 
     @Override
-    public String generateUrl(BugLinkOptions bugOptions, SpecTopic specTopic, String buildName,
-            Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(BugLinkOptions bugOptions, SpecTopic specTopic) throws UnsupportedEncodingException {
         return bugOptions.getBaseUrl();
     }
 
     @Override
-    public String generateUrl(BugLinkOptions bugOptions, InitialContent initialContent, String buildName,
-            Date buildDate) throws UnsupportedEncodingException {
+    public String generateUrl(BugLinkOptions bugOptions, InitialContent initialContent) throws UnsupportedEncodingException {
         return bugOptions.getBaseUrl();
     }
 

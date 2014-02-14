@@ -1,7 +1,6 @@
 package org.jboss.pressgang.ccms.contentspec.buglinks;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Date;
 
 import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -16,11 +15,9 @@ public abstract class BaseBugLinkStrategy<T extends BugLinkOptions> {
 
     public abstract void initialise(final String serverUrl, final Object... args);
 
-    public abstract String generateUrl(T bugOptions, SpecTopic specTopic, String buildName,
-            Date buildDate) throws UnsupportedEncodingException;
+    public abstract String generateUrl(T bugOptions, SpecTopic specTopic) throws UnsupportedEncodingException;
 
-    public abstract String generateUrl(T bugOptions, InitialContent initialContent, String buildName,
-            Date buildDate) throws UnsupportedEncodingException;
+    public abstract String generateUrl(T bugOptions, InitialContent initialContent) throws UnsupportedEncodingException;
 
     /**
      * Validates the bugzilla options against an external server.
@@ -50,5 +47,10 @@ public abstract class BaseBugLinkStrategy<T extends BugLinkOptions> {
 
     protected String getFixedServerUrl() {
         return getServerUrl() == null ? null : (getServerUrl().endsWith("/") ? getServerUrl() : (getServerUrl() + "/"));
+    }
+
+    protected String addBuildNameAndDateEntities(final String encodedEnvironment) {
+        return  encodedEnvironment.replace("Build+Date%3A+", "Build+Date%3A+&BUILD_DATE;")
+                .replace("Build+Name%3A+", "Build+Name%3A+&BUILD_NAME;");
     }
 }

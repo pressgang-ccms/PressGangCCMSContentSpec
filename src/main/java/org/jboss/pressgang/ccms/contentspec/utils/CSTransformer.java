@@ -33,7 +33,6 @@ import org.jboss.pressgang.ccms.contentspec.entities.InjectionOptions;
 import org.jboss.pressgang.ccms.contentspec.enums.BookType;
 import org.jboss.pressgang.ccms.contentspec.enums.LevelType;
 import org.jboss.pressgang.ccms.contentspec.enums.RelationshipType;
-import org.jboss.pressgang.ccms.contentspec.enums.TopicType;
 import org.jboss.pressgang.ccms.contentspec.sort.CSNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.CSRelatedNodeSorter;
 import org.jboss.pressgang.ccms.contentspec.sort.EntityWrapperIDComparator;
@@ -534,9 +533,7 @@ public class CSTransformer {
                 } else {
                     // Relationships to topics
                     final SpecTopic toSpecTopic = (SpecTopic) toNode;
-                    final String title = TopicType.INITIAL_CONTENT.equals(
-                            toSpecTopic.getTopicType()) && toSpecTopic.getParent() instanceof Level ? ((Level) toSpecTopic.getParent())
-                            .getTitle() : toSpecTopic.getTitle();
+                    final String title = toSpecTopic.getTitle();
 
                     // Add the relationship
                     if (relatedToNode.getRelationshipMode().equals(CommonConstants.CS_RELATIONSHIP_MODE_TARGET)) {

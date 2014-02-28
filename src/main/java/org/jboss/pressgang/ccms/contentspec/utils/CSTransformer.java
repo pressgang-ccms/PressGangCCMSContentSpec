@@ -72,6 +72,7 @@ public class CSTransformer {
         final ContentSpec contentSpec = new ContentSpec();
 
         contentSpec.setId(spec.getId());
+        contentSpec.setLocale(spec.getLocale());
         transformGlobalOptions(spec, contentSpec);
 
         // Add all the levels/topics

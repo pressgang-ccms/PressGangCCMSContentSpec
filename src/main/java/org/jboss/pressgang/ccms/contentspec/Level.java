@@ -699,10 +699,11 @@ public class Level extends SpecNodeWithRelationships {
 
         // Get the xref id
         final String levelXRefId;
-        if (useFixedUrls) {
-            levelXRefId = DocBookUtilities.escapeTitle(title);
+        final String escapedTitle = DocBookUtilities.escapeTitle(title);
+        if (useFixedUrls && !(isNullOrEmpty(escapedTitle) || escapedTitle.matches("^\\d+$"))) {
+            levelXRefId = escapedTitle;
         } else {
-            levelXRefId = "ChapterID" + getStep();
+            levelXRefId = getLevelType().getTitle().replace(" ", "_") + "ID" + getUniqueId();
         }
 
         return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));

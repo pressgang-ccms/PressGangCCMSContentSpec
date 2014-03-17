@@ -72,10 +72,10 @@ public class CSTransformer {
         final ContentSpec contentSpec = new ContentSpec();
 
         contentSpec.setId(spec.getId());
-        contentSpec.setLocale(spec.getLocale());
         transformGlobalOptions(spec, contentSpec);
 
         // Add all the levels/topics
+        boolean localeFound = false;
         if (spec.getChildren() != null) {
             final List<CSNodeWrapper> childNodes = spec.getChildren().getItems();
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
@@ -91,6 +91,9 @@ public class CSTransformer {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
                         final KeyValueNode<?> metaDataNode = transformMetaData(childNode, nodes, topicTargets, relationshipFromNodes);
                         levelNodes.put(childNode, metaDataNode);
+                    }
+                    if (CommonConstants.CS_LOCALE_TITLE.equalsIgnoreCase(childNode.getTitle())) {
+                        localeFound = true;
                     }
                 } else {
                     final Level level = transformLevel(childNode, nodes, topicTargets, relationshipFromNodes, processes);
@@ -110,6 +113,12 @@ public class CSTransformer {
                 // If a level or spec topic is found then start adding to the base level instead of the content spec
                 if ((entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) && !addToBaseLevel) {
                     addToBaseLevel = true;
+
+                    // Add the locale if it wasn't specified
+                    if (!localeFound) {
+                        contentSpec.setLocale(spec.getLocale());
+                    }
+
                     // Add a space between the base metadata and optional metadata
                     contentSpec.appendChild(new TextNode("\n"));
                 }

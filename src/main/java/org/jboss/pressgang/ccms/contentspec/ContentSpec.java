@@ -72,12 +72,12 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraLabels = null;
     private KeyValueNode<String> jiraServer = null;
     private KeyValueNode<Boolean> includeIndex = null;
+    private KeyValueNode<String> locale = null;
     private FileList files = null;
     private KeyValueNode<String> entities = null;
     private Map<String, KeyValueNode<String>> publicanCfgs = new HashMap<String, KeyValueNode<String>>();
     private KeyValueNode<String> defaultPublicanCfg = null;
     private Integer revision = null;
-    private String locale = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
     private final Level level;
@@ -809,7 +809,7 @@ public class ContentSpec extends Node {
      * @return The Content Specification locale.
      */
     public String getLocale() {
-        return locale;
+        return locale == null ? null : locale.getValue();
     }
 
     /**
@@ -818,7 +818,17 @@ public class ContentSpec extends Node {
      * @param locale The locale for the content specification
      */
     public void setLocale(final String locale) {
-        this.locale = locale;
+        if (locale == null && this.locale == null) {
+            return;
+        } else if (locale == null) {
+            removeChild(this.locale);
+            this.locale = null;
+        } else if (this.locale == null) {
+            this.locale = new KeyValueNode<String>(CommonConstants.CS_LOCALE_TITLE, locale);
+            appendChild(this.locale, false);
+        } else {
+            this.locale.setValue(locale);
+        }
     }
 
     /**
@@ -2068,6 +2078,9 @@ public class ContentSpec extends Node {
                 }
                 includeIndex = useIndexNode;
                 setKeyValueNodeKey(includeIndex, CommonConstants.CS_INDEX_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_LOCALE_TITLE) && value instanceof String) {
+                locale = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(locale, CommonConstants.CS_LOCALE_TITLE);
             }
 
             // Add the node to the list of nodes

@@ -403,11 +403,11 @@ public abstract class SpecNode extends Node {
         }
 
         if (assignedWriter != null && !assignedWriter.trim().isEmpty()) {
-            vars.add("Writer = " + assignedWriter);
+            vars.add("writer = " + assignedWriter);
         }
 
         if (description != null && !description.trim().isEmpty()) {
-            vars.add("Description = " + description);
+            vars.add("description = " + description);
         }
 
         if (condition != null && !condition.trim().isEmpty()) {

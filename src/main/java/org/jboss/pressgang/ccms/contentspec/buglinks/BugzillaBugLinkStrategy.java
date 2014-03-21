@@ -222,7 +222,8 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
                 connector.executeMethod(getProduct);
                 final Product product = getProduct.getProduct();
                 if (product == null) {
-                    throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\".");
+                    throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\", " +
+                            "or it is a private Product.");
                 } else {
                     // Validate the Bugzilla Component
                     if (bugzillaOptions.getComponent() != null) {

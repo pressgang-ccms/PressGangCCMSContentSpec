@@ -175,9 +175,13 @@ public class CSTransformer {
                 final List<File> files = ((FileList) node).getValue();
                 current += files == null || files.isEmpty() ? 0 : (files.size() - 1);
             } else if (node instanceof KeyValueNode) {
-                if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_PUBLICAN_CFG_TITLE)) {
+                if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_PUBLICAN_CFG_TITLE) || ((KeyValueNode) node).getKey()
+                        .endsWith("-" + CommonConstants.CS_PUBLICAN_CFG_TITLE)) {
                     final String publicanCfg = (String) ((KeyValueNode) node).getValue();
                     current += StringUtils.countMatches(publicanCfg, "\n");
+                } else if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_ENTITIES_TITLE)) {
+                    final String entities = (String) ((KeyValueNode) node).getValue();
+                    current += StringUtils.countMatches(entities, "\n");
                 }
             } else if (node instanceof SpecTopic && !((SpecTopic) node).getRelationships().isEmpty()) {
                 int numPrereqs = ((SpecTopic) node).getPrerequisiteRelationships().size();

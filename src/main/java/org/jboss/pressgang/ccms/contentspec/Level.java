@@ -34,7 +34,8 @@ public class Level extends SpecNodeWithRelationships {
     protected final LinkedList<Node> nodes = new LinkedList<Node>();
     protected final LevelType type;
     protected String translatedTitle;
-    private String externalTargetId = null;
+    protected String externalTargetId;
+    protected InfoTopic infoTopic;
 
     /**
      * Constructor.
@@ -314,6 +315,21 @@ public class Level extends SpecNodeWithRelationships {
         removeChild(comment);
     }
 
+    public InfoTopic getInfoTopic() {
+        return infoTopic;
+    }
+
+    public void setInfoTopic(final InfoTopic infoTopic) {
+        if (this.infoTopic != null) {
+            infoTopic.setLevel(null);
+        }
+
+        this.infoTopic = infoTopic;
+        if (infoTopic != null) {
+            infoTopic.setLevel(this);
+        }
+    }
+
     /**
      * Gets a ordered linked list of the child nodes within the level.
      *
@@ -419,16 +435,22 @@ public class Level extends SpecNodeWithRelationships {
                     output.append(ContentSpecUtilities.escapeTitle(title));
                 }
             }
+        }
+        // Add any options
+        if (!options.equals("")) {
+            output.append(" [").append(options).append("]");
+        }
+        
+        if (type != LevelType.BASE) {
+            if (getInfoTopic() != null) {
+                output.append(" ").append(getInfoTopic().getText());
+            }
             if (getTargetId() != null) {
                 output.append(" [").append(getTargetId()).append("]");
             }
             if (externalTargetId != null) {
                 output.append(" [").append(externalTargetId).append("]");
             }
-        }
-        // Add any options
-        if (!options.equals("")) {
-            output.append(" [").append(options).append("]");
         }
 
         // Append any relationship text

@@ -1095,6 +1095,22 @@ public class ContentSpec extends Node {
 
     public List<SpecTopic> getSpecTopics() {
         final List<SpecTopic> specTopics = getLevelSpecTopics(level);
+        specTopics.addAll(getMetaDataSpecTopics());
+        return specTopics;
+    }
+
+    public List<ITopicNode> getAllTopicNodes() {
+        final List<ITopicNode> topicNodes = getLevelTopicNodes(level);
+        topicNodes.addAll(getMetaDataSpecTopics());
+        return topicNodes;
+    }
+
+    public List<InfoTopic> getInfoTopics() {
+        return getLevelInfoTopics(level);
+    }
+
+    private List<SpecTopic> getMetaDataSpecTopics() {
+        final List<SpecTopic> specTopics = new ArrayList<SpecTopic>();
 
         // Add the Revision History Spec Topic
         if (getRevisionHistory() != null) {
@@ -1124,12 +1140,34 @@ public class ContentSpec extends Node {
         return specTopics;
     }
 
+    private List<ITopicNode> getLevelTopicNodes(final Level level) {
+        final List<ITopicNode> topicNodes = new ArrayList<ITopicNode>(level.getSpecTopics());
+        if (level.getInfoTopic() != null) {
+            topicNodes.add(level.getInfoTopic());
+        }
+        for (final Level childLevel : level.getChildLevels()) {
+            topicNodes.addAll(getLevelTopicNodes(childLevel));
+        }
+        return topicNodes;
+    }
+
     private List<SpecTopic> getLevelSpecTopics(final Level level) {
         final List<SpecTopic> specTopics = new ArrayList<SpecTopic>(level.getSpecTopics());
         for (final Level childLevel : level.getChildLevels()) {
             specTopics.addAll(getLevelSpecTopics(childLevel));
         }
         return specTopics;
+    }
+
+    private List<InfoTopic> getLevelInfoTopics(final Level level) {
+        final List<InfoTopic> infoTopics = new ArrayList<InfoTopic>();
+        if (level.getInfoTopic() != null) {
+            infoTopics.add(level.getInfoTopic());
+        }
+        for (final Level childLevel : level.getChildLevels()) {
+            infoTopics.addAll(getLevelInfoTopics(childLevel));
+        }
+        return infoTopics;
     }
 
     public Map<SpecNodeWithRelationships, List<Relationship>> getRelationships() {

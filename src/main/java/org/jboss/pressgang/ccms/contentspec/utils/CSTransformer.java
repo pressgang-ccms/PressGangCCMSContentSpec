@@ -17,6 +17,7 @@ import org.jboss.pressgang.ccms.contentspec.Comment;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.File;
 import org.jboss.pressgang.ccms.contentspec.FileList;
+import org.jboss.pressgang.ccms.contentspec.InfoTopic;
 import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
@@ -40,6 +41,7 @@ import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSInfoNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
@@ -339,6 +341,11 @@ public class CSTransformer {
             relationshipFromNodes.add(node);
         }
 
+        if (node.getInfoTopicNode() != null) {
+            final InfoTopic infoTopic = transformInfoTopic(node.getInfoTopicNode());
+            level.setInfoTopic(infoTopic);
+        }
+
         // Add all the levels/topics
         if (node.getChildren() != null && node.getChildren().getItems() != null) {
             final List<CSNodeWrapper> childNodes = node.getChildren().getItems();
@@ -458,6 +465,23 @@ public class CSTransformer {
         }
 
         return specTopic;
+    }
+
+    /**
+     * Transform a Topic CSNode entity object into an InfoTopic Object that can be added to a Content Specification.
+     *
+     * @param node                  The CSNode entity object to be transformed.
+     * @return The transformed InfoTopic entity.
+     */
+    protected static InfoTopic transformInfoTopic(final CSInfoNodeWrapper node) {
+        final InfoTopic infoTopic = new InfoTopic(node.getTopicId(), null);
+
+        // Basic data
+        infoTopic.setRevision(node.getTopicRevision());
+        infoTopic.setConditionStatement(node.getCondition());
+        infoTopic.setUniqueId(node.getId() == null ? null : node.getId().toString());
+
+        return infoTopic;
     }
 
     /**

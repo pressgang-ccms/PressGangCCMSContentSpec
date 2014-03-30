@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.ITopicNode;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
@@ -93,17 +93,17 @@ public class TopicPool {
      * within this pool. The topic pool must be saved and initialised before
      * this call will work.
      *
-     * @param specTopic
+     * @param topicNode
      * @return
      */
-    public SpecTopic initialiseFromPool(final SpecTopic specTopic) {
+    public ITopicNode initialiseFromPool(final ITopicNode topicNode) {
         if (initialised) {
             if (newTopicPool != null && !newTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : newTopicPool.getItems()) {
                     if (topic.getProperty(cspIdPropertyTagId) != null) {
-                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(specTopic.getUniqueId())) {
-                            specTopic.setId(Integer.toString(topic.getId()));
-                            return specTopic;
+                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(topicNode.getUniqueId())) {
+                            topicNode.setId(Integer.toString(topic.getId()));
+                            return topicNode;
                         }
                     }
                 }
@@ -111,15 +111,15 @@ public class TopicPool {
             if (updatedTopicPool != null && !updatedTopicPool.isEmpty()) {
                 for (final TopicWrapper topic : updatedTopicPool.getItems()) {
                     if (topic.getProperty(cspIdPropertyTagId) != null) {
-                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(specTopic.getUniqueId())) {
-                            specTopic.setId(Integer.toString(topic.getId()));
-                            return specTopic;
+                        if (topic.getProperty(cspIdPropertyTagId).getValue().equals(topicNode.getUniqueId())) {
+                            topicNode.setId(Integer.toString(topic.getId()));
+                            return topicNode;
                         }
                     }
                 }
             }
         }
-        return specTopic;
+        return topicNode;
     }
 
     /**

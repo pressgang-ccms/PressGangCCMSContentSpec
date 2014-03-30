@@ -15,6 +15,8 @@ import java.util.Map;
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.ITopicNode;
+import org.jboss.pressgang.ccms.contentspec.InfoTopic;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
@@ -308,6 +310,16 @@ public class ContentSpecUtilities {
         return specTopicMap;
     }
 
+    public static Map<String, InfoTopic> getUniqueIdInfoTopicMap(ContentSpec contentSpec) {
+        // Create the map of unique ids to spec topics
+        final Map<String, InfoTopic> infoTopicMap = new HashMap<String, InfoTopic>();
+        final List<InfoTopic> infoTopics = contentSpec.getInfoTopics();
+        for (final InfoTopic infoTopic : infoTopics) {
+            infoTopicMap.put(infoTopic.getUniqueId(), infoTopic);
+        }
+        return infoTopicMap;
+    }
+
     public static Map<String, SpecTopic> getTargetIdSpecTopicMap(ContentSpec contentSpec) {
         // Create the map of unique ids to spec topics
         final Map<String, SpecTopic> specTopicMap = new HashMap<String, SpecTopic>();
@@ -330,6 +342,21 @@ public class ContentSpecUtilities {
                     specTopicMap.put(specTopic.getId(), new ArrayList<SpecTopic>());
                 }
                 specTopicMap.get(specTopic.getId()).add(specTopic);
+            }
+        }
+        return specTopicMap;
+    }
+
+    public static Map<String, List<ITopicNode>> getIdTopicNodeMap(ContentSpec contentSpec) {
+        // Create the map of unique ids to spec topics
+        final Map<String, List<ITopicNode>> specTopicMap = new HashMap<String, List<ITopicNode>>();
+        final List<ITopicNode> topicNodes = contentSpec.getAllTopicNodes();
+        for (final ITopicNode topicNode : topicNodes) {
+            if (topicNode.getId() != null) {
+                if (!specTopicMap.containsKey(topicNode.getId())) {
+                    specTopicMap.put(topicNode.getId(), new ArrayList<ITopicNode>());
+                }
+                specTopicMap.get(topicNode.getId()).add(topicNode);
             }
         }
         return specTopicMap;
@@ -538,73 +565,5 @@ public class ContentSpecUtilities {
         final String entitiesString = ContentSpecUtilities.generateEntitiesForContentSpec(contentSpec, docBookVersion, escapedTitle,
                 contentSpec.getTitle(), contentSpec.getProduct());
         return XMLUtilities.parseEntitiesFromString(entitiesString);
-    }
-}
-
-/**
- * Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match
- * it to the source XML.
- */
-class ZanataStringDetails {
-    /**
-     * The number of spaces that Zanata removed from the left
-     */
-    private final int leftTrimCount;
-    /**
-     * The number of spaces that Zanata removed from the right
-     */
-    private final int rightTrimCount;
-    /**
-     * The string that was matched to the one returned by Zanata. This will be null if there was no match.
-     */
-    private final String fixedString;
-
-    ZanataStringDetails(final Map<String, String> translations, final String originalString) {
-        /*
-         * Here we account for any trimming that is done by Zanata.
-         */
-        final String lTrimtString = StringUtilities.ltrim(originalString);
-        final String rTrimString = StringUtilities.rtrim(originalString);
-        final String trimString = originalString.trim();
-
-        final boolean containsExactMacth = translations.containsKey(originalString);
-        final boolean lTrimMatch = translations.containsKey(lTrimtString);
-        final boolean rTrimMatch = translations.containsKey(rTrimString);
-        final boolean trimMatch = translations.containsKey(trimString);
-
-        /* remember the details of the trimming, so we can add the padding back */
-        if (containsExactMacth) {
-            leftTrimCount = 0;
-            rightTrimCount = 0;
-            fixedString = originalString;
-        } else if (lTrimMatch) {
-            leftTrimCount = originalString.length() - lTrimtString.length();
-            rightTrimCount = 0;
-            fixedString = lTrimtString;
-        } else if (rTrimMatch) {
-            leftTrimCount = 0;
-            rightTrimCount = originalString.length() - rTrimString.length();
-            fixedString = rTrimString;
-        } else if (trimMatch) {
-            leftTrimCount = StringUtilities.ltrimCount(originalString);
-            rightTrimCount = StringUtilities.rtrimCount(originalString);
-            fixedString = trimString;
-        } else {
-            leftTrimCount = 0;
-            rightTrimCount = 0;
-            fixedString = null;
-        }
-    }
-
-    public int getLeftTrimCount() {
-        return leftTrimCount;
-    }
-
-    public int getRightTrimCount() {
-        return rightTrimCount;
-    }
-
-    public String getFixedString() {
-        return fixedString;
     }
 }

@@ -19,6 +19,7 @@ import org.jboss.pressgang.ccms.provider.TranslatedCSNodeProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedTopicProvider;
 import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
+import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -201,7 +202,7 @@ public class TranslationUtilities {
 
             if (nodeCollections != null && nodeCollections.size() != 0) {
                 // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
-                final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
+                final TranslationStringDetails fixedStringDetails = new TranslationStringDetails(translations, originalString);
                 if (fixedStringDetails.getFixedString() != null) {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
 
@@ -311,6 +312,74 @@ public class TranslationUtilities {
                     node.setAdditionalText(fixedValue);
                 }
             }
+        }
+    }
+
+    /**
+     * Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match
+     * it to the source XML.
+     */
+    private static class TranslationStringDetails {
+        /**
+         * The number of spaces that Zanata removed from the left
+         */
+        private final int leftTrimCount;
+        /**
+         * The number of spaces that Zanata removed from the right
+         */
+        private final int rightTrimCount;
+        /**
+         * The string that was matched to the one returned by Zanata. This will be null if there was no match.
+         */
+        private final String fixedString;
+
+        TranslationStringDetails(final Map<String, String> translations, final String originalString) {
+        /*
+         * Here we account for any trimming that is done by Zanata.
+         */
+            final String lTrimtString = StringUtilities.ltrim(originalString);
+            final String rTrimString = StringUtilities.rtrim(originalString);
+            final String trimString = originalString.trim();
+
+            final boolean containsExactMacth = translations.containsKey(originalString);
+            final boolean lTrimMatch = translations.containsKey(lTrimtString);
+            final boolean rTrimMatch = translations.containsKey(rTrimString);
+            final boolean trimMatch = translations.containsKey(trimString);
+
+        /* remember the details of the trimming, so we can add the padding back */
+            if (containsExactMacth) {
+                leftTrimCount = 0;
+                rightTrimCount = 0;
+                fixedString = originalString;
+            } else if (lTrimMatch) {
+                leftTrimCount = originalString.length() - lTrimtString.length();
+                rightTrimCount = 0;
+                fixedString = lTrimtString;
+            } else if (rTrimMatch) {
+                leftTrimCount = 0;
+                rightTrimCount = originalString.length() - rTrimString.length();
+                fixedString = rTrimString;
+            } else if (trimMatch) {
+                leftTrimCount = StringUtilities.ltrimCount(originalString);
+                rightTrimCount = StringUtilities.rtrimCount(originalString);
+                fixedString = trimString;
+            } else {
+                leftTrimCount = 0;
+                rightTrimCount = 0;
+                fixedString = null;
+            }
+        }
+
+        public int getLeftTrimCount() {
+            return leftTrimCount;
+        }
+
+        public int getRightTrimCount() {
+            return rightTrimCount;
+        }
+
+        public String getFixedString() {
+            return fixedString;
         }
     }
 }

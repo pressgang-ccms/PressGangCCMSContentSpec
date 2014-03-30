@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSInfoNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 
 /**
@@ -32,6 +33,11 @@ public class TestUtil {
     public static CSNodeWrapper createValidTopicMock() {
         CSNodeWrapper topicNode = mock(CSNodeWrapper.class);
         given(topicNode.getNodeType()).willReturn(CommonConstants.CS_NODE_TOPIC);
+        return topicNode;
+    }
+
+    public static CSInfoNodeWrapper createValidInfoTopicMock() {
+        CSInfoNodeWrapper topicNode = mock(CSInfoNodeWrapper.class);
         return topicNode;
     }
 

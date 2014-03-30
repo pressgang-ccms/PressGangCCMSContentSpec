@@ -411,4 +411,12 @@ public class EntityUtilities {
             return false;
         }
     }
+
+    public static boolean isANormalTopic(final BaseTopicWrapper<?> topic, final ServerEntitiesWrapper serverEntities) {
+        return !(topic.hasTag(serverEntities.getLegalNoticeTagId())
+                || topic.hasTag(serverEntities.getRevisionHistoryTagId())
+                || topic.hasTag(serverEntities.getAuthorGroupTagId())
+                || topic.hasTag(serverEntities.getAbstractTagId())
+                || topic.hasTag(serverEntities.getInfoTagId()));
+    }
 }

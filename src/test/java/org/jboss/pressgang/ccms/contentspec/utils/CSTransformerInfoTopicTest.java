@@ -23,7 +23,7 @@ public class CSTransformerInfoTopicTest extends CSTransformerTest {
     @Mock CSNodeWrapper nodeWrapper;
 
     @Test
-    public void shouldTransformValidSpecTopic() throws Exception {
+    public void shouldTransformValidInfoTopic() throws Exception {
         // Given a valid info topic with no related nodes and a target id
         mockValidInfoTopicWrapper();
 
@@ -34,7 +34,7 @@ public class CSTransformerInfoTopicTest extends CSTransformerTest {
         assertThat(result.getDBId(), is(infoNodeWrapper.getTopicId()));
         assertThat(result.getRevision(), is(infoNodeWrapper.getTopicRevision()));
         assertThat(result.getConditionStatement(), is(infoNodeWrapper.getCondition()));
-        assertThat(result.getUniqueId(), is(infoNodeWrapper.getId().toString()));
+        assertThat(result.getUniqueId(), is(nodeWrapper.getId().toString()));
     }
 
     @Test

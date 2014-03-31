@@ -346,7 +346,7 @@ public class CSTransformer {
         }
 
         if (node.getInfoTopicNode() != null) {
-            final InfoTopic infoTopic = transformInfoTopic(node.getInfoTopicNode());
+            final InfoTopic infoTopic = transformInfoTopic(node, node.getInfoTopicNode());
             level.setInfoTopic(infoTopic);
         }
 
@@ -477,13 +477,13 @@ public class CSTransformer {
      * @param node                  The CSNode entity object to be transformed.
      * @return The transformed InfoTopic entity.
      */
-    protected static InfoTopic transformInfoTopic(final CSInfoNodeWrapper node) {
+    protected static InfoTopic transformInfoTopic(final CSNodeWrapper parentNode, final CSInfoNodeWrapper node) {
         final InfoTopic infoTopic = new InfoTopic(node.getTopicId(), null);
 
         // Basic data
         infoTopic.setRevision(node.getTopicRevision());
         infoTopic.setConditionStatement(node.getCondition());
-        infoTopic.setUniqueId(node.getId() == null ? null : node.getId().toString());
+        infoTopic.setUniqueId(parentNode.getId() == null ? null : parentNode.getId().toString());
 
         return infoTopic;
     }

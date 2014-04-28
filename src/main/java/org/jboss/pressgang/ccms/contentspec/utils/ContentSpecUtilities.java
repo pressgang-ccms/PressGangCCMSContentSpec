@@ -15,6 +15,7 @@ import java.util.Map;
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
+import org.jboss.pressgang.ccms.contentspec.FileList;
 import org.jboss.pressgang.ccms.contentspec.ITopicNode;
 import org.jboss.pressgang.ccms.contentspec.InfoTopic;
 import org.jboss.pressgang.ccms.contentspec.Level;
@@ -208,10 +209,25 @@ public class ContentSpecUtilities {
         for (final Node node : contentSpec.getNodes()) {
             if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
                 return node;
+            } else if (node instanceof FileList) {
+                final Node retValue = findMatchingContentSpecNode((FileList) node, csNodeId);
+                if (retValue != null) {
+                    return retValue;
+                }
             }
         }
 
         return findMatchingContentSpecNode(contentSpec.getBaseLevel(), csNodeId);
+    }
+
+    protected static Node findMatchingContentSpecNode(final FileList fileList, final Integer csNodeId) {
+        for (final Node node : fileList.getValue()) {
+            if (node.getUniqueId() != null && node.getUniqueId().equals(csNodeId + "")) {
+                return node;
+            }
+        }
+
+        return null;
     }
 
     public static Node findMatchingContentSpecNode(final Level level, final Integer csNodeId) {

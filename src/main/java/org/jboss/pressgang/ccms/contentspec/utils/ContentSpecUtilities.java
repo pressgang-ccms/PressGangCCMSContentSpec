@@ -439,6 +439,11 @@ public class ContentSpecUtilities {
 
     public static String generateEntitiesForContentSpec(final ContentSpec contentSpec, final DocBookVersion docBookVersion,
             final String escapedTitle, final String originalTitle, final String originalProduct) {
+        return generateEntitiesForContentSpec(contentSpec, docBookVersion, escapedTitle, originalTitle, originalProduct, true);
+    }
+
+    public static String generateEntitiesForContentSpec(final ContentSpec contentSpec, final DocBookVersion docBookVersion,
+            final String escapedTitle, final String originalTitle, final String originalProduct, final boolean addCustomEntities) {
         Document doc = null;
         if (!isNullOrEmpty(contentSpec.getEntities())) {
             try {
@@ -550,7 +555,7 @@ public class ContentSpecUtilities {
         }
 
         // Add the custom entities if any exist
-        if (doc != null) {
+        if (addCustomEntities && doc != null) {
             retValue.append(contentSpec.getEntities().trim());
         }
 

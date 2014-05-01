@@ -3,6 +3,7 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -18,7 +19,6 @@ import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TranslatedCSNodeProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedTopicProvider;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
@@ -36,10 +36,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class TranslationUtilities {
-    private static final List<String> TRANSLATABLE_METADATA = CollectionUtilities.toArrayList(
-            new String[]{CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE, CommonConstants.CS_SUBTITLE_TITLE,
-                    CommonConstants.CS_ABSTRACT_TITLE, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, CommonConstants.CS_VERSION_TITLE,
-                    CommonConstants.CS_EDITION_TITLE});
+    public static final List<String> TRANSLATABLE_METADATA = Arrays.asList(CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE,
+            CommonConstants.CS_SUBTITLE_TITLE, CommonConstants.CS_ABSTRACT_TITLE, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE);
 
     /**
      * Create a TranslatedTopic based on the content from a normal Topic.
@@ -223,7 +221,7 @@ public class TranslationUtilities {
                             final Node contentSpecNode = ContentSpecUtilities.findMatchingContentSpecNode(contentSpec, node.getId());
                             if (contentSpecNode != null) {
                                 if (contentSpecNode instanceof KeyValueNode) {
-                                    ((KeyValueNode) contentSpecNode).setValue(fixedTranslation);
+                                    ((KeyValueNode) contentSpecNode).setTranslatedValue(fixedTranslation);
                                 } else if (contentSpecNode instanceof Level) {
                                     ((Level) contentSpecNode).setTranslatedTitle(fixedTranslation);
                                 }
@@ -310,6 +308,31 @@ public class TranslationUtilities {
                 if (node.getAdditionalText().contains(entityString)) {
                     final String fixedValue = node.getAdditionalText().replace(entityString, entity.getTextContent());
                     node.setAdditionalText(fixedValue);
+                }
+            }
+        }
+    }
+
+    public static void resolveCustomContentSpecEntities(final List<Entity> customEntities, final ContentSpec contentSpec) {
+        final List<KeyValueNode<String>> translatableNodes = new ArrayList<KeyValueNode<String>>();
+
+        // Find all the translatable nodes first
+        for (final Node node : contentSpec.getNodes()) {
+            if (node instanceof KeyValueNode) {
+                final KeyValueNode<String> keyValueNode = (KeyValueNode<String>) node;
+                if (TRANSLATABLE_METADATA.contains(keyValueNode.getKey())) {
+                    translatableNodes.add(keyValueNode);
+                }
+            }
+        }
+
+        // Resolve any custom entities
+        for (final Entity entity : customEntities) {
+            final String entityString = "&" + entity.getNodeName() + ";";
+            for (final KeyValueNode<String> node : translatableNodes) {
+                if (node.getValue().contains(entityString)) {
+                    final String fixedValue = node.getValue().replace(entityString, entity.getTextContent());
+                    node.setValue(fixedValue);
                 }
             }
         }

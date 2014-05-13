@@ -487,7 +487,7 @@ public class ContentSpecUtilities {
 
         // HOLDER
         if (!definedEntities.contains("HOLDER")) {
-            final String escapedHolder = StringUtilities.escapeForXMLEntity(contentSpec.getCopyrightHolder());
+            final String escapedHolder = escapeTitleForXMLEntity(contentSpec.getCopyrightHolder());
             retValue.append("<!ENTITY HOLDER \"").append(escapedHolder).append("\">\n");
         }
 

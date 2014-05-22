@@ -1,9 +1,9 @@
 package org.jboss.pressgang.ccms.contentspec.constants;
 
-import java.util.regex.Pattern;
 import java.util.Arrays;
 import java.util.List;
 
+import com.google.code.regexp.Pattern;
 import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 
@@ -28,7 +28,7 @@ public class CSConstants {
     public static final String CLONED_DUPLICATE_TOPIC_ID_REGEX = "^XC[0-9]+$";
     public static final String ALL_TOPIC_ID_REGEX = "(^N[0-9]*$)|(^[0-9]+$)|(^X[0-9]+$)|(^C[0-9]+$)|(^XC[0-9]+$)";
     public static final Pattern CUSTOM_PUBLICAN_CFG_PATTERN = Pattern.compile("([A-Za-z0-9-]+)-" + StringUtilities.convertToRegexString(
-            CommonConstants.CS_PUBLICAN_CFG_TITLE), Pattern.CASE_INSENSITIVE);
+            CommonConstants.CS_PUBLICAN_CFG_TITLE), java.util.regex.Pattern.CASE_INSENSITIVE);
 
     public static final String CHAPTER = "Chapter";
     public static final String APPENDIX = "Appendix";

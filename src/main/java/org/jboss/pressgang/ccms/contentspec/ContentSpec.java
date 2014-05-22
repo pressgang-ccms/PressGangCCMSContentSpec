@@ -13,8 +13,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
+import com.google.code.regexp.Matcher;
 import org.jboss.pressgang.ccms.contentspec.buglinks.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.buglinks.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;

@@ -56,7 +56,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
         final StringBuilder jiraEnvironment = buildBaseEnvironment(bugOptions, buildName, buildDate);
-        jiraEnvironment.append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        jiraEnvironment.append("\nTopic ID: ").append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
         if (specTopic.getRevision() == null) {
             jiraEnvironment.append(" [Latest]");
         } else {
@@ -80,7 +80,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             jiraEnvironment.append("\n");
-            jiraEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
+            jiraEnvironment.append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
             if (initialContentTopic.getRevision() == null) {
                 jiraEnvironment.append(" [Latest]");
             } else {

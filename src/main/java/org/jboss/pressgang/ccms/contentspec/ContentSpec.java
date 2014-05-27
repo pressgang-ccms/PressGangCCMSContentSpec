@@ -73,6 +73,7 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraServer = null;
     private KeyValueNode<Boolean> includeIndex = null;
     private KeyValueNode<String> locale = null;
+    private KeyValueNode<Boolean> useDefaultPreface = null;
     private FileList files = null;
     private KeyValueNode<String> entities = null;
     private Map<String, KeyValueNode<String>> publicanCfgs = new HashMap<String, KeyValueNode<String>>();
@@ -982,6 +983,43 @@ public class ContentSpec extends Node {
             appendChild(this.locale, false);
         } else {
             this.locale.setValue(locale);
+        }
+    }
+
+    /**
+     * Gets if the DefaultPreface should be used for a Content Specification.
+     *
+     * @return Whether the default preface should be used.
+     */
+    public Boolean getUseDefaultPreface() {
+        return useDefaultPreface == null ? true : useDefaultPreface.getValue();
+    }
+
+    /**
+     * Gets the Default Preface key/value node.
+     *
+     * @return The key/value node that contains the Default Preface, or null if one isn't set.
+     */
+    public KeyValueNode<Boolean> getDefaultPrefaceNode() {
+        return useDefaultPreface;
+    }
+
+    /**
+     * Sets the Content Specifications Default Preface setting.
+     *
+     * @param useDefaultPreface Whether the default preface should be used.
+     */
+    public void setUseDefaultPreface(final Boolean useDefaultPreface) {
+        if (useDefaultPreface == null && this.useDefaultPreface == null) {
+            return;
+        } else if (useDefaultPreface == null) {
+            removeChild(this.useDefaultPreface);
+            this.useDefaultPreface = null;
+        } else if (this.useDefaultPreface == null) {
+            this.useDefaultPreface = new KeyValueNode<Boolean>(CommonConstants.CS_DEFAULT_PREFACE, useDefaultPreface);
+            appendChild(this.useDefaultPreface, false);
+        } else {
+            this.useDefaultPreface.setValue(useDefaultPreface);
         }
     }
 
@@ -2435,6 +2473,23 @@ public class ContentSpec extends Node {
             } else if (key.equalsIgnoreCase(CommonConstants.CS_LOCALE_TITLE) && value instanceof String) {
                 locale = (KeyValueNode<String>) node;
                 setKeyValueNodeKey(locale, CommonConstants.CS_LOCALE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_DEFAULT_PREFACE) && value instanceof String) {
+                final KeyValueNode<Boolean> useDefaultPrefaceNode;
+                if (value instanceof String) {
+                    final Boolean fixedValue;
+                    if (((String) value).equalsIgnoreCase("ON")) {
+                        fixedValue = true;
+                    } else {
+                        fixedValue = Boolean.parseBoolean((String) value);
+                    }
+                    useDefaultPrefaceNode = new KeyValueNode<Boolean>(CommonConstants.CS_DEFAULT_PREFACE, fixedValue);
+                    cloneKeyValueNode(node, useDefaultPrefaceNode);
+                    fixedNode = useDefaultPrefaceNode;
+                } else {
+                    useDefaultPrefaceNode = (KeyValueNode<Boolean>) node;
+                }
+                useDefaultPreface = useDefaultPrefaceNode;
+                setKeyValueNodeKey(useDefaultPreface, CommonConstants.CS_DEFAULT_PREFACE);
             }
 
             // Add the node to the list of nodes

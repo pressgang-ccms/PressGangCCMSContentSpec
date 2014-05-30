@@ -97,7 +97,7 @@ public class KeyValueNode<T> extends Node {
             final String valueString = (value == null ? "" : value.toString()).replace("[", "\\[").replace("]", "\\]");
             return key + " " + separator + " [" + valueString + "]";
         } else if (value instanceof Boolean) {
-            return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));
+            return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "On" : "Off"));
         } else if (value instanceof SpecTopic) {
             return key + " " + separator + " " + (value == null ? "" : ("[" + ((SpecTopic) value).getIdAndOptionsString()) + "]");
         } else {

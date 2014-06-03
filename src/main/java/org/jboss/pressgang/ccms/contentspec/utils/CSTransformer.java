@@ -14,6 +14,7 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Chapter;
 import org.jboss.pressgang.ccms.contentspec.Comment;
+import org.jboss.pressgang.ccms.contentspec.CommonContent;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.File;
 import org.jboss.pressgang.ccms.contentspec.FileList;
@@ -88,6 +89,9 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+                    final CommonContent commonContent = transformCommonContent(childNode);
+                    levelNodes.put(childNode, commonContent);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA || childNode.getNodeType() == CommonConstants
                         .CS_NODE_META_DATA_TOPIC) {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
@@ -362,6 +366,9 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+                    final CommonContent commonContent = transformCommonContent(childNode);
+                    levelNodes.put(childNode, commonContent);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INITIAL_CONTENT_TOPIC) {
                     final SpecTopic initialContentTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics,
                             relationshipFromNodes);
@@ -505,6 +512,25 @@ public class CSTransformer {
         comment.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         return comment;
+    }
+
+    /**
+     * Transform a Common Content CSNode entity into a Comment object that can be added to a Content Specification.
+     *
+     * @param node The CSNode to be transformed.
+     * @return The transformed Comment object.
+     */
+    protected static CommonContent transformCommonContent(CSNodeWrapper node) {
+        final CommonContent commonContent;
+        if (node.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+            commonContent = new CommonContent(node.getTitle());
+        } else {
+            throw new IllegalArgumentException("The passed node is not a Comment");
+        }
+
+        commonContent.setUniqueId(node.getId() == null ? null : node.getId().toString());
+
+        return commonContent;
     }
 
     /**

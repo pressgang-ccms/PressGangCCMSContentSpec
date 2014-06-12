@@ -29,6 +29,11 @@ public class Level extends SpecNodeWithRelationships {
     protected final List<Level> levels = new ArrayList<Level>();
 
     /**
+     * A list of the CommonContent topics that are stored directly within the level.
+     */
+    protected final List<CommonContent> commonContents = new ArrayList<CommonContent>();
+
+    /**
      * A List of all the nodes stored directly within the level.
      */
     protected final LinkedList<Node> nodes = new LinkedList<Node>();
@@ -169,6 +174,14 @@ public class Level extends SpecNodeWithRelationships {
             child.setParent(this);
         } else if (child instanceof SpecTopic) {
             appendSpecTopic((SpecTopic) child);
+        } else if (child instanceof CommonContent) {
+            // Append the common content
+            commonContents.add((CommonContent) child);
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         } else {
             nodes.add(child);
             if (child.getParent() != null) {
@@ -190,6 +203,10 @@ public class Level extends SpecNodeWithRelationships {
             child.setParent(null);
         } else if (child instanceof SpecTopic) {
             removeSpecTopic((SpecTopic) child);
+        } else if (child instanceof CommonContent) {
+            commonContents.remove(child);
+            nodes.remove(child);
+            child.setParent(null);
         } else {
             nodes.remove(child);
             child.setParent(null);
@@ -212,6 +229,15 @@ public class Level extends SpecNodeWithRelationships {
      */
     public int getNumberOfChildLevels() {
         return levels.size();
+    }
+
+    /**
+     * Gets the number of Common Content topics in the Level.
+     *
+     * @return The number of Common Content topics
+     */
+    public int getNumberOfCommonContents() {
+        return commonContents.size();
     }
 
     /**

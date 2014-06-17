@@ -398,6 +398,25 @@ public class Level extends SpecNodeWithRelationships {
     }
 
     /**
+     * Checks to see if this level or any of its children contain CommonContent.
+     *
+     * @return True if the level or the levels children contain at least one CommonContent.
+     */
+    public boolean hasCommonContents() {
+        if (getNumberOfCommonContents() > 0) {
+            return true;
+        }
+
+        for (final Level childLevel : levels) {
+            if (childLevel.hasCommonContents()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks to see if this level or any of its children contain SpecTopics that represent a revision.
      *
      * @return True if the level or the levels children contain at least one SpecTopic that is a revision.

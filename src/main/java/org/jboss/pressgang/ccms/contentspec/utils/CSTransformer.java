@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -27,6 +29,7 @@ import org.jboss.pressgang.ccms.contentspec.Part;
 import org.jboss.pressgang.ccms.contentspec.Preface;
 import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.Section;
+import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecNodeWithRelationships;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
@@ -344,11 +347,16 @@ public class CSTransformer {
         level.setTargetId(node.getTargetId());
         level.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
+        // Set the fixed url properties
+        applyFixedURLs(node, level);
+
+        // Collect any relationships for processing after everything is transformed
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {
             relationshipFromNodes.add(node);
         }
 
+        // Transform the info topic node if one exists for the level
         if (node.getInfoTopicNode() != null) {
             final InfoTopic infoTopic = transformInfoTopic(node, node.getInfoTopicNode());
             level.setInfoTopic(infoTopic);
@@ -462,6 +470,10 @@ public class CSTransformer {
         specTopic.setTargetId(node.getTargetId());
         specTopic.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
+        // Set the fixed url properties
+        applyFixedURLs(node, specTopic);
+
+        // Collect any relationships for processing after everything is transformed
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {
             relationshipFromNodes.add(node);
@@ -620,6 +632,12 @@ public class CSTransformer {
         for (final Process process : processes) {
             process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class),
                     providerFactory.getProvider(ServerSettingsProvider.class));
+        }
+    }
+
+    protected static void applyFixedURLs(final CSNodeWrapper node, final SpecNode specNode) {
+        if (!isNullOrEmpty(node.getFixedURL())) {
+            specNode.setFixedUrl(node.getFixedURL());
         }
     }
 

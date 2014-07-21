@@ -1,5 +1,7 @@
 package org.jboss.pressgang.ccms.contentspec;
 
+import static org.jboss.pressgang.ccms.utils.common.StringUtilities.isStringNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,6 +22,7 @@ public abstract class SpecNode extends Node implements IOptionsNode {
     protected String targetId;
     protected String title;
     protected String duplicateId;
+    protected String fixedUrl;
 
     protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
@@ -83,6 +86,24 @@ public abstract class SpecNode extends Node implements IOptionsNode {
      */
     public boolean isTargetIdAnInternalId() {
         return targetId == null ? false : getTargetId().matches("^T-" + getUniqueId() + "0[0-9]+$");
+    }
+
+    /**
+     * Get the Fixed URL component for the node to be used when it is built.
+     *
+     * @return A string containing the unique fixed url to be used for the node.
+     */
+    public String getFixedUrl() {
+        return fixedUrl;
+    }
+
+    /**
+     * Set the Fixed URL component to be used for the node when building.
+     *
+     * @param fixedUrl The unique fixed URL component.
+     */
+    public void setFixedUrl(final String fixedUrl) {
+        this.fixedUrl = fixedUrl;
     }
 
     @Override
@@ -339,19 +360,24 @@ public abstract class SpecNode extends Node implements IOptionsNode {
             }
         }
 
-        if (assignedWriter != null && !assignedWriter.trim().isEmpty()) {
+        if (!isStringNullOrEmpty(assignedWriter)) {
             vars.add("writer = " + assignedWriter);
         }
 
-        if (description != null && !description.trim().isEmpty()) {
+        if (!isStringNullOrEmpty(description)) {
             vars.add("description = " + description);
         }
 
-        if (condition != null && !condition.trim().isEmpty()) {
+        if (!isStringNullOrEmpty(condition)) {
             vars.add("condition = " + condition);
         }
+
+        if (!isStringNullOrEmpty(fixedUrl)) {
+            vars.add("Fixed URL = " + fixedUrl);
+        }
+
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
     }
 
-    public abstract String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls);
+    public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

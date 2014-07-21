@@ -738,41 +738,22 @@ public class Level extends SpecNodeWithRelationships {
     }
 
     @Override
-    public String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
-        // Get the pre link string
-        final String preFix;
-        switch (getLevelType()) {
-            case APPENDIX:
-                preFix = "appe-";
-                break;
-            case SECTION:
-                preFix = "sect-";
-                break;
-            case PROCESS:
-                preFix = "proc-";
-                break;
-            case CHAPTER:
-                preFix = "chap-";
-                break;
-            case PART:
-                preFix = "part-";
-                break;
-            case PREFACE:
-                preFix = "pref-";
-                break;
-            default:
-                preFix = "";
-        }
-
+    public String getUniqueLinkId(final boolean useFixedUrls) {
         // Get the xref id
         final String levelXRefId;
-        final String escapedTitle = DocBookUtilities.escapeTitle(title);
-        if (useFixedUrls && !(isNullOrEmpty(escapedTitle) || escapedTitle.matches("^\\d+$"))) {
-            levelXRefId = escapedTitle;
+        if (useFixedUrls && getFixedUrl() != null) {
+            levelXRefId = getFixedUrl();
         } else {
-            levelXRefId = getLevelType().getTitle().replace(" ", "_") + "ID" + getUniqueId();
+            final String prefix = ContentSpecUtilities.getLevelPrefix(this);
+            final String escapedTitle = DocBookUtilities.escapeTitle(title);
+
+            if (useFixedUrls && !(isNullOrEmpty(escapedTitle) || escapedTitle.matches("^\\d+$"))) {
+                levelXRefId = prefix + escapedTitle;
+            } else {
+                levelXRefId = prefix + getLevelType().getTitle().replace(" ", "_") + "ID" + getUniqueId();
+            }
         }
 
-        return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+        return levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
     }
 }

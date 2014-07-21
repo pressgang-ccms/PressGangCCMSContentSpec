@@ -19,7 +19,7 @@ public class CommonContent extends SpecNode {
     }
 
     @Override
-    public String getUniqueLinkId(Integer fixedUrlPropertyTagId, boolean useFixedUrls) {
+    public String getUniqueLinkId(boolean useFixedUrls) {
         return getFixedTitle();
     }
 

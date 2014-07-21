@@ -8,9 +8,11 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.code.regexp.Matcher;
 import com.google.code.regexp.Pattern;
@@ -20,6 +22,7 @@ import org.jboss.pressgang.ccms.contentspec.ITopicNode;
 import org.jboss.pressgang.ccms.contentspec.InfoTopic;
 import org.jboss.pressgang.ccms.contentspec.Level;
 import org.jboss.pressgang.ccms.contentspec.Node;
+import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
 import org.jboss.pressgang.ccms.contentspec.entities.Revision;
@@ -33,6 +36,7 @@ import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -586,5 +590,111 @@ public class ContentSpecUtilities {
         final String entitiesString = ContentSpecUtilities.generateEntitiesForContentSpec(contentSpec, docBookVersion, escapedTitle,
                 contentSpec.getTitle(), contentSpec.getProduct());
         return XMLUtilities.parseEntitiesFromString(entitiesString);
+    }
+
+    /**
+     * Get the prefix to use for level container fixed urls.
+     *
+     * @param level The level to get the prefix for.
+     * @return The levels prefix to be used in a fixed url.
+     */
+    public static String getLevelPrefix(final Level level) {
+        // Get the pre link string
+        switch (level.getLevelType()) {
+            case APPENDIX:
+                return "appe-";
+            case SECTION:
+                return "sect-";
+            case PROCESS:
+                return "proc-";
+            case CHAPTER:
+                return "chap-";
+            case PART:
+                return "part-";
+            case PREFACE:
+                return "pref-";
+            default:
+                return "";
+        }
+    }
+
+    /**
+     * Gets all the fixed urls from a content specification
+     *
+     * @param contentSpec A content spec to get the fixed urls for
+     * @return A set of fixed urls used in the content spec.
+     */
+    public static Set<String> getFixedURLs(final ContentSpec contentSpec) {
+        final Set<String> fixedUrls = new HashSet<String>();
+
+        for (final Node childNode : contentSpec.getNodes()) {
+            if (childNode instanceof SpecNode) {
+                final SpecNode specNode = ((SpecNode) childNode);
+                if (!isNullOrEmpty(specNode.getFixedUrl())) {
+                    fixedUrls.add(specNode.getFixedUrl());
+                }
+            }
+
+            if (childNode instanceof Level) {
+                fixedUrls.addAll(getFixedURLs((Level) childNode));
+            }
+        }
+
+        fixedUrls.addAll(getFixedURLs(contentSpec.getBaseLevel()));
+
+        return fixedUrls;
+    }
+
+    /**
+     * Gets all the fixed urls from a content specification level.
+     *
+     * @param level A level to get the fixed urls for
+     * @return A set of fixed urls used in the level.
+     */
+    public static Set<String> getFixedURLs(final Level level) {
+        final Set<String> fixedUrls = new HashSet<String>();
+
+        for (final Node childNode : level.getChildNodes()) {
+            if (childNode instanceof SpecNode) {
+                final SpecNode specNode = ((SpecNode) childNode);
+                if (!isNullOrEmpty(specNode.getFixedUrl())) {
+                    fixedUrls.add(specNode.getFixedUrl());
+                }
+            }
+
+            if (childNode instanceof Level) {
+                fixedUrls.addAll(getFixedURLs((Level) childNode));
+            }
+        }
+
+        return fixedUrls;
+    }
+
+    /**
+     * Gets a Topics title with conditional statements applied
+     *
+     * @param specTopic The TopicNode of the topic to get the title for.
+     * @param topic     The actual topic to get the non-processed title from.
+     * @return The processed title that has the conditions applied.
+     */
+    public static String getTopicTitleWithConditions(final ITopicNode specTopic, final BaseTopicWrapper<?> topic) {
+        final String condition = specTopic.getConditionStatement(true);
+        if (condition != null && topic.getTitle() != null && topic.getTitle().contains("condition")) {
+            try {
+                final Document doc = XMLUtilities.convertStringToDocument("<title>" + topic.getTitle() + "</title>");
+
+                // Process the condition on the title
+                DocBookUtilities.processConditions(condition, doc);
+
+                // Return the processed title
+                return XMLUtilities.convertNodeToString(doc, false);
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
+
+            return topic.getTitle();
+        } else {
+            return topic.getTitle();
+        }
     }
 }

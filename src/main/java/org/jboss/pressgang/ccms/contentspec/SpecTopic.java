@@ -568,14 +568,14 @@ public class SpecTopic extends SpecNodeWithRelationships implements ITopicNode {
     }
 
     @Override
-    public String getUniqueLinkId(Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
+    public String getUniqueLinkId(final boolean useFixedUrls) {
         // If this is an inner topic then get the parents id
         if (getTopicType() == TopicType.INITIAL_CONTENT) {
-            return ((Level) getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls);
+            return ((Level) getParent()).getUniqueLinkId(useFixedUrls);
         } else {
             final String topicXRefId;
-            if (useFixedUrls) {
-                topicXRefId = topic.getXRefPropertyOrId(fixedUrlPropertyTagId);
+            if (useFixedUrls && getFixedUrl() != null) {
+                topicXRefId = getFixedUrl();
             } else {
                 topicXRefId = topic.getXRefId();
             }

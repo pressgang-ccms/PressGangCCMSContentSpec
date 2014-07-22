@@ -3,17 +3,22 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.jboss.pressgang.ccms.contentspec.InitialContent;
+import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.utils.common.DocBookUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.structures.DocBookVersion;
 import org.jboss.pressgang.ccms.wrapper.ServerEntitiesWrapper;
 import org.jboss.pressgang.ccms.wrapper.ServerSettingsWrapper;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 public class CustomTopicXMLValidator {
+    private static final Logger log = LoggerFactory.getLogger(CustomTopicXMLValidator.class);
     private static final String[] DATE_FORMATS = new String[]{"MM-dd-yyyy", "MM/dd/yyyy", "yyyy-MM-dd", "yyyy/MM/dd", "EEE MMM dd yyyy",
             "EEE, MMM dd yyyy", "EEE MMM dd yyyy Z", "EEE dd MMM yyyy", "EEE, dd MMM yyyy", "EEE dd MMM yyyy Z", "yyyyMMdd",
             "yyyyMMdd'T'HHmmss.SSSZ"};
@@ -150,5 +155,55 @@ public class CustomTopicXMLValidator {
                 serverSettings.getEntities().getLegalNoticeTagId()) || topic.hasTag(
                 serverSettings.getEntities().getAuthorGroupTagId()) || topic.hasTag(
                 serverSettings.getEntities().getInfoTagId()) || topic.hasTag(serverSettings.getEntities().getAbstractTagId()));
+    }
+
+    /**
+     * Checks a topics XML to make sure it has content that can be used as front matter for a level.
+     *
+     * @param specTopic The SpecTopic of the topic to check the XML for.
+     * @param topic     The actual topic to check the XML from.
+     * @return True if the XML can be used, otherwise false.
+     */
+    public static boolean doesTopicHaveValidXMLForInitialContent(final SpecTopic specTopic, final BaseTopicWrapper<?> topic) {
+        boolean valid = true;
+        final InitialContent initialContent = (InitialContent) specTopic.getParent();
+        final int numSpecTopics = initialContent.getNumberOfSpecTopics() + initialContent.getNumberOfCommonContents();
+        final boolean isOnlyChild = initialContent.getParent().getNumberOfChildLevels() == 1
+                && initialContent.getParent().getNumberOfSpecTopics() == 0
+                && initialContent.getParent().getNumberOfCommonContents() == 0
+                && numSpecTopics == 1;
+        if (numSpecTopics >= 1) {
+            final String condition = specTopic.getConditionStatement(true);
+            try {
+                final Document doc = XMLUtilities.convertStringToDocument(topic.getXml());
+
+                // Process the conditions to remove anything that isn't used
+                DocBookUtilities.processConditions(condition, doc);
+
+                /*
+                 * We need to make sure the following rules apply for initial text:
+                 * - Nested sections aren't used
+                 * - <simplesect> and <refentry> can only be used if the topic is an only child
+                 * - <info>/<sectioninfo> can only be used in the first child topic and the initial content doesn't have an info topic
+                 */
+                final List<org.w3c.dom.Node> invalidElements = XMLUtilities.getDirectChildNodes(doc.getDocumentElement(), "section");
+                final List<org.w3c.dom.Node> invalidElementsIfMultipleChildren = XMLUtilities.getDirectChildNodes(doc.getDocumentElement(),
+                        "refentry", "simplesect");
+                final List<org.w3c.dom.Node> invalidInfoElements = XMLUtilities.getDirectChildNodes(doc.getDocumentElement(), "info",
+                        "sectioninfo");
+                if (numSpecTopics > 1 && invalidElements.size() > 0) {
+                    valid = false;
+                } else if (!isOnlyChild && invalidElementsIfMultipleChildren.size() > 0) {
+                    valid = false;
+                } else if ((initialContent.getFirstSpecNode() != specTopic && invalidInfoElements.size() > 0)
+                        || (initialContent.getParent().getInfoTopic() != null && invalidInfoElements.size() > 0)) {
+                    valid = false;
+                }
+            } catch (Exception e) {
+                log.debug(e.getMessage());
+            }
+        }
+
+        return valid;
     }
 }

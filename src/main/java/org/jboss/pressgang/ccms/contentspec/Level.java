@@ -48,12 +48,18 @@ public class Level extends SpecNodeWithRelationships {
     protected final List<Level> levels = new ArrayList<Level>();
 
     /**
+     * A list of the CommonContent topics that are stored directly within the level.
+     */
+    protected final List<CommonContent> commonContents = new ArrayList<CommonContent>();
+
+    /**
      * A List of all the nodes stored directly within the level.
      */
     protected final LinkedList<Node> nodes = new LinkedList<Node>();
     protected final LevelType type;
     protected String translatedTitle;
-    private String externalTargetId = null;
+    protected String externalTargetId;
+    protected InfoTopic infoTopic;
 
     /**
      * Constructor.
@@ -187,6 +193,14 @@ public class Level extends SpecNodeWithRelationships {
             child.setParent(this);
         } else if (child instanceof SpecTopic) {
             appendSpecTopic((SpecTopic) child);
+        } else if (child instanceof CommonContent) {
+            // Append the common content
+            commonContents.add((CommonContent) child);
+            nodes.add(child);
+            if (child.getParent() != null) {
+                child.removeParent();
+            }
+            child.setParent(this);
         } else {
             nodes.add(child);
             if (child.getParent() != null) {
@@ -208,6 +222,10 @@ public class Level extends SpecNodeWithRelationships {
             child.setParent(null);
         } else if (child instanceof SpecTopic) {
             removeSpecTopic((SpecTopic) child);
+        } else if (child instanceof CommonContent) {
+            commonContents.remove(child);
+            nodes.remove(child);
+            child.setParent(null);
         } else {
             nodes.remove(child);
             child.setParent(null);
@@ -230,6 +248,15 @@ public class Level extends SpecNodeWithRelationships {
      */
     public int getNumberOfChildLevels() {
         return levels.size();
+    }
+
+    /**
+     * Gets the number of Common Content topics in the Level.
+     *
+     * @return The number of Common Content topics
+     */
+    public int getNumberOfCommonContents() {
+        return commonContents.size();
     }
 
     /**
@@ -333,6 +360,21 @@ public class Level extends SpecNodeWithRelationships {
         removeChild(comment);
     }
 
+    public InfoTopic getInfoTopic() {
+        return infoTopic;
+    }
+
+    public void setInfoTopic(final InfoTopic infoTopic) {
+        if (this.infoTopic != null) {
+            infoTopic.setLevel(null);
+        }
+
+        this.infoTopic = infoTopic;
+        if (infoTopic != null) {
+            infoTopic.setLevel(this);
+        }
+    }
+
     /**
      * Gets a ordered linked list of the child nodes within the level.
      *
@@ -367,6 +409,25 @@ public class Level extends SpecNodeWithRelationships {
 
         for (final Level childLevel : levels) {
             if (childLevel.hasSpecTopics()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks to see if this level or any of its children contain CommonContent.
+     *
+     * @return True if the level or the levels children contain at least one CommonContent.
+     */
+    public boolean hasCommonContents() {
+        if (getNumberOfCommonContents() > 0) {
+            return true;
+        }
+
+        for (final Level childLevel : levels) {
+            if (childLevel.hasCommonContents()) {
                 return true;
             }
         }
@@ -438,16 +499,22 @@ public class Level extends SpecNodeWithRelationships {
                     output.append(ContentSpecUtilities.escapeTitle(title));
                 }
             }
+        }
+        // Add any options
+        if (!options.equals("")) {
+            output.append(" [").append(options).append("]");
+        }
+        
+        if (type != LevelType.BASE) {
+            if (getInfoTopic() != null) {
+                output.append(" ").append(getInfoTopic().getText());
+            }
             if (getTargetId() != null) {
                 output.append(" [").append(getTargetId()).append("]");
             }
             if (externalTargetId != null) {
                 output.append(" [").append(externalTargetId).append("]");
             }
-        }
-        // Add any options
-        if (!options.equals("")) {
-            output.append(" [").append(options).append("]");
         }
 
         // Append any relationship text
@@ -690,41 +757,22 @@ public class Level extends SpecNodeWithRelationships {
     }
 
     @Override
-    public String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
-        // Get the pre link string
-        final String preFix;
-        switch (getLevelType()) {
-            case APPENDIX:
-                preFix = "appe-";
-                break;
-            case SECTION:
-                preFix = "sect-";
-                break;
-            case PROCESS:
-                preFix = "proc-";
-                break;
-            case CHAPTER:
-                preFix = "chap-";
-                break;
-            case PART:
-                preFix = "part-";
-                break;
-            case PREFACE:
-                preFix = "pref-";
-                break;
-            default:
-                preFix = "";
-        }
-
+    public String getUniqueLinkId(final boolean useFixedUrls) {
         // Get the xref id
         final String levelXRefId;
-        final String escapedTitle = DocBookUtilities.escapeTitle(title);
-        if (useFixedUrls && !(isNullOrEmpty(escapedTitle) || escapedTitle.matches("^\\d+$"))) {
-            levelXRefId = escapedTitle;
+        if (useFixedUrls && getFixedUrl() != null) {
+            levelXRefId = getFixedUrl();
         } else {
-            levelXRefId = getLevelType().getTitle().replace(" ", "_") + "ID" + getUniqueId();
+            final String prefix = ContentSpecUtilities.getLevelPrefix(this);
+            final String escapedTitle = DocBookUtilities.escapeTitle(title);
+
+            if (useFixedUrls && !(isNullOrEmpty(escapedTitle) || escapedTitle.matches("^\\d+$"))) {
+                levelXRefId = prefix + escapedTitle;
+            } else {
+                levelXRefId = prefix + getLevelType().getTitle().replace(" ", "_") + "ID" + getUniqueId();
+            }
         }
 
-        return preFix + levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+        return levelXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
     }
 }

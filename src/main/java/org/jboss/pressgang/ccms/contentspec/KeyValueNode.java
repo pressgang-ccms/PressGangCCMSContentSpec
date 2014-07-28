@@ -19,11 +19,14 @@
 
 package org.jboss.pressgang.ccms.contentspec;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 
 public class KeyValueNode<T> extends Node {
     private String key;
     private T value = null;
+    private T translatedValue = null;
     private final char separator;
 
     public KeyValueNode(final String key, final T value, final char separator, final int lineNumber) {
@@ -82,6 +85,14 @@ public class KeyValueNode<T> extends Node {
         }
     }
 
+    public T getTranslatedValue() {
+        return translatedValue;
+    }
+
+    public void setTranslatedValue(T translatedValue) {
+        this.translatedValue = translatedValue;
+    }
+
     protected char getSeparator() {
         return separator;
     }
@@ -105,11 +116,20 @@ public class KeyValueNode<T> extends Node {
             final String valueString = (value == null ? "" : value.toString()).replace("[", "\\[").replace("]", "\\]");
             return key + " " + separator + " [" + valueString + "]";
         } else if (value instanceof Boolean) {
-            return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "ON" : "OFF"));
+            return key + " " + separator + " " + (value == null ? "" : ((Boolean) value ? "On" : "Off"));
         } else if (value instanceof SpecTopic) {
             return key + " " + separator + " " + (value == null ? "" : ("[" + ((SpecTopic) value).getIdAndOptionsString()) + "]");
         } else {
-            return key + " " + separator + " " + (value == null ? "" : value.toString());
+            final String value = (translatedValue == null ? (this.value == null ? "" : this.value.toString()) : translatedValue.toString());
+            return key + " " + separator + " " + value;
+        }
+    }
+
+    public String getValueText() {
+        if (translatedValue != null && !isNullOrEmpty(translatedValue.toString())) {
+            return translatedValue.toString();
+        } else {
+            return value == null ? null : value.toString();
         }
     }
 

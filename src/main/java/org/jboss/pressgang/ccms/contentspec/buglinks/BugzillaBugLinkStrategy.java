@@ -77,7 +77,7 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
 
         final String bugzillaDescription = URLEncoder.encode(String.format(BUGZILLA_DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
         final StringBuilder bugzillaEnvironment = buildBaseEnvironment(bzOptions, buildName, buildDate);
-        bugzillaEnvironment.append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        bugzillaEnvironment.append("\nTopic ID: ").append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
         final StringBuilder bugzillaBuildID = new StringBuilder();
         bugzillaBuildID.append(topic.getBugzillaBuildId());
 
@@ -112,7 +112,7 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             bugzillaEnvironment.append("\n");
-            bugzillaEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
+            bugzillaEnvironment.append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
             if (initialContentTopic.getRevision() == null) {
                 bugzillaEnvironment.append(" [Latest]");
             } else {
@@ -241,7 +241,8 @@ public class BugzillaBugLinkStrategy extends BaseBugLinkStrategy<BugzillaBugLink
                 connector.executeMethod(getProduct);
                 final Product product = getProduct.getProduct();
                 if (product == null) {
-                    throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\".");
+                    throw new ValidationException("No Bugzilla Product exists for product \"" + bugzillaOptions.getProduct() + "\", " +
+                            "or it is a private Product.");
                 } else {
                     // Validate the Bugzilla Component
                     if (bugzillaOptions.getComponent() != null) {

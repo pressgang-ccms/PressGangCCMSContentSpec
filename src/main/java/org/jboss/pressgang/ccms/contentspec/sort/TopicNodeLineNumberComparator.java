@@ -21,12 +21,12 @@ package org.jboss.pressgang.ccms.contentspec.sort;
 
 import java.util.Comparator;
 
-import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.ITopicNode;
 
-public class SpecTopicLineNumberComparator implements Comparator<SpecTopic> {
+public class TopicNodeLineNumberComparator implements Comparator<ITopicNode> {
 
     @Override
-    public int compare(final SpecTopic o1, final SpecTopic o2) {
+    public int compare(final ITopicNode o1, final ITopicNode o2) {
         // Check for null values
         if (o1 == null && o2 == null) return 0;
         if (o1 == null) return -1;

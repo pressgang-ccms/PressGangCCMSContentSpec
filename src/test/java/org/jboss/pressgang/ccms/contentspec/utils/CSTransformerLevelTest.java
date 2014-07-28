@@ -21,9 +21,11 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 
 import static com.google.common.collect.Maps.newHashMap;
 import static java.util.Arrays.asList;
+import static junit.framework.Assert.assertNotNull;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringContains.containsString;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidCommentMock;
+import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidInfoTopicMock;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidLevelMock;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.createValidTopicMock;
 import static org.jboss.pressgang.ccms.contentspec.TestUtil.getLevelTypeMapping;
@@ -48,6 +50,7 @@ import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSInfoNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.UpdateableCollectionWrapper;
 import org.junit.Test;
@@ -154,6 +157,21 @@ public class CSTransformerLevelTest extends CSTransformerTest {
         // Then the topic is transformed and added as a level child
         assertThat(result.getChildNodes().size(), is(1));
         assertThat(result.getChildNodes().get(0).getClass().equals(SpecTopic.class), is(true));
+    }
+
+    @Test
+    public void shouldAddInfoTopic() throws Exception {
+        // Given a node with a valid level type
+        given(nodeWrapper.getNodeType()).willReturn(getRandomLevelType());
+        // And a child topic node
+        CSInfoNodeWrapper topicNode = createValidInfoTopicMock();
+        given(nodeWrapper.getInfoTopicNode()).willReturn(topicNode);
+
+        // When transformLevel is called
+        Level result = CSTransformer.transformLevel(nodeWrapper, nodes, targetTopics, relationshipFromNodes, processes);
+
+        // Then the topic is transformed and set as the info topic
+        assertNotNull(result.getInfoTopic());
     }
 
     @Test

@@ -31,6 +31,7 @@ import java.util.regex.Pattern;
 
 import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
+import org.jboss.pressgang.ccms.contentspec.exceptions.BugLinkException;
 import org.jboss.pressgang.ccms.contentspec.exceptions.ValidationException;
 import org.jboss.pressgang.ccms.contentspec.utils.EntityUtilities;
 import org.jboss.pressgang.ccms.jira.rest.JIRAProxyFactory;
@@ -74,7 +75,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
 
         final String description = URLEncoder.encode(String.format(DESCRIPTION_TEMPLATE, topic.getTitle()), ENCODING);
         final StringBuilder jiraEnvironment = buildBaseEnvironment(bugOptions, buildName, buildDate);
-        jiraEnvironment.append("\nTopic ID: ").append(topic.getId()).append("-").append(topic.getRevision());
+        jiraEnvironment.append("\nTopic ID: ").append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
         if (specTopic.getRevision() == null) {
             jiraEnvironment.append(" [Latest]");
         } else {
@@ -98,7 +99,7 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
             final BaseTopicWrapper<?> topic = initialContentTopic.getTopic();
 
             jiraEnvironment.append("\n");
-            jiraEnvironment.append(topic.getId()).append("-").append(topic.getRevision());
+            jiraEnvironment.append(topic.getTopicId()).append("-").append(topic.getTopicRevision());
             if (initialContentTopic.getRevision() == null) {
                 jiraEnvironment.append(" [Latest]");
             } else {
@@ -123,19 +124,31 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
         final StringBuilder retValue = new StringBuilder(super.generateEntities(bugOptions, buildName, buildDate));
 
         final JIRAProject project = getJIRAProject(client, bugOptions.getProject());
-        retValue.append("<!ENTITY BUILD_JIRA_PID \"").append(project.getId()).append("\">\n");
+        if (project == null) {
+            throw new BugLinkException("The JIRA Project \"" + bugOptions.getProject() + "\" cannot be found");
+        } else {
+            retValue.append("<!ENTITY BUILD_JIRA_PID \"").append(project.getId()).append("\">\n");
 
-        if (bugOptions.getComponent() != null) {
-            final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
-            retValue.append("<!ENTITY BUILD_JIRA_CID \"").append(component.getId()).append("\">\n");
+            if (bugOptions.getComponent() != null) {
+                final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
+                if (component == null) {
+                    throw new BugLinkException("The JIRA Component \"" + bugOptions.getComponent() + "\" cannot be found");
+                } else {
+                    retValue.append("<!ENTITY BUILD_JIRA_CID \"").append(component.getId()).append("\">\n");
+                }
+            }
+
+            if (bugOptions.getVersion() != null) {
+                final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
+                if (version == null) {
+                    throw new BugLinkException("The JIRA Version \"" + bugOptions.getVersion() + "\" cannot be found");
+                } else {
+                    retValue.append("<!ENTITY BUILD_JIRA_VID \"").append(version.getId()).append("\">\n");
+                }
+            }
+
+            return retValue.toString();
         }
-
-        if (bugOptions.getVersion() != null) {
-            final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
-            retValue.append("<!ENTITY BUILD_JIRA_VID \"").append(version.getId()).append("\">\n");
-        }
-
-        return retValue.toString();
     }
 
     protected String generateUrl(final JIRABugLinkOptions bugOptions, final String encodedDescription,
@@ -149,47 +162,59 @@ public class JIRABugLinkStrategy extends BaseBugLinkStrategy<JIRABugLinkOptions>
         JIRAURLComponents.append("description=").append(encodedDescription);
 
         final JIRAProject project = getJIRAProject(client, bugOptions.getProject());
-        JIRAURLComponents.append("&amp;");
-        JIRAURLComponents.append("pid=");
-        if (bugOptions.isUseEntities()) {
-            JIRAURLComponents.append("&BUILD_JIRA_PID;");
+        if (project == null) {
+            throw new BugLinkException("The JIRA Project \"" + bugOptions.getProject() + "\" cannot be found");
         } else {
-            JIRAURLComponents.append(project.getId());
-        }
-
-        if (bugOptions.getComponent() != null) {
-            final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
             JIRAURLComponents.append("&amp;");
-            JIRAURLComponents.append("components=");
+            JIRAURLComponents.append("pid=");
             if (bugOptions.isUseEntities()) {
-                JIRAURLComponents.append("&BUILD_JIRA_CID;");
+                JIRAURLComponents.append("&BUILD_JIRA_PID;");
             } else {
-                JIRAURLComponents.append(component.getId());
+                JIRAURLComponents.append(project.getId());
             }
-        }
 
-        if (bugOptions.getVersion() != null) {
-            final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
-            JIRAURLComponents.append("&amp;");
-            JIRAURLComponents.append("versions=");
-            if (bugOptions.isUseEntities()) {
-                JIRAURLComponents.append("&BUILD_JIRA_VID;");
-            } else {
-                JIRAURLComponents.append(version.getId());
-            }
-        }
-
-        if (bugOptions.getLabels() != null) {
-            final String[] labels = bugOptions.getLabels().split("\\s*,\\s*");
-            for (final String label : labels) {
+            if (bugOptions.getComponent() != null) {
                 JIRAURLComponents.append("&amp;");
-                JIRAURLComponents.append("labels=");
-                JIRAURLComponents.append(URLEncoder.encode(label, ENCODING));
+                JIRAURLComponents.append("components=");
+                if (bugOptions.isUseEntities()) {
+                    JIRAURLComponents.append("&BUILD_JIRA_CID;");
+                } else {
+                    final JIRAComponent component = getJIRAComponent(bugOptions.getComponent(), project);
+                    if (project == null) {
+                        throw new BugLinkException("The JIRA Component \"" + bugOptions.getComponent() + "\" cannot be found");
+                    } else {
+                        JIRAURLComponents.append(component.getId());
+                    }
+                }
             }
-        }
 
-        // build the JIRA url with the base components
-        return getFixedServerUrl() + "secure/CreateIssueDetails!init.jspa" + JIRAURLComponents.toString();
+            if (bugOptions.getVersion() != null) {
+                JIRAURLComponents.append("&amp;");
+                JIRAURLComponents.append("versions=");
+                if (bugOptions.isUseEntities()) {
+                    JIRAURLComponents.append("&BUILD_JIRA_VID;");
+                } else {
+                    final JIRAVersion version = getJIRAVersion(bugOptions.getVersion(), project);
+                    if (project == null) {
+                        throw new BugLinkException("The JIRA Version \"" + bugOptions.getVersion() + "\" cannot be found");
+                    } else {
+                        JIRAURLComponents.append(version.getId());
+                    }
+                }
+            }
+
+            if (bugOptions.getLabels() != null) {
+                final String[] labels = bugOptions.getLabels().split("\\s*,\\s*");
+                for (final String label : labels) {
+                    JIRAURLComponents.append("&amp;");
+                    JIRAURLComponents.append("labels=");
+                    JIRAURLComponents.append(URLEncoder.encode(label, ENCODING));
+                }
+            }
+
+            // build the JIRA url with the base components
+            return getFixedServerUrl() + "secure/CreateIssueDetails!init.jspa" + JIRAURLComponents.toString();
+        }
     }
 
     @Override

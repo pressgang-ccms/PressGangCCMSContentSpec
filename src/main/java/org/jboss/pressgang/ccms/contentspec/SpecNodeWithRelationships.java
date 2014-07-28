@@ -135,7 +135,7 @@ public abstract class SpecNodeWithRelationships extends SpecNode {
     /**
      * Gets a list of previous relationships for the Topic.
      */
-    public List<Relationship> getPreviousRelationship() {
+    public List<Relationship> getPreviousRelationships() {
         final List<Relationship> prevRelationships = new LinkedList<Relationship>();
         for (final Relationship r : relationships) {
             if (r.getType() == RelationshipType.PREVIOUS) {

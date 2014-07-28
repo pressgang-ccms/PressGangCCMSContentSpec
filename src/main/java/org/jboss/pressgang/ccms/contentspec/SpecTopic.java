@@ -41,7 +41,7 @@ import org.jboss.pressgang.ccms.contentspec.utils.ContentSpecUtilities;
 import org.jboss.pressgang.ccms.wrapper.base.BaseTopicWrapper;
 import org.w3c.dom.Document;
 
-public class SpecTopic extends SpecNodeWithRelationships {
+public class SpecTopic extends SpecNodeWithRelationships implements ITopicNode {
     private String id;
     private Integer DBId = null;
     private String type;
@@ -233,47 +233,27 @@ public class SpecTopic extends SpecNodeWithRelationships {
         super.setParent(parent);
     }
 
-    /**
-     * Checks to see if the topic is a new topic based on its ID.
-     *
-     * @return True if the topic is a new Topic otherwise false.
-     */
+    @Override
     public boolean isTopicANewTopic() {
         return CSConstants.NEW_TOPIC_ID_PATTERN.matcher(id).matches();
     }
 
-    /**
-     * Checks to see if the topic is an existing topic based on its ID.
-     *
-     * @return True if the topic is a existing Topic otherwise false.
-     */
+    @Override
     public boolean isTopicAnExistingTopic() {
         return id.matches(CSConstants.EXISTING_TOPIC_ID_REGEX);
     }
 
-    /**
-     * Checks to see if the topic is a cloned topic based on its ID.
-     *
-     * @return True if the topic is a cloned Topic otherwise false.
-     */
+    @Override
     public boolean isTopicAClonedTopic() {
         return id.matches(CSConstants.CLONED_TOPIC_ID_REGEX);
     }
 
-    /**
-     * Checks to see if the topic is a duplicated topic based on its ID.
-     *
-     * @return True if the topic is a duplicated Topic otherwise false.
-     */
+    @Override
     public boolean isTopicADuplicateTopic() {
         return id.matches(CSConstants.DUPLICATE_TOPIC_ID_REGEX);
     }
 
-    /**
-     * Checks to see if the topic is a Duplicated Cloned topic based on its ID.
-     *
-     * @return True if the topic is a Duplicated Cloned Topic otherwise false.
-     */
+    @Override
     public boolean isTopicAClonedDuplicateTopic() {
         return id.matches(CSConstants.CLONED_DUPLICATE_TOPIC_ID_REGEX);
     }
@@ -607,14 +587,14 @@ public class SpecTopic extends SpecNodeWithRelationships {
     }
 
     @Override
-    public String getUniqueLinkId(Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
+    public String getUniqueLinkId(final boolean useFixedUrls) {
         // If this is an inner topic then get the parents id
         if (getTopicType() == TopicType.INITIAL_CONTENT) {
-            return ((Level) getParent()).getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls);
+            return ((Level) getParent()).getUniqueLinkId(useFixedUrls);
         } else {
             final String topicXRefId;
-            if (useFixedUrls) {
-                topicXRefId = topic.getXRefPropertyOrId(fixedUrlPropertyTagId);
+            if (useFixedUrls && getFixedUrl() != null) {
+                topicXRefId = getFixedUrl();
             } else {
                 topicXRefId = topic.getXRefId();
             }

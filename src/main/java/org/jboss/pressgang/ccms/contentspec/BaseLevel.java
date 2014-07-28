@@ -117,4 +117,10 @@ class BaseLevel extends Level {
             return null;
         }
     }
+
+    @Override
+    public Integer getStep() {
+        if (getContentSpec() == null) return null;
+        return getContentSpec().getNodes().size();
+    }
 }

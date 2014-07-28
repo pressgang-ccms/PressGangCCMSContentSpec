@@ -19,6 +19,8 @@
 
 package org.jboss.pressgang.ccms.contentspec;
 
+import static org.jboss.pressgang.ccms.utils.common.StringUtilities.isStringNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,7 +31,7 @@ import org.jboss.pressgang.ccms.utils.common.StringUtilities;
  *
  * @author lnewson
  */
-public abstract class SpecNode extends Node {
+public abstract class SpecNode extends Node implements IOptionsNode {
     protected List<String> tags = new ArrayList<String>();
     protected List<String> removeTags = new ArrayList<String>();
     protected List<String> sourceUrls = new ArrayList<String>();
@@ -39,6 +41,7 @@ public abstract class SpecNode extends Node {
     protected String targetId;
     protected String title;
     protected String duplicateId;
+    protected String fixedUrl;
 
     protected SpecNode(final int lineNumber, final String text) {
         super(lineNumber, text);
@@ -105,20 +108,29 @@ public abstract class SpecNode extends Node {
     }
 
     /**
-     * Sets the description for a node.
+     * Get the Fixed URL component for the node to be used when it is built.
      *
-     * @param desc The description.
+     * @return A string containing the unique fixed url to be used for the node.
      */
+    public String getFixedUrl() {
+        return fixedUrl;
+    }
+
+    /**
+     * Set the Fixed URL component to be used for the node when building.
+     *
+     * @param fixedUrl The unique fixed URL component.
+     */
+    public void setFixedUrl(final String fixedUrl) {
+        this.fixedUrl = fixedUrl;
+    }
+
+    @Override
     public void setDescription(final String desc) {
         description = desc;
     }
 
-    /**
-     * Get the description for a node. If useInherited is true then it will check for an inherited description as well.
-     *
-     * @param useInherited If the function should check for an inherited description
-     * @return The description as a String
-     */
+    @Override
     public String getDescription(final boolean useInherited) {
         if (description == null && parent != null && useInherited) {
             if (parent instanceof ContentSpec) {
@@ -133,21 +145,12 @@ public abstract class SpecNode extends Node {
         }
     }
 
-    /**
-     * Sets the Assigned Writer for this set of options
-     *
-     * @param writer The writers name that matches to the assigned writer tag in the database
-     */
+    @Override
     public void setAssignedWriter(final String writer) {
         assignedWriter = writer;
     }
 
-    /**
-     * Get the Assigned Writer for a topic. If useInherited is true then it will check for an inherited writer as well.
-     *
-     * @param useInherited If the function should check for an inherited writer
-     * @return The Assigned Writers name as a String
-     */
+    @Override
     public String getAssignedWriter(final boolean useInherited) {
         if (assignedWriter == null && parent != null && useInherited) {
             if (parent instanceof ContentSpec) {
@@ -161,23 +164,12 @@ public abstract class SpecNode extends Node {
         return assignedWriter;
     }
 
-    /**
-     * Sets the set of tags for this set of options
-     *
-     * @param tags A HashMap of tags. The key in the map is the tags category name and the value is an ArrayList of tags for
-     *             each category.
-     */
+    @Override
     public void setTags(final List<String> tags) {
         this.tags = tags;
     }
 
-    /**
-     * Gets the set of tags for this set of options. If useInherited is true then it will check for inherited options as well.
-     * <p/>
-     * This function also removes the tags from the HashMap for any tag that has a - in front of its name.
-     *
-     * @param useInherited If the function should check for inherited tags
-     */
+    @Override
     public List<String> getTags(final boolean useInherited) {
         List<String> temp = new ArrayList<String>();
         // Get the inherited tags
@@ -216,22 +208,12 @@ public abstract class SpecNode extends Node {
         }
     }
 
-    /**
-     * Sets the list of tags that are to be removed in this set of options
-     *
-     * @param tags An ArrayList of tags to be removed
-     */
+    @Override
     public void setRemoveTags(final List<String> tags) {
         removeTags = tags;
     }
 
-    /**
-     * Gets an ArrayList of tags that are to be removed for these options. If useInherited is true then it will also add all
-     * inherited removeable tags.
-     *
-     * @param useInherited If the function should check for inherited removable tags
-     * @return An ArrayList of tags
-     */
+    @Override
     public List<String> getRemoveTags(final boolean useInherited) {
         List<String> temp = new ArrayList<String>();
         // Get the parent remove tags if requested
@@ -289,13 +271,7 @@ public abstract class SpecNode extends Node {
         return temp;
     }
 
-    /**
-     * Adds a tag to the list of tags. If the tag starts with a - then its added to the remove tag list otherwise its added to
-     * the normal tag mapping. Also strips off + & - from the start of tags.
-     *
-     * @param tagName The name of the Tag to be added.
-     * @return True if the tag was added successfully otherwise false.
-     */
+    @Override
     public boolean addTag(final String tagName) {
         String name = tagName;
         // Remove the + or - from the tag temporarily to get the tag from the database
@@ -320,12 +296,7 @@ public abstract class SpecNode extends Node {
         return true;
     }
 
-    /**
-     * Adds an array of tags to the list of tags for this node
-     *
-     * @param tagArray A list of tags by name that are to be added.
-     * @return True if all the tags were added successfully otherwise false.
-     */
+    @Override
     public boolean addTags(final List<String> tagArray) {
         boolean error = false;
         for (final String tag : tagArray) {
@@ -355,30 +326,17 @@ public abstract class SpecNode extends Node {
         sourceUrls.remove(url);
     }
 
-    /**
-     * Sets the conditional statement to be used when building
-     *
-     * @param condition The conditional statement for this node and it's sub nodes.
-     */
+    @Override
     public void setConditionStatement(final String condition) {
         this.condition = condition;
     }
 
-    /**
-     * Gets the conditional statement to be used when building
-     *
-     * @return The conditional statement for this node and it's sub nodes.
-     */
+    @Override
     public String getConditionStatement() {
         return getConditionStatement(false);
     }
 
-    /**
-     * Gets the conditional statement to be used when building
-     *
-     * @param useInherited If the conditional statement should be pulled from its parent nodes.
-     * @return The conditional statement for this node and it's sub nodes.
-     */
+    @Override
     public String getConditionStatement(final boolean useInherited) {
         if (condition == null && useInherited && parent != null) {
             if (parent instanceof ContentSpec) {
@@ -421,19 +379,24 @@ public abstract class SpecNode extends Node {
             }
         }
 
-        if (assignedWriter != null && !assignedWriter.trim().isEmpty()) {
-            vars.add("Writer = " + assignedWriter);
+        if (!isStringNullOrEmpty(assignedWriter)) {
+            vars.add("writer = " + assignedWriter);
         }
 
-        if (description != null && !description.trim().isEmpty()) {
-            vars.add("Description = " + description);
+        if (!isStringNullOrEmpty(description)) {
+            vars.add("description = " + description);
         }
 
-        if (condition != null && !condition.trim().isEmpty()) {
+        if (!isStringNullOrEmpty(condition)) {
             vars.add("condition = " + condition);
         }
+
+        if (!isStringNullOrEmpty(fixedUrl)) {
+            vars.add("Fixed URL = " + fixedUrl);
+        }
+
         return StringUtilities.buildString(vars.toArray(new String[vars.size()]), ", ");
     }
 
-    public abstract String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls);
+    public abstract String getUniqueLinkId(final boolean useFixedUrls);
 }

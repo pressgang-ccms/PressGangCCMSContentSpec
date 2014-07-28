@@ -55,7 +55,7 @@ public class InitialContent extends Level {
     }
 
     @Override
-    public String getUniqueLinkId(final Integer fixedUrlPropertyTagId, final boolean useFixedUrls) {
-        return getParent().getUniqueLinkId(fixedUrlPropertyTagId, useFixedUrls);
+    public String getUniqueLinkId(final boolean useFixedUrls) {
+        return getParent().getUniqueLinkId(useFixedUrls);
     }
 }

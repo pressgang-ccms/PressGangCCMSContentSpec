@@ -19,6 +19,8 @@
 
 package org.jboss.pressgang.ccms.contentspec.utils;
 
+import static com.google.common.base.Strings.isNullOrEmpty;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -33,9 +35,11 @@ import org.apache.commons.lang.StringUtils;
 import org.jboss.pressgang.ccms.contentspec.Appendix;
 import org.jboss.pressgang.ccms.contentspec.Chapter;
 import org.jboss.pressgang.ccms.contentspec.Comment;
+import org.jboss.pressgang.ccms.contentspec.CommonContent;
 import org.jboss.pressgang.ccms.contentspec.ContentSpec;
 import org.jboss.pressgang.ccms.contentspec.File;
 import org.jboss.pressgang.ccms.contentspec.FileList;
+import org.jboss.pressgang.ccms.contentspec.InfoTopic;
 import org.jboss.pressgang.ccms.contentspec.InitialContent;
 import org.jboss.pressgang.ccms.contentspec.KeyValueNode;
 import org.jboss.pressgang.ccms.contentspec.Level;
@@ -44,6 +48,7 @@ import org.jboss.pressgang.ccms.contentspec.Part;
 import org.jboss.pressgang.ccms.contentspec.Preface;
 import org.jboss.pressgang.ccms.contentspec.Process;
 import org.jboss.pressgang.ccms.contentspec.Section;
+import org.jboss.pressgang.ccms.contentspec.SpecNode;
 import org.jboss.pressgang.ccms.contentspec.SpecNodeWithRelationships;
 import org.jboss.pressgang.ccms.contentspec.SpecTopic;
 import org.jboss.pressgang.ccms.contentspec.TextNode;
@@ -59,6 +64,7 @@ import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.ServerSettingsProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
+import org.jboss.pressgang.ccms.wrapper.CSInfoNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CSRelatedNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
@@ -91,10 +97,10 @@ public class CSTransformer {
         final ContentSpec contentSpec = new ContentSpec();
 
         contentSpec.setId(spec.getId());
-        contentSpec.setLocale(spec.getLocale());
         transformGlobalOptions(spec, contentSpec);
 
         // Add all the levels/topics
+        boolean localeFound = false;
         if (spec.getChildren() != null) {
             final List<CSNodeWrapper> childNodes = spec.getChildren().getItems();
             final HashMap<CSNodeWrapper, Node> levelNodes = new HashMap<CSNodeWrapper, Node>();
@@ -105,11 +111,17 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+                    final CommonContent commonContent = transformCommonContent(childNode);
+                    levelNodes.put(childNode, commonContent);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA || childNode.getNodeType() == CommonConstants
                         .CS_NODE_META_DATA_TOPIC) {
                     if (!IGNORE_META_DATA.contains(childNode.getTitle().toLowerCase())) {
                         final KeyValueNode<?> metaDataNode = transformMetaData(childNode, nodes, topicTargets, relationshipFromNodes);
                         levelNodes.put(childNode, metaDataNode);
+                    }
+                    if (CommonConstants.CS_LOCALE_TITLE.equalsIgnoreCase(childNode.getTitle())) {
+                        localeFound = true;
                     }
                 } else {
                     final Level level = transformLevel(childNode, nodes, topicTargets, relationshipFromNodes, processes);
@@ -129,6 +141,12 @@ public class CSTransformer {
                 // If a level or spec topic is found then start adding to the base level instead of the content spec
                 if ((entry.getValue() instanceof Level || entry.getValue() instanceof SpecTopic) && !addToBaseLevel) {
                     addToBaseLevel = true;
+
+                    // Add the locale if it wasn't specified
+                    if (!localeFound) {
+                        contentSpec.setLocale(spec.getLocale());
+                    }
+
                     // Add a space between the base metadata and optional metadata
                     contentSpec.appendChild(new TextNode("\n"));
                 }
@@ -183,9 +201,13 @@ public class CSTransformer {
                 final List<File> files = ((FileList) node).getValue();
                 current += files == null || files.isEmpty() ? 0 : (files.size() - 1);
             } else if (node instanceof KeyValueNode) {
-                if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_PUBLICAN_CFG_TITLE)) {
+                if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_PUBLICAN_CFG_TITLE) || ((KeyValueNode) node).getKey()
+                        .endsWith("-" + CommonConstants.CS_PUBLICAN_CFG_TITLE)) {
                     final String publicanCfg = (String) ((KeyValueNode) node).getValue();
                     current += StringUtils.countMatches(publicanCfg, "\n");
+                } else if (((KeyValueNode) node).getKey().equals(CommonConstants.CS_ENTITIES_TITLE)) {
+                    final String entities = (String) ((KeyValueNode) node).getValue();
+                    current += StringUtils.countMatches(entities, "\n");
                 }
             } else if (node instanceof SpecTopic && !((SpecTopic) node).getRelationships().isEmpty()) {
                 int numPrereqs = ((SpecTopic) node).getPrerequisiteRelationships().size();
@@ -344,9 +366,19 @@ public class CSTransformer {
         level.setTargetId(node.getTargetId());
         level.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
+        // Set the fixed url properties
+        applyFixedURLs(node, level);
+
+        // Collect any relationships for processing after everything is transformed
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {
             relationshipFromNodes.add(node);
+        }
+
+        // Transform the info topic node if one exists for the level
+        if (node.getInfoTopicNode() != null) {
+            final InfoTopic infoTopic = transformInfoTopic(node, node.getInfoTopicNode());
+            level.setInfoTopic(infoTopic);
         }
 
         // Add all the levels/topics
@@ -361,6 +393,9 @@ public class CSTransformer {
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMENT) {
                     final Comment comment = transformComment(childNode);
                     levelNodes.put(childNode, comment);
+                } else if (childNode.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+                    final CommonContent commonContent = transformCommonContent(childNode);
+                    levelNodes.put(childNode, commonContent);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_INITIAL_CONTENT_TOPIC) {
                     final SpecTopic initialContentTopic = transformSpecTopicWithoutTypeCheck(childNode, nodes, targetTopics,
                             relationshipFromNodes);
@@ -454,6 +489,10 @@ public class CSTransformer {
         specTopic.setTargetId(node.getTargetId());
         specTopic.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
+        // Set the fixed url properties
+        applyFixedURLs(node, specTopic);
+
+        // Collect any relationships for processing after everything is transformed
         if (node.getRelatedToNodes() != null && node.getRelatedToNodes().getItems() != null && !node.getRelatedToNodes().getItems()
                 .isEmpty()) {
             relationshipFromNodes.add(node);
@@ -468,6 +507,23 @@ public class CSTransformer {
         }
 
         return specTopic;
+    }
+
+    /**
+     * Transform a Topic CSNode entity object into an InfoTopic Object that can be added to a Content Specification.
+     *
+     * @param node                  The CSNode entity object to be transformed.
+     * @return The transformed InfoTopic entity.
+     */
+    protected static InfoTopic transformInfoTopic(final CSNodeWrapper parentNode, final CSInfoNodeWrapper node) {
+        final InfoTopic infoTopic = new InfoTopic(node.getTopicId(), null);
+
+        // Basic data
+        infoTopic.setRevision(node.getTopicRevision());
+        infoTopic.setConditionStatement(node.getCondition());
+        infoTopic.setUniqueId(parentNode.getId() == null ? null : parentNode.getId().toString());
+
+        return infoTopic;
     }
 
     /**
@@ -487,6 +543,25 @@ public class CSTransformer {
         comment.setUniqueId(node.getId() == null ? null : node.getId().toString());
 
         return comment;
+    }
+
+    /**
+     * Transform a Common Content CSNode entity into a Comment object that can be added to a Content Specification.
+     *
+     * @param node The CSNode to be transformed.
+     * @return The transformed Comment object.
+     */
+    protected static CommonContent transformCommonContent(CSNodeWrapper node) {
+        final CommonContent commonContent;
+        if (node.getNodeType() == CommonConstants.CS_NODE_COMMON_CONTENT) {
+            commonContent = new CommonContent(node.getTitle());
+        } else {
+            throw new IllegalArgumentException("The passed node is not a Comment");
+        }
+
+        commonContent.setUniqueId(node.getId() == null ? null : node.getId().toString());
+
+        return commonContent;
     }
 
     /**
@@ -576,6 +651,12 @@ public class CSTransformer {
         for (final Process process : processes) {
             process.processTopics(uniqueIdSpecTopicMap, targetTopics, providerFactory.getProvider(TopicProvider.class),
                     providerFactory.getProvider(ServerSettingsProvider.class));
+        }
+    }
+
+    protected static void applyFixedURLs(final CSNodeWrapper node, final SpecNode specNode) {
+        if (!isNullOrEmpty(node.getFixedURL())) {
+            specNode.setFixedUrl(node.getFixedURL());
         }
     }
 

@@ -22,6 +22,7 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import static com.google.common.base.Strings.isNullOrEmpty;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -37,7 +38,7 @@ import org.jboss.pressgang.ccms.provider.DataProviderFactory;
 import org.jboss.pressgang.ccms.provider.TranslatedCSNodeProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.TranslatedTopicProvider;
-import org.jboss.pressgang.ccms.utils.common.CollectionUtilities;
+import org.jboss.pressgang.ccms.utils.common.StringUtilities;
 import org.jboss.pressgang.ccms.utils.common.XMLUtilities;
 import org.jboss.pressgang.ccms.utils.constants.CommonConstants;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
@@ -54,10 +55,8 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 public class TranslationUtilities {
-    private static final List<String> TRANSLATABLE_METADATA = CollectionUtilities.toArrayList(
-            new String[]{CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE, CommonConstants.CS_SUBTITLE_TITLE,
-                    CommonConstants.CS_ABSTRACT_TITLE, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE, CommonConstants.CS_VERSION_TITLE,
-                    CommonConstants.CS_EDITION_TITLE});
+    public static final List<String> TRANSLATABLE_METADATA = Arrays.asList(CommonConstants.CS_TITLE_TITLE, CommonConstants.CS_PRODUCT_TITLE,
+            CommonConstants.CS_SUBTITLE_TITLE, CommonConstants.CS_ABSTRACT_TITLE, CommonConstants.CS_COPYRIGHT_HOLDER_TITLE);
 
     /**
      * Create a TranslatedTopic based on the content from a normal Topic.
@@ -106,7 +105,7 @@ public class TranslationUtilities {
         final Set<CSNodeWrapper> nodes = new HashSet<CSNodeWrapper>();
         final List<CSNodeWrapper> childrenNodes = contentSpec.getChildren().getItems();
         for (CSNodeWrapper childNode : childrenNodes) {
-            if (EntityUtilities.isNodeALevel(childNode)) {
+            if (EntityUtilities.isNodeALevel(childNode) && childNode.getNodeType() != CommonConstants.CS_NODE_INITIAL_CONTENT) {
                 nodes.add(childNode);
             } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                 if (TRANSLATABLE_METADATA.contains(childNode.getTitle())) {
@@ -122,7 +121,7 @@ public class TranslationUtilities {
         if (csNode.getChildren() != null) {
             final List<CSNodeWrapper> childrenNodes = csNode.getChildren().getItems();
             for (CSNodeWrapper childNode : childrenNodes) {
-                if (EntityUtilities.isNodeALevel(childNode)) {
+                if (EntityUtilities.isNodeALevel(childNode) && childNode.getNodeType() != CommonConstants.CS_NODE_INITIAL_CONTENT) {
                     nodes.add(childNode);
                 } else if (childNode.getNodeType() == CommonConstants.CS_NODE_META_DATA) {
                     if (TRANSLATABLE_METADATA.contains(childNode.getTitle())) {
@@ -220,7 +219,7 @@ public class TranslationUtilities {
 
             if (nodeCollections != null && nodeCollections.size() != 0) {
                 // Zanata will change the format of the strings that it returns. Here we account for any trimming that was done.
-                final ZanataStringDetails fixedStringDetails = new ZanataStringDetails(translations, originalString);
+                final TranslationStringDetails fixedStringDetails = new TranslationStringDetails(translations, originalString);
                 if (fixedStringDetails.getFixedString() != null) {
                     final String translation = translations.get(fixedStringDetails.getFixedString());
 
@@ -241,7 +240,7 @@ public class TranslationUtilities {
                             final Node contentSpecNode = ContentSpecUtilities.findMatchingContentSpecNode(contentSpec, node.getId());
                             if (contentSpecNode != null) {
                                 if (contentSpecNode instanceof KeyValueNode) {
-                                    ((KeyValueNode) contentSpecNode).setValue(fixedTranslation);
+                                    ((KeyValueNode) contentSpecNode).setTranslatedValue(fixedTranslation);
                                 } else if (contentSpecNode instanceof Level) {
                                     ((Level) contentSpecNode).setTranslatedTitle(fixedTranslation);
                                 }
@@ -330,6 +329,99 @@ public class TranslationUtilities {
                     node.setAdditionalText(fixedValue);
                 }
             }
+        }
+    }
+
+    public static void resolveCustomContentSpecEntities(final List<Entity> customEntities, final ContentSpec contentSpec) {
+        final List<KeyValueNode<String>> translatableNodes = new ArrayList<KeyValueNode<String>>();
+
+        // Find all the translatable nodes first
+        for (final Node node : contentSpec.getNodes()) {
+            if (node instanceof KeyValueNode) {
+                final KeyValueNode<String> keyValueNode = (KeyValueNode<String>) node;
+                if (TRANSLATABLE_METADATA.contains(keyValueNode.getKey())) {
+                    translatableNodes.add(keyValueNode);
+                }
+            }
+        }
+
+        // Resolve any custom entities
+        for (final Entity entity : customEntities) {
+            final String entityString = "&" + entity.getNodeName() + ";";
+            for (final KeyValueNode<String> node : translatableNodes) {
+                if (node.getValue().contains(entityString)) {
+                    final String fixedValue = node.getValue().replace(entityString, entity.getTextContent());
+                    node.setValue(fixedValue);
+                }
+            }
+        }
+    }
+
+    /**
+     * Zanata will modify strings sent to it for translation. This class contains the info necessary to take a string from Zanata and match
+     * it to the source XML.
+     */
+    private static class TranslationStringDetails {
+        /**
+         * The number of spaces that Zanata removed from the left
+         */
+        private final int leftTrimCount;
+        /**
+         * The number of spaces that Zanata removed from the right
+         */
+        private final int rightTrimCount;
+        /**
+         * The string that was matched to the one returned by Zanata. This will be null if there was no match.
+         */
+        private final String fixedString;
+
+        TranslationStringDetails(final Map<String, String> translations, final String originalString) {
+        /*
+         * Here we account for any trimming that is done by Zanata.
+         */
+            final String lTrimtString = StringUtilities.ltrim(originalString);
+            final String rTrimString = StringUtilities.rtrim(originalString);
+            final String trimString = originalString.trim();
+
+            final boolean containsExactMacth = translations.containsKey(originalString);
+            final boolean lTrimMatch = translations.containsKey(lTrimtString);
+            final boolean rTrimMatch = translations.containsKey(rTrimString);
+            final boolean trimMatch = translations.containsKey(trimString);
+
+        /* remember the details of the trimming, so we can add the padding back */
+            if (containsExactMacth) {
+                leftTrimCount = 0;
+                rightTrimCount = 0;
+                fixedString = originalString;
+            } else if (lTrimMatch) {
+                leftTrimCount = originalString.length() - lTrimtString.length();
+                rightTrimCount = 0;
+                fixedString = lTrimtString;
+            } else if (rTrimMatch) {
+                leftTrimCount = 0;
+                rightTrimCount = originalString.length() - rTrimString.length();
+                fixedString = rTrimString;
+            } else if (trimMatch) {
+                leftTrimCount = StringUtilities.ltrimCount(originalString);
+                rightTrimCount = StringUtilities.rtrimCount(originalString);
+                fixedString = trimString;
+            } else {
+                leftTrimCount = 0;
+                rightTrimCount = 0;
+                fixedString = null;
+            }
+        }
+
+        public int getLeftTrimCount() {
+            return leftTrimCount;
+        }
+
+        public int getRightTrimCount() {
+            return rightTrimCount;
+        }
+
+        public String getFixedString() {
+            return fixedString;
         }
     }
 }

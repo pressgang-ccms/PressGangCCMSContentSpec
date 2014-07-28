@@ -32,8 +32,8 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
 
+import com.google.code.regexp.Matcher;
 import org.jboss.pressgang.ccms.contentspec.buglinks.BugzillaBugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.buglinks.JIRABugLinkOptions;
 import org.jboss.pressgang.ccms.contentspec.constants.CSConstants;
@@ -91,12 +91,13 @@ public class ContentSpec extends Node {
     private KeyValueNode<String> jiraLabels = null;
     private KeyValueNode<String> jiraServer = null;
     private KeyValueNode<Boolean> includeIndex = null;
+    private KeyValueNode<String> locale = null;
+    private KeyValueNode<Boolean> useDefaultPreface = null;
     private FileList files = null;
     private KeyValueNode<String> entities = null;
     private Map<String, KeyValueNode<String>> publicanCfgs = new HashMap<String, KeyValueNode<String>>();
     private KeyValueNode<String> defaultPublicanCfg = null;
     private Integer revision = null;
-    private String locale = null;
 
     private final LinkedList<Node> nodes = new LinkedList<Node>();
     private final Level level;
@@ -159,7 +160,16 @@ public class ContentSpec extends Node {
      * @return The name of the product.
      */
     public String getProduct() {
-        return product == null ? "" : product.getValue();
+        return product == null ? "" : product.getValueText();
+    }
+
+    /**
+     * Gets the Product key/value node.
+     *
+     * @return The key/value node that contains the product, or null if one isn't set.
+     */
+    public KeyValueNode<String> getProductNode() {
+        return product;
     }
 
     /**
@@ -187,7 +197,16 @@ public class ContentSpec extends Node {
      * @return The version of the product or an empty string if the version is null.
      */
     public String getVersion() {
-        return version == null ? null : version.getValue();
+        return version == null ? null : version.getValueText();
+    }
+
+    /**
+     * Gets the Version key/value node.
+     *
+     * @return The key/value node that contains the version, or null if one isn't set.
+     */
+    public KeyValueNode<String> getVersionNode() {
+        return version;
     }
 
     /**
@@ -215,7 +234,16 @@ public class ContentSpec extends Node {
      * @return The brand of the product or null if one doesn't exist.
      */
     public String getBrand() {
-        return brand == null ? null : brand.getValue();
+        return brand == null ? null : brand.getValueText();
+    }
+
+    /**
+     * Gets the Brand key/value node.
+     *
+     * @return The key/value node that contains the brand, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBrandNode() {
+        return brand;
     }
 
     /**
@@ -295,7 +323,16 @@ public class ContentSpec extends Node {
      * @return The Content Specification title or an empty string if it is null.
      */
     public String getTitle() {
-        return title == null ? "" : title.getValue();
+        return title == null ? "" : title.getValueText();
+    }
+
+    /**
+     * Gets the Title key/value node.
+     *
+     * @return The key/value node that contains the title, or null if one isn't set.
+     */
+    public KeyValueNode<String> getTitleNode() {
+        return title;
     }
 
     /**
@@ -332,7 +369,16 @@ public class ContentSpec extends Node {
      * @return The Subtitle of the Content Specification or null if one doesn't exist.
      */
     public String getSubtitle() {
-        return subtitle == null ? null : subtitle.getValue();
+        return subtitle == null ? null : subtitle.getValueText();
+    }
+
+    /**
+     * Gets the Subtitle key/value node.
+     *
+     * @return The key/value node that contains the subtitle, or null if one isn't set.
+     */
+    public KeyValueNode<String> getSubtitleNode() {
+        return subtitle;
     }
 
     /**
@@ -360,7 +406,16 @@ public class ContentSpec extends Node {
      * @return The Content Specifications Book Edition or null if one doesn't exist.
      */
     public String getBookVersion() {
-        return bookVersion == null ? null : bookVersion.getValue();
+        return bookVersion == null ? null : bookVersion.getValueText();
+    }
+
+    /**
+     * Gets the Book Version key/value node.
+     *
+     * @return The key/value node that contains the book version, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBookVersionNode() {
+        return product;
     }
 
     /**
@@ -388,7 +443,16 @@ public class ContentSpec extends Node {
      * @return The Content Specifications Book Edition or null if one doesn't exist.
      */
     public String getEdition() {
-        return edition == null ? null : edition.getValue();
+        return edition == null ? null : edition.getValueText();
+    }
+
+    /**
+     * Gets the Edition key/value node.
+     *
+     * @return The key/value node that contains the edition, or null if one isn't set.
+     */
+    public KeyValueNode<String> getEditionNode() {
+        return edition;
     }
 
     /**
@@ -420,6 +484,15 @@ public class ContentSpec extends Node {
     }
 
     /**
+     * Gets the Pubsnumber key/value node.
+     *
+     * @return The key/value node that contains the pubsnumber, or null if one isn't set.
+     */
+    public KeyValueNode<Integer> getPubsNumberNode() {
+        return pubsNumber;
+    }
+
+    /**
      * Set the publication number for the Content Specification.
      *
      * @param pubsNumber The publication number.
@@ -444,7 +517,16 @@ public class ContentSpec extends Node {
      * @return The data to be appended or null if none exist.
      */
     public String getPublicanCfg() {
-        return !publicanCfgs.containsKey(DEFAULT_PUBLICAN_CFG_KEY) ? null : publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY).getValue();
+        return !publicanCfgs.containsKey(DEFAULT_PUBLICAN_CFG_KEY) ? null : publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY).getValueText();
+    }
+
+    /**
+     * Gets the publican.cfg key/value node.
+     *
+     * @return The key/value node that contains the publican.cfg, or null if one isn't set.
+     */
+    public KeyValueNode<String> getPublicanCfgNode() {
+        return publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY);
     }
 
     /**
@@ -474,7 +556,17 @@ public class ContentSpec extends Node {
      * @return The data to be appended or null if none exist.
      */
     public String getAdditionalPublicanCfg(final String name) {
-        return !publicanCfgs.containsKey(name) ? null : publicanCfgs.get(name).getValue();
+        return !publicanCfgs.containsKey(name) ? null : publicanCfgs.get(name).getValueText();
+    }
+
+    /**
+     * Gets the custom additional publican.cfg node for the specified name.
+     *
+     * @param name The custom configuration name.
+     * @return The additional publican.cfg node, or null if it doesn't exist.
+     */
+    public KeyValueNode<String> getAdditionalPublicanCfgNode(final String name) {
+        return !publicanCfgs.containsKey(name) ? null : publicanCfgs.get(name);
     }
 
     /**
@@ -487,7 +579,7 @@ public class ContentSpec extends Node {
 
         for (final Map.Entry<String, KeyValueNode<String>> entry : publicanCfgs.entrySet()) {
             if (!DEFAULT_PUBLICAN_CFG_KEY.equals(entry.getKey())) {
-                retValue.put(entry.getValue().getKey(), entry.getValue().getValue());
+                retValue.put(entry.getValue().getKey(), entry.getValue().getValueText());
             }
         }
 
@@ -522,7 +614,16 @@ public class ContentSpec extends Node {
      * @return The name of the default publican.cfg to use when building.
      */
     public String getDefaultPublicanCfg() {
-        return defaultPublicanCfg == null ? CommonConstants.CS_PUBLICAN_CFG_TITLE : defaultPublicanCfg.getValue();
+        return defaultPublicanCfg == null ? CommonConstants.CS_PUBLICAN_CFG_TITLE : defaultPublicanCfg.getValueText();
+    }
+
+    /**
+     * Gets the Default publican.cfg key/value node.
+     *
+     * @return The key/value node that contains the Default publican.cfg, or null if one isn't set.
+     */
+    public KeyValueNode<String> getDefaultPublicanCfgNode() {
+        return defaultPublicanCfg;
     }
 
     /**
@@ -545,12 +646,21 @@ public class ContentSpec extends Node {
     }
 
     /**
-     * Get the DTD of the Content Specification. The default value is "DocBook 4.5".
+     * Get the Format of the Content Specification. The default value is "DocBook 4.5".
      *
-     * @return The DTD of the Content Specification or the default value if one isn't set.
+     * @return The Format of the Content Specification or the default value if one isn't set.
      */
     public String getFormat() {
-        return format == null ? CommonConstants.DOCBOOK_45_TITLE : format.getValue();
+        return format == null ? CommonConstants.DOCBOOK_45_TITLE : format.getValueText();
+    }
+
+    /**
+     * Gets the Format key/value node.
+     *
+     * @return The key/value node that contains the format, or null if one isn't set.
+     */
+    public KeyValueNode<String> getFormatNode() {
+        return format;
     }
 
     /**
@@ -580,7 +690,7 @@ public class ContentSpec extends Node {
      * @return The set value of the Content Specifications Checksum or null if one doesn't exist.
      */
     public String getChecksum() {
-        return checksum == null ? null : checksum.getValue();
+        return checksum == null ? null : checksum.getValueText();
     }
 
     /**
@@ -610,7 +720,16 @@ public class ContentSpec extends Node {
      * @return The abstract for the Content Specification or null if one doesn't exist.
      */
     public String getAbstract() {
-        return description == null ? null : description.getValue();
+        return description == null ? null : description.getValueText();
+    }
+
+    /**
+     * Gets the Abstract key/value node.
+     *
+     * @return The key/value node that contains the abstract, or null if one isn't set.
+     */
+    public KeyValueNode<String> getAbstractNode() {
+        return description;
     }
 
     /**
@@ -668,7 +787,16 @@ public class ContentSpec extends Node {
      * @return The name of the Copyright Holder.
      */
     public String getCopyrightHolder() {
-        return copyrightHolder == null ? "" : copyrightHolder.getValue();
+        return copyrightHolder == null ? "" : copyrightHolder.getValueText();
+    }
+
+    /**
+     * Gets the Copyright Holder key/value node.
+     *
+     * @return The key/value node that contains the copyright holder, or null if one isn't set.
+     */
+    public KeyValueNode<String> getCopyrightHolderNode() {
+        return copyrightHolder;
     }
 
     /**
@@ -696,7 +824,16 @@ public class ContentSpec extends Node {
      * @return The year(s) for the Copyright.
      */
     public String getCopyrightYear() {
-        return copyrightYear == null ? null : copyrightYear.getValue();
+        return copyrightYear == null ? null : copyrightYear.getValueText();
+    }
+
+    /**
+     * Gets the Copyright Year key/value node.
+     *
+     * @return The key/value node that contains the copyright year, or null if one isn't set.
+     */
+    public KeyValueNode<String> getCopyrightYearNode() {
+        return copyrightYear;
     }
 
     /**
@@ -754,7 +891,16 @@ public class ContentSpec extends Node {
      * @return The path to the Brand Logo.
      */
     public String getBrandLogo() {
-        return brandLogo == null ? "" : brandLogo.getValue();
+        return brandLogo == null ? "" : brandLogo.getValueText();
+    }
+
+    /**
+     * Gets the Brand Logo key/value node.
+     *
+     * @return The key/value node that contains the brand logo, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBrandLogoNode() {
+        return brandLogo;
     }
 
     /**
@@ -828,6 +974,15 @@ public class ContentSpec extends Node {
      * @return The Content Specification locale.
      */
     public String getLocale() {
+        return locale == null ? null : locale.getValueText();
+    }
+
+    /**
+     * Gets the Locale key/value node.
+     *
+     * @return The key/value node that contains the locale, or null if one isn't set.
+     */
+    public KeyValueNode<String> getLocaleNode() {
         return locale;
     }
 
@@ -837,7 +992,54 @@ public class ContentSpec extends Node {
      * @param locale The locale for the content specification
      */
     public void setLocale(final String locale) {
-        this.locale = locale;
+        if (locale == null && this.locale == null) {
+            return;
+        } else if (locale == null) {
+            removeChild(this.locale);
+            this.locale = null;
+        } else if (this.locale == null) {
+            this.locale = new KeyValueNode<String>(CommonConstants.CS_LOCALE_TITLE, locale);
+            appendChild(this.locale, false);
+        } else {
+            this.locale.setValue(locale);
+        }
+    }
+
+    /**
+     * Gets if the DefaultPreface should be used for a Content Specification.
+     *
+     * @return Whether the default preface should be used.
+     */
+    public Boolean getUseDefaultPreface() {
+        return useDefaultPreface == null ? true : useDefaultPreface.getValue();
+    }
+
+    /**
+     * Gets the Default Preface key/value node.
+     *
+     * @return The key/value node that contains the Default Preface, or null if one isn't set.
+     */
+    public KeyValueNode<Boolean> getDefaultPrefaceNode() {
+        return useDefaultPreface;
+    }
+
+    /**
+     * Sets the Content Specifications Default Preface setting.
+     *
+     * @param useDefaultPreface Whether the default preface should be used.
+     */
+    public void setUseDefaultPreface(final Boolean useDefaultPreface) {
+        if (useDefaultPreface == null && this.useDefaultPreface == null) {
+            return;
+        } else if (useDefaultPreface == null) {
+            removeChild(this.useDefaultPreface);
+            this.useDefaultPreface = null;
+        } else if (this.useDefaultPreface == null) {
+            this.useDefaultPreface = new KeyValueNode<Boolean>(CommonConstants.CS_DEFAULT_PREFACE, useDefaultPreface);
+            appendChild(this.useDefaultPreface, false);
+        } else {
+            this.useDefaultPreface.setValue(useDefaultPreface);
+        }
     }
 
     /**
@@ -846,7 +1048,16 @@ public class ContentSpec extends Node {
      * @return The Content Specification output style.
      */
     public String getOutputStyle() {
-        return outputStyle == null ? CSConstants.CSP_OUTPUT_FORMAT : outputStyle.getValue();
+        return outputStyle == null ? CSConstants.CSP_OUTPUT_FORMAT : outputStyle.getValueText();
+    }
+
+    /**
+     * Gets the Output Style key/value node.
+     *
+     * @return The key/value node that contains the output style, or null if one isn't set.
+     */
+    public KeyValueNode<String> getOutputStyleNode() {
+        return outputStyle;
     }
 
     /**
@@ -1104,6 +1315,22 @@ public class ContentSpec extends Node {
 
     public List<SpecTopic> getSpecTopics() {
         final List<SpecTopic> specTopics = getLevelSpecTopics(level);
+        specTopics.addAll(getMetaDataSpecTopics());
+        return specTopics;
+    }
+
+    public List<ITopicNode> getAllTopicNodes() {
+        final List<ITopicNode> topicNodes = getLevelTopicNodes(level);
+        topicNodes.addAll(getMetaDataSpecTopics());
+        return topicNodes;
+    }
+
+    public List<InfoTopic> getInfoTopics() {
+        return getLevelInfoTopics(level);
+    }
+
+    private List<SpecTopic> getMetaDataSpecTopics() {
+        final List<SpecTopic> specTopics = new ArrayList<SpecTopic>();
 
         // Add the Revision History Spec Topic
         if (getRevisionHistory() != null) {
@@ -1133,12 +1360,34 @@ public class ContentSpec extends Node {
         return specTopics;
     }
 
+    private List<ITopicNode> getLevelTopicNodes(final Level level) {
+        final List<ITopicNode> topicNodes = new ArrayList<ITopicNode>(level.getSpecTopics());
+        if (level.getInfoTopic() != null) {
+            topicNodes.add(level.getInfoTopic());
+        }
+        for (final Level childLevel : level.getChildLevels()) {
+            topicNodes.addAll(getLevelTopicNodes(childLevel));
+        }
+        return topicNodes;
+    }
+
     private List<SpecTopic> getLevelSpecTopics(final Level level) {
         final List<SpecTopic> specTopics = new ArrayList<SpecTopic>(level.getSpecTopics());
         for (final Level childLevel : level.getChildLevels()) {
             specTopics.addAll(getLevelSpecTopics(childLevel));
         }
         return specTopics;
+    }
+
+    private List<InfoTopic> getLevelInfoTopics(final Level level) {
+        final List<InfoTopic> infoTopics = new ArrayList<InfoTopic>();
+        if (level.getInfoTopic() != null) {
+            infoTopics.add(level.getInfoTopic());
+        }
+        for (final Level childLevel : level.getChildLevels()) {
+            infoTopics.addAll(getLevelInfoTopics(childLevel));
+        }
+        return infoTopics;
     }
 
     public Map<SpecNodeWithRelationships, List<Relationship>> getRelationships() {
@@ -1169,7 +1418,16 @@ public class ContentSpec extends Node {
     }
 
     public String getBugzillaProduct() {
-        return bugzillaProduct == null ? null : bugzillaProduct.getValue().toString();
+        return bugzillaProduct == null ? null : bugzillaProduct.getValueText();
+    }
+
+    /**
+     * Gets the BZProduct key/value node.
+     *
+     * @return The key/value node that contains the bugzilla product, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaProductNode() {
+        return bugzillaProduct;
     }
 
     public void setBugzillaProduct(final String bugzillaProduct) {
@@ -1187,7 +1445,16 @@ public class ContentSpec extends Node {
     }
 
     public String getBugzillaComponent() {
-        return bugzillaComponent == null ? null : bugzillaComponent.getValue().toString();
+        return bugzillaComponent == null ? null : bugzillaComponent.getValueText();
+    }
+
+    /**
+     * Gets the BZComponent key/value node.
+     *
+     * @return The key/value node that contains the bugzilla component, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaComponentNode() {
+        return publicanCfgs.get(DEFAULT_PUBLICAN_CFG_KEY);
     }
 
     public void setBugzillaComponent(final String bugzillaComponent) {
@@ -1210,7 +1477,16 @@ public class ContentSpec extends Node {
      * @return The version of the product in bugzilla.
      */
     public String getBugzillaVersion() {
-        return bugzillaVersion == null ? null : bugzillaVersion.getValue().toString();
+        return bugzillaVersion == null ? null : bugzillaVersion.getValueText();
+    }
+
+    /**
+     * Gets the BZVersion key/value node.
+     *
+     * @return The key/value node that contains the bugzilla version, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaVersionNode() {
+        return bugzillaVersion;
     }
 
     /**
@@ -1238,7 +1514,16 @@ public class ContentSpec extends Node {
      * @return The keywords to be set in bugzilla.
      */
     public String getBugzillaKeywords() {
-        return bugzillaKeywords == null ? null : bugzillaKeywords.getValue().toString();
+        return bugzillaKeywords == null ? null : bugzillaKeywords.getValueText();
+    }
+
+    /**
+     * Gets the BZKeywords key/value node.
+     *
+     * @return The key/value node that contains the bugzilla keywords, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaKeywordsNode() {
+        return bugzillaKeywords;
     }
 
     /**
@@ -1256,7 +1541,7 @@ public class ContentSpec extends Node {
             this.bugzillaKeywords = new KeyValueNode<String>(CommonConstants.CS_BUGZILLA_KEYWORDS_TITLE, bugzillaKeywords);
             appendChild(this.bugzillaKeywords, false);
         } else {
-            this.bugzillaVersion.setValue(bugzillaKeywords);
+            this.bugzillaKeywords.setValue(bugzillaKeywords);
         }
     }
 
@@ -1264,7 +1549,16 @@ public class ContentSpec extends Node {
      * @return
      */
     public String getBugzillaServer() {
-        return bugzillaServer == null ? null : bugzillaServer.getValue().toString();
+        return bugzillaServer == null ? null : bugzillaServer.getValueText();
+    }
+
+    /**
+     * Gets the BZServer key/value node.
+     *
+     * @return The key/value node that contains the bugzilla server, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaServerNode() {
+        return bugzillaServer;
     }
 
     /**
@@ -1290,7 +1584,16 @@ public class ContentSpec extends Node {
      * @return The BZURL component for the content specification.
      */
     public String getBugzillaURL() {
-        return bugzillaURL == null ? null : bugzillaURL.getValue().toString();
+        return bugzillaURL == null ? null : bugzillaURL.getValueText();
+    }
+
+    /**
+     * Gets the BZURL key/value node.
+     *
+     * @return The key/value node that contains the bugzilla url entity, or null if one isn't set.
+     */
+    public KeyValueNode<String> getBugzillaURLNode() {
+        return bugzillaURL;
     }
 
     /**
@@ -1320,6 +1623,15 @@ public class ContentSpec extends Node {
         return (bugLinks == null || bugLinks.getValue() == null) ? BugLinkType.BUGZILLA : bugLinks.getValue();
     }
 
+    /**
+     * Gets the BZServer key/value node.
+     *
+     * @return The key/value node that contains whether bug links should be injected, or null if one isn't set.
+     */
+    public KeyValueNode<BugLinkType> getInjectBugLinksNode() {
+        return bugLinks;
+    }
+
     public BugLinkType getBugLinksActualValue() {
         return bugLinks == null ? null : bugLinks.getValue();
     }
@@ -1340,6 +1652,15 @@ public class ContentSpec extends Node {
 
     public boolean isInjectBugzillaAssignee() {
         return (Boolean) (injectBugzillaAssignee == null ? true : injectBugzillaAssignee.getValue());
+    }
+
+    /**
+     * Gets the BZ Assignee key/value node.
+     *
+     * @return The key/value node that contains whether bugzilla assignee should be set, or null if one isn't set.
+     */
+    public KeyValueNode<BugLinkType> getInjectBugzillaAssigneeNode() {
+        return bugLinks;
     }
 
     public void setInjectBugzillaAssignee(final Boolean injectBugzillaAssignee) {
@@ -1369,7 +1690,16 @@ public class ContentSpec extends Node {
     }
 
     public String getJIRAProject() {
-        return jiraProject == null ? null : jiraProject.getValue().toString();
+        return jiraProject == null ? null : jiraProject.getValueText();
+    }
+
+    /**
+     * Gets the JIRA Project key/value node.
+     *
+     * @return The key/value node that contains the JIRA project, or null if one isn't set.
+     */
+    public KeyValueNode<String> getJIRAProjectNode() {
+        return jiraProject;
     }
 
     public void setJIRAProject(final String jiraProject) {
@@ -1387,7 +1717,16 @@ public class ContentSpec extends Node {
     }
 
     public String getJIRAComponent() {
-        return jiraComponent == null ? null : jiraComponent.getValue().toString();
+        return jiraComponent == null ? null : jiraComponent.getValueText();
+    }
+
+    /**
+     * Gets the JIRA Component key/value node.
+     *
+     * @return The key/value node that contains the JIRA component, or null if one isn't set.
+     */
+    public KeyValueNode<String> getJIRAComponentNode() {
+        return jiraComponent;
     }
 
     public void setJIRAComponent(final String jiraComponent) {
@@ -1410,7 +1749,16 @@ public class ContentSpec extends Node {
      * @return The version of the project in jira.
      */
     public String getJIRAVersion() {
-        return jiraVersion == null ? null : jiraVersion.getValue().toString();
+        return jiraVersion == null ? null : jiraVersion.getValueText();
+    }
+
+    /**
+     * Gets the JIRA Version key/value node.
+     *
+     * @return The key/value node that contains the JIRA version, or null if one isn't set.
+     */
+    public KeyValueNode<String> getJIRAVersionNode() {
+        return jiraVersion;
     }
 
     /**
@@ -1438,7 +1786,16 @@ public class ContentSpec extends Node {
      * @return The labels to be set in jira.
      */
     public String getJIRALabels() {
-        return jiraLabels == null ? null : jiraLabels.getValue().toString();
+        return jiraLabels == null ? null : jiraLabels.getValueText();
+    }
+
+    /**
+     * Gets the JIRA Labels key/value node.
+     *
+     * @return The key/value node that contains the JIRA labels, or null if one isn't set.
+     */
+    public KeyValueNode<String> getJIRALabelsNode() {
+        return jiraLabels;
     }
 
     /**
@@ -1464,7 +1821,16 @@ public class ContentSpec extends Node {
      * @return
      */
     public String getJIRAServer() {
-        return jiraServer == null ? null : jiraServer.getValue().toString();
+        return jiraServer == null ? null : jiraServer.getValueText();
+    }
+
+    /**
+     * Gets the JIRA Server key/value node.
+     *
+     * @return The key/value node that contains the JIRA server, or null if one isn't set.
+     */
+    public KeyValueNode<String> getJIRAServerNode() {
+        return jiraServer;
     }
 
     /**
@@ -1621,7 +1987,16 @@ public class ContentSpec extends Node {
      * @return The Maven groupId for the content specification.
      */
     public String getGroupId() {
-        return groupId == null ? null : groupId.getValue().toString();
+        return groupId == null ? null : groupId.getValueText();
+    }
+
+    /**
+     * Gets the maven Group Id key/value node.
+     *
+     * @return The key/value node that contains the maven group id, or null if one isn't set.
+     */
+    public KeyValueNode<String> getGroupIdNode() {
+        return groupId;
     }
 
     /**
@@ -1649,7 +2024,16 @@ public class ContentSpec extends Node {
      * @return The Maven artifactId for the content specification.
      */
     public String getArtifactId() {
-        return artifactId == null ? null : artifactId.getValue().toString();
+        return artifactId == null ? null : artifactId.getValueText();
+    }
+
+    /**
+     * Gets the maven Artifact Id key/value node.
+     *
+     * @return The key/value node that contains the maven artifact id, or null if one isn't set.
+     */
+    public KeyValueNode<String> getArtifactIdNode() {
+        return artifactId;
     }
 
     /**
@@ -1677,7 +2061,16 @@ public class ContentSpec extends Node {
      * @return The Maven POM version for the content specification.
      */
     public String getPOMVersion() {
-        return pomVersion == null ? null : pomVersion.getValue().toString();
+        return pomVersion == null ? null : pomVersion.getValueText();
+    }
+
+    /**
+     * Gets the maven POMVersion key/value node.
+     *
+     * @return The key/value node that contains the maven pom version, or null if one isn't set.
+     */
+    public KeyValueNode<String> getPOMVersionNode() {
+        return pomVersion;
     }
 
     /**
@@ -1742,7 +2135,16 @@ public class ContentSpec extends Node {
      * @return The data to be appended or null if none exist.
      */
     public String getEntities() {
-        return entities == null ? null : entities.getValue();
+        return entities == null ? null : entities.getValueText();
+    }
+
+    /**
+     * Gets the Entities key/value node.
+     *
+     * @return The key/value node that contains the entities, or null if one isn't set.
+     */
+    public KeyValueNode<String> getEntitiesNode() {
+        return entities;
     }
 
     /**
@@ -2087,6 +2489,26 @@ public class ContentSpec extends Node {
                 }
                 includeIndex = useIndexNode;
                 setKeyValueNodeKey(includeIndex, CommonConstants.CS_INDEX_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_LOCALE_TITLE) && value instanceof String) {
+                locale = (KeyValueNode<String>) node;
+                setKeyValueNodeKey(locale, CommonConstants.CS_LOCALE_TITLE);
+            } else if (key.equalsIgnoreCase(CommonConstants.CS_DEFAULT_PREFACE) && value instanceof String) {
+                final KeyValueNode<Boolean> useDefaultPrefaceNode;
+                if (value instanceof String) {
+                    final Boolean fixedValue;
+                    if (((String) value).equalsIgnoreCase("ON")) {
+                        fixedValue = true;
+                    } else {
+                        fixedValue = Boolean.parseBoolean((String) value);
+                    }
+                    useDefaultPrefaceNode = new KeyValueNode<Boolean>(CommonConstants.CS_DEFAULT_PREFACE, fixedValue);
+                    cloneKeyValueNode(node, useDefaultPrefaceNode);
+                    fixedNode = useDefaultPrefaceNode;
+                } else {
+                    useDefaultPrefaceNode = (KeyValueNode<Boolean>) node;
+                }
+                useDefaultPreface = useDefaultPrefaceNode;
+                setKeyValueNodeKey(useDefaultPreface, CommonConstants.CS_DEFAULT_PREFACE);
             }
 
             // Add the node to the list of nodes

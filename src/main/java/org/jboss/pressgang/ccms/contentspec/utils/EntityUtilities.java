@@ -34,6 +34,7 @@ import org.jboss.pressgang.ccms.contentspec.sort.EnversRevisionSort;
 import org.jboss.pressgang.ccms.contentspec.sort.TagWrapperNameComparator;
 import org.jboss.pressgang.ccms.provider.ContentSpecProvider;
 import org.jboss.pressgang.ccms.provider.DataProviderFactory;
+import org.jboss.pressgang.ccms.provider.LocaleProvider;
 import org.jboss.pressgang.ccms.provider.TagProvider;
 import org.jboss.pressgang.ccms.provider.TopicProvider;
 import org.jboss.pressgang.ccms.provider.exception.NotFoundException;
@@ -42,6 +43,7 @@ import org.jboss.pressgang.ccms.utils.structures.NameIDSortMap;
 import org.jboss.pressgang.ccms.wrapper.CSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.CategoryInTagWrapper;
 import org.jboss.pressgang.ccms.wrapper.ContentSpecWrapper;
+import org.jboss.pressgang.ccms.wrapper.LocaleWrapper;
 import org.jboss.pressgang.ccms.wrapper.ServerEntitiesWrapper;
 import org.jboss.pressgang.ccms.wrapper.TagWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
@@ -75,7 +77,7 @@ public class EntityUtilities {
             final List<TranslatedTopicWrapper> translatedTopicItems = translatedTopics.getItems();
             for (final TranslatedTopicWrapper translatedTopic : translatedTopicItems) {
                 // Make sure the locale and topic revision matches
-                if (translatedTopic.getLocale().equals(locale) && translatedTopic.getTopicRevision().equals(rev)) {
+                if (translatedTopic.getLocale().getValue().equals(locale) && translatedTopic.getTopicRevision().equals(rev)) {
                     // Make sure the translated cs node id matches
                     if ((translatedCSNodeId == null && translatedTopic.getTranslatedCSNode() == null) || (translatedTopic
                             .getTranslatedCSNode() != null && translatedTopic.getTranslatedCSNode().getId().equals(
@@ -243,7 +245,8 @@ public class EntityUtilities {
 
     public static TranslatedTopicWrapper returnPushedTranslatedTopic(final TopicWrapper source,
             final TranslatedCSNodeWrapper translatedCSNode) {
-        return returnClosestTranslatedTopic(source, translatedCSNode, source.getLocale());
+        final String locale = source.getLocale() == null ? null : source.getLocale().getValue();
+        return returnClosestTranslatedTopic(source, translatedCSNode, locale);
     }
 
     public static TranslatedTopicWrapper returnClosestTranslatedTopic(final TopicWrapper source, final String locale) {
@@ -259,7 +262,7 @@ public class EntityUtilities {
             final List<TranslatedTopicWrapper> topics = source.getTranslatedTopics().getItems();
             for (final TranslatedTopicWrapper translatedTopic : topics) {
                 // Make sure the locale and topic revision matches
-                if (translatedTopic.getLocale().equals(locale)) {
+                if (translatedTopic.getLocale().getValue().equals(locale)) {
                     // Ensure that the topic revision is less than or equal to the source revision
                     if ((topicRev == null || translatedTopic.getTopicRevision() <= topicRev) &&
                             // Check if this translated topic is a higher revision then the current stored translation
@@ -437,5 +440,42 @@ public class EntityUtilities {
                 || topic.hasTag(serverEntities.getAuthorGroupTagId())
                 || topic.hasTag(serverEntities.getAbstractTagId())
                 || topic.hasTag(serverEntities.getInfoTagId()));
+    }
+
+    /**
+     * Finds the matching locale entity from a locale string.
+     *
+     * @param localeProvider
+     * @param localeString
+     * @return
+     */
+    public static LocaleWrapper findLocaleFromString(final LocaleProvider localeProvider, final String localeString) {
+        final CollectionWrapper<LocaleWrapper> locales = localeProvider.getLocales();
+
+        for (final LocaleWrapper locale : locales.getItems()) {
+            if (localeString.equals(locale.getValue())) {
+                return locale;
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * Finds the matching locale entity from a translation locale string.
+     *
+     * @param localeProvider
+     * @param localeString
+     * @return
+     */
+    public static LocaleWrapper findTranslationLocaleFromString(final LocaleProvider localeProvider, final String localeString) {
+        final CollectionWrapper<LocaleWrapper> locales = localeProvider.getLocales();
+        for (final LocaleWrapper locale : locales.getItems()) {
+            if (localeString.equals(locale.getValue())) {
+                return locale;
+            }
+        }
+
+        return null;
     }
 }

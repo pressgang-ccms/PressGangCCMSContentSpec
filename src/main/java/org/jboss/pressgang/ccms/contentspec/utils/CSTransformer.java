@@ -144,7 +144,7 @@ public class CSTransformer {
 
                     // Add the locale if it wasn't specified
                     if (!localeFound) {
-                        contentSpec.setLocale(spec.getLocale());
+                        contentSpec.setLocale(spec.getLocale() == null ? null : spec.getLocale().getValue());
                     }
 
                     // Add a space between the base metadata and optional metadata

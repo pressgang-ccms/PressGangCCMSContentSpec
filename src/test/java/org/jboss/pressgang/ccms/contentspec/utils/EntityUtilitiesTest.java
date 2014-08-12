@@ -22,6 +22,7 @@ package org.jboss.pressgang.ccms.contentspec.utils;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.when;
 
 import java.util.Arrays;
 
@@ -29,10 +30,12 @@ import net.sf.ipsedixit.annotation.Arbitrary;
 import net.sf.ipsedixit.annotation.ArbitraryString;
 import net.sf.ipsedixit.core.StringType;
 import org.jboss.pressgang.ccms.contentspec.BaseUnitTest;
+import org.jboss.pressgang.ccms.wrapper.LocaleWrapper;
 import org.jboss.pressgang.ccms.wrapper.TopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedCSNodeWrapper;
 import org.jboss.pressgang.ccms.wrapper.TranslatedTopicWrapper;
 import org.jboss.pressgang.ccms.wrapper.collection.CollectionWrapper;
+import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
 
@@ -48,6 +51,12 @@ public class EntityUtilitiesTest extends BaseUnitTest {
     @Mock CollectionWrapper<TranslatedTopicWrapper> translatedTopicCollectionWrapper;
     @Mock TranslatedCSNodeWrapper translatedCSNodeWrapper;
     @Mock TranslatedCSNodeWrapper translatedCSNodeWrapper2;
+    @Mock LocaleWrapper localeWrapper;
+
+    @Before
+    public void setUp() {
+        when(localeWrapper.getValue()).thenReturn(locale);
+    }
 
     @Test
     public void shouldFindHighestWhenMatchingIdForPushedTranslatedTopic() {
@@ -75,7 +84,7 @@ public class EntityUtilitiesTest extends BaseUnitTest {
         given(translatedTopicCollectionWrapper.getItems()).willReturn(Arrays.asList(translatedTopicWrapper, translatedTopicWrapper2));
         given(translatedTopicWrapper2.getTopicRevision()).willReturn(revision);
         given(translatedTopicWrapper2.getTopicRevision()).willReturn(revision);
-        given(translatedTopicWrapper.getLocale()).willReturn("en-US");
+        given(translatedTopicWrapper.getLocale()).willReturn(localeWrapper);
 
         // When getting the pushed translated topic
         final TranslatedTopicWrapper result = EntityUtilities.returnPushedTranslatedTopic(topicWrapper);
@@ -186,12 +195,12 @@ public class EntityUtilitiesTest extends BaseUnitTest {
         given(topicWrapper.getRevision()).willReturn(revision);
         given(topicWrapper.getTopicRevision()).willReturn(revision);
         given(topicWrapper.getTranslatedTopics()).willReturn(translatedTopicCollectionWrapper);
-        given(topicWrapper.getLocale()).willReturn(locale);
+        given(topicWrapper.getLocale()).willReturn(localeWrapper);
     }
 
     private void setUpBaseTranslatedTopic(final TranslatedTopicWrapper topicWrapper) {
         given(topicWrapper.getTopicId()).willReturn(id);
-        given(topicWrapper.getLocale()).willReturn(locale);
+        given(topicWrapper.getLocale()).willReturn(localeWrapper);
     }
 
     private void setUpBaseTranslatedCSNode(final TranslatedCSNodeWrapper translatedCSNodeWrapper) {

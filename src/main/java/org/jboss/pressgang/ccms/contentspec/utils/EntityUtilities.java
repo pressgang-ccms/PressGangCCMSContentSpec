@@ -449,8 +449,8 @@ public class EntityUtilities {
      * @param localeString
      * @return
      */
-    public static LocaleWrapper findLocaleFromString(final LocaleProvider localeProvider, final String localeString) {
-        final CollectionWrapper<LocaleWrapper> locales = localeProvider.getLocales();
+    public static LocaleWrapper findLocaleFromString(final CollectionWrapper<LocaleWrapper> locales, final String localeString) {
+        if (localeString == null) return null;
 
         for (final LocaleWrapper locale : locales.getItems()) {
             if (localeString.equals(locale.getValue())) {
@@ -469,6 +469,8 @@ public class EntityUtilities {
      * @return
      */
     public static LocaleWrapper findTranslationLocaleFromString(final LocaleProvider localeProvider, final String localeString) {
+        if (localeString == null) return null;
+
         final CollectionWrapper<LocaleWrapper> locales = localeProvider.getLocales();
         for (final LocaleWrapper locale : locales.getItems()) {
             if (localeString.equals(locale.getValue())) {

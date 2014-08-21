@@ -596,10 +596,10 @@ public class SpecTopic extends SpecNodeWithRelationships implements ITopicNode {
             if (useFixedUrls && getFixedUrl() != null) {
                 topicXRefId = getFixedUrl();
             } else {
-                topicXRefId = topic.getXRefId();
+                topicXRefId = topic.getXRefId() + (duplicateId == null ? "" : ("-" + duplicateId));
             }
 
-            return topicXRefId + (duplicateId == null ? "" : ("-" + duplicateId));
+            return topicXRefId;
         }
     }
 

@@ -5,12 +5,12 @@
     <parent>
         <groupId>org.jboss.pressgang</groupId>
         <artifactId>pressgang-parent</artifactId>
-        <version>1.6</version>
+        <version>1.7</version>
     </parent>
 
     <groupId>org.jboss.pressgang.ccms</groupId>
     <artifactId>pressgang-ccms-contentspec</artifactId>
-    <version>1.9-SNAPSHOT</version>
+    <version>1.9</version>
     <packaging>jar</packaging>
 
     <name>PressGang CCMS ContentSpec</name>
@@ -23,7 +23,7 @@
     </scm>
 
     <properties>
-        <pressgang.ccms.version>1.9-SNAPSHOT</pressgang.ccms.version>
+        <pressgang.ccms.version>1.9</pressgang.ccms.version>
         <j2bugzilla.version>1.4</j2bugzilla.version>
         <jira.rest.client.version>1.4</jira.rest.client.version>
         <com.ibm.ico.version>4.8.1.1</com.ibm.ico.version>

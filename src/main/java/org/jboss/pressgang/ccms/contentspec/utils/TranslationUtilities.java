@@ -112,7 +112,11 @@ public class TranslationUtilities {
                     nodes.add(childNode);
                 }
             }
-            addAllTranslatableCSNodeChildren(childNode, nodes);
+
+            // Check child nodes for translations, if its not a topic. As topics cannot have children
+            if (!EntityUtilities.isNodeATopic(childNode)) {
+                addAllTranslatableCSNodeChildren(childNode, nodes);
+            }
         }
         return nodes;
     }
@@ -128,7 +132,11 @@ public class TranslationUtilities {
                         nodes.add(childNode);
                     }
                 }
-                addAllTranslatableCSNodeChildren(childNode, nodes);
+
+                // Check child nodes for translations, if its not a topic. As topics cannot have children
+                if (!EntityUtilities.isNodeATopic(childNode)) {
+                    addAllTranslatableCSNodeChildren(childNode, nodes);
+                }
             }
         }
     }

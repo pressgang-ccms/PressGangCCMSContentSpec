@@ -338,8 +338,9 @@ public class TranslationUtilities {
         // Find all the translatable nodes first
         for (final Node node : contentSpec.getNodes()) {
             if (node instanceof KeyValueNode) {
-                final KeyValueNode<String> keyValueNode = (KeyValueNode<String>) node;
-                if (TRANSLATABLE_METADATA.contains(keyValueNode.getKey())) {
+                final KeyValueNode keyValueNode = (KeyValueNode) node;
+                if (keyValueNode.getValue() instanceof String
+                        && TRANSLATABLE_METADATA.contains(keyValueNode.getKey())) {
                     translatableNodes.add(keyValueNode);
                 }
             }
